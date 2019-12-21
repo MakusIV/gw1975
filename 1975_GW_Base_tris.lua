@@ -2360,6 +2360,69 @@ end
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- TEMPLATE
 
 
@@ -3393,98 +3456,98 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -- WAREHOUSE
+      -- WAREHOUSE
 
 
 
 
-    -- NOTA BENE: LE WAREHOUSE VANNO INSERITE PRIMA DI TUTTO
+      -- NOTA BENE: LE WAREHOUSE VANNO INSERITE PRIMA DI TUTTO
 
 
-    -- Architettura:
-    -- master warehouse --> link warehouse --> area warehouse --> link warehouse --> farp warehouse, airbase warehouse, naval warehouse, zone warehouse
-    -- master warehouse: contiene tutte i rifornimenti che la fazione ha destinato per il conflitto. Queste rifornimenti servono per rifornire le area-farp-airbase-naval -zonewarehouse attraverso le link warehouse,
-    -- per via aerea (in questo caso le master warehouse coincidono con le airbase warehouse) e/o per per via marittima (in questo caso le master warehouse coincidono con le naval warehouse)
+      -- Architettura:
+      -- master warehouse --> link warehouse --> area warehouse --> link warehouse --> farp warehouse, airbase warehouse, naval warehouse, zone warehouse
+      -- master warehouse: contiene tutte i rifornimenti che la fazione ha destinato per il conflitto. Queste rifornimenti servono per rifornire le area-farp-airbase-naval -zonewarehouse attraverso le link warehouse,
+      -- per via aerea (in questo caso le master warehouse coincidono con le airbase warehouse) e/o per per via marittima (in questo caso le master warehouse coincidono con le naval warehouse)
 
-    -- link warehouse:warehouse di collegamento che effettuano il servizio di trasferimento da - a, contengon pertanto solo gli asset in fase spostamento
+      -- link warehouse:warehouse di collegamento che effettuano il servizio di trasferimento da - a, contengon pertanto solo gli asset in fase spostamento
 
-    -- area warehouse: warehouse intermedie che servono da depositi di area per i rifornimenti delle farp-airbase-naval-zone
+      -- area warehouse: warehouse intermedie che servono da depositi di area per i rifornimenti delle farp-airbase-naval-zone
 
-    -- farp warehouse: warehouse che inviano risorse direttamente alle zone di combattimento tramite via aerea prevalentemente elicotteri
+      -- farp warehouse: warehouse che inviano risorse direttamente alle zone di combattimento tramite via aerea prevalentemente elicotteri
 
-    -- zone warehouse: warehouse che inviano risorse direttamente alle zone di combattimento tramite terra
+      -- zone warehouse: warehouse che inviano risorse direttamente alle zone di combattimento tramite terra
 
-    -- airbase warehouse: warehouse degli aeroporti (devi capire come collegarle alle A2ADispatch: purtroppo l'implementazione dei CAP squadron utilizza come parametri i template). GLi airbase piu' importanti sono delle master warehouse gli altri sono area warehouse.
-    -- Per adesso conviene utilizzare il dispatcher includendo nel numero degli aerei assegnati agli sqadron anche le riserve. Le warehouse puoi utilizzarle per il carburante, le munizione e tutti i mezzi terrestri e per i task
-    -- di trasporto rifornimenti (Heli, Aircraft ecc in quanto master-aerea warehouse)
+      -- airbase warehouse: warehouse degli aeroporti (devi capire come collegarle alle A2ADispatch: purtroppo l'implementazione dei CAP squadron utilizza come parametri i template). GLi airbase piu' importanti sono delle master warehouse gli altri sono area warehouse.
+      -- Per adesso conviene utilizzare il dispatcher includendo nel numero degli aerei assegnati agli sqadron anche le riserve. Le warehouse puoi utilizzarle per il carburante, le munizione e tutti i mezzi terrestri e per i task
+      -- di trasporto rifornimenti (Heli, Aircraft ecc in quanto master-aerea warehouse)
 
-    -- naval warehouse:  warehouse dei porti (prevalentemente dovrebbero esssere dele master warehouse)
+      -- naval warehouse:  warehouse dei porti (prevalentemente dovrebbero esssere dele master warehouse)
 
-    -- Conviene dedicare una missione ad ogni fase disponendo solo i mezzi coinvolti in quella fase
+      -- Conviene dedicare una missione ad ogni fase disponendo solo i mezzi coinvolti in quella fase
 
-    -- suddividere il codice che definisce i mezzi impiegati nella varie sottofasi in modo da impiegare
+      -- suddividere il codice che definisce i mezzi impiegati nella varie sottofasi in modo da impiegare
 
-    -- WAREHOUSE.Debug = true
-    -- WAREHOUSE.Report = true
-
-
-
+      -- WAREHOUSE.Debug = true
+      -- WAREHOUSE.Report = true
 
 
 
 
-    -- INITIALIZE WAREHOUSE.
 
 
 
-    local warehouse={}
+      -- INITIALIZE WAREHOUSE.
 
 
 
-    -- LOAD ASSET IN WAREHOUSE
+      local warehouse={}
 
 
 
-
-    -- blue front line warehouses
-
-     -- blue resupply warehouse (dca modificare: l'architettura dovrebbe prevederre un link tra la master warehouse e le farp. La farp dovrebbe avere.
-
-    -- CONVIENE PER ADESSO DEFINIRE QUI LE QUANTITA' DEGLI ASSET, IN FUTURO SI PUO' UTILIZZARE UNA VARIABILE IN MODO DA IMPLEMENTARE UN'ASSEGNAZIONE DINAMICA DELLE QUANTITA'
-    -- NOTA CHE E' POSSIBILE SALVARE LO STATO DELLE WAREHOUSE VERIFICA COME IMPLEMENTARE IL SALVATAGGIO NELLA CHIUSURA DELLA MISSIONE E IL CARICAMENTO ALLA APERTURA
-
-
-    --[[
-
-      BLUE RESUPPLY LINK
-
-      Tbilisi
-      Soganiug    --->  Gori
-      Kutaisi     --->  Zestafoni
-      Zestafoni   --->  Khashuri
-      Khashuri    --->  Gori
-
-    ]]
+      -- LOAD ASSET IN WAREHOUSE
 
 
 
 
-    -- red airbase warehouses
+      -- blue front line warehouses
 
-    --[[
+       -- blue resupply warehouse (dca modificare: l'architettura dovrebbe prevederre un link tra la master warehouse e le farp. La farp dovrebbe avere.
 
-      RED RESUPPLY LINK
-
-      Myneralnye  --->  Beslan, Kvemo_Sba
-      Mozdok      --->  Beslan, Kvemo_Sba
-      Beslan      --->  Kvemo_Sba
-      Kvemo_Sba   --->  Didi
-      Didi        --->  Biteta
-
-    ]]
+      -- CONVIENE PER ADESSO DEFINIRE QUI LE QUANTITA' DEGLI ASSET, IN FUTURO SI PUO' UTILIZZARE UNA VARIABILE IN MODO DA IMPLEMENTARE UN'ASSEGNAZIONE DINAMICA DELLE QUANTITA'
+      -- NOTA CHE E' POSSIBILE SALVARE LO STATO DELLE WAREHOUSE VERIFICA COME IMPLEMENTARE IL SALVATAGGIO NELLA CHIUSURA DELLA MISSIONE E IL CARICAMENTO ALLA APERTURA
 
 
-    -- red front line warehouses
+      --[[
+
+        BLUE RESUPPLY LINK
+
+        Tbilisi
+        Soganiug    --->  Gori
+        Kutaisi     --->  Zestafoni
+        Zestafoni   --->  Khashuri
+        Khashuri    --->  Gori
+
+      ]]
+
+
+
+
+      -- red airbase warehouses
+
+      --[[
+
+        RED RESUPPLY LINK
+
+        Myneralnye  --->  Beslan, Kvemo_Sba
+        Mozdok      --->  Beslan, Kvemo_Sba
+        Beslan      --->  Kvemo_Sba
+        Kvemo_Sba   --->  Didi
+        Didi        --->  Biteta
+
+      ]]
+
+
+      -- red front line warehouses
 
 
 
@@ -7615,20 +7678,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  -- BALANCER
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   if activeAirWar then
 
@@ -7854,12 +7903,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       end
 
-
-
-
-
-
-  end -- end activeBalancer
+    end -- end activeBalancer
 
 
 
@@ -8158,7 +8202,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- Spawn aircraft from template  IMPORTANTE
     -- Da utilizzare per generare traffico o voli generici
 
---[[
+
+
+
+    --[[
 
     local Spawn_GE_Recognition_Flight =
       { air_template_blue.REC_L_39C,
@@ -8177,7 +8224,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     local Spawn_BLUE_Air_Recon = genericSpawnSimple('Georgian Transport Flight', 15, 40, Spawn_GE_Transpor_Flight, 1, 1, 1000, 2000, 900, 0.7)
 
-]]
+    ]]
 
           -- CAS MISSION
       ---
@@ -8453,9 +8500,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-
-
   end -- end activeAirWar
+
+
 
 end -- end if conflictZone == 'Zone 1: South Ossetia' then
