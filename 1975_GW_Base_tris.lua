@@ -1198,69 +1198,69 @@ function activeGCIWarehouse(groupset, capZoneName, typeZoneName, engageRange, en
 end -- function
 
 
-    --- Attiva il task RECON per un asset assegnato
-    --
-    -- @param groupset = il gruppo (asset) proveniente dalla warehouse
-    -- @param home = il nome della warehouse airbase di partenza
-    -- @param target = il target (es warehouse.tblisi)
-    -- @param toTargetAltitude = altitudine relativa alla rotta verso il target
-    -- @param toHomeAltitude = altitudine relativa alla rotta verso la airbase
-    -- @param reconDirection = la direzione di attacco
-    -- @param reconAltitude = altitudine di attacco
-    -- @param reconRunDistance = distanza dal target per l'inizio del run
-    -- @param reconRunDirection = direzione del run
-    -- @param speedReconRun = velocit� di attacco
-    --
-    function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
+--- Attiva il task RECON per un asset assegnato
+--
+-- @param groupset = il gruppo (asset) proveniente dalla warehouse
+-- @param home = il nome della warehouse airbase di partenza
+-- @param target = il target (es warehouse.tblisi)
+-- @param toTargetAltitude = altitudine relativa alla rotta verso il target
+-- @param toHomeAltitude = altitudine relativa alla rotta verso la airbase
+-- @param reconDirection = la direzione di attacco
+-- @param reconAltitude = altitudine di attacco
+-- @param reconRunDistance = distanza dal target per l'inizio del run
+-- @param reconRunDirection = direzione del run
+-- @param speedReconRun = velocit� di attacco
+--
+function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
 
-            --[[ i task sono descritti in controllable:
+    --[[ i task sono descritti in controllable:
 
-https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Controllable.html
-
-
+    https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Controllable.html
 
 
 
-            ]]
 
-            for _,_group in pairs(groupset:GetSet()) do
 
-                  local group=_group --Wrapper.Group#GROUP
+        ]]
 
-                  -- Start uncontrolled aircraft.
-                  group:StartUncontrolled()
+    for _,_group in pairs(groupset:GetSet()) do
 
-                  -- Target coordinate!
-                  local ToCoord=target:GetCoordinate():SetAltitude(toTargetAltitude)
+          local group=_group --Wrapper.Group#GROUP
 
-                  -- Home coordinate.
-                  local HomeCoord=home:GetCoordinate():SetAltitude(toHomeAltitude)
+          -- Start uncontrolled aircraft.
+          group:StartUncontrolled()
 
-                  -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
-                  -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-                  --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , reconDirection, reconAltitude, bombQuantity)
+          -- Target coordinate!
+          local ToCoord=target:GetCoordinate():SetAltitude(toTargetAltitude)
 
-                  -- Define waypoints.
-                  local WayPoints={}
+          -- Home coordinate.
+          local HomeCoord=home:GetCoordinate():SetAltitude(toHomeAltitude)
 
-                  -- Take off position.
-                  WayPoints[1]=home:GetCoordinate():WaypointAirTakeOffParking()
-                  -- Begin bombing run 20 km south of target.
-                  WayPoints[2]=ToCoord:Translate(reconRunDistance, reconRunDirection):WaypointAirTurningPoint(nil, speedBombRun, {task}, "RECON Run")
-                  -- Return to base.
-                  WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
-                  -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
-                  WayPoints[4]=home:GetCoordinate():WaypointAirLanding()
+          -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
+          -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
+          --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , reconDirection, reconAltitude, bombQuantity)
 
-                  -- Route bombers.
-                  group:Route(WayPoints)
+          -- Define waypoints.
+          local WayPoints={}
 
-            end -- end for
+          -- Take off position.
+          WayPoints[1]=home:GetCoordinate():WaypointAirTakeOffParking()
+          -- Begin bombing run 20 km south of target.
+          WayPoints[2]=ToCoord:Translate(reconRunDistance, reconRunDirection):WaypointAirTurningPoint(nil, speedBombRun, {task}, "RECON Run")
+          -- Return to base.
+          WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
+          -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
+          WayPoints[4]=home:GetCoordinate():WaypointAirLanding()
 
-            return
+          -- Route bombers.
+          group:Route(WayPoints)
 
-    end -- end function
+    end -- end for
+
+    return
+
+end -- end function
 
 
 
@@ -2011,9 +2011,6 @@ end
 --
 function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport, speed, onRoad, maxDistance, maxFiringRange, numOtherAmmo)
 
-
-
-
   -- ARTY.WeaponType.Auto: Automatic weapon selection by the DCS logic. This is the default setting.
   -- ARTY.WeaponType.Cannon: Only cannons are used during the attack. Corresponding ammo type are shells and can be defined by ARTY.SetShellTypes.
   -- ARTY.WeaponType.Rockets: Only unguided are used during the attack. Corresponding ammo type are rockets/nurs and can be defined by ARTY.SetRocketTypes.
@@ -2158,33 +2155,33 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
   --ARTY:_Move(group, ToCoord, Speed, OnRoad)
 
 
--- Specific Weapons
+  -- Specific Weapons
 
---This example demonstrates how to use specific weapons during an engagement.
+  --This example demonstrates how to use specific weapons during an engagement.
 
--- Define the Normandy as ARTY object.
--- normandy=ARTY:New(GROUP:FindByName("Normandy"))
+  -- Define the Normandy as ARTY object.
+  -- normandy=ARTY:New(GROUP:FindByName("Normandy"))
 
--- Add target: prio=50, radius=300 m, number of missiles=20, number of engagements=1, start time=08:05 hours, only use cruise missiles for this attack.
--- normandy:AssignTargetCoord(GROUP:FindByName("Red Targets 1"):GetCoordinate(),  20, 300,  50, 1, "08:01:00", ARTY.WeaponType.CruiseMissile)
+  -- Add target: prio=50, radius=300 m, number of missiles=20, number of engagements=1, start time=08:05 hours, only use cruise missiles for this attack.
+  -- normandy:AssignTargetCoord(GROUP:FindByName("Red Targets 1"):GetCoordinate(),  20, 300,  50, 1, "08:01:00", ARTY.WeaponType.CruiseMissile)
 
--- Add target: prio=50, radius=300 m, number of shells=100, number of engagements=1, start time=08:15 hours, only use cannons during this attack.
--- normandy:AssignTargetCoord(GROUP:FindByName("Red Targets 1"):GetCoordinate(),  50, 300, 100, 1, "08:15:00", ARTY.WeaponType.Cannon)
+  -- Add target: prio=50, radius=300 m, number of shells=100, number of engagements=1, start time=08:15 hours, only use cannons during this attack.
+  -- normandy:AssignTargetCoord(GROUP:FindByName("Red Targets 1"):GetCoordinate(),  50, 300, 100, 1, "08:15:00", ARTY.WeaponType.Cannon)
 
--- Define shells that are counted to check whether the ship is out of ammo.
--- Note that this is necessary because the Normandy has a lot of other shell type weapons which cannot be used to engage ground targets in an artillery style manner.
--- normandy:SetShellTypes({"MK45_127"})
+  -- Define shells that are counted to check whether the ship is out of ammo.
+  -- Note that this is necessary because the Normandy has a lot of other shell type weapons which cannot be used to engage ground targets in an artillery style manner.
+  -- normandy:SetShellTypes({"MK45_127"})
 
--- Define missile types that are counted.
--- normandy:SetMissileTypes({"BGM"})
+  -- Define missile types that are counted.
+  -- normandy:SetMissileTypes({"BGM"})
 
--- Start ARTY process.
--- normandy:Start()
+  -- Start ARTY process.
+  -- normandy:Start()
 
 
-logging('exit', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)')
+  logging('exit', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)')
 
-end
+end -- end function
 
 
 
@@ -3452,12 +3449,37 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  -- WAREHOUSE
+
   if activeWarehouse then
-
-
-
-      -- WAREHOUSE
-
 
 
 
@@ -3493,26 +3515,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-
-
-      -- INITIALIZE WAREHOUSE.
-
-
-
-      local warehouse={}
-
-
-
-      -- LOAD ASSET IN WAREHOUSE
-
-
-
-
-      -- blue front line warehouses
-
-       -- blue resupply warehouse (dca modificare: l'architettura dovrebbe prevederre un link tra la master warehouse e le farp. La farp dovrebbe avere.
-
       -- CONVIENE PER ADESSO DEFINIRE QUI LE QUANTITA' DEGLI ASSET, IN FUTURO SI PUO' UTILIZZARE UNA VARIABILE IN MODO DA IMPLEMENTARE UN'ASSEGNAZIONE DINAMICA DELLE QUANTITA'
       -- NOTA CHE E' POSSIBILE SALVARE LO STATO DELLE WAREHOUSE VERIFICA COME IMPLEMENTARE IL SALVATAGGIO NELLA CHIUSURA DELLA MISSIONE E IL CARICAMENTO ALLA APERTURA
 
@@ -3527,14 +3529,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
         Zestafoni   --->  Khashuri
         Khashuri    --->  Gori
 
-      ]]
+
 
 
 
 
       -- red airbase warehouses
 
-      --[[
+
 
         RED RESUPPLY LINK
 
@@ -3547,46 +3549,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       ]]
 
 
-      -- red front line warehouses
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    -- WAREHOUSE OPERATIONS
-
-
-
-
-
-
-
-    -- LOGIC FOR RESUPPLY FARP AND ROUTING GROUND ASSET ON TSKHINVALI ZONE
-
-
-    --      FRONT BATTLE!    Battle zone near FARP Didi_Cupta. This is where the action is!
-
+    local warehouse={}
 
 
     -- AIR --
@@ -3664,7 +3627,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
    --- colonne di rifornimento (fuel, ammo)
 
-   ----                                          DA FARE INOLTRE IMPLEMENTARE NELLE ALTRE WH LE RICHIESTE AD AGIDIR
+   ----  DA FARE INOLTRE IMPLEMENTARE NELLE ALTRE WH LE RICHIESTE AD AGIDIR
 
 
 
@@ -3687,10 +3650,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-    local didi_wh_activation = true
-
     -------------------------------------- red DIDI warehouse operations -------------------------------------------------------------------------------------------------------
+    local didi_wh_activation = true
 
     if didi_wh_activation then
 
@@ -3932,8 +3893,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- esegui una AddRequest alla warehouse di link. Ricevuta la richiesta la warehouse di link richiede a sua volta l'invio degli asset alla warehouse di riferimento (link, Area o Master)
     end
 
-
-
     -- END red DIDI warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
 
@@ -3967,10 +3926,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-    local biteta_wh_activation = true
-
     ---------------------------------------------- red BITETA warehouse operations ------------------------------------------------------------------------------------------------------------
+    local biteta_wh_activation = true
 
     if biteta_wh_activation then
 
@@ -4133,9 +4090,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-
-
     ------------------------------------------------- red Warehouse KVEMO_SBA operations -------------------------------------------------------------------------------------------------------------------------
 
     local Kvemo_Sba_wh_activation = false
@@ -4172,11 +4126,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addAsset Kvemo_Sba warehouse'} )
 
-
-
-
     end
-
+    ------------------------------------------------- END red Warehouse KVEMO_SBA operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4212,23 +4163,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Alagir:Start()
 
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    ------------------------------------------------- END Warehouse ALAGIR operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4318,6 +4253,21 @@ if conflictZone == 'Zone 1: South Ossetia' then
         logging('info', { 'main' , 'addAsset Batumi warehouse'} )
 
     end
+    ------------------------------------------------- END blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4375,7 +4325,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     end
-
+    ------------------------------------------------- END blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4444,7 +4394,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         logging('info', { 'main' , 'addAsset Kvitiri warehouse'} )
 
     end
-
+    ------------------------------------------------- END blue Warehouse KVITIRI operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4513,8 +4463,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addAsset Kvitiri_Helo warehouse'} )
 
-
     end
+    ------------------------------------------------- END blue Warehouse KVITIRI_HELO operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4545,13 +4495,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-
-
-    local zestafoni_wh_activation = true
 
     ------------------------------------------------- blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------------
-
+    local zestafoni_wh_activation = true
 
     if zestafoni_wh_activation then
 
@@ -4695,10 +4641,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         end -- end function
 
     end
-
-
-    -- END blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------
-
+    ------------------------------------------------- END blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4736,12 +4679,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-
-      local khashuri_wh_activation = true
 
 
       ----------------------------------------------- blue Warehouse KHASHURI operations ------------------------------------------------------------------------------------------------------------------------
+      local khashuri_wh_activation = true
 
       if khashuri_wh_activation then
 
@@ -4872,9 +4813,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         end -- end function
 
       end
-
-    -- END blue Warehouse KHASHURI operations --------------------------------------------------------------------------------------------------------------------
-
+      ----------------------------------------------- END blue Warehouse KHASHURI operations --------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4912,11 +4851,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    local gori_wh_activation = true
+      ------------------------------------------------ blue Warehouse GORI operations ----------------------------------------------------------------------------------------------------------------------------
+      local gori_wh_activation = true
 
-    ------------------------------------------------ blue Warehouse GORI operations ----------------------------------------------------------------------------------------------------------------------------
-
-    if gori_wh_activation then
+      if gori_wh_activation then
 
         warehouse.Gori = WAREHOUSE:New( targetBAIStaticObj.Warehouse.blue.Gori[ 1 ], targetBAIStaticObj.Warehouse.blue.Gori[ 2 ] )  --Functional.Warehouse#WAREHOUSE
 
@@ -5215,9 +5153,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         end --  warehouse.Gori:OnAfterAssetDead( From, Event, To, asset, request )
 
-    end
+      end
+      ----------------------------------------------- END blue Warehouse GORI operations -------------------------------------------------------------------------------------------------------------------------
 
-    -- END blue Warehouse GORI operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -5270,385 +5208,405 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+      ------------------------------------------------------------ blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
+      local tbilisi_wh_activation = true
 
+      if tbilisi_wh_activation then -- true activate tbilisi wh operations
 
-    local tbilisi_wh_activation = true
+        -- Nota: Tipo Operazioni Bomber, Transport, EWR
 
 
-    -- dovresti inserire le assegnazioni degli asset (e l'attivazione della warehouse) qui in modo da includerle/escluderle in base alla attivazione della AF. Inoltre gli asset
-    -- potrebbero essere assegnati dinamicamente tramite variabili in modo da configurare dinamicamente la distribuzione delle risorse.
+        logging('info', { 'main' , 'init Warehouse TBILISI operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
-    -- blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
+        -- INITIALIZE WAREHOUSE.
+        warehouse.Tbilisi =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Tbilisi[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Tbilisi[ 2 ] )  --Functional.Warehouse#WAREHOUSE
 
-    if tbilisi_wh_activation then -- true activate tbilisi wh operations
+        -- START WAREHOUSE
+        warehouse.Tbilisi:Start()
 
-      -- Nota: Tipo Operazioni Bomber, Transport, EWR
 
+        -- ADD ASSET
+        -- Tbilisi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
+        -- Tbilisi - Gori
+        -- Tbilisi e' utilizzato come aeroporto internazionale civile e non e' attaccato dalla forze sovietiche. Da Tbilisi decollano voli per trasporto merci e missioni di pinpoint strike e BAI.
+        -- non decollano elicotteri
 
-      logging('info', { 'main' , 'init Warehouse TBILISI operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
-      -- INITIALIZE WAREHOUSE.
-      warehouse.Tbilisi =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Tbilisi[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Tbilisi[ 2 ] )  --Functional.Warehouse#WAREHOUSE
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_14A,                10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_L_39ZA,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_SA_342,               10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_AN_26,                 5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000 ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_1H,                10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_60A,               10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_MI_24,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500  ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_C_130,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              9000  ) -- Transport
+         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_CH_47,               5,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_SU_24_Bomb,           15,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_52H,                10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.B_1B_HBomb,                10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Structure,      10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_1B,                 10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.EWR_B_1B,                 2,           WAREHOUSE.Attribute.AIR_AWACS ) -- EWR
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.EWR_F_4,                 2,           WAREHOUSE.Attribute.AIR_AWACS ) -- EWR
+         warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_Mi_24,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_SA342L,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_UH_1H,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+         warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_AV_88,               2,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC EXPERIMENTAL PROTOTYPE
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,          WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,          WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportA,      12,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportB,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.Truck,           3,           WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtilleryResupply,   4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ResupplyTrucksColumn,   4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+
+
+         logging('info', { 'main' , 'addAsset Tbilisi warehouse'} )
+
+
+
+         -- DA ELIMINARE random targets PRENDI SOLO LE TARGET ZONE E INSERISCILE SOTTO NEGLI ASSIGN
+        local rndTrgTbilisi = {
+
+
+          -- [1] = number of mission
+          -- [pos mission][1] = name of mission
+          -- [pos mission][2] = name of mission
+          -- [pos mission][3] = asset group name
+          -- [pos mission][4] = quantity
+          -- [pos mission][5] = target zone
+          -- [pos mission][6] = type of mission
+
+          cap = { -- mechanized mission parameters
+
+            {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
+            {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
+            {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1 , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
+            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
+          },
+
+          cas = { -- cas mission parameters
+
+            {'tskhivali_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.TSKHINVALI, "enemy_attack" }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
+            {'sathiari_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.SATIHARI, 'enemy_attack' }, -- 3
+            {'didmukha_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.DIDMUKHA, 'enemy_attack' }, -- 3
+            {'didi_cupta_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.DIDI_CUPTA, 'enemy_attack' }, -- 4
+            {'oni_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_ONI, 'enemy_attack' }, -- 4
+            {'perevi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_PEREVI, 'enemy_attack' }, -- 4
+            {'tskhivali_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.TSKHINVALI, "enemy_attack" }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
+            {'sathiari_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.SATIHARI, 'enemy_attack' }, -- 3
+            {'didmukha_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.DIDMUKHA, 'enemy_attack' }, -- 3
+            {'didi_cupta_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.DIDI_CUPTA, 'enemy_attack' }, -- 4
+            {'oni_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_ONI, 'enemy_attack' }, -- 4
+            {'perevi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_PEREVI, 'enemy_attack' }
+
+          },
+
+          bai = { -- bai mission parameters
+
+            {'didi_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , targetBAIZoneStructure.Blue_Didi[math.random( 1, #targetBAIZoneStructure.Blue_Didi)], "pinpoint_strike" },
+            {'biteta_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , targetBAIZoneStructure.Blue_Biteta[math.random( 1, #targetBAIZoneStructure.Blue_Biteta)], "pinpoint_strike" },
+            {'kvem0_sba_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , targetBAIZoneStructure.Blue_Kvemo_Sba[math.random( 1, #targetBAIZoneStructure.Blue_Kvemo_Sba)], "pinpoint_strike" }
+            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
+          },
+
+          sead = { -- helo mission parameters
+
+
+            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
+          },
+
+          reco = { -- mechanized mission parameters
+
+            {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( 1, 2 ) , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
+            {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( 1, 2 ) , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
+            {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( 1, 2 ) , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
+            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
+          }
 
-      -- START WAREHOUSE
-      warehouse.Tbilisi:Start()
 
-
-      -- ADD ASSET
-      -- Tbilisi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
-      -- Tbilisi - Gori
-      -- Tbilisi e' utilizzato come aeroporto internazionale civile e non e' attaccato dalla forze sovietiche. Da Tbilisi decollano voli per trasporto merci e missioni di pinpoint strike e BAI.
-      -- non decollano elicotteri
-
-
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_14A,                10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_L_39ZA,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_SA_342,               10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_AN_26,                 5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000 ) -- Transport
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_1H,                10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_60A,               10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_MI_24,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500  ) -- Transport
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_C_130,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              9000  ) -- Transport
-       warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_CH_47,               5,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_SU_24_Bomb,           15,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_52H,                10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.B_1B_HBomb,                10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Structure,      10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_1B,                 10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.EWR_B_1B,                 2,           WAREHOUSE.Attribute.AIR_AWACS ) -- EWR
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.EWR_F_4,                 2,           WAREHOUSE.Attribute.AIR_AWACS ) -- EWR
-       warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_Mi_24,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_SA342L,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-       --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_UH_1H,              7,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-       warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_AV_88,               2,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC EXPERIMENTAL PROTOTYPE
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,          WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,          WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY  ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportA,      12,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportB,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.Truck,           3,           WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-       --warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtilleryResupply,   4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-       --warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ResupplyTrucksColumn,   4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-
-
-       logging('info', { 'main' , 'addAsset Tbilisi warehouse'} )
-
-
-
-       -- DA ELIMINARE random targets PRENDI SOLO LE TARGET ZONE E INSERISCILE SOTTO NEGLI ASSIGN
-      local rndTrgTbilisi = {
-
-
-        -- [1] = number of mission
-        -- [pos mission][1] = name of mission
-        -- [pos mission][2] = name of mission
-        -- [pos mission][3] = asset group name
-        -- [pos mission][4] = quantity
-        -- [pos mission][5] = target zone
-        -- [pos mission][6] = type of mission
-
-        cap = { -- mechanized mission parameters
-
-          {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
-          {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1 , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        },
-
-        cas = { -- cas mission parameters
-
-          {'tskhivali_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.TSKHINVALI, "enemy_attack" }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'sathiari_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.SATIHARI, 'enemy_attack' }, -- 3
-          {'didmukha_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.DIDMUKHA, 'enemy_attack' }, -- 3
-          {'didi_cupta_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.DIDI_CUPTA, 'enemy_attack' }, -- 4
-          {'oni_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_ONI, 'enemy_attack' }, -- 4
-          {'perevi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_PEREVI, 'enemy_attack' }, -- 4
-          {'tskhivali_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.TSKHINVALI, "enemy_attack" }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'sathiari_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.SATIHARI, 'enemy_attack' }, -- 3
-          {'didmukha_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.DIDMUKHA, 'enemy_attack' }, -- 3
-          {'didi_cupta_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.DIDI_CUPTA, 'enemy_attack' }, -- 4
-          {'oni_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_ONI, 'enemy_attack' }, -- 4
-          {'perevi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_PEREVI, 'enemy_attack' }
-
-        },
-
-        bai = { -- bai mission parameters
-
-          {'didi_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , targetBAIZoneStructure.Blue_Didi[math.random( 1, #targetBAIZoneStructure.Blue_Didi)], "pinpoint_strike" },
-          {'biteta_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , targetBAIZoneStructure.Blue_Biteta[math.random( 1, #targetBAIZoneStructure.Blue_Biteta)], "pinpoint_strike" },
-          {'kvem0_sba_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , targetBAIZoneStructure.Blue_Kvemo_Sba[math.random( 1, #targetBAIZoneStructure.Blue_Kvemo_Sba)], "pinpoint_strike" }
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        },
-
-        sead = { -- helo mission parameters
-
-
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        },
-
-        reco = { -- mechanized mission parameters
-
-          {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( 1, 2 ) , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( 1, 2 ) , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
-          {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( 1, 2 ) , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
         }
 
 
-      }
+
+        -- blue Tbilisi warehouse operations
+
+        logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
+
+        local depart_time = defineRequestPosition(8)
+        local tblisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
+
+        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+        local tblisi_sched = SCHEDULER:New( nil,
+
+          function()
+
+             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2 , 5 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 3 , 5 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 3 , 5 ), nil, nil, nil, "Bomb Airbase")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( 2 , 3 ), nil, nil, nil, "TRANSFER MIG 21")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT 2")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+          end, {}, start_sched *  tblisi_efficiency_influence, interval_sched, rand_sched
+
+        ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
 
 
 
-      -- blue Tbilisi warehouse operations
-
-      logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
-
-      local depart_time = defineRequestPosition(8)
-      local tblisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
-
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local tblisi_sched = SCHEDULER:New( nil,
-
-        function()
-
-           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2 , 5 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 3 , 5 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 3 , 5 ), nil, nil, nil, "Bomb Airbase")
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( 2 , 3 ), nil, nil, nil, "TRANSFER MIG 21")
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT")
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT 2")
-           warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
-           logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
-
-        end, {}, start_sched *  tblisi_efficiency_influence, interval_sched, rand_sched
-
-      ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
+        -- Do something with the spawned aircraft.
+        function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
 
-      -- Do something with the spawned aircraft.
-      function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)
+          logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
 
-        logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+          if request.assignment == "BAI TARGET" then
+
+            -- le diverse opzioni disponibili per la scelta casuale della missione: nota puoi definire un vettore unico per tutte le missioni e utilizzarlo qui
 
 
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if request.assignment == "BAI TARGET" then
-
-          -- le diverse opzioni disponibili per la scelta casuale della missione: nota puoi definire un vettore unico per tutte le missioni e utilizzarlo qui
-
-
-          -- VEDI vettore parametri missione (sopra)
-          -- @param param:  tabella conentente i seguenti parametri:
-          -- @param groupset = il gruppo (asset) proveniente dalla warehouse
-          -- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
-          -- @param patrolZoneName = il nome della Zone assegnata per la patrol
-          -- @param engageZoneName = il nome della Zone di ingaggio
-          -- @param engageSpeed =  velocita di attacco
-          -- @param engageAltitude = quota di attacco
-          -- @param engageWeaponExpend = numero di weapon da sganciare
-          -- @param engageAttackQty = numero attacchi
-          -- @param engageDirection = direzione angolare di attacco
-          -- @param targets = il wrapper:group dei target
-          -- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
-          -- @param patrolFloorAltitude = altezza minima  nella patrol zone
-          -- @param patrolCeilAltitude = altezza massima nella patrol zone
-          -- @param minPatrolSpeed = velocita minima di pattugliamento
-          -- @param maxPatrolSpeed = velocita massima di pattugliamento
-          -- @param timeToEngage = timer per l'ingaggiare
-          -- @param timeToRTB = timer per l'RTB
-          -- @param delay = ritardo di attesa per l'attivazione della missione
+            -- VEDI vettore parametri missione (sopra)
+            -- @param param:  tabella conentente i seguenti parametri:
+            -- @param groupset = il gruppo (asset) proveniente dalla warehouse
+            -- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
+            -- @param patrolZoneName = il nome della Zone assegnata per la patrol
+            -- @param engageZoneName = il nome della Zone di ingaggio
+            -- @param engageSpeed =  velocita di attacco
+            -- @param engageAltitude = quota di attacco
+            -- @param engageWeaponExpend = numero di weapon da sganciare
+            -- @param engageAttackQty = numero attacchi
+            -- @param engageDirection = direzione angolare di attacco
+            -- @param targets = il wrapper:group dei target
+            -- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
+            -- @param patrolFloorAltitude = altezza minima  nella patrol zone
+            -- @param patrolCeilAltitude = altezza massima nella patrol zone
+            -- @param minPatrolSpeed = velocita minima di pattugliamento
+            -- @param maxPatrolSpeed = velocita massima di pattugliamento
+            -- @param timeToEngage = timer per l'ingaggiare
+            -- @param timeToRTB = timer per l'RTB
+            -- @param delay = ritardo di attesa per l'attivazione della missione
 
 
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI_target('aircraft')
-
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local request_kills = math.random( 2 , 4 )
-
-          local param = {
-
-            [1] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[2], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
-            [2] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[3], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
-            [3] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[5], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 }
-
-          }
-
-          local pos = math.random( 1 , #param )
-
-
-          logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB: ' .. speed_attack .. ' - ' .. altitude_attack .. ' - ' .. speed_patrol_min .. ' - ' .. altitude_patrol_min .. ' - ' .. speed_patrol_max .. ' - ' .. altitude_patrol_max .. ' - ' .. attack_angle .. ' - ' .. num_attack .. ' - ' .. num_weapon .. ' - ' .. time_to_engage .. ' - ' .. time_to_RTB } )
-          logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-          activeBAIWarehouseBisA( param[ pos ] )
-
-        end -- end if
-
-
-
-        if request.assignment == "BAI STRUCTURE" then
-
-
-            local targets = {
-
-                targetBAIZoneStructure.Blue_Didi[ math.random( 1, #targetBAIZoneStructure.Blue_Didi) ],
-                targetBAIZoneStructure.Blue_Blue_Biteta[ math.random( 1, #targetBAIZoneStructure.Blue_Biteta) ],
-                targetBAIZoneStructure.Blue_Blue_Kvemo_Sba[ math.random( 1, #targetBAIZoneStructure.Blue_Kvemo_Sba) ]
-
-            }
-
-
-            --eliminare local speed, altitude = defineSpeedAndAltitude(400, 600, 3000, 7000)
             speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI_target('aircraft')
+
+            -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+            local request_kills = math.random( 2 , 4 )
 
             local param = {
 
-              { 'Interdiction from Tbilisi tris', groupset, 'bombing', targets[ 1 ], targets[ 1 ], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
-              { 'Interdiction from Tbilisi tris', groupset, 'bombing', targets[ 2 ], targets[ 2 ], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
-              { 'Interdiction from Tbilisi tris', groupset, 'bombing', targets[ 3 ], targets[ 3 ], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 }
-
+              [1] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[2], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
+              [2] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[3], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
+              [3] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[5], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 }
 
             }
 
             local pos = math.random( 1 , #param )
 
+
+            logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB: ' .. speed_attack .. ' - ' .. altitude_attack .. ' - ' .. speed_patrol_min .. ' - ' .. altitude_patrol_min .. ' - ' .. speed_patrol_max .. ' - ' .. altitude_patrol_max .. ' - ' .. attack_angle .. ' - ' .. num_attack .. ' - ' .. num_weapon .. ' - ' .. time_to_engage .. ' - ' .. time_to_RTB } )
             logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
             activeBAIWarehouseBisA( param[ pos ] )
 
-        end -- end if
+          end -- end if
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-        if request.assignment == "PATROL" then
-
-        -- groupset, capZoneName, typeZoneName, engageRange, engageZone, typeEngageZoneName, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
+          if request.assignment == "BAI STRUCTURE" then
 
 
-          -- le diverse opzioni disponibili per la scelta casuale della missione
-          local param = {
-              -- modifica la activePATROLWarehouseA in modo da passare come parametro direttamente la ZONE già configurata
-            [1] = { groupset, bluePatrolZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
-            [2] = { groupset, bluePatrolZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
-            [3] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
-            [4] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
+              local targets = {
 
-          }
+                  targetBAIZoneStructure.Blue_Didi[ math.random( 1, #targetBAIZoneStructure.Blue_Didi) ],
+                  targetBAIZoneStructure.Blue_Blue_Biteta[ math.random( 1, #targetBAIZoneStructure.Blue_Biteta) ],
+                  targetBAIZoneStructure.Blue_Blue_Kvemo_Sba[ math.random( 1, #targetBAIZoneStructure.Blue_Kvemo_Sba) ]
 
-          local pos = math.random( 1 , #param )
-
-          logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-          activePATROLWarehouseA( param[ pos ] )
+              }
 
 
-        end -- end if
+              --eliminare local speed, altitude = defineSpeedAndAltitude(400, 600, 3000, 7000)
+              speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI_target('aircraft')
+
+              local param = {
+
+                { 'Interdiction from Tbilisi tris', groupset, 'bombing', targets[ 1 ], targets[ 1 ], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
+                { 'Interdiction from Tbilisi tris', groupset, 'bombing', targets[ 2 ], targets[ 2 ], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
+                { 'Interdiction from Tbilisi tris', groupset, 'bombing', targets[ 3 ], targets[ 3 ], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 }
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
-        if request.assignment == "PATROL MIG 21" then
+              }
 
-          -- le diverse opzioni disponibili per la scelta casuale della missione
-          local param = {
+              local pos = math.random( 1 , #param )
 
+              logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+              activeBAIWarehouseBisA( param[ pos ] )
+
+          end -- end if
+
+
+
+          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+          if request.assignment == "PATROL" then
+
+          -- groupset, capZoneName, typeZoneName, engageRange, engageZone, typeEngageZoneName, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
+
+
+            -- le diverse opzioni disponibili per la scelta casuale della missione
+            local param = {
+                -- modifica la activePATROLWarehouseA in modo da passare come parametro direttamente la ZONE già configurata
               [1] = { groupset, bluePatrolZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
               [2] = { groupset, bluePatrolZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
               [3] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
               [4] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
 
-          }
-
-          local pos = math.random( 1 , #param )
-
-          logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-          activePATROLWarehouseA( param[ pos ] )
-
-
-        end -- end if
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-        if request.assignment == "GCI" then
-
-          -- inserire la funzione
-
-          --local pos = math.random( 1 , #param )
-
-          --logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-        end -- end if
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-        if request.assignment == "Bomb Airbase" then
-
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-            local home = warehouse.Tbilisi
-            local target = warehouse.Beslan
-
-            'groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombQuantity, bombRunDistance, bombRunDirection, speedBombRun'
-
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-              [1] = { groupset, warehouse.Tbilisi, warehouse.Beslan, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
-              [2] = { groupset, warehouse.Tbilisi, warehouse.Mozdok, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
-              [3] = { groupset, warehouse.Tbilisi, warehouse.Mineralnye, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
-              [4] = { groupset, warehouse.Tbilisi, warehouse.Nalchik, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun }
-
             }
-
 
             local pos = math.random( 1 , #param )
 
             logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-            activeBOMBINGWarehouseA( param[ pos ] )
-
-        end
+            activePATROLWarehouseA( param[ pos ] )
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
-        if request.assignment == "TRANSPORT" then
+          end -- end if
+
+
+          ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
+          if request.assignment == "PATROL MIG 21" then
+
+            -- le diverse opzioni disponibili per la scelta casuale della missione
+            local param = {
+
+                [1] = { groupset, bluePatrolZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
+                [2] = { groupset, bluePatrolZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
+                [3] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
+                [4] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
+
+            }
+
+            local pos = math.random( 1 , #param )
+
+            logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+            activePATROLWarehouseA( param[ pos ] )
+
+
+          end -- end if
+
+
+
+          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+          if request.assignment == "GCI" then
+
+            -- inserire la funzione
+
+            --local pos = math.random( 1 , #param )
+
+            --logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+          end -- end if
+
+
+
+          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+          if request.assignment == "Bomb Airbase" then
+
+              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+              local home = warehouse.Tbilisi
+              local target = warehouse.Beslan
+
+              'groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombQuantity, bombRunDistance, bombRunDirection, speedBombRun'
+
+              local toTargetAltitude = math.random(5000, 7000)
+              local toHomeAltitude = math.random(3000, 5000)
+              local bombingDirection = math.random(270, 359)
+              local bombingAltitude = math.random(4000, 6000)
+              local bombQuantity = 2023
+              local bombRunDistance = 20000
+              local bombRunDirection = math.random(270, 359)
+              local speedBombRun = math.random(400, 600)
+
+              -- le diverse opzioni disponibili per la scelta casuale della missione
+              local param = {
+
+                [1] = { groupset, warehouse.Tbilisi, warehouse.Beslan, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
+                [2] = { groupset, warehouse.Tbilisi, warehouse.Mozdok, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
+                [3] = { groupset, warehouse.Tbilisi, warehouse.Mineralnye, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
+                [4] = { groupset, warehouse.Tbilisi, warehouse.Nalchik, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun }
+
+              }
+
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+              activeBOMBINGWarehouseA( param[ pos ] )
+
+          end
+
+
+          ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
+          if request.assignment == "TRANSPORT" then
+
+              -- da realizzare: ridefinire param creando percorsi diversi :
+
+
+              -- le diverse opzioni disponibili per la scelta casuale della missione
+              VehicleCargoSet = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
+
+              local param = {
+
+                -- activeCARGOWarehouse( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet
+
+                [1] = { groupset, AIRBASE.Caucasus.Tbilisi, AIRBASE.Caucasus.Kutaisi, 300, VehicleCargoSet },
+                [2] = { groupset, AIRBASE.Caucasus.Tbilisi, AIRBASE.Caucasus.Kutaisi, 260, VehicleCargoSet },
+                [3] = { groupset, AIRBASE.Caucasus.Tbilisi, AIRBASE.Caucasus.Batumi, 300, VehicleCargoSet },
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+              activeCARGOWarehouse( param[ pos ] )
+
+          end
+
+
+          ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+          if request.assignment == "TRANSPORT 2" then
 
             -- da realizzare: ridefinire param creando percorsi diversi :
 
@@ -5671,413 +5629,272 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
             activeCARGOWarehouse( param[ pos ] )
 
-        end
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-        if request.assignment == "TRANSPORT 2" then
-
-          -- da realizzare: ridefinire param creando percorsi diversi :
-
-
-          -- le diverse opzioni disponibili per la scelta casuale della missione
-          VehicleCargoSet = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-
-          local param = {
-
-            -- activeCARGOWarehouse( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet
-
-            [1] = { groupset, AIRBASE.Caucasus.Tbilisi, AIRBASE.Caucasus.Kutaisi, 300, VehicleCargoSet },
-            [2] = { groupset, AIRBASE.Caucasus.Tbilisi, AIRBASE.Caucasus.Kutaisi, 260, VehicleCargoSet },
-            [3] = { groupset, AIRBASE.Caucasus.Tbilisi, AIRBASE.Caucasus.Batumi, 300, VehicleCargoSet },
-
-          }
-
-          local pos = math.random( 1 , #param )
-
-          logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-          activeCARGOWarehouse( param[ pos ] )
-
-        end
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-        if request.assignment == "RECON " then
-
-            -- da realizzare: ridefinire param creando percorsi diversi vedi funzioni random di assegnazione waypoint e
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local reconDirection = math.random(270, 359)
-            local reconAltitude = math.random(4000, 6000)
-            local reconRunDistance = 20000
-            local reconRunDirection = math.random(270, 359)
-            local speedReconRun = math.random(400, 600)
-
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-              [1] = { groupset, warehouse.Tbilisi, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-              [2] = { groupset, warehouse.Tbilisi, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-              [3] = { groupset, warehouse.Tbilisi, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
-
-            logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-
-        end
-
-
-
-
-      end  --end  function warehouse.Tbilisi:OnAfterSelfRequest(From, Event, To, groupset, request)
-
-
-
-
-        --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-       -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
-      function warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
-
-        -- le diverse opzioni disponibili per la scelta casuale della missione
-        local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-        logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
-
-        -- manca il groupset
-        -- So we start another request.
-        --if request.assignment=="PATROL" then
-
-          --local pos = math.random( 1 , #param )
-
-          --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled PATROL mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-          --activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-          -- warehouse.Batumi:AddRequest(warehouse.Pampa, WAREHOUSE.Descriptor.ATTRIBUTE, request.cargoattribute, request.ndelivered, WAREHOUSE.TransportType.APC, WAREHOUSE.Quantity.ALL)
-
-        --end
-
-        --if request.assignment=="BAI STRUCTURE" then
-
-          --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled BAI STRUCTURE mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-          --activeBAIWarehouseT('Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-        --end -- end if
-
-      end -- end warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
-
-    end -- end if tbilisi_wh_activation
-
-    -- END blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    local vaziani_wh_activation = true
-
-    -- blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
-
-    if vaziani_wh_activation then
-
-        warehouse.Vaziani = WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
-        warehouse.Vaziani:Start()
-
-        -- Vaziani e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas transport
-
-        warehouse.Vaziani:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Vaziani:AddAsset(              air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Vaziani:AddAsset(              air_template_blue.CAP_L_39ZA,               10,          WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-        warehouse.Vaziani:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-        warehouse.Vaziani:AddAsset(              air_template_blue.BOM_SU_24_Bomb,           10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-        warehouse.Vaziani:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
-        warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
-        warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
-        warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
-        warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_MI_24,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500 ) -- Transport
-        warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000)
-        warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-        warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-        warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-        warehouse.Vaziani:AddAsset(              ground_group_template_blue.TransportA,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-        warehouse.Vaziani:AddAsset(              ground_group_template_blue.TransportB,       4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-        warehouse.Vaziani:AddAsset(              ground_group_template_blue.TroopTransport,  4,          WAREHOUSE.Attribute.GROUND_TRUCK  )-- Transport
-
-        logging('info', { 'main' , 'addAsset Soganiug warehouse'} )
-        -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, EWR, Transport
-
-        logging('info', { 'main' , 'init Warehouse Vaziani operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
-
-        warehouse.Vaziani =  WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
-        -- Red targets at Vaziani X (late activated). for test
-        local RedTargets = GROUP:FindByName("Russian Antitank Defence@Sathiari")
-
-
-
-        -- blue Vaziani warehouse operations
-
-        logging('info', { 'main' , 'addrequest Vaziani warehouse'} )
-
-        local depart_time = defineRequestPosition(9)
-
-        local vaziani_efficiency_influence = 1
-
-        local vaziani_sched = SCHEDULER:New( nil,
-
-            function()
-
-              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, 4, nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, 2, nil, nil, nil, "PATROL")
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, 2, nil, nil, nil, "PATROL MIG 21")
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 3, nil, nil, nil, "Bomb Airbase")
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, 2, nil, nil, nil, "TRANSFER MIG 21")
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_YAK_40, 2, nil, nil, nil, "TRANSPORT 2")
-                warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
-                logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
-
-            end, {}, start_sched * vaziani_efficiency_influence, interval_sched, rand_sched
-
-        ) -- end  vaziani_sched = SCHEDULER:New( nil, ..)
-
-
-
-
-
-
-
-        -- Do something with the spawned aircraft.
-        function warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-          logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI TARGET" then
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione: nota puoi definire un vettore unico per tutte le missioni e utilizzarlo qui
-
-
-            -- VEDI vettore parametri missione (sopra)
-            -- @param param:  tabella conentente i seguenti parametri:
-            -- @param groupset = il gruppo (asset) proveniente dalla warehouse
-            -- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
-            -- @param patrolZoneName = il nome della Zone assegnata per la patrol
-            -- @param engageZoneName = il nome della Zone di ingaggio
-            -- @param engageSpeed =  velocita di attacco
-            -- @param engageAltitude = quota di attacco
-            -- @param engageWeaponExpend = numero di weapon da sganciare
-            -- @param engageAttackQty = numero attacchi
-            -- @param engageDirection = direzione angolare di attacco
-            -- @param targets = il wrapper:group dei target
-            -- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
-            -- @param patrolFloorAltitude = altezza minima  nella patrol zone
-            -- @param patrolCeilAltitude = altezza massima nella patrol zone
-            -- @param minPatrolSpeed = velocita minima di pattugliamento
-            -- @param maxPatrolSpeed = velocita massima di pattugliamento
-            -- @param timeToEngage = timer per l'ingaggiare
-            -- @param timeToRTB = timer per l'RTB
-            -- @param delay = ritardo di attesa per l'attivazione della missione
-            local param = {
-
-              [1] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-              [2] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-              [3] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-          end -- end if
-
-
-          if request.assignment == "BAI TARGET BIS" then
-
-            local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
-
-              local param = {
-
-              [1] = { 'Interdiction from Vaziani bis', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
-              [2] = { 'Interdiction from Vaziani tris', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL" then
-
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-              [1] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activePATROLWarehouseA( param[ pos ] )
-
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
-          if request.assignment == "PATROL MIG 21" then
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-              [1] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activePATROLWarehouseA( param[ pos ] )
-
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
-
-            -- inserire la funzione
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          if request.assignment == "Bomb Airbase" then
-
-            local home = warehouse.Vaziani
-            local target = warehouse.Beslan
-
-            -- groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombQuantity, bombRunDistance, bombRunDirection, speedBombRun
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-                [1] = { groupset, home, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [2] = { groupset, home, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [3] = { groupset, home, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activeBOMBINGWarehouseA( param[ pos ] )
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-          if request.assignment == "TRANSPORT" then
-
-              -- da realizzare: ridefinire param creando percorsi diversi :
-
-
-              -- le diverse opzioni disponibili per la scelta casuale della missione
-              VehicleCargoSet = SET_CARGO:New():FilterTypes( "VehiclesToCargo" ):FilterStart()
-
-              local param = {
-
-                -- activeCARGOWarehouse( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet
-
-                [1] = { groupset, AIRBASE.Caucasus.Vaziani, AIRBASE.Caucasus.Kutaisi, 300, VehicleCargoSet },
-                [2] = { groupset, AIRBASE.Caucasus.Vaziani, AIRBASE.Caucasus.Kutaisi, 260, VehicleCargoSet },
-                [3] = { groupset, AIRBASE.Caucasus.Vaziani, AIRBASE.Caucasus.Batumi, 300, VehicleCargoSet },
-
-              }
-
-              local pos = math.random( 1 , #param )
-
-              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-              activeCARGOWarehouse( param[ pos ] )
-
-          end -- end if
+          end
 
 
           ------------------------------------------------------------------------------------------------------ assignment for RECON asset
           if request.assignment == "RECON " then
 
               -- da realizzare: ridefinire param creando percorsi diversi vedi funzioni random di assegnazione waypoint e
+              local toTargetAltitude = math.random(5000, 7000)
+              local toHomeAltitude = math.random(3000, 5000)
+              local reconDirection = math.random(270, 359)
+              local reconAltitude = math.random(4000, 6000)
+              local reconRunDistance = 20000
+              local reconRunDirection = math.random(270, 359)
+              local speedReconRun = math.random(400, 600)
 
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, warehouse.Vaziani, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [2] = { groupset, warehouse.Vaziani, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [3] = { groupset, warehouse.Vaziani, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                [1] = { groupset, warehouse.Tbilisi, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                [2] = { groupset, warehouse.Tbilisi, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                [3] = { groupset, warehouse.Tbilisi, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
+
+              logging('info', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'tblisi scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+
+          end
+
+
+
+
+        end  --end  function warehouse.Tbilisi:OnAfterSelfRequest(From, Event, To, groupset, request)
+
+
+
+
+          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+         -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
+        function warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
+
+          -- le diverse opzioni disponibili per la scelta casuale della missione
+          local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+          logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
+
+          -- manca il groupset
+          -- So we start another request.
+          --if request.assignment=="PATROL" then
+
+            --local pos = math.random( 1 , #param )
+
+            --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled PATROL mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
+            --activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+            -- warehouse.Batumi:AddRequest(warehouse.Pampa, WAREHOUSE.Descriptor.ATTRIBUTE, request.cargoattribute, request.ndelivered, WAREHOUSE.TransportType.APC, WAREHOUSE.Quantity.ALL)
+
+          --end
+
+          --if request.assignment=="BAI STRUCTURE" then
+
+            --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled BAI STRUCTURE mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
+            --activeBAIWarehouseT('Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+
+          --end -- end if
+
+        end -- end warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
+
+      end -- end if tbilisi_wh_activation
+      ------------------------------------------------------------ END blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ------------------------------------------------------------ blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
+      local vaziani_wh_activation = true
+
+      if vaziani_wh_activation then
+
+          warehouse.Vaziani = WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
+          warehouse.Vaziani:Start()
+
+          -- Vaziani e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas transport
+
+          warehouse.Vaziani:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAP_L_39ZA,               10,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.BOM_SU_24_Bomb,           10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_MI_24,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500 ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000)
+          warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Vaziani:AddAsset(              ground_group_template_blue.TransportA,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+          warehouse.Vaziani:AddAsset(              ground_group_template_blue.TransportB,       4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+          warehouse.Vaziani:AddAsset(              ground_group_template_blue.TroopTransport,  4,          WAREHOUSE.Attribute.GROUND_TRUCK  )-- Transport
+
+          logging('info', { 'main' , 'addAsset Soganiug warehouse'} )
+          -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, EWR, Transport
+
+          logging('info', { 'main' , 'init Warehouse Vaziani operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
+
+          warehouse.Vaziani =  WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
+          -- Red targets at Vaziani X (late activated). for test
+          local RedTargets = GROUP:FindByName("Russian Antitank Defence@Sathiari")
+
+
+
+          -- blue Vaziani warehouse operations
+
+          logging('info', { 'main' , 'addrequest Vaziani warehouse'} )
+
+          local depart_time = defineRequestPosition(9)
+
+          local vaziani_efficiency_influence = 1
+
+          local vaziani_sched = SCHEDULER:New( nil,
+
+              function()
+
+                -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, 4, nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, 2, nil, nil, nil, "PATROL")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, 2, nil, nil, nil, "PATROL MIG 21")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 3, nil, nil, nil, "Bomb Airbase")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, 2, nil, nil, nil, "TRANSFER MIG 21")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_YAK_40, 2, nil, nil, nil, "TRANSPORT 2")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                  logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+              end, {}, start_sched * vaziani_efficiency_influence, interval_sched, rand_sched
+
+          ) -- end  vaziani_sched = SCHEDULER:New( nil, ..)
+
+
+
+
+
+
+
+          -- Do something with the spawned aircraft.
+          function warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI TARGET" then
+
+              -- le diverse opzioni disponibili per la scelta casuale della missione: nota puoi definire un vettore unico per tutte le missioni e utilizzarlo qui
+
+
+              -- VEDI vettore parametri missione (sopra)
+              -- @param param:  tabella conentente i seguenti parametri:
+              -- @param groupset = il gruppo (asset) proveniente dalla warehouse
+              -- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
+              -- @param patrolZoneName = il nome della Zone assegnata per la patrol
+              -- @param engageZoneName = il nome della Zone di ingaggio
+              -- @param engageSpeed =  velocita di attacco
+              -- @param engageAltitude = quota di attacco
+              -- @param engageWeaponExpend = numero di weapon da sganciare
+              -- @param engageAttackQty = numero attacchi
+              -- @param engageDirection = direzione angolare di attacco
+              -- @param targets = il wrapper:group dei target
+              -- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
+              -- @param patrolFloorAltitude = altezza minima  nella patrol zone
+              -- @param patrolCeilAltitude = altezza massima nella patrol zone
+              -- @param minPatrolSpeed = velocita minima di pattugliamento
+              -- @param maxPatrolSpeed = velocita massima di pattugliamento
+              -- @param timeToEngage = timer per l'ingaggiare
+              -- @param timeToRTB = timer per l'RTB
+              -- @param delay = ritardo di attesa per l'attivazione della missione
+              local param = {
+
+                [1] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [2] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [3] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+            end -- end if
+
+
+            if request.assignment == "BAI TARGET BIS" then
+
+              local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
+
+                local param = {
+
+                [1] = { 'Interdiction from Vaziani bis', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
+                [2] = { 'Interdiction from Vaziani tris', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+            if request.assignment == "PATROL" then
+
+
+              -- le diverse opzioni disponibili per la scelta casuale della missione
+              local param = {
+
+                [1] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
@@ -6085,362 +5902,383 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
+              activePATROLWarehouseA( param[ pos ] )
 
-              -- activeRECONWarehouseA( param[ pos ] )
 
-          end -- end if
+            end -- end if
 
 
-
-
-
-
-
-
-
-          --- quando ritorna alla base viene 'riassorbito' e quindi viene lanciato questo evento. Utilizzato per rilanciare la missione dopo un RTB
-          -- puo' non servire se le missioni sono schedulate
-          function warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)
-
-                -- le diverse opzioni disponibili per la scelta casuale della missione
-                local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-                logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-                -- manca il groupset
-                -- So we start another request.
-                --[[
-                if request.assignment=="PATROL" then
-
-                    logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled PATROL mission'})
-                    activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-
-                end
-
-                if request.assignment=="BAI TARGET" then
-
-                  logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled BAI TARGET mission'})
-                  activeBAIWarehouseT('Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-                end -- end if
-
-                ]]
-
-          end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
-
-        end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
-    end
-
-
-    -- END blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    local soganiug_wh_activation = true
-
-    -- blue Warehouse Soganiug operations ----------------------------------------------------------------------------------------------------------------------------
-
-    if soganiug_wh_activation then
-
-
-        warehouse.Soganiug      =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Soganiug[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Soganiug[ 2 ] )  --Functional.Warehouse#WAREHOUSE
-        warehouse.Soganiug:Start()
-
-
-        -- Soganiug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
-
-
-        warehouse.Soganiug:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Soganiug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Soganiug:AddAsset(              air_template_blue.GCI_F_4,                  5,           WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
-        warehouse.Soganiug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
-        warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000)
-        warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
-        warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
-        warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
-        warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_C_130,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000 ) -- Transport
-        warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-        warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-        warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-        warehouse.Soganiug:AddAsset(              ground_group_template_blue.TransportA,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-        warehouse.Soganiug:AddAsset(              ground_group_template_blue.TransportB,       4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-        warehouse.Soganiug:AddAsset(              ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK  )-- Transport
-
-        logging('info', { 'main' , 'addAsset Soganiug warehouse'} )
-
-
-        -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, EWR, Transport
-
-
-        logging('info', { 'main' , 'init Warehouse Soganiug operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
-
-        -- Red targets at Soganiug X (late activated). for test
-        local RedTargets=GROUP:FindByName("Russian Antitank Defence@Sathiari")
-
-
-        -- blue Soganiug warehouse operations
-
-        logging('info', { 'main' , 'addrequest Soganiug warehouse'} )
-
-
-        local depart_time = defineRequestPosition(9) -- list of position
-
-        local soganiug_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
-
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local soganiug_sched = SCHEDULER:New( nil,
-
-          function()
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, 4, nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H, 4, nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "PATROL")
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 3, nil, nil, nil, "Bomb Airbase")
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4")
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21")
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, 2, nil, nil, nil, "TRANSPORT 2")
-            warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
-            logging('info', { 'main' , 'Soganiug scheduler - start time:' .. start_sched *  soganiug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
-
-          end, {}, start_sched *  soganiug_efficiency_influence, interval_sched, rand_sched
-
-        )
-
-
-
-
-        -- Do something with the spawned aircraft.
-        function warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-
-          logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI TARGET" then
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione: nota puoi definire un vettore unico per tutte le missioni e utilizzarlo qui
-
-
-            -- VEDI vettore parametri missione (sopra)
-            -- @param param:  tabella conentente i seguenti parametri:
-            -- @param groupset = il gruppo (asset) proveniente dalla warehouse
-            -- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
-            -- @param patrolZoneName = il nome della Zone assegnata per la patrol
-            -- @param engageZoneName = il nome della Zone di ingaggio
-            -- @param engageSpeed =  velocita di attacco
-            -- @param engageAltitude = quota di attacco
-            -- @param engageWeaponExpend = numero di weapon da sganciare
-            -- @param engageAttackQty = numero attacchi
-            -- @param engageDirection = direzione angolare di attacco
-            -- @param targets = il wrapper:group dei target
-            -- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
-            -- @param patrolFloorAltitude = altezza minima  nella patrol zone
-            -- @param patrolCeilAltitude = altezza massima nella patrol zone
-            -- @param minPatrolSpeed = velocita minima di pattugliamento
-            -- @param maxPatrolSpeed = velocita massima di pattugliamento
-            -- @param timeToEngage = timer per l'ingaggiare
-            -- @param timeToRTB = timer per l'RTB
-            -- @param delay = ritardo di attesa per l'attivazione della missione
-            local param = {
-
-              [1] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-              [2] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-              [3] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-          end -- end if
-
-
-          if request.assignment == "BAI TARGET BIS" then
-
-              local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
-
-              local param = {
-
-              [1] = { 'Interdiction from Soganiug bis', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
-              [2] = { 'Interdiction from Soganiug tris', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL" then
-
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-              [1] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activePATROLWarehouseA( param[ pos ] )
-
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
-          if request.assignment == "PATROL MIG 21" then
-
-            -- le diverse opzioni disponibili per la scelta casuale della missione
-            local param = {
-
-              [1] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activePATROLWarehouseA( param[ pos ] )
-
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
-
-            -- inserire la funzione
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          if request.assignment == "Bomb Airbase" then
-
-              local home = warehouse.Soganiug
-              local target = warehouse.Beslan
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
+            if request.assignment == "PATROL MIG 21" then
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, warehouse.Soganiug, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [2] = { groupset, warehouse.Soganiug, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [3] = { groupset, warehouse.Soganiug, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                [1] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
-            local pos = math.random( 1 , #param )
+              local pos = math.random( 1 , #param )
 
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
-            activeBOMBINGWarehouseA( param[ pos ] )
-
-          end
+              activePATROLWarehouseA( param[ pos ] )
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-          if request.assignment == "TRANSPORT" then
+            end -- end if
 
-              -- da realizzare: ridefinire param creando percorsi diversi :
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+            if request.assignment == "GCI" then
+
+              -- inserire la funzione
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+            if request.assignment == "Bomb Airbase" then
+
+              local home = warehouse.Vaziani
+              local target = warehouse.Beslan
+
+              -- groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombQuantity, bombRunDistance, bombRunDirection, speedBombRun
+              -- le diverse opzioni disponibili per la scelta casuale della missione
+              local param = {
+
+                  [1] = { groupset, home, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [2] = { groupset, home, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [3] = { groupset, home, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activeBOMBINGWarehouseA( param[ pos ] )
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+            if request.assignment == "TRANSPORT" then
+
+                -- da realizzare: ridefinire param creando percorsi diversi :
+
+
+                -- le diverse opzioni disponibili per la scelta casuale della missione
+                VehicleCargoSet = SET_CARGO:New():FilterTypes( "VehiclesToCargo" ):FilterStart()
+
+                local param = {
+
+                  -- activeCARGOWarehouse( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet
+
+                  [1] = { groupset, AIRBASE.Caucasus.Vaziani, AIRBASE.Caucasus.Kutaisi, 300, VehicleCargoSet },
+                  [2] = { groupset, AIRBASE.Caucasus.Vaziani, AIRBASE.Caucasus.Kutaisi, 260, VehicleCargoSet },
+                  [3] = { groupset, AIRBASE.Caucasus.Vaziani, AIRBASE.Caucasus.Batumi, 300, VehicleCargoSet },
+
+                }
+
+                local pos = math.random( 1 , #param )
+
+                logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+                activeCARGOWarehouse( param[ pos ] )
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+            if request.assignment == "RECON " then
+
+                -- da realizzare: ridefinire param creando percorsi diversi vedi funzioni random di assegnazione waypoint e
+
+
+                -- le diverse opzioni disponibili per la scelta casuale della missione
+                local param = {
+
+                  [1] = { groupset, warehouse.Vaziani, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [2] = { groupset, warehouse.Vaziani, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [3] = { groupset, warehouse.Vaziani, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+
+                }
+
+                local pos = math.random( 1 , #param )
+
+                logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'vaziani scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+
+                -- activeRECONWarehouseA( param[ pos ] )
+
+            end -- end if
+
+
+
+
+
+
+
+
+
+            --- quando ritorna alla base viene 'riassorbito' e quindi viene lanciato questo evento. Utilizzato per rilanciare la missione dopo un RTB
+            -- puo' non servire se le missioni sono schedulate
+            function warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)
+
+                  -- le diverse opzioni disponibili per la scelta casuale della missione
+                  local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+                  logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+                  -- manca il groupset
+                  -- So we start another request.
+                  --[[
+                  if request.assignment=="PATROL" then
+
+                      logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled PATROL mission'})
+                      activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+
+                  end
+
+                  if request.assignment=="BAI TARGET" then
+
+                    logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled BAI TARGET mission'})
+                    activeBAIWarehouseT('Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+
+                  end -- end if
+
+                  ]]
+
+            end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+
+          end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
+      end
+      ------------------------------------------------------------ END blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      -------------------------------------------------------------- blue Warehouse Soganiug operations ----------------------------------------------------------------------------------------------------------------------------
+      local soganiug_wh_activation = true
+
+      if soganiug_wh_activation then
+
+
+          warehouse.Soganiug      =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.blue.Soganiug[ 1 ], targetBAIStaticObj.Warehouse_AB.blue.Soganiug[ 2 ] )  --Functional.Warehouse#WAREHOUSE
+          warehouse.Soganiug:Start()
+
+
+          -- Soganiug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
+
+
+          warehouse.Soganiug:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganiug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganiug:AddAsset(              air_template_blue.GCI_F_4,                  5,           WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
+          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
+          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000)
+          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
+          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
+          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
+          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_C_130,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000 ) -- Transport
+          warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Soganiug:AddAsset(              ground_group_template_blue.TransportA,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+          warehouse.Soganiug:AddAsset(              ground_group_template_blue.TransportB,       4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+          warehouse.Soganiug:AddAsset(              ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK  )-- Transport
+
+          logging('info', { 'main' , 'addAsset Soganiug warehouse'} )
+
+
+          -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, EWR, Transport
+
+
+          logging('info', { 'main' , 'init Warehouse Soganiug operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
+
+          -- Red targets at Soganiug X (late activated). for test
+          local RedTargets=GROUP:FindByName("Russian Antitank Defence@Sathiari")
+
+
+          -- blue Soganiug warehouse operations
+
+          logging('info', { 'main' , 'addrequest Soganiug warehouse'} )
+
+
+          local depart_time = defineRequestPosition(9) -- list of position
+
+          local soganiug_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
+
+          -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+          local soganiug_sched = SCHEDULER:New( nil,
+
+            function()
+              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, 4, nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H, 4, nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "PATROL")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 3, nil, nil, nil, "Bomb Airbase")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, 2, nil, nil, nil, "TRANSPORT 2")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+              logging('info', { 'main' , 'Soganiug scheduler - start time:' .. start_sched *  soganiug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+            end, {}, start_sched *  soganiug_efficiency_influence, interval_sched, rand_sched
+
+          )
+
+
+
+
+          -- Do something with the spawned aircraft.
+          function warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+
+            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI TARGET" then
+
+              -- le diverse opzioni disponibili per la scelta casuale della missione: nota puoi definire un vettore unico per tutte le missioni e utilizzarlo qui
+
+
+              -- VEDI vettore parametri missione (sopra)
+              -- @param param:  tabella conentente i seguenti parametri:
+              -- @param groupset = il gruppo (asset) proveniente dalla warehouse
+              -- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
+              -- @param patrolZoneName = il nome della Zone assegnata per la patrol
+              -- @param engageZoneName = il nome della Zone di ingaggio
+              -- @param engageSpeed =  velocita di attacco
+              -- @param engageAltitude = quota di attacco
+              -- @param engageWeaponExpend = numero di weapon da sganciare
+              -- @param engageAttackQty = numero attacchi
+              -- @param engageDirection = direzione angolare di attacco
+              -- @param targets = il wrapper:group dei target
+              -- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
+              -- @param patrolFloorAltitude = altezza minima  nella patrol zone
+              -- @param patrolCeilAltitude = altezza massima nella patrol zone
+              -- @param minPatrolSpeed = velocita minima di pattugliamento
+              -- @param maxPatrolSpeed = velocita massima di pattugliamento
+              -- @param timeToEngage = timer per l'ingaggiare
+              -- @param timeToRTB = timer per l'RTB
+              -- @param delay = ritardo di attesa per l'attivazione della missione
+              local param = {
+
+                [1] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [2] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [3] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+            end -- end if
+
+
+            if request.assignment == "BAI TARGET BIS" then
+
+                local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
+
+                local param = {
+
+                [1] = { 'Interdiction from Soganiug bis', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
+                [2] = { 'Interdiction from Soganiug tris', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+            if request.assignment == "PATROL" then
 
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
-              VehicleCargoSet = SET_CARGO:New():FilterTypes( "VehiclesToCargo" ):FilterStart()
-
               local param = {
 
-                -- activeCARGOWarehouse( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet
-
-                [1] = { groupset, AIRBASE.Caucasus.Soganiug, AIRBASE.Caucasus.Kutaisi, 300, VehicleCargoSet },
-                [2] = { groupset, AIRBASE.Caucasus.Soganiug, AIRBASE.Caucasus.Kutaisi, 260, VehicleCargoSet },
-                [3] = { groupset, AIRBASE.Caucasus.Soganiug, AIRBASE.Caucasus.Batumi, 300, VehicleCargoSet },
+                [1] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
@@ -6448,94 +6286,118 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
-              activeCARGOWarehouse( param[ pos ] )
-
-          end
+              activePATROLWarehouseA( param[ pos ] )
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-          if request.assignment == "RECON " then
+            end -- end if
 
-              -- da realizzare: ridefinire param creando percorsi diversi vedi funzioni random di assegnazione waypoint e
 
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
+            if request.assignment == "PATROL MIG 21" then
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, warehouse.Soganiug, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [2] = { groupset, warehouse.Soganiug, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
-                [3] = { groupset, warehouse.Soganiug, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                [1] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
               local pos = math.random( 1 , #param )
 
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
-              -- activeRECONWarehouseA( param[ pos ] )
-
-          end
+              activePATROLWarehouseA( param[ pos ] )
 
 
-
+            end -- end if
 
 
 
+            ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+            if request.assignment == "GCI" then
+
+              -- inserire la funzione
+
+            end -- end if
 
 
 
-          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-          function warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)
+            ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+            if request.assignment == "Bomb Airbase" then
+
+                local home = warehouse.Soganiug
+                local target = warehouse.Beslan
 
                 -- le diverse opzioni disponibili per la scelta casuale della missione
-                local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+                local param = {
 
-                logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-              --[[
-                -- manca il groupset
-                -- So we start another request.
-                if request.assignment=="PATROL" then
+                  [1] = { groupset, warehouse.Soganiug, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [2] = { groupset, warehouse.Soganiug, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [3] = { groupset, warehouse.Soganiug, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
 
-                  logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled PATROL mission' })
-                  activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+                }
 
-                end
+              local pos = math.random( 1 , #param )
 
-                if request.assignment=="BAI TARGET" then
+              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
-                  logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled BAI TARGET mission' })
-                  activeBAIWarehouseT('Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+              activeBOMBINGWarehouseA( param[ pos ] )
 
-                end -- end if
-                ]]
+            end
 
-          end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-        end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
-    end
+            ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+            if request.assignment == "TRANSPORT" then
 
-    -- END blue Soganiug operations ----------------------------------------------------------------------------------------------------------------------------
+                -- da realizzare: ridefinire param creando percorsi diversi :
 
 
+                -- le diverse opzioni disponibili per la scelta casuale della missione
+                VehicleCargoSet = SET_CARGO:New():FilterTypes( "VehiclesToCargo" ):FilterStart()
 
+                local param = {
 
+                  -- activeCARGOWarehouse( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet
 
+                  [1] = { groupset, AIRBASE.Caucasus.Soganiug, AIRBASE.Caucasus.Kutaisi, 300, VehicleCargoSet },
+                  [2] = { groupset, AIRBASE.Caucasus.Soganiug, AIRBASE.Caucasus.Kutaisi, 260, VehicleCargoSet },
+                  [3] = { groupset, AIRBASE.Caucasus.Soganiug, AIRBASE.Caucasus.Batumi, 300, VehicleCargoSet },
 
+                }
 
+                local pos = math.random( 1 , #param )
 
+                logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
+                activeCARGOWarehouse( param[ pos ] )
 
+            end
 
 
+            ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+            if request.assignment == "RECON " then
 
+                -- da realizzare: ridefinire param creando percorsi diversi vedi funzioni random di assegnazione waypoint e
 
 
+                -- le diverse opzioni disponibili per la scelta casuale della missione
+                local param = {
 
+                  [1] = { groupset, warehouse.Soganiug, warehouse.Beslan, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [2] = { groupset, warehouse.Soganiug, warehouse.Mozdok, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
+                  [3] = { groupset, warehouse.Soganiug, warehouse.Mineralnye, 5000, 3000, 330, 5000, 2023, 20000, 330, 400 },
 
+                }
 
+                local pos = math.random( 1 , #param )
 
+              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Soganiug scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
+                -- activeRECONWarehouseA( param[ pos ] )
 
+            end
 
 
 
@@ -6545,197 +6407,235 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+            --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+            function warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)
 
+                  -- le diverse opzioni disponibili per la scelta casuale della missione
+                  local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
+                  logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+                --[[
+                  -- manca il groupset
+                  -- So we start another request.
+                  if request.assignment=="PATROL" then
 
+                    logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled PATROL mission' })
+                    activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
+                  end
 
+                  if request.assignment=="BAI TARGET" then
 
+                    logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled BAI TARGET mission' })
+                    activeBAIWarehouseT('Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
+                  end -- end if
+                  ]]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    local mineralnye_wh_activation = true
-
-    -- red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-    if mineralnye_wh_activation then
-
-
-        warehouse.Mineralnye    =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Mineralnye[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Mineralnye[ 2 ])  --Functional.Warehouse#WAREHOUSE
-        warehouse.Mineralnye:Start()
-
-
-        -- Mineralnye e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
-        -- Send resupply to Kvemo_Sba
-
-        warehouse.Mineralnye:AddAsset(            air_template_red.CAP_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER ) -- Fighter
-        warehouse.Mineralnye:AddAsset(            air_template_red.GCI_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber - Cas
-        warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            5,          WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            5,          WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.CAS_Su_17M4_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.CAS_L_39C_Rocket,          10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.CAS_Mig_27K_Bomb,          10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mineralnye:AddAsset(            air_template_red.EWR_TU_22,                 3,          WAREHOUSE.Attribute.AIR_AWACS )
-        warehouse.Mineralnye:AddAsset(            air_template_red.CAS_MI_24V,                10,         WAREHOUSE.Attribute.AIR_ATTACKHELO      ) -- attack
-        warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_24,                24,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500  ) -- transport
-        warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
-        warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
-        warehouse.Mineralnye:AddAsset(            ground_group_template_red.Truck,            3 )
-
-        logging('info', { 'main' , 'addAsset Mineralnye warehouse'} )
-
-        logging('info', { 'main' , 'addrequest Mineralnye warehouse'} )
-
-        local depart_time = defineRequestPosition(5)
-
-        local mineralnye_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
-
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local mineralnye_sched = SCHEDULER:New( nil,
-
-          function()
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, 4, nil, nil, nil, "BAI A")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, 4, nil, nil, nil, "BAI B")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tbilisi")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
-            logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
-
-          end, {}, start_sched * mineralnye_efficiency_influence, interval_sched, rand_sched
-
-        ) -- end mineralnye_sched = SCHEDULER:New( nil, ..)
-
-
-          -- Do something with the spawned aircraft.
-        function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-          --local groupset=groupset --Core.Set#SET_GROUP
-          --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI A" then
-
-            local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
-
-            local param = {
-
-                  [1] = { 'Interdiction from Mineralnye to Kutaisi Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Kutaisi[ math.random( 1, #targetBAIZoneStructure.Red_Kutaisi ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Mineralnye to Zestafoni Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Zestafoni[ math.random( 1, #targetBAIZoneStructure.Red_Zestafoni ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Mineralnye to Gori Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2],  targetBAIZoneStructure.Red_Gori[ math.random( 1, #targetBAIZoneStructure.Red_Gori ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 }
-
-
-              }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI B" then
-
-            local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
-
-            local param = {
-
-                  [1] = { 'Interdiction from Mineralnye to Kutaisi Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Kutaisi[ math.random( 1, #targetBAIZoneStructure.Red_Kutaisi ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Mineralnye to Zestafoni Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Zestafoni[ math.random( 1, #targetBAIZoneStructure.Red_Zestafoni ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Mineralnye to Gori Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2],  targetBAIZoneStructure.Red_Gori[ math.random( 1, #targetBAIZoneStructure.Red_Gori ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 }
-
-
-              }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL TKVIAVI" then
-
-
-            local param = {
-
-              [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activePATROLWarehouseA( param[ pos ] )
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
-
-            -- inserire la funzione
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "Bomb Tbilisi" then
-
-
-              local param = {
-
-                [1] = { groupset, warehouse.Mineralnye, warehouse.Tbilisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Mineralnye, warehouse.Tbilisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Mineralnye, warehouse.Tbilisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
-
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activeBOMBINGWarehouseA( param[ pos ] )
+            end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
           end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
+      end
+      -------------------------------------------------------------END blue Soganiug operations ----------------------------------------------------------------------------------------------------------------------------
 
 
-          if request.assignment == "Bomb Tkviavi" then
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ---------------------------------------------------------------- red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
+      local mineralnye_wh_activation = true
+
+      if mineralnye_wh_activation then
+
+
+          warehouse.Mineralnye    =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Mineralnye[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Mineralnye[ 2 ])  --Functional.Warehouse#WAREHOUSE
+          warehouse.Mineralnye:Start()
+
+
+          -- Mineralnye e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
+          -- Send resupply to Kvemo_Sba
+
+          warehouse.Mineralnye:AddAsset(            air_template_red.CAP_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER ) -- Fighter
+          warehouse.Mineralnye:AddAsset(            air_template_red.GCI_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber - Cas
+          warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            5,          WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            5,          WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.CAS_Su_17M4_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.CAS_L_39C_Rocket,          10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.CAS_Mig_27K_Bomb,          10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mineralnye:AddAsset(            air_template_red.EWR_TU_22,                 3,          WAREHOUSE.Attribute.AIR_AWACS )
+          warehouse.Mineralnye:AddAsset(            air_template_red.CAS_MI_24V,                10,         WAREHOUSE.Attribute.AIR_ATTACKHELO      ) -- attack
+          warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_24,                24,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500  ) -- transport
+          warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
+          warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
+          warehouse.Mineralnye:AddAsset(            ground_group_template_red.Truck,            3 )
+
+          logging('info', { 'main' , 'addAsset Mineralnye warehouse'} )
+
+          logging('info', { 'main' , 'addrequest Mineralnye warehouse'} )
+
+          local depart_time = defineRequestPosition(5)
+
+          local mineralnye_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
+
+          -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+          local mineralnye_sched = SCHEDULER:New( nil,
+
+            function()
+              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+              warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, 4, nil, nil, nil, "BAI A")
+              warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, 4, nil, nil, nil, "BAI B")
+              warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
+              warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tbilisi")
+              warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
+              logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+            end, {}, start_sched * mineralnye_efficiency_influence, interval_sched, rand_sched
+
+          ) -- end mineralnye_sched = SCHEDULER:New( nil, ..)
+
+
+            -- Do something with the spawned aircraft.
+          function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+            --local groupset=groupset --Core.Set#SET_GROUP
+            --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI A" then
+
+              local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
 
               local param = {
 
-                [1] = { groupset, warehouse.Mineralnye, warehouse.Gori, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Mineralnye, warehouse.Gori, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Mineralnye, warehouse.Gori, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+                    [1] = { 'Interdiction from Mineralnye to Kutaisi Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Kutaisi[ math.random( 1, #targetBAIZoneStructure.Red_Kutaisi ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1  },
+                    [2] = { 'Interdiction from Mineralnye to Zestafoni Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Zestafoni[ math.random( 1, #targetBAIZoneStructure.Red_Zestafoni ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 },
+                    [3] = { 'Interdiction from Mineralnye to Gori Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2],  targetBAIZoneStructure.Red_Gori[ math.random( 1, #targetBAIZoneStructure.Red_Gori ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 }
+
+
+                }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI B" then
+
+              local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
+
+              local param = {
+
+                    [1] = { 'Interdiction from Mineralnye to Kutaisi Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Kutaisi[ math.random( 1, #targetBAIZoneStructure.Red_Kutaisi ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1  },
+                    [2] = { 'Interdiction from Mineralnye to Zestafoni Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2], targetBAIZoneStructure.Red_Zestafoni[ math.random( 1, #targetBAIZoneStructure.Red_Zestafoni ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 },
+                    [3] = { 'Interdiction from Mineralnye to Gori Bridges', groupset, 'bombing', redFrontZone.DIDI_CUPTA[2],  targetBAIZoneStructure.Red_Gori[ math.random( 1, #targetBAIZoneStructure.Red_Gori ) ][ 2 ], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, nil, 3, 500, 3000, 500, 600, 300, -3600, 1 }
+
+
+                }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+            if request.assignment == "PATROL TKVIAVI" then
+
+
+              local param = {
+
+                [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activePATROLWarehouseA( param[ pos ] )
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+            if request.assignment == "GCI" then
+
+              -- inserire la funzione
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+            if request.assignment == "Bomb Tbilisi" then
+
+
+                local param = {
+
+                  [1] = { groupset, warehouse.Mineralnye, warehouse.Tbilisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                  [2] = { groupset, warehouse.Mineralnye, warehouse.Tbilisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                  [3] = { groupset, warehouse.Mineralnye, warehouse.Tbilisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
 
 
               }
@@ -6744,45 +6644,346 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
+              activeBOMBINGWarehouseA( param[ pos ] )
+
+            end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
+
+
+            if request.assignment == "Bomb Tkviavi" then
+
+                local param = {
+
+                  [1] = { groupset, warehouse.Mineralnye, warehouse.Gori, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                  [2] = { groupset, warehouse.Mineralnye, warehouse.Gori, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                  [3] = { groupset, warehouse.Mineralnye, warehouse.Gori, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+
+
+                }
+
+                local pos = math.random( 1 , #param )
+
+                logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mineralnye scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+
+                activeBOMBINGWarehouseA( param[ pos ] )
+
+            end  --end  function warehouse.Mineralnye:OnAfterSelfRequest(From, Event, To, groupset, request)
+
+
+
+            --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+            function warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)
+
+                local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+                logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+
+                --[[
+                -- So we start another request.
+                if request.assignment=="PATROL" then
+
+                  logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'Mineralnye scheduled PATROL mission' })
+                    --activeCAPWarehouse(groupset, "Patrol Zone Mineralnye", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+
+                end
+
+                if request.assignment=="BAI TARGET" then
+
+                  logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'Mineralnye scheduled BAI TARGET mission' })
+                  activeBAIWarehouseA('Interdiction from Mineralnye to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+
+                end -- end if
+                ]]
+
+            end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+
+          end -- end function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+      end
+      ---------------------------------------------------------------- END red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ------------------------------------------------------------------ red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
+      local mozdok_wh_activation = true
+
+      if mozdok_wh_activation then
+
+
+          -- Mozdok e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
+          -- Send resupply to Kvemo_Sba, Beslan
+
+          warehouse.Mozdok = WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Mozdok[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Mozdok[ 2 ])  --Functional.Warehouse#WAREHOUSE
+
+          warehouse.Mozdok:Start()
+
+          warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
+          warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Nuke,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mozdok:AddAsset(                air_template_red.EWR_TU_22,                  1,         WAREHOUSE.Attribute.AIR_AWACS )
+          --warehouse.Mozdok:AddAsset(                air_template_red.EWR_Mig_25RTB,                  1,         WAREHOUSE.Attribute.AIR_AWACS )
+          warehouse.Mozdok:AddAsset(                air_template_red.CAS_Su_17M4_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Bomb,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO    ) -- attack
+          --warehouse.Mozdok:AddAsset(                air_template_red.CAS_L_39C_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mi_8MTV2,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
+          --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HBomb,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500   ) -- transport
+          warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
+          warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
+          --warehouse.Mozdok:AddAsset(                air_template_red.TRAN_YAK_40,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
+          --warehouse.Mozdok:AddAsset(                air_template_red.REC_Mig_25RTB,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- recognition
+          --warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- recognition
+          --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Yak_52,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
+          --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_L_39C,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
+          --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Mi_8MTV2,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
+          --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Mi_24,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorA,          10,                WAREHOUSE.Attribute.GROUND_TANK    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorB,          10,                WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiAkatsia,     10,                WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiGwozdika,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiKatiusha,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiHeavyMortar, 10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedA,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedB,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedC,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankA,       10,                WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankB,       50,          WAREHOUSE.Attribute.GROUND_TANK  )
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankC,       50,          WAREHOUSE.Attribute.GROUND_TANK  )
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportA,       5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportB,       5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.TroopTransport,   5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport troop
+          --warehouse.Mozdok:AddAsset(                ground_group_template_red.Truck,            3 )
+
+          logging('info', { 'main' , 'addAsset Mozdok warehouse'} )
+
+          logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
+
+          local depart_time = defineRequestPosition(4)
+          local mozdok_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
+
+          -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+          local mozdok_sched = SCHEDULER:New( nil,
+
+            function()
+              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+              warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TKVIAVI")
+              warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
+              warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Kutaisi")
+              warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
+              logging('info', { 'main' , 'Mozdok scheduler - start time:' .. start_sched *  mozdok_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+
+            end, {}, start_sched * mozdok_efficiency_influence, interval_sched, rand_sched
+
+          ) -- end mozdok_sched = SCHEDULER:New( nil, ..)
+
+          -- Do something with the spawned aircraft.
+          function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+            --local groupset=groupset --Core.Set#SET_GROUP
+            --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI TKVIAVI" then
+
+              local targets=GROUP:FindByName("Georgian Mechanized Defence Squad@Tkviavi B")
+
+              -- Activate the targets.
+              --RedTargets:Activate()
+
+              local speed, altitude = defineSpeedAndAltitude(500, 700, 4000, 7000)
+
+              local param = {
+
+                    [1] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
+                    [2] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                    [3] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+            if request.assignment == "PATROL TKVIAVI" then
+
+
+              local param = {
+
+                [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activePATROLWarehouseA( param[ pos ] )
+
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+            if request.assignment == "GCI" then
+
+              -- inserire la funzione
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+            if request.assignment == "Bomb Kutaisi" then
+
+
+                local param = {
+
+                  [1] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                  [2] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                  [3] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
               activeBOMBINGWarehouseA( param[ pos ] )
 
-          end  --end  function warehouse.Mineralnye:OnAfterSelfRequest(From, Event, To, groupset, request)
+            end  --end  if
+
+
+              if request.assignment == "Bomb Tkviavi" then
+
+                local param = {
+
+                  [1] = { groupset, warehouse.Mozdok, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                  [2] = { groupset, warehouse.Mozdok, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                  [3] = { groupset, warehouse.Mozdok, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+
+
+                }
+
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activeBOMBINGWarehouseA( param[ pos ] )
+
+              end  --end  if
 
 
 
-          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-          function warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)
+
+            --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+            function warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)
 
               local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-              logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+              logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
               --[[
               -- So we start another request.
               if request.assignment=="PATROL" then
 
-                logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'Mineralnye scheduled PATROL mission' })
-                  --activeCAPWarehouse(groupset, "Patrol Zone Mineralnye", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+                logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'Mozdok scheduled PATROL mission' })
+                  --activeCAPWarehouse(groupset, "Patrol Zone Mozdok", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
               end
 
               if request.assignment=="BAI TARGET" then
 
-                logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'Mineralnye scheduled BAI TARGET mission' })
-                activeBAIWarehouseA('Interdiction from Mineralnye to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+                logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'Mozdok scheduled BAI TARGET mission' })
+                activeBAIWarehouseA('Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
               end -- end if
+
               ]]
 
-          end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+            end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-        end -- end function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
+          end -- end function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-    end
+      end
+      ------------------------------------------------------------------ END red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
 
-    -- END red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -6837,236 +7038,492 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    local mozdok_wh_activation = true
 
-    -- red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-    if mozdok_wh_activation then
 
 
-        -- Mozdok e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
-        -- Send resupply to Kvemo_Sba, Beslan
 
-        warehouse.Mozdok = WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Mozdok[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Mozdok[ 2 ])  --Functional.Warehouse#WAREHOUSE
 
-        warehouse.Mozdok:Start()
 
-        warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Nuke,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.EWR_TU_22,                  1,         WAREHOUSE.Attribute.AIR_AWACS )
-        --warehouse.Mozdok:AddAsset(                air_template_red.EWR_Mig_25RTB,                  1,         WAREHOUSE.Attribute.AIR_AWACS )
-        warehouse.Mozdok:AddAsset(                air_template_red.CAS_Su_17M4_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Bomb,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO    ) -- attack
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_L_39C_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mi_8MTV2,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HBomb,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500   ) -- transport
-        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
-        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
-        --warehouse.Mozdok:AddAsset(                air_template_red.TRAN_YAK_40,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
-        --warehouse.Mozdok:AddAsset(                air_template_red.REC_Mig_25RTB,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- recognition
-        --warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- recognition
-        --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Yak_52,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
-        --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_L_39C,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
-        --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Mi_8MTV2,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
-        --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Mi_24,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorA,          10,                WAREHOUSE.Attribute.GROUND_TANK    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorB,          10,                WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiAkatsia,     10,                WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiGwozdika,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiKatiusha,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiHeavyMortar, 10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedA,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedB,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedC,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankA,       10,                WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankB,       50,          WAREHOUSE.Attribute.GROUND_TANK  )
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankC,       50,          WAREHOUSE.Attribute.GROUND_TANK  )
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportA,       5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportB,       5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TroopTransport,   5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport troop
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.Truck,            3 )
 
-        logging('info', { 'main' , 'addAsset Mozdok warehouse'} )
 
-        logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
 
-        local depart_time = defineRequestPosition(4)
-        local mozdok_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local mozdok_sched = SCHEDULER:New( nil,
 
-          function()
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TKVIAVI")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Kutaisi")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
-            logging('info', { 'main' , 'Mozdok scheduler - start time:' .. start_sched *  mozdok_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
 
-          end, {}, start_sched * mozdok_efficiency_influence, interval_sched, rand_sched
 
-        ) -- end mozdok_sched = SCHEDULER:New( nil, ..)
 
-        -- Do something with the spawned aircraft.
-        function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-          --local groupset=groupset --Core.Set#SET_GROUP
-          --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI TKVIAVI" then
 
-            local targets=GROUP:FindByName("Georgian Mechanized Defence Squad@Tkviavi B")
 
-            -- Activate the targets.
-            --RedTargets:Activate()
+      ------------------------------------------------------------------ red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
+      local beslan_wh_activation = true
 
-            local speed, altitude = defineSpeedAndAltitude(500, 700, 4000, 7000)
+      if beslan_wh_activation then
 
-            local param = {
 
-                  [1] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+          warehouse.Beslan = WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Beslan[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Beslan[ 2 ])  --Functional.Warehouse#WAREHOUSE
+          warehouse.Beslan:Start()
 
+          -- Beslan e' una delle principale warehouse russe nell'area.
+          -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
 
-            }
+          warehouse.Beslan:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Beslan:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Beslan:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO      ) -- attack
+          warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Beslan:AddAsset(               air_template_red.CAS_Mig_27K_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500  ) -- transport
+          warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
+          warehouse.Beslan:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
+          warehouse.Beslan:AddAsset(               air_template_red.TRAN_AN_YAK_40,             4,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE ) -- transport
+          warehouse.Beslan:AddAsset(               air_template_red.AFAC_L_39C,                 4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+          warehouse.Beslan:AddAsset(               air_template_red.AFAC_Yak_52,                4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.ArmorA,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.ArmorB,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiAkatsia,     10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiGwozdika,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiKatiusha,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.mechanizedA,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.mechanizedB,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.mechanizedC,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.antitankA,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.antitankB,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(               ground_group_template_red.antitankC,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Beslan:AddAsset(                "Infantry Platoon Alpha",                 6   )
 
-            local pos = math.random( 1 , #param )
+          logging('info', { 'main' , 'addAsset Beslan warehouse'} )
 
-            logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+          logging('info', { 'main' , 'addrequest Beslan warehouse'} )
 
-            activeBAIWarehouseBisA( param[ pos ] )
+          local depart_time = defineRequestPosition(4)
+          local beslan_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
+          -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+          local beslan_sched = SCHEDULER:New( nil,
 
-          end -- end if
+            function()
 
+              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+              warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TKVIAVI")
+              warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
+              warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Kutaisi")
+              warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
+              logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL TKVIAVI" then
+            end, {}, start_sched * beslan_efficiency_influence, interval_sched, rand_sched
 
+          )
 
-            local param = {
 
-              [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
+          -- Do something with the spawned aircraft.
+          function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-            }
+            --local groupset=groupset --Core.Set#SET_GROUP
+            --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-            local pos = math.random( 1 , #param )
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI TKVIAVI" then
 
-            logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+              local targets=GROUP:FindByName("Georgian Mechanized Defence Squad@Tkviavi B")
 
-            activePATROLWarehouseA( param[ pos ] )
+              -- Activate the targets.
+              --RedTargets:Activate()
 
+              local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
 
-          end -- end if
+              local param = {
 
+                    [1] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
+                    [2] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                    [3] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
 
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
 
-            -- inserire la funzione
+              }
 
-          end -- end if
+              local pos = math.random( 1 , #param )
 
+              logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
 
+              activeBAIWarehouseBisA( param[ pos ] )
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "Bomb Kutaisi" then
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+            if request.assignment == "PATROL TKVIAVI" then
 
 
               local param = {
 
-                [1] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+                [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
 
 
-            }
+              activePATROLWarehouseA( param[ pos ] )
 
-            local pos = math.random( 1 , #param )
 
-            logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+            end -- end if
 
-            activeBOMBINGWarehouseA( param[ pos ] )
 
-          end  --end  if
+            ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+            if request.assignment == "GCI" then
+
+              -- inserire la funzione
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+            if request.assignment == "Bomb Kutaisi" then
+
+
+                local param = {
+
+                  [1] = { groupset, warehouse.Beslan, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                  [2] = { groupset, warehouse.Beslan, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                  [3] = { groupset, warehouse.Beslan, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activeBOMBINGWarehouseA( param[ pos ] )
+
+            end  -- end if
 
 
             if request.assignment == "Bomb Tkviavi" then
 
               local param = {
 
-                [1] = { groupset, warehouse.Mozdok, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Mozdok, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Mozdok, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+                [1] = { groupset, warehouse.Beslan, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                [2] = { groupset, warehouse.Beslan, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                [3] = { groupset, warehouse.Beslan, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
 
 
               }
 
+              local pos = math.random( 1 , #param )
 
-            local pos = math.random( 1 , #param )
+              logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
 
-            logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Mozdok scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+             activeBOMBINGWarehouseA( param[ pos ] )
 
-            activeBOMBINGWarehouseA( param[ pos ] )
+            end  -- end  if
+
+
+
+
+            --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+            function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
+
+              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+              logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+
+              --[[
+              -- So we start another request.
+              if request.assignment=="PATROL" then
+
+                logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'Beslan scheduled PATROL mission' })
+                  --activeCAPWarehouse(groupset, "Patrol Zone Beslan", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+
+              end
+
+              if request.assignment=="BAI TARGET" then
+
+                logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'Beslan scheduled BAI TARGET mission' })
+                activeBAIWarehouseA('Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+
+              end -- end if
+              ]]
+
+            end -- end function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
+
+          end -- end function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+      end
+      ----------------------------------------------------------------- END red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ------------------------------------------------------------------- red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
+      local nalchik_wh_activation = true
+
+      if nalchik_wh_activation then
+
+          warehouse.Nalchik       =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Nalchik[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Nalchik[ 2 ])  --Functional.Warehouse#WAREHOUSE
+
+          warehouse.Nalchik:Start()
+          -- Nalchik e' una delle principale warehouse russe nell'area.
+          -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
+
+          warehouse.Nalchik:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Nalchik:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Nalchik:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO      ) -- attack
+          warehouse.Nalchik:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Nalchik:AddAsset(               air_template_red.CAS_Mig_27K_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER )
+          warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500  ) -- transport
+          warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
+          warehouse.Nalchik:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
+          warehouse.Nalchik:AddAsset(               air_template_red.TRAN_AN_YAK_40,             4,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE ) -- transport
+          warehouse.Nalchik:AddAsset(               air_template_red.AFAC_L_39C,                 4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+          warehouse.Nalchik:AddAsset(               air_template_red.AFAC_Yak_52,                4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArmorA,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArmorB,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiAkatsia,     10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiGwozdika,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiKatiusha,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.mechanizedA,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.mechanizedB,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.mechanizedC,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.antitankA,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.antitankB,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(               ground_group_template_red.antitankC,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
+          --warehouse.Nalchik:AddAsset(                "Infantry Platoon Alpha",                 6   )
+
+          logging('info', { 'main' , 'addAsset Nalchik warehouse'} )
+
+
+
+          logging('info', { 'main' , 'addrequest Nalchik warehouse'} )
+
+          local depart_time = defineRequestPosition(4)
+          local nalchik_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
+
+          -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+          local nalchik_sched = SCHEDULER:New( nil,
+
+            function()
+
+              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+              warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TKVIAVI")
+              warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
+              warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Kutaisi")
+              warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
+              logging('info', { 'main' , 'Nalchik scheduler - start time:' .. start_sched *  nalchik_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+            end, {}, start_sched * nalchik_efficiency_influence, interval_sched, rand_sched
+
+          )
+
+
+          -- Do something with the spawned aircraft.
+          function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+            --local groupset=groupset --Core.Set#SET_GROUP
+            --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+            ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+            if request.assignment == "BAI TKVIAVI" then
+
+              local targets=GROUP:FindByName("Georgian Mechanized Defence Squad@Tkviavi B")
+
+              -- Activate the targets.
+              --RedTargets:Activate()
+
+              local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
+
+              local param = {
+
+                    [1] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
+                    [2] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                    [3] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+
+
+                }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
+
+              activeBAIWarehouseBisA( param[ pos ] )
+
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+            if request.assignment == "PATROL TKVIAVI" then
+
+
+              local param = {
+
+                [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activePATROLWarehouseA( param[ pos ] )
+
+
+            end -- end if
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+            if request.assignment == "GCI" then
+
+              -- inserire la funzione
+
+            end -- end if
+
+
+
+            ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+            if request.assignment == "Bomb Kutaisi" then
+
+
+                local param = {
+
+                  [1] = { groupset, warehouse.Nalchik, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                  [2] = { groupset, warehouse.Nalchik, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                  [3] = { groupset, warehouse.Nalchik, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activeBOMBINGWarehouseA( param[ pos ] )
+
+            end  --end  if
+
+
+            if request.assignment == "Bomb Tkviavi" then
+
+              local param = {
+
+                [1] = { groupset, warehouse.Nalchik, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+                [2] = { groupset, warehouse.Nalchik, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+                [3] = { groupset, warehouse.Nalchik, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+
+
+              }
+
+              local pos = math.random( 1 , #param )
+
+              logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
+
+              activeBOMBINGWarehouseA( param[ pos ] )
 
             end  --end  if
 
 
 
 
-          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-          function warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)
+            --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+            function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
 
-            local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-            logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+              logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
-            --[[
-            -- So we start another request.
-            if request.assignment=="PATROL" then
+              --[[
+              -- So we start another request.
+              if request.assignment=="PATROL" then
 
-              logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'Mozdok scheduled PATROL mission' })
-                --activeCAPWarehouse(groupset, "Patrol Zone Mozdok", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+                logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'Nalchik scheduled PATROL mission' })
+                  --activeCAPWarehouse(groupset, "Patrol Zone Nalchik", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
-            end
+              end
 
-            if request.assignment=="BAI TARGET" then
+              if request.assignment=="BAI TARGET" then
 
-              logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'Mozdok scheduled BAI TARGET mission' })
-              activeBAIWarehouseA('Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+                logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'Nalchik scheduled BAI TARGET mission' })
+                activeBAIWarehouseA('Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
-            end -- end if
+              end -- end if
+              ]]
 
-            ]]
+            end -- end function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
 
-          end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+          end -- end function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-        end -- end function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
+      end
+      ------------------------------------------------------------------- END red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-    end
 
-    -- END red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -7077,550 +7534,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    local beslan_wh_activation = true
-
-    -- red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-    if beslan_wh_activation then
-
-
-        warehouse.Beslan = WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Beslan[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Beslan[ 2 ])  --Functional.Warehouse#WAREHOUSE
-        warehouse.Beslan:Start()
-
-        -- Beslan e' una delle principale warehouse russe nell'area.
-        -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
-
-        warehouse.Beslan:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Beslan:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Beslan:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO      ) -- attack
-        warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Beslan:AddAsset(               air_template_red.CAS_Mig_27K_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500  ) -- transport
-        warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
-        warehouse.Beslan:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
-        warehouse.Beslan:AddAsset(               air_template_red.TRAN_AN_YAK_40,             4,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE ) -- transport
-        warehouse.Beslan:AddAsset(               air_template_red.AFAC_L_39C,                 4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-        warehouse.Beslan:AddAsset(               air_template_red.AFAC_Yak_52,                4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.ArmorA,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.ArmorB,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiAkatsia,     10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiGwozdika,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiKatiusha,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.mechanizedA,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.mechanizedB,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.mechanizedC,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.antitankA,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.antitankB,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(               ground_group_template_red.antitankC,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Beslan:AddAsset(                "Infantry Platoon Alpha",                 6   )
-
-        logging('info', { 'main' , 'addAsset Beslan warehouse'} )
-
-        logging('info', { 'main' , 'addrequest Beslan warehouse'} )
-
-        local depart_time = defineRequestPosition(4)
-        local beslan_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
-
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local beslan_sched = SCHEDULER:New( nil,
-
-          function()
-
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TKVIAVI")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Kutaisi")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
-            logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
-
-          end, {}, start_sched * beslan_efficiency_influence, interval_sched, rand_sched
-
-        )
-
-
-        -- Do something with the spawned aircraft.
-        function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-          --local groupset=groupset --Core.Set#SET_GROUP
-          --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI TKVIAVI" then
-
-            local targets=GROUP:FindByName("Georgian Mechanized Defence Squad@Tkviavi B")
-
-            -- Activate the targets.
-            --RedTargets:Activate()
-
-            local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
-
-            local param = {
-
-                  [1] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
-
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL TKVIAVI" then
-
-
-            local param = {
-
-              [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-
-            activePATROLWarehouseA( param[ pos ] )
-
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
-
-            -- inserire la funzione
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "Bomb Kutaisi" then
-
-
-              local param = {
-
-                [1] = { groupset, warehouse.Beslan, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Beslan, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Beslan, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
-
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activeBOMBINGWarehouseA( param[ pos ] )
-
-          end  -- end if
-
-
-          if request.assignment == "Bomb Tkviavi" then
-
-            local param = {
-
-              [1] = { groupset, warehouse.Beslan, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-              [2] = { groupset, warehouse.Beslan, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-              [3] = { groupset, warehouse.Beslan, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
-
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Beslan scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-           activeBOMBINGWarehouseA( param[ pos ] )
-
-          end  -- end  if
-
-
-
-
-          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-          function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
-
-            local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-            logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-
-            --[[
-            -- So we start another request.
-            if request.assignment=="PATROL" then
-
-              logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'Beslan scheduled PATROL mission' })
-                --activeCAPWarehouse(groupset, "Patrol Zone Beslan", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-
-            end
-
-            if request.assignment=="BAI TARGET" then
-
-              logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'Beslan scheduled BAI TARGET mission' })
-              activeBAIWarehouseA('Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-            end -- end if
-            ]]
-
-          end -- end function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
-
-        end -- end function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-    end
-
-    -- END red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    local nalchik_wh_activation = true
-
-    -- red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-    if nalchik_wh_activation then
-
-        warehouse.Nalchik       =   WAREHOUSE:New( targetBAIStaticObj.Warehouse_AB.red.Nalchik[ 1 ], targetBAIStaticObj.Warehouse_AB.red.Nalchik[ 2 ])  --Functional.Warehouse#WAREHOUSE
-
-        warehouse.Nalchik:Start()
-        -- Nalchik e' una delle principale warehouse russe nell'area.
-        -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
-
-        warehouse.Nalchik:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Nalchik:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER )
-        warehouse.Nalchik:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO      ) -- attack
-        warehouse.Nalchik:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Nalchik:AddAsset(               air_template_red.CAS_Mig_27K_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500  ) -- transport
-        warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
-        warehouse.Nalchik:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
-        warehouse.Nalchik:AddAsset(               air_template_red.TRAN_AN_YAK_40,             4,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE ) -- transport
-        warehouse.Nalchik:AddAsset(               air_template_red.AFAC_L_39C,                 4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-        warehouse.Nalchik:AddAsset(               air_template_red.AFAC_Yak_52,                4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArmorA,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArmorB,          10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiAkatsia,     10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiGwozdika,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiKatiusha,    10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 10,           WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.mechanizedA,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.mechanizedB,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.mechanizedC,     10,           WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.antitankA,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.antitankB,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(               ground_group_template_red.antitankC,       10,           WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Nalchik:AddAsset(                "Infantry Platoon Alpha",                 6   )
-
-        logging('info', { 'main' , 'addAsset Nalchik warehouse'} )
-
-
-
-        logging('info', { 'main' , 'addrequest Nalchik warehouse'} )
-
-        local depart_time = defineRequestPosition(4)
-        local nalchik_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
-
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local nalchik_sched = SCHEDULER:New( nil,
-
-          function()
-
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TKVIAVI")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, 2, nil, nil, nil, "PATROL TKVIAVI")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Kutaisi")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 2, nil, nil, nil, "Bomb Tkviavi")
-            logging('info', { 'main' , 'Nalchik scheduler - start time:' .. start_sched *  nalchik_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
-
-          end, {}, start_sched * nalchik_efficiency_influence, interval_sched, rand_sched
-
-        )
-
-
-        -- Do something with the spawned aircraft.
-        function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-          --local groupset=groupset --Core.Set#SET_GROUP
-          --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI TKVIAVI" then
-
-            local targets=GROUP:FindByName("Georgian Mechanized Defence Squad@Tkviavi B")
-
-            -- Activate the targets.
-            --RedTargets:Activate()
-
-            local speed, altitude = defineSpeedAndAltitude(500, 700, 3000, 5000)
-
-            local param = {
-
-                  [1] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
-
-
-              }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 2 ]:GetObjectNames() } )
-
-            activeBAIWarehouseBisA( param[ pos ] )
-
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL TKVIAVI" then
-
-
-            local param = {
-
-              [1] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [2] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-              [3] = { groupset, redFrontZone.DIDI_CUPTA[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 }
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activePATROLWarehouseA( param[ pos ] )
-
-
-          end -- end if
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
-
-            -- inserire la funzione
-
-          end -- end if
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "Bomb Kutaisi" then
-
-
-              local param = {
-
-                [1] = { groupset, warehouse.Nalchik, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Nalchik, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Nalchik, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
-
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activeBOMBINGWarehouseA( param[ pos ] )
-
-          end  --end  if
-
-
-          if request.assignment == "Bomb Tkviavi" then
-
-            local param = {
-
-              [1] = { groupset, warehouse.Nalchik, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-              [2] = { groupset, warehouse.Nalchik, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-              [3] = { groupset, warehouse.Nalchik, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
-
-
-            }
-
-            local pos = math.random( 1 , #param )
-
-            logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest' , 'Nalchik scheduled mission number: ' .. pos .. ' - groupset name: ' .. param[ pos ][ 1 ]:GetObjectNames() } )
-
-            activeBOMBINGWarehouseA( param[ pos ] )
-
-          end  --end  if
-
-
-
-
-          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-          function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
-
-            local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-            logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-
-            --[[
-            -- So we start another request.
-            if request.assignment=="PATROL" then
-
-              logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'Nalchik scheduled PATROL mission' })
-                --activeCAPWarehouse(groupset, "Patrol Zone Nalchik", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-
-            end
-
-            if request.assignment=="BAI TARGET" then
-
-              logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'Nalchik scheduled BAI TARGET mission' })
-              activeBAIWarehouseA('Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-            end -- end if
-            ]]
-
-          end -- end function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
-
-        end -- end function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-    end
-
-    -- END red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-    -------------------------------------------------- END WAREHOUSE OPERATIONS
+      -------------------------------------------------- END WAREHOUSE OPERATIONS
 
 
 
