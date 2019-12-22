@@ -3191,14 +3191,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   local redPatrolZone = {
 
+      BAI_Zone_Mineralnye = { ZONE:New("BAI_Zone_Mineralnye") , "BAI_Zone_Mineralnye", targetPoints.front_zone },
+      BAI_Zone_Nalchik = { ZONE:New("BAI_Zone_Nalchik") , "BAI_Zone_Nalchik", targetPoints.front_zone },
+      BAI_Zone_Beslan = { ZONE:New("BAI_Zone_Beslan") , "BAI_Zone_Beslan", targetPoints.front_zone }
 
   }
 
   local bluePatrolZone = {
 
-      Patrol_Zone_Tbilisi = { ZONE:New("Patrol_Zone_Tbilisi") , "Patrol_Zone_Tbilisi", targetPoints.front_zone },
-      Patrol_Zone_Vaziani = { ZONE:New("Patrol_Zone_Vaziani") , "Patrol_Zone_Vaziani", targetPoints.front_zone },
-      Patrol_Zone_Soganiug = { ZONE:New("Patrol_Zone_Soganiug") , "Patrol_Zone_Soganiug", targetPoints.front_zone }
+      BAI_Zone_Tbilisi = { ZONE:New("BAI_Zone_Tbilisi") , "BAI_Zone_Tbilisi", targetPoints.front_zone },
+      BAI_Zone_Vaziani = { ZONE:New("BAI_Zone_Vaziani") , "BAI_Zone_Vaziani", targetPoints.front_zone },
+      BAI_Zone_Soganiug = { ZONE:New("BAI_Zone_Soganiug") , "BAI_Zone_Soganiug", targetPoints.front_zone },
+      Patrol_Zone_Kutaisi = { ZONE:New("BAI_Zone_Kutaisi") , "BAI_Zone_Kutaisi", targetPoints.front_zone }
 
 
   }
@@ -4030,8 +4034,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-            if assignment == rndTrgBiteta.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLEWarehouse( groupset, rndTrgDidi.mechanized[ 1 ][ 5 ], rndTrgBiteta.mechanized[ 1 ][ 6 ], nil, nil, nil)  end
-            if assignment == rndTrgBiteta.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLEWarehouse( groupset, rndTrgDidi.mechanized[ 2 ][ 5 ], rndTrgBiteta.mechanized[ 2 ][ 6 ], nil, nil, nil)  end
+            if assignment == rndTrgBiteta.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLEWarehouse( groupset, rndTrgBiteta.mechanized[ 1 ][ 5 ], rndTrgBiteta.mechanized[ 1 ][ 6 ], nil, nil, nil)  end
+            if assignment == rndTrgBiteta.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLEWarehouse( groupset, rndTrgBiteta.mechanized[ 2 ][ 5 ], rndTrgBiteta.mechanized[ 2 ][ 6 ], nil, nil, nil)  end
 
         end -- end function
 
@@ -4563,9 +4567,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local param = {
 
-                  [1] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+                  [1] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, blueGroundGroup[6], 3, 500, 1000, 500, 600, 300, -3600, 1  },
+                  [2] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, blueGroundGroup[7], 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                  [3] = { 'Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, blueGroundGroup[9], 3, 500, 1000, 500, 600, 300, -3600, 1 }
 
 
             }
@@ -4614,12 +4618,29 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
           if request.assignment == "Bomb Kutaisi" then
 
+              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+              local home = warehouse.Mozdok
+              local target = warehouse.Kutaisi
+
+              'groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombQuantity, bombRunDistance, bombRunDirection, speedBombRun'
+
+              local toTargetAltitude = math.random(5000, 7000)
+              local toHomeAltitude = math.random(3000, 5000)
+              local bombingDirection = math.random(270, 359)
+              local bombingAltitude = math.random(4000, 6000)
+              local bombQuantity = 2023
+              local bombRunDistance = 20000
+              local bombRunDirection = math.random(270, 359)
+              local speedBombRun = math.random(400, 600)
 
               local param = {
 
-                [1] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-                [2] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-                [3] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+                [1] = { groupset, warehouse.Mozdok, warehouse.Kutaisi, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
+                [2] = { groupset, warehouse.Mozdok, warehouse.Kvitiri, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
+                [3] = { groupset, warehouse.Mozdok, warehouse.Kvitiri_Helo, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun },
+                [4] = { groupset, warehouse.Mozdok, warehouse.Zestafoni, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun }
+
 
 
             }
@@ -4826,9 +4847,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local param = {
 
-                  [1] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+                  [1] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, blueGroundGroup[6], 3, 500, 1000, 500, 600, 300, -3600, 1  },
+                  [2] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, blueGroundGroup[7], 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                  [3] = { 'Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, blueGroundGroup[10], 3, 500, 1000, 500, 600, 300, -3600, 1 }
 
 
             }
@@ -4901,9 +4922,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local param = {
 
-              [1] = { groupset, warehouse.Beslan, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-              [2] = { groupset, warehouse.Beslan, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-              [3] = { groupset, warehouse.Beslan, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+              [1] = { groupset, warehouse.Beslan, warehouse.Tkviavi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+              [2] = { groupset, warehouse.Beslan, warehouse.Tkviavi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+              [3] = { groupset, warehouse.Beslan, warehouse.Tkviavi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
 
 
             }
@@ -5089,9 +5110,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local param = {
 
-                  [1] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1  },
-                  [2] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                  [3] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, targets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+                  [1] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.FOUR, 2, 300, blueGroundGroup[1], 3, 500, 1000, 500, 600, 300, -3600, 1  },
+                  [2] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.HALF, 1, 300, blueGroundGroup[4], 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                  [3] = { 'Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], speed, altitude, AI.Task.WeaponExpend.ALL, 1, 300, blueGroundGroup[5], 3, 500, 1000, 500, 600, 300, -3600, 1 }
 
 
               }
@@ -5163,9 +5184,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local param = {
 
-              [1] = { groupset, warehouse.Nalchik, warehouse.Biteta, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
-              [2] = { groupset, warehouse.Nalchik, warehouse.Biteta, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
-              [3] = { groupset, warehouse.Nalchik, warehouse.Biteta, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
+              [1] = { groupset, warehouse.Nalchik, warehouse.Tkviavi, 5000, 7000, 330, 5000, AI.Task.WeaponExpend.ALL, 20000, 330, 500  },
+              [2] = { groupset, warehouse.Nalchik, warehouse.Tkviavi, 7000, 3000, 370, 4000, AI.Task.WeaponExpend.ALL, 20000, 310, 540  },
+              [3] = { groupset, warehouse.Nalchik, warehouse.Tkviavi, 4000, 5000, 300, 3000, AI.Task.WeaponExpend.ALL, 20000, 340, 600  }
 
 
             }
@@ -6483,14 +6504,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI_target('aircraft')
 
+            logging('finest', { 'function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB: ' .. speed_attack .. ' - ' .. altitude_attack .. ' - ' .. speed_patrol_min .. ' - ' .. altitude_patrol_min .. ' - ' .. speed_patrol_max .. ' - ' .. altitude_patrol_max .. ' - ' .. attack_angle  .. ' - ' .. num_attack ..  ' - ' .. num_weapon .. ' - ' .. time_to_engage .. ' - ' .. time_to_RTB } )
+
+
+              ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+
             -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
             local request_kills = math.random( 2 , 4 )
 
             local param = {
 
-              [1] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[2], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
-              [2] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[3], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
-              [3] = { 'Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[5], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 }
+              [1] = { 'Interdiction from Tbilisi', groupset, 'target', bluePatrolZone.BAI_Zone_Tbilisi[2], bluePatrolZone.BAI_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[2], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
+              [2] = { 'Interdiction from Tbilisi', groupset, 'target', bluePatrolZone.BAI_Zone_Tbilisi[2], bluePatrolZone.BAI_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[3], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 },
+              [3] = { 'Interdiction from Tbilisi', groupset, 'target', bluePatrolZone.BAI_Zone_Tbilisi[2], bluePatrolZone.BAI_Zone_Tbilisi[2], speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, redGroundGroup[5], request_kills, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 }
 
             }
 
@@ -6547,10 +6573,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- le diverse opzioni disponibili per la scelta casuale della missione
             local param = {
                 -- modifica la activePATROLWarehouseA in modo da passare come parametro direttamente la ZONE già configurata
-              [1] = { groupset, bluePatrolZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
-              [2] = { groupset, bluePatrolZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
-              [3] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
-              [4] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
+              [1] = { groupset, bluePatrolZone.BAI_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
+              [2] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
+              [3] = { groupset, bluePatrolZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
+              [4] = { groupset, bluePatrolZone.BAI_Zone_Kutaisi[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
 
             }
 
@@ -6569,10 +6595,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- le diverse opzioni disponibili per la scelta casuale della missione
             local param = {
 
-                [1] = { groupset, bluePatrolZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
-                [2] = { groupset, bluePatrolZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
-                [3] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
-                [4] = { groupset, bluePatrolZone.Patrol_Zone_Soganiug[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
+                [1] = { groupset, bluePatrolZone.BAI_Zone_Tbilisi[2], 'circle', 10000, nil, nil, 5000, 7000, 400, 500, 600, 800 },
+                [2] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 4000, 6000, 400, 550, 700, 1000 },
+                [3] = { groupset, bluePatrolZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 3000, 5000, 400, 600, 800, 900 },
+                [4] = { groupset, bluePatrolZone.BAI_Zone_Kutaisi[2], 'circle', 10000, blueFrontZone.GORI[2], 'circle', 5000, 8000, 400, 600, 800, 1000 }
 
             }
 
@@ -6746,7 +6772,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             --local pos = math.random( 1 , #param )
 
             --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled PATROL mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-            --activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Tbilisi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+            --activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Tbilisi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
             -- warehouse.Batumi:AddRequest(warehouse.Pampa, WAREHOUSE.Descriptor.ATTRIBUTE, request.cargoattribute, request.ndelivered, WAREHOUSE.TransportType.APC, WAREHOUSE.Quantity.ALL)
 
           --end
@@ -6754,7 +6780,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           --if request.assignment=="BAI STRUCTURE" then
 
             --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled BAI STRUCTURE mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-            --activeBAIWarehouseT('Interdiction from Tbilisi', groupset, 'target', redFrontZone.Patrol_Zone_Tbilisi[2], redFrontZone.Patrol_Zone_Tbilisi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+            --activeBAIWarehouseT('Interdiction from Tbilisi', groupset, 'target', redFrontZone.BAI_Zone_Tbilisi[2], redFrontZone.BAI_Zone_Tbilisi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
           --end -- end if
 
@@ -6908,9 +6934,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- @param delay = ritardo di attesa per l'attivazione della missione
               local param = {
 
-                [1] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                [2] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                [3] = { 'Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+                [1] = { 'Interdiction from Vaziani', groupset, 'target', bluePatrolZone.BAI_Zone_Vaziani[2], bluePatrolZone.BAI_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [2] = { 'Interdiction from Vaziani', groupset, 'target', bluePatrolZone.BAI_Zone_Vaziani[2], bluePatrolZone.BAI_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [3] = { 'Interdiction from Vaziani', groupset, 'target', bluePatrolZone.BAI_Zone_Vaziani[2], bluePatrolZone.BAI_Zone_Vaziani[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
 
               }
 
@@ -6929,8 +6955,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 local param = {
 
-                [1] = { 'Interdiction from Vaziani bis', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
-                [2] = { 'Interdiction from Vaziani tris', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [1] = { 'Interdiction from Vaziani bis', groupset, 'target', bluePatrolZone.BAI_Zone_Vaziani[2], bluePatrolZone.BAI_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
+                [2] = { 'Interdiction from Vaziani tris', groupset, 'target', bluePatrolZone.BAI_Zone_Vaziani[2], bluePatrolZone.BAI_Zone_Vaziani[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
 
               }
 
@@ -6951,9 +6977,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-                [2] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-                [3] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [1] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
@@ -6973,9 +6999,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-                [2] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-                [3] = { groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [1] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, bluePatrolZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
@@ -7098,14 +7124,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
                   if request.assignment=="PATROL" then
 
                       logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled PATROL mission'})
-                      activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Vaziani[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+                      activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
                   end
 
                   if request.assignment=="BAI TARGET" then
 
                     logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled BAI TARGET mission'})
-                    activeBAIWarehouseT('Interdiction from Vaziani', groupset, 'target', redFrontZone.Patrol_Zone_Vaziani[2], redFrontZone.Patrol_Zone_Vaziani[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+                    activeBAIWarehouseT('Interdiction from Vaziani', groupset, 'target', redFrontZone.BAI_Zone_Vaziani[2], redFrontZone.BAI_Zone_Vaziani[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
                   end -- end if
 
@@ -7247,7 +7273,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4")
               warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21")
               warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, 2, nil, nil, nil, "TRANSPORT 2")
+              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2")
               warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
               logging('info', { 'main' , 'Soganiug scheduler - start time:' .. start_sched *  soganiug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -7292,9 +7318,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- @param delay = ritardo di attesa per l'attivazione della missione
               local param = {
 
-                [1] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                [2] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
-                [3] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
+                [1] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.TSKHINVALI[2], redFrontZone.TSKHINVALI[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [2] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.SATIHARI[2], redFrontZone.SATIHARI[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [3] = { 'Interdiction from Soganiug', groupset, 'target', redFrontZone.DIDI_CUPTA[2], redFrontZone.DIDI_CUPTA[2], 400, 1000, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 }
 
               }
 
@@ -7313,8 +7339,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 local param = {
 
-                [1] = { 'Interdiction from Soganiug bis', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
-                [2] = { 'Interdiction from Soganiug tris', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
+                [1] = { 'Interdiction from Soganiug bis', groupset, 'target', blueFrontZone.BAI_Zone_Soganiug[2], blueFrontZone.BAI_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 100, 200, 300, -3600, 1  },
+                [2] = { 'Interdiction from Soganiug tris', groupset, 'target', blueFrontZone.BAI_Zone_Soganiug[2], blueFrontZone.BAI_Zone_Soganiug[2], speed, altitude, 4, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 },
 
               }
 
@@ -7335,9 +7361,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-                [2] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-                [3] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [1] = { groupset, blueFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, blueFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, blueFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
@@ -7357,9 +7383,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- le diverse opzioni disponibili per la scelta casuale della missione
               local param = {
 
-                [1] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
-                [2] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
-                [3] = { groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [1] = { groupset, blueFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 2000, 3000, 500, 600, 600, 800 },
+                [2] = { groupset, blueFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
+                [3] = { groupset, blueFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, nil, 1000, 2000, 500, 600, 600, 800 },
 
               }
 
@@ -7479,14 +7505,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
                   if request.assignment=="PATROL" then
 
                     logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled PATROL mission' })
-                    activeCAPWarehouse(groupset, redFrontZone.Patrol_Zone_Soganiug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+                    activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
                   end
 
                   if request.assignment=="BAI TARGET" then
 
                     logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled BAI TARGET mission' })
-                    activeBAIWarehouseT('Interdiction from Soganiug', groupset, 'target', redFrontZone.Patrol_Zone_Soganiug[2], redFrontZone.Patrol_Zone_Soganiug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+                    activeBAIWarehouseT('Interdiction from Soganiug', groupset, 'target', redFrontZone.BAI_Zone_Soganiug[2], redFrontZone.BAI_Zone_Soganiug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
                   end -- end if
                   ]]
