@@ -748,9 +748,14 @@ end
 -- @param minSpeedEngage = velocit� minima di ingaggio
 -- @param maxSpeedEngage = velocit� massima di ingaggio
 --
-function activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage )
+function activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+
 
       -- nota: inserire il mission accomplish se le munizioni sono finite, l'eventuale check del fuel, se danneggiato ecc.
+
+      local homeAirbase_ = homeAirbase -- wrapper AIRBASE ?
+
+      logging('finest', { 'activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )' , 'homeAirbase_ coord = ' .. homeAirbase_:GetCoordinate()  } )
 
       for _,group in pairs(groupset:GetSetObjects()) do
 
@@ -758,6 +763,8 @@ function activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone,
         group:StartUncontrolled()
 
         CAP = AI_A2A_CAP:New(group, patrolZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage)
+
+        CAP:SetHomeAirbase(homeAirbase_)
 
         -- Tell the program to use the object (in this case called CAPPlane) as the group to use in the CAP function
         CAP:SetControllable(group)
@@ -795,119 +802,6 @@ end -- function
 
 
 
-
-
-
---- Attiva il task BAI per un asset assegnato
---
--- @param groupset = il gruppo (asset) proveniente dalla warehouse
--- @param typeOfBAI = tipo di BAI richiesta = 'bombing': bombarda il centro della engage zone, 'target': Attacca i target
--- @param patrolZoneName = il nome della Zone assegnata per la patrol
--- @param engageZoneName = il nome della Zone di ingaggio
--- @param engageSpeed =  velocit� di attacco
--- @param engageAltitude = quota di attacco
--- @param engageWeaponExpend = numero di weapon da sganciare
--- @param engageAttackQty = numero attacchi
--- @param engageDirection = direzione angolare di attacco
--- @param targets = il wrapper:group dei target
--- @param requestNumberKill = il numero di target distrutti utilizzato per valutare il completamento della missione
--- @param patrolFloorAltitude = altezza minima  nella patrol zone
--- @param patrolCeilAltitude = altezza massima nella patrol zone
--- @param minPatrolSpeed = velocit� minima di pattugliamento
--- @param maxPatrolSpeed = velocit� massima di pattugliamento
--- @param timeToEngage = timer per l'ingaggiare
--- @param timeToRTB = timer per l'RTB
--- @param delay = ritardo di attesa per l'attivazione della missione
---
--- ATTIVA SOLO UN AEREO: BOH!!!
---
-function activeBAIWarehouse(nameMission, groupset, typeOfBAI, patrolZoneName, engageZoneName, engageSpeed, engageAltitude, engageWeaponExpend, engageAttackQty, engageDirection, targets, requestNumberKill, patrolFloorAltitude, patrolCeilingAltitude, minPatrolSpeed, maxPatrolSpeed, timeToEngage, timeToRTB, delayMission )
-
-
-        local patrolZone = defineZone( patrolZoneName, 'circle' )
-        local engageZone = defineZone( engageZoneName, 'circle' )
-
-        for _, _group in pairs(groupset:GetSetObjects()) do
-
-                local group = _group --Wrapper.Group#GROUP
-
-                -- Start uncontrolled aircraft.
-                group:StartUncontrolled()
-
-                --self:E( "BAI Mission: " .. nameMission .. ": group = " .. group .." started!!" )
-                --MESSAGE:New("BAI Mission: " .. nameMission .. ": group = " .. group .." started!!", 10):ToAll()
-
-
-                BAI = AI_BAI_ZONE:New(patrolZone, patrolFloorAltitude, patrolCeilingAltitude, minPatrolSpeed, maxPatrolSpeed, engageZone)
-
-                -- Tell the program to use the object (in this case called BAIPlane) as the group to use in the BAI function
-                BAI:SetControllable(group)
-
-                local Check, CheckScheduleID
-
-                if typeOfBAI == 'bombing' then
-
-                    -- Tell the BAI not to search for potential targets in the BAIEngagementZone, but rather use the center of the BAIEngagementZone as the bombing location.
-                      BAI:SearchOff()
-
-                    -- inserire il codice per verificare se il bombardamento � stato effettuato e ordinare l'rtb:  BAI:__RTB(1)
-
-                elseif typeOfBAI == 'target' and targets ~= nil then
-
-                    -- Function checking if targets are still alive: utilizzata per stabilire se la missione e' stata eseguita (imposta BAI_Accomplish a 1)
-                        local function CheckTargets()
-
-                                local nTargets = targets:GetSize()
-                                local nInitial = targets:GetInitialSize()
-                                local nDead = nInitial-nTargets
-
-                                if targets:IsAlive() and nDead < requestNumberKill then
-
-                                    MESSAGE:New(string.format("BAI Mission: " .. nameMission .. ": %d of %d red targets still alive. At least %d targets need to be eliminated.", nTargets, nInitial, requestNumberKill), 5):ToAll()
-
-                                else
-
-                                    MESSAGE:New("BAI Mission: " .. nameMission .. ": The required red targets are destroyed. Mission accomplish!", 30):ToAll()
-                                    BAI:__Accomplish(1) -- Now they should fly back to the patrolzone and patrol (nota che l'accomplish nella funzione evento ordina l'RTB vedi sotto).
-
-                                end -- end if
-
-                        end  -- end local function
-
-                        -- Schedula la funzione locale CheckTargets() con un ritardo iniziale di 60 secondi e successivamente una frequenza di ripetizione di 60 secondi.
-                        -- Start scheduler to monitor number of targets and so order RTB.
-                        Check, CheckScheduleID = SCHEDULER:New(nil, CheckTargets, {}, 60, 60)
-
-                end -- end if
-
-                -- inserire una funzione evento se le munizioni sono finite -- accomplish, rtb se non e' automatico
-
-
-                -- When the targets in the zone are destroyed, (see scheduled function), the planes will return home ...
-                function BAI:OnAfterAccomplish( Controllable, From, Event, To )
-
-                      MESSAGE:New( "BAI Mission:" .. nameMission .." Sending the aircraft back to base.", 30):ToAll()
-                      Check:Stop(CheckScheduleID) -- chiude lo Scheduler
-                      BAI:__RTB(1) -- qui viene ordinato l'RTB ma potresti eliminarlo in modo che la BAI rimanga nella patrol zone in attesa di successivi comandi
-
-                end -- end function
-
-                -- Start BAI
-                -- BAI:__Start(delayMission)
-                BAI:Start()
-
-                -- Engage after timeToEngage.
-                -- BAI:__Engage(timeToEngage, engageSpeed, engageAltitude, engageWeaponExpend, engageAttackQty, engageDirection)
-                BAI:__Engage()
-
-                -- RTB after timeToRTB.
-                BAI:__RTB(timeToRTB)
-
-        end -- end for
-
-        return
-
-end -- end function
 
 
 
@@ -6595,10 +6489,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI_target('fighter_bomber')
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - request kills: ' .. request_kills .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-              activeBAIWarehouseBis( 'Interdiction from Tbilisi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+              activeBAIWarehouseBis( 'Interdiction from Tbilisi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
           end -- end if
 
@@ -6608,7 +6502,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if request.assignment == "PATROL" then
 
-
+            local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
             local patrolZone =  bluePatrolZone.tbilisi[1]
             local engageRange = math.random(10000, 20000)
             local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
@@ -6622,7 +6516,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage )
+            activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
           end -- end if
 
@@ -6630,7 +6524,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
           if request.assignment == "PATROL WITH ENGAGE ZONE" then
 
-
+            local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
             local engageZone = redFrontZone.TSKHINVALI[1]
 
             for _, v in pairs(redFrontZone) do
@@ -6658,7 +6552,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage )
+            activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
           end -- end if
 
@@ -6956,12 +6850,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
               local patrolZone = bluePatrolZone.vaziani[1]
 
+
               speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI_target('fighter_bomber')
 
-              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - request kills: ' .. request_kills .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-              activeBAIWarehouseBis( 'Interdiction from Vaziani against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+              activeBAIWarehouseBis( 'Interdiction from Vaziani against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
             end -- end if
 
@@ -6971,10 +6866,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
             if request.assignment == "PATROL" then
 
                 -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
-
+                local homeAirbase =  AIRBASE.Caucasus.Vaziani
                 local patrolZone =  bluePatrolZone.vaziani[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
                 local engageRange = math.random(10000, 20000)
-                local engageZone = engageZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+                local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
                 local patrolFloorAltitude = 4000
                 local patrolCeilAltitude = 9000
                 local minSpeedPatrol = 400
@@ -6985,7 +6880,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
                 logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-                activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage )
+                activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase)
 
             end -- end if
 
@@ -6993,7 +6888,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
             if request.assignment == "PATROL WITH ENGAGE ZONE" then
 
-
+              local homeAirbase =  AIRBASE.Caucasus.Vaziani
               local engageZone = redFrontZone.TSKHINVALI[1]
 
               for _, v in pairs(redFrontZone) do
@@ -7019,7 +6914,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName() } )
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-              activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage )
+              activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
             end -- end if
 
