@@ -186,25 +186,26 @@ local loggingLevel = 7
 --
 function logging(type, info)
 
-    local msg = '1975GW - Function:  '
+    local msg = '1975GW - '
+    local msg1 = 'Function:  '
 
-    if type == 'enter' and loggingLevel > 5 then  env.info( msg .. info .. '  ENTER') end
+    if type == 'enter' and loggingLevel > 5 then  env.info( msg .. 'ENTER - ' .. msg1 .. info) end
 
-    if type == 'exit'  and loggingLevel > 5 then  env.info( msg .. info .. '  EXIT') end
+    if type == 'exit'  and loggingLevel > 5 then  env.info( msg .. 'EXIT - ' .. msg1 .. info ) end
 
-    if type == 'error' and loggingLevel > 0 then  env.info( msg .. info[1] .. '  ERROR: ' .. info[2] ) end
+    if type == 'error' and loggingLevel > 0 then  env.info( msg .. 'ERROR - '  .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
-    if type == 'severe' and loggingLevel > 1 then  env.info( msg .. info[1] .. '  SEVERE: ' .. info[2] ) end
+    if type == 'severe' and loggingLevel > 1 then  env.info( msg .. 'SEVERE - ' .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
-    if type == 'warning' and loggingLevel > 2 then  env.info( msg .. info[1] .. '  WARNING: ' .. info[2] ) end
+    if type == 'warning' and loggingLevel > 2 then  env.info( msg .. 'WARNING - ' .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
-    if type == 'info' and loggingLevel > 3 then  env.info( msg .. info[1] .. '  INFO: ' .. info[2] ) end
+    if type == 'info' and loggingLevel > 3 then  env.info( msg .. 'INFO - ' .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
-    if type == 'fine' and loggingLevel > 4 then  env.info( msg .. info[1] .. '  FINE: ' .. info[2] ) end
+    if type == 'fine' and loggingLevel > 4 then  env.info( msg .. 'FINE - ' .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
-    if type == 'finer' and loggingLevel > 5 then  env.info( msg .. info[1] .. '  FINER: ' .. info[2] ) end
+    if type == 'finer' and loggingLevel > 5 then  env.info( msg .. 'FINER - ' .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
-    if type == 'finest' and loggingLevel > 6 then  env.info( msg .. info[1] .. '  FINEST: ' .. info[2] ) end
+    if type == 'finest' and loggingLevel > 6 then  env.info( msg .. 'FINEST - ' .. msg1 .. info[1] .. '     -     message:' .. info[2] ) end
 
     return
 
@@ -748,14 +749,14 @@ end
 -- @param minSpeedEngage = velocit� minima di ingaggio
 -- @param maxSpeedEngage = velocit� massima di ingaggio
 --
-function activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+function activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbaseName )
 
 
       -- nota: inserire il mission accomplish se le munizioni sono finite, l'eventuale check del fuel, se danneggiato ecc.
 
-      local homeAirbase_ = homeAirbase -- wrapper AIRBASE ?
+      local homeAirbase = AIRBASE:FindByName( homeAirbaseName ) -- wrapper AIRBASE
 
-      logging('finest', { 'activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )' , 'homeAirbase_ coord = ' .. homeAirbase_:GetCoordinate()  } )
+      logging('finest', { 'activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbaseName )' , 'homeAirbase coord = ' .. homeAirbase:GetCoordinate():ToStringLLDDM()  } )
 
       for _,group in pairs(groupset:GetSetObjects()) do
 
@@ -764,7 +765,7 @@ function activePATROLWarehouseNew(groupset, patrolZone, engageRange, engageZone,
 
         CAP = AI_A2A_CAP:New(group, patrolZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage)
 
-        CAP:SetHomeAirbase(homeAirbase_)
+        CAP:SetHomeAirbase(homeAirbase)
 
         -- Tell the program to use the object (in this case called CAPPlane) as the group to use in the CAP function
         CAP:SetControllable(group)
@@ -875,7 +876,7 @@ end -- end function
 -- OK
 --
 --
-function activeBAIWarehouseT(nameMission, groupset, patrolZone, engageZone, engageSpeed, engageAltitude, engageWeaponExpend, engageAttackQty, engageDirection, targets, requestNumberKill, patrolFloorAltitude, patrolCeilingAltitude, minPatrolSpeed, maxPatrolSpeed, timeToEngage, timeToRTB, delayMission )
+function activeBAIWarehouseT(nameMission, groupset, patrolZone, engageZone, engageSpeed, engageAltitude, engageWeaponExpend, engageAttackQty, engageDirection, targets, percRequestKill, patrolFloorAltitude, patrolCeilingAltitude, minPatrolSpeed, maxPatrolSpeed, timeToEngage, timeToRTB, delayMission )
 
 
         for _,group in pairs(groupset:GetSetObjects()) do
@@ -903,6 +904,7 @@ function activeBAIWarehouseT(nameMission, groupset, patrolZone, engageZone, enga
                     local nTargets = targets:GetSize()
                     local nInitial = targets:GetInitialSize()
                     local nDead = nInitial-nTargets
+                    local requestNumberKill = nInitial * percRequestKill
 
                     if targets:IsAlive() and nDead < requestNumberKill then
 
