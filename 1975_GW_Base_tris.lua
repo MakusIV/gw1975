@@ -3736,7 +3736,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           end, {}, start_ground_sched * didi_efficiency_influence, interval_ground_sched, rand_ground_sched
 
-        )
+        ) -- END SCHEDULER
 
 
         attackGroupForAFACSet = {}
@@ -6409,7 +6409,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
 
-        local depart_time = defineRequestPosition(8)
+        local depart_time = defineRequestPosition(7)
         local tblisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -6422,10 +6422,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 3 , 5 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 3 , 5 ), nil, nil, nil, "Bomb Airbase")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( 2 , 3 ), nil, nil, nil, "TRANSFER MIG 21")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT 2")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT 2")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  tblisi_efficiency_influence, interval_sched, rand_sched
@@ -6439,7 +6438,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
 
@@ -6560,10 +6559,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for GCI asset
+          ------------------------------------------------------------------------------------------------------ assignment for TRANSFER MIG 21 asset
           if request.assignment == "GCI" then
 
-            -- inserire la funzione
 
 
           end -- end if
@@ -6769,7 +6767,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           logging('info', { 'main' , 'addrequest Vaziani warehouse'} )
 
-          local depart_time = defineRequestPosition(9)
+          local depart_time = defineRequestPosition(8)
 
           local vaziani_efficiency_influence = 1
 
@@ -6779,15 +6777,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, 4, nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, 4, nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, 4, nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
                   warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, 2, nil, nil, nil, "PATROL")
                   warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, 2, nil, nil, nil, "PATROL WITH ENGAGE ZONE")
                   warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, 3, nil, nil, nil, "Bomb Airbase")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, 2, nil, nil, nil, "TRANSFER MIG 21")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_YAK_40, 2, nil, nil, nil, "TRANSPORT 2")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_YAK_40, 2, nil, nil, nil, "TRANSPORT 2")
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
                   logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
               end, {}, start_sched * vaziani_efficiency_influence, interval_sched, rand_sched
@@ -6803,7 +6800,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- Do something with the spawned aircraft.
           function warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'request.assignmet: ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+            logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' ,  ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
             ------------------------------------------------------------------------------------------------------ assignment for BAI asset
@@ -8162,6 +8159,31 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ------------------------------------------- CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
     -- RAT (Random Air Traffic) OK
 
     -- Name: RAT-005 - Restricted Coalition
@@ -8207,46 +8229,148 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -- Create RAT object. Additionally, to the template group name we give the group an alias to be able to distinguish to another group created from this template.
-    local ant = RAT:New(air_template_red.TRAN_AN_26, "Antonov 26 Red")
-
-    -- Change coalition of Antonof to red.
-    ant:SetCoalitionAircraft("red")
-
-
-    -- This restricts the possible departure and destination airports the airports belonging to the red coalition.
-    -- Here it is important that in the mission editor enough (>2) airports have been set to red! Otherwise there will be no possible departure and/or destination airports.
-    ant:SetCoalition("sameonly")
-
-    -- Explicitly exclude Senaki from possible departures and destinations.
-    ant:ExcludedAirports("Nalchik", "Beslan")
-
-    -- Spawn three aircraft.
-    ant:Spawn(3)
+    local interval_civ_sched = 1800
+    local start_civ_sched = 10
+    local rand_civ_sched = 0.30
 
 
 
-    -- Create RAT object. Alias is "Yak Blue". If the same template is used multiple times, it is important to give each RAT object an indiviual name!
-    local yakblue=RAT:New(air_template_blue.TRAN_YAK_40, "Yak Blue")
+    ------------------------------------------- RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
 
-    -- Change coalition of Yak to blue.
-    yakblue:SetCoalitionAircraft("blue")
+    local red_civilian_traffic = true
 
-    -- This restricts the possible departure and destination airports the airports belonging to the blue coalition since the coalition is changed manually.
-    yakblue:SetCoalition("sameonly")
+    if red_civilian_traffic then
 
-    -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
-    yakblue:Livery({"Georgian Airlines"})
+      local civilian_aircraft = {
 
-    -- Explicitly exclude Nalchik from possible departures and destinations.
-    yakblue:ExcludedAirports({"Kutaisi", "Gudauta", "Sochi-Adler"})
+        air_template_red.TRAN_AN_26 = 'SQ red TRA AN_26', -- TRANSPORT
+        air_template_red.TRAN_YAK_40 = 'SQ red TRA YAK_40',
+        air_template_red.TRAN_MI_26 = 'SQ red TRAN MI_26'
 
-    -- Spawn three aircraft.
-    yakblue:Spawn(3)
+      }
+
+      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+      local red_civilian_traffic_sched = SCHEDULER:New( nil,
+
+          function()
+
+            -- Create RAT object. Additionally, to the template group name we give the group an alias to be able to distinguish to another group created from this template.
+            local civ_transport = RAT:New(civilian_aircraft[math.random(1, #civilian_aircraft)], "red civilian transport")
+
+            -- Change coalition of Antonof to red.
+            civ_transport:SetCoalitionAircraft("red")
+
+
+            -- This restricts the possible departure and destination airports the airports belonging to the red coalition.
+            -- Here it is important that in the mission editor enough (>2) airports have been set to red! Otherwise there will be no possible departure and/or destination airports.
+            civ_transport:SetCoalition("sameonly")
+
+            -- Explicitly exclude Senaki from possible departures and destinations.
+            civ_transport:ExcludedAirports("Nalchik", "Beslan", "Nalchik", "Mineralnye_Vody")
+
+            -- Spawn from 1 to 4 aircraft.
+            civ_transport:Spawn(math.math.random(1, 4))
+
+             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * (1-rand_civ_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+          end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
+
+      ) -- end  scheduler
+
+    end -- end if
+
+    ------------------------------------------- END RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ------------------------------------------- BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+    local blue_civilian_traffic = true
+
+    if blue_civilian_traffic then
+
+      local civilian_aircraft = {
+
+        air_template_blue.TRAN_AN_26 = 'SQ blue TRAN AN_26', -- TRANSPORT
+        air_template_blue.TRAN_YAK_40 = 'SQ blue TRANSPORT YAK_40',
+        air_template_blue.TRAN_UH_60A = 'SQ blue TRAN UH_60A',
+        air_template_blue.TRAN_CH_47 = 'SQ blue TRAN CH_47',
+        air_template_blue.TRAN_C_130 = 'SQ blue TRAN C_130'
+
+      }
+
+      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+      local red_civilian_traffic_sched = SCHEDULER:New( nil,
+
+          function()
+
+            -- Create RAT object. Alias is "Yak Blue". If the same template is used multiple times, it is important to give each RAT object an indiviual name!
+            local civ_transport=RAT:New(civilian_aircraft[math.random(1, #civilian_aircraft)], "blue civilian transport")
+
+            -- Change coalition of Yak to blue.
+            civ_transport:SetCoalitionAircraft("blue")
+
+            -- This restricts the possible departure and destination airports the airports belonging to the blue coalition since the coalition is changed manually.
+            civ_transport:SetCoalition("sameonly")
+
+            -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
+            civ_transport:Livery({"Georgian Airlines"})
+
+            -- Explicitly exclude Nalchik from possible departures and destinations.
+            civ_transport:ExcludedAirports({"Kutaisi", "Gudauta", "Sochi-Adler"})
+
+
+
+              -- Spawn from 1 to 4 aircraft.
+              civ_transport:Spawn(math.math.random(1, 4))
+
+             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * (1-rand_civ_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+          end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
+
+      ) -- end  scheduler
+
+    end -- end if
+
+    ------------------------------------------- END BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
 
   end -- end activeAirWar
+
+
 
 
 
