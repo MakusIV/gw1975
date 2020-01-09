@@ -1141,14 +1141,14 @@ function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseNam
 
   logging('enter', 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )')
 
-  logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'pickupAirbaseName = ' .. pickupAirbaseName .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetName() .. '  -  speed = ' .. tostring(speed) } )
+  logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'pickupAirbaseName = ' .. pickupAirbaseName .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } )
 
   local lenghtGroupCargoSet = #groupCargoSet
   local i = 1
 
   for _, group in pairs(groupPlaneSet:GetSetObjects()) do
 
-        logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , ' Airplane = ' .. group:GetName() ..  } )
+        logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , ' Airplane = ' .. group:GetName()  } )
 
         if i <= #groupCargoSet then
 
@@ -1219,7 +1219,7 @@ end -- end function
 
       for _, group in pairs(groupHeliSet:GetSetObjects()) do
 
-            logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , ' Helicopter = ' .. group:GetName() .. '  -  speed = ' .. tostring(speed)  } )
+            logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , ' Helicopter = ' .. group:GetName()  } )
 
             if i <= #groupCargoSet then
 
@@ -2458,7 +2458,7 @@ local activeGroundWar = true
 local activeSeaWar = false
 
 logging('info', { 'main' , 'conflictZone code module activated = ' ..  conflictZone } )
-logging('info', { 'main' , 'Activation code module for Warehouse, Air War, Ground War, SeaWar active = ' .. activeWarehouse .. ' , ' .. activeAirWar .. ' , ' .. activeGroundWar .. ' , ' .. activeSeaWar } )
+logging('info', { 'main' , 'Activation code module for Warehouse, Air War, Ground War, SeaWar active = ' .. tostring(activeWarehouse) .. ' , ' .. tostring(activeAirWar) .. ' , ' .. tostring(activeGroundWar) .. ' , ' .. tostring(activeSeaWar) } )
 
 -- Qui l'eventuale codice per stabilire la zona del conflitto
 --  conflictZone = conflictZone()
@@ -2763,19 +2763,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-           Zestafoni     =   ZONE:New( "ZestafoniPickupZone" ),
-           Gori          =   ZONE:New( "GoriPickupZone" ),
-           Khashuri      =   ZONE:New( "KhashuriPickupZone" )
+           Zestafoni     =   ZONE:New( "Warehouse ZESTAFONI Spawn Zone" ),
+           Gori          =   ZONE:New( "Gori WH Spawn Zone" ),
+           Khashuri      =   ZONE:New( "Warehouse KHASHURI Spawn Zone" )
 
 
         },
 
         red = {
 
-          Biteta        =   ZONE:New( "BitetaPickupZone" ),
-          Didi          =   ZONE:New( "DidiPickupZone" ),
-          Kvemo_Sba     =   ZONE:New( "Kvemo_SbaPickupZone" ),
-          Alagir        =   ZONE:New( "AlagirPickupZone" )
+          Biteta        =   ZONE:New( "Warehouse Biteta Spawn Zone" ),
+          Didi          =   ZONE:New( "Didi Warehouse Spawn Zone" ),
+          Kvemo_Sba     =   ZONE:New( "Kvemo_Sba Warehouse Spawn Zone" ),
+          Alagir        =   ZONE:New( "Alagir Warehouse Spawn Zone" )
 
         }
 
@@ -2785,8 +2785,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-          Vaziani       =   ZONE:New( "VazianiPickupZone" ),
-          Soganiug      =   ZONE:New( "SoganiugPickupZone" ),
+          Vaziani       =   ZONE:New( "TbilisiPickupZone" ),
+          Soganiug      =   ZONE:New( "TbilisiPickupZone" ),
           Tbilisi       =   ZONE:New( "TbilisiPickupZone" ),
           Kutaisi       =   ZONE:New( "KutaisiPickupZone" ),
           Kvitiri       =   ZONE:New( "KvitiriPickupZone" ),
@@ -2797,10 +2797,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         red = {
 
-          Mozdok        =   ZONE:New( "PickupZone" ),
-          Mineralnye    =   ZONE:New( "PickupZone" ),
-          Beslan        =   ZONE:New( "PickupZone" ),
-          Nalchik       =   ZONE:New( "PickupZone" )
+          Mozdok        =   ZONE:New( "MozdockPickupZone" ),
+          Mineralnye    =   ZONE:New( "MineralnyePickupZone" ),
+          Beslan        =   ZONE:New( "BeslanPickupZone" ),
+          Nalchik       =   ZONE:New( "NalchikPickupZone" )
+
+        }
 
       },
 
@@ -2808,8 +2810,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-          Zestafoni_Railway_Station       =   ZONE:New( "PickupZone" ),
-          Agara_Railway_Station      =   ZONE:New( "PickupZone" ),
+          --Zestafoni_Railway_Station       =   ZONE:New( "PickupZone" ),
+          --Agara_Railway_Station      =   ZONE:New( "PickupZone" )
 
 
         },
@@ -2819,6 +2821,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         }
+
+      }
 
   }
 
