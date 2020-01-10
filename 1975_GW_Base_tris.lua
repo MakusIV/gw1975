@@ -276,7 +276,7 @@ function defineRequestPosition(num_pos)
 
   local debug = false
 
-  if debug then if debug then logging('enter', 'defineRequestPosition(num_pos)') end
+  if debug then logging('enter', 'defineRequestPosition(num_pos)') end
 
   if num_pos > 30 then num_pos = 30 end
   if num_pos < 1 then num_pos = 1 end
@@ -3183,7 +3183,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   if activeWarehouse then
 
-
+    logging('info', { 'main' , ' --------------------------------------------------  INIT WAREHOUSE SYSTEM'} )
 
       -- NOTA BENE: LE WAREHOUSE VANNO INSERITE PRIMA DI TUTTO
 
@@ -3521,27 +3521,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local num_mission = 3 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition( num_mission )
-            local pos_mech = defineRequestPosition( #rndTrgDidi.mechanized )
-            local pos_helo = { 1, 2, 3, 4 } -- defineRequestPosition( #rndTrgDidi.helo ) -- le CAS sono connesse alle AFAC e devono essere lanciate prima delle AFAC (alle AFAC sono assegnati i gruppi CAS da dirigere)
---[[
-            for i = 1, num_mission do
 
-              logging('finer', { 'didi scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
-
-              if i < #rndTrgDidi.mechanized then
-
-                logging('finer', { 'didi scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                -- logging('finest', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ 1 ] = ' .. rndTrgDidi.mechanized[ 1 ] .. '  - rndTrgDidi.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] + 1 ][ 2 ] .. 'rndTrgDidi.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] + 1 ][ 3 ] .. '  - rndTrgDidi.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 4 ][ 2 ]  .. '  - rndTrgDidi.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 5 ]} )
-                logging('finer', { 'didi scheduler function' , '#rndTrgDidi.mechanized = ' .. #rndTrgDidi.mechanized} )
-                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 2 ]} )
-                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 3 ]} )
-                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 4 ]} )
-                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
-              end
-
-            end
-
-]]
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 2 , 4 ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 2 , 4 ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
