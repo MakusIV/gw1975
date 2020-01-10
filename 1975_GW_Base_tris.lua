@@ -63,7 +63,7 @@ warhouse:
 
 verifica se in runtime riesci ad interrogare il database di DCS sugli aerei:
 
-mediante il nome dell'unit� template es: nome = 'SQ red CAP Mig_23MLD', unit.findByName(name), name_missile = unit.getDescr.getMissile.name, out_info(name_missile)
+mediante il nome dell'unita' template es: nome = 'SQ red CAP Mig_23MLD', unit.findByName(name), name_missile = unit.getDescr.getMissile.name, out_info(name_missile)
 
 
 
