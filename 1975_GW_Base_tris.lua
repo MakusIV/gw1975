@@ -3506,8 +3506,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             {'AFAC_ZONE_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, afacZone.Tskhunvali_Tkviavi, 'AFAC_HELO'},
             {'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi', WAREHOUSE.Descriptor.GROUPNAME,  air_template_red.CAS_MI_24V, math.random( 1 , 4 ), redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO'},
             {'ATTACK_ZONE_HELO_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 1 , 4 ), redFrontZone.DIDMUKHA, 'ATTACK_ZONE_HELO'},
-            {'RECON_ZONE_HELO_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 1 , 2 ), redFrontZone.DIDMUKHA, 'RECON_ZONE_HELO'}
-            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
+            {'RECON_ZONE_HELO_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 1 , 2 ), redFrontZone.DIDMUKHA, 'RECON_ZONE_HELO'}            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
           }
         }
 
@@ -3544,15 +3543,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 ]]
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.helo[ pos_helo[ 3 ] ][ 2 ], rndTrgDidi.helo[ pos_helo[ 1 ] ][ 3 ], rndTrgDidi.helo[ pos_helo[ 1 ] ][ 4 ], nil, nil, nil, rndTrgDidi.helo[ pos_helo[ 1 ] ][ 1 ])
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.helo[ pos_helo[ 4 ] ][ 2 ], rndTrgDidi.helo[ pos_helo[ 2 ] ][ 3 ], rndTrgDidi.helo[ pos_helo[ 2 ] ][ 4 ], nil, nil, nil, rndTrgDidi.helo[ pos_helo[ 2 ] ][ 1 ])
+            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 2 , 4 ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
+            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 2 , 4 ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
             -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time[1] + 1 ) * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.helo[ pos_helo[ 1 ] ][ 2 ], rndTrgDidi.helo[ pos_helo[ 3 ] ][ 3 ], rndTrgDidi.helo[ pos_helo[ 3 ] ][ 4 ], nil, nil, nil, rndTrgDidi.helo[ pos_helo[ 3 ] ][ 1 ])
-            warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time[2] + 1 ) * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.helo[ pos_helo[ 2 ] ][ 2 ], rndTrgDidi.helo[ pos_helo[ 4 ] ][ 3 ], rndTrgDidi.helo[ pos_helo[ 4 ] ][ 4 ], nil, nil, nil, rndTrgDidi.helo[ pos_helo[ 4 ] ][ 1 ])
+            warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time[1] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO')
+            warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time[2] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO')
             -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1]  * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgDidi.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgDidi.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgDidi.mechanized[ pos_mech[ 1 ] ][ 1 ] )
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 2 ], rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 3 ], rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 4 ], nil, nil, nil, rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 1 ] )
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 2 ], rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 3 ], rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 4 ], nil, nil, nil, rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 1 ] )
+            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' )
+            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' )
+            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[3]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' )
 
             logging('finer', { 'didi scheduler function' , 'addRequest Didi warehouse'} )
 
@@ -3579,12 +3578,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
           logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
           -- activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI, 'enemy_attack', nil, nil, nil)  end
-          if assignment == rndTrgDidi.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgDidi.mechanized[ 1 ][ 5 ], rndTrgDidi.mechanized[ 1 ][ 6 ], nil, nil, nil )  end
-          if assignment == rndTrgDidi.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgDidi.mechanized[ 2 ][ 5 ], rndTrgDidi.mechanized[ 2 ][ 6 ], nil, nil, nil  )  end
-          if assignment == rndTrgDidi.mechanized[ 3 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgDidi.mechanized[ 3 ][ 5 ], rndTrgDidi.mechanized[ 3 ][ 6 ], nil, nil, nil  )  end
-          --if assignment == tkviavi_attack_2 then activeGO_TO_BATTLE( groupset, blueFrontZone.TKVIAVI, 'enemy_attack' )  end
+          if assignment == 'tkviavi_attack_1' then activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, nil, nil )  end
+          if assignment == 'tkviavi_attack_2' then activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, nil, nil  )  end
+          if assignment == 'tseveri_attack_1' then activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, nil, nil  )  end
 
-          if assignment == rndTrgDidi.helo[ 1 ][ 1 ] then
+
+          if assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
 
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
@@ -3593,7 +3592,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local attackgroup = attackGroupForAFACSet[ lenAttackGroupForAFACSet ]
               lenAttackGroupForAFACSet = lenAttackGroupForAFACSet - 1
               logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
-              activeAFAC( groupset, attackgroup, rndTrgDidi.helo[ 1 ][ 5 ], red_command_center, rndTrgDidi.helo[ 1 ][ 6 ] )
+              activeAFAC( groupset, attackgroup, afacZone.Didmukha_Tsveri, afacZone.Didmukha_Tsveri, red_command_center, 'AFAC_HELO' )
 
             else
 
@@ -3601,9 +3600,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             end
 
-          end
 
-          if assignment == rndTrgDidi.helo[ 2 ][ 1 ] then
+
+          elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
 
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
@@ -3612,7 +3611,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local attackgroup = attackGroupForAFACSet[ lenAttackGroupForAFACSet ] -- assegna il gruppo CAS disponibile prelevandolo dalla lista
               lenAttackGroupForAFACSet = lenAttackGroupForAFACSet - 1 -- diminuisce di 1 il numero di gruppi CAS dedicati disponibili
               logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
-              activeAFAC( groupset, attackgroup, rndTrgDidi.helo[ 2 ][ 5 ], red_command_center, rndTrgDidi.helo[ 2 ][ 6 ] )
+              activeAFAC( groupset, attackgroup, afacZone.Tskhunvali_Tkviavi, red_command_center, 'AFAC_HELO' )
 
             else
 
@@ -3622,31 +3621,31 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           end
 
-          if assignment == rndTrgDidi.helo[ 3 ][ 1 ] then
+          if assignment == 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi' then
 
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Didmukha_Tsveri_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
             lenAttackGroupForAFACSet = lenAttackGroupForAFACSet + 1
             attackGroupForAFACSet[ lenAttackGroupForAFACSet ] = groupset
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
-            activeCAS_AFAC( groupset, rndTrgDidi.helo[ 4 ][ 5 ], rndTrgDidi.helo[ 4 ][ 6 ] )
+            activeCAS_AFAC( groupset, redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO' )
 
           end
 
-          if assignment == rndTrgDidi.helo[ 4 ][ 1 ] then
+          if assignment == 'ATTACK_ZONE_HELO_Didmukha_Tsveri' then
 
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Tskhunvali_Tkviavi_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
             lenAttackGroupForAFACSet = lenAttackGroupForAFACSet + 1
             attackGroupForAFACSet[ lenAttackGroupForAFACSet ] = groupset
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
-            activeCAS_AFAC( groupset, rndTrgDidi.helo[ 4 ][ 5 ], rndTrgDidi.helo[ 4 ][ 6 ] )
+            activeCAS_AFAC( groupset, redFrontZone.DIDMUKHA, 'ATTACK_ZONE_HELO' )
 
           end
 
-          if assignment == rndTrgDidi.helo[ 5 ][ 1 ] then
+          if assignment == 'RECON_ZONE_HELO_Didmukha_Tsveri' then
 
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'RECON_ZONE_HELO_Didmukha_Tsveri assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-            activeGO_TO_ZONE_AIR( groupset,  rndTrgDidi.helo[ 5 ][ 5 ], speedPerc )
+            activeGO_TO_ZONE_AIR( groupset,  redFrontZone.DIDMUKHA, speedPerc )
             RecceDetection( groupset, red_command_center, true, 10, 10 )
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
 
