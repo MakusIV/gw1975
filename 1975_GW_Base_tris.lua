@@ -12,6 +12,8 @@ autor: Marco Bellafante
 
 stato:   sviluppo
 
+branch: ristrutturazione farp
+
 
 
 
@@ -142,7 +144,14 @@ https://github.com/FlightControl-Master/MOOSE_MISSIONS/tree/master/SPA%20-%20Spa
 local loggingLevel = 7
 
 
+-- Debug messages for ARTY
+ARTY.Debug = false --If true, send debug messages to all.
 
+-- Debug messages for WAREHOUSE
+WAREHOUSE.Debug = false --If true, send debug messages to all.
+
+-- Status messages for WAREHOUSE
+WAREHOUSE.Report = true -- If true, send status messages to coalition.
 
 
 
@@ -265,11 +274,13 @@ end
 -- @param: num_pos il numero di posizioni da sorteggiare (max 30)
 function defineRequestPosition(num_pos)
 
-  logging('enter', 'defineRequestPosition(num_pos)')
+  local debug = false
+
+  if debug then if debug then logging('enter', 'defineRequestPosition(num_pos)') end
 
   if num_pos > 30 then num_pos = 30 end
   if num_pos < 1 then num_pos = 1 end
-  logging('finest', { 'defineRequestPosition(num_pos)' , 'num_pos = ' .. num_pos  } )
+  if debug then logging('finest', { 'defineRequestPosition(num_pos)' , 'num_pos = ' .. num_pos  } ) end
   local pos = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30}
   local pos_f = {}
 
@@ -278,11 +289,11 @@ function defineRequestPosition(num_pos)
     local b = math.random(num_pos-#pos_f)
     pos_f[ i ] = pos[ b ]
     table.remove( pos, b )
-    logging('finest', { 'defineRequestPosition(num_pos)' , 'pos_f[' .. i .. '] = ' .. pos_f[ i ] .. ' - removed pos[' .. #pos_f .. '] = ' .. pos_f[#pos_f]  } )
+    if debug then logging('finest', { 'defineRequestPosition(num_pos)' , 'pos_f[' .. i .. '] = ' .. pos_f[ i ] .. ' - removed pos[' .. #pos_f .. '] = ' .. pos_f[#pos_f]  } ) end
 
   end
 
-  logging('exit', 'defineRequestPosition(num_pos)')
+  if debug then logging('exit', 'defineRequestPosition(num_pos)') end
 
   return pos_f
 
@@ -294,7 +305,9 @@ end
 -- @param: min_vel, max_vel, min_alt, max_alt
 function defineSpeedAndAltitude(min_vel, max_vel, min_alt, max_alt)
 
-    logging('enter', 'defineSpeedAndAltitude(min_vel, max_vel, min_alt, max_alt)')
+    local debug = false
+
+    if debug then logging('enter', 'defineSpeedAndAltitude(min_vel, max_vel, min_alt, max_alt)') end
 
     if min_vel < 0 or min_vel > 3000 then min_vel = 100 end
     if max_vel < 0 or max_vel > 3000 then max_vel = 200 end
@@ -305,7 +318,7 @@ function defineSpeedAndAltitude(min_vel, max_vel, min_alt, max_alt)
     local speed = math.random( min_vel, max_vel )
     local altitude = math.random( min_alt, max_alt )
 
-    logging('exit', 'defineSpeedAndAltitude(min_vel, max_vel, min_alt, max_alt)')
+    if debug then logging('exit', 'defineSpeedAndAltitude(min_vel, max_vel, min_alt, max_alt)') end
 
     return speed, altitude
 
@@ -317,7 +330,9 @@ end
 -- @param: type_aircraft ('fighter_bomber', 'bomber', 'helicopter')
 function calcParamForBAI(type_aircraft)
 
-  logging('enter', 'calcParamForBAI(type_aircraft)')
+    local debug = false
+
+  if debug then logging('enter', 'calcParamForBAI(type_aircraft)') end
 
   local speed_patrol_max = 300
   local speed_patrol_min = 200
@@ -370,8 +385,8 @@ function calcParamForBAI(type_aircraft)
 
   end
 
-  logging('finest', { 'calcParamForBAI(type_aircraft)' , 'speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB: ' .. speed_attack .. ' - ' .. altitude_attack .. ' - ' .. speed_patrol_min .. ' - ' .. altitude_patrol_min .. ' - ' .. speed_patrol_max .. ' - ' .. altitude_patrol_max .. ' - ' .. attack_angle  .. ' - ' .. num_attack .. ' - ' .. num_weapon .. ' - ' .. time_to_engage .. ' - ' .. time_to_RTB } )
-  logging('exit', 'calcParamForBAI(type_aircraft)')
+  if debug then logging('finest', { 'calcParamForBAI(type_aircraft)' , 'speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB: ' .. speed_attack .. ' - ' .. altitude_attack .. ' - ' .. speed_patrol_min .. ' - ' .. altitude_patrol_min .. ' - ' .. speed_patrol_max .. ' - ' .. altitude_patrol_max .. ' - ' .. attack_angle  .. ' - ' .. num_attack .. ' - ' .. num_weapon .. ' - ' .. time_to_engage .. ' - ' .. time_to_RTB } ) end
+  if debug then logging('exit', 'calcParamForBAI(type_aircraft)') end
 
   return speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB
 
@@ -641,6 +656,7 @@ end
 --
 function createCASMission(route, max_contemp_units, max_contemp_groups, templateList, route_wp_start, route_wp_end, route_range, route_altitud, scheduled_time, scheduled_var, patrolNameZone, patrolSpeedMin, patrolMaxSPeed, minAltitude, maxAltitude, casNameZone, timeOfEngage, timeOfStopEngage, engageSpeed, engageAltitude, nameOfTarget, targetNumToAccomplish, startMission)
 
+
       local Spawn_CAS_Aircraft  = genericSpawnSimple(route, max_contemp_units, max_contemp_groups, templateList, route_wp_start, route_wp_end, route_range, route_altitud, scheduled_time, scheduled_var)
 
       local CASPlane = GROUP:FindByName( route )
@@ -748,12 +764,12 @@ end
 --
 function activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbaseName )
 
-
+      local debug = false
       -- nota: inserire il mission accomplish se le munizioni sono finite, l'eventuale check del fuel, se danneggiato ecc.
 
       local homeAirbase = AIRBASE:FindByName( homeAirbaseName ) -- wrapper AIRBASE
 
-      logging('finest', { 'activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbaseName )' , 'homeAirbase coord = ' .. homeAirbase:GetCoordinate():ToStringLLDDM()  } )
+      if debug then logging('finest', { 'activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbaseName )' , 'homeAirbase coord = ' .. homeAirbase:GetCoordinate():ToStringLLDDM()  } ) end
 
       for _,group in pairs(groupset:GetSetObjects()) do
 
@@ -1138,17 +1154,18 @@ end -- end function
 --
 function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )
 
+  local debug = true
 
-  logging('enter', 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )')
+  if debug then logging('enter', 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )') end
 
-  logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'pickupAirbaseName = ' .. pickupAirbaseName .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } )
+  if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'pickupAirbaseName = ' .. pickupAirbaseName .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
 
   local lenghtGroupCargoSet = #groupCargoSet
   local i = 1
 
   for _, group in pairs(groupPlaneSet:GetSetObjects()) do
 
-        logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , ' Airplane = ' .. group:GetName()  } )
+        if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , ' Airplane = ' .. group:GetName()  } ) end
 
         if i <= #groupCargoSet then
 
@@ -1158,7 +1175,7 @@ function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseNam
 
             local group = group --Wrapper.Group#GROUP
 
-            logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'i = ' .. i .. ' - Helicopter = ' .. group:GetName()  .. '  - cargo selected = ' .. groupCargo:GetName()} )
+            if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'i = ' .. i .. ' - Helicopter = ' .. group:GetName()  .. '  - cargo selected = ' .. groupCargo:GetName()} ) end
 
             -- Start uncontrolled aircraft.
             -- group:StartUncontrolled()
@@ -1170,13 +1187,13 @@ function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseNam
             CargoAirplane:Pickup( PickupAirbase )
 
             function CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )
-                logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )' } )
+                if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )' } ) end
                 CargoAirplane:Deploy( DeployAirbase, speed )
             end
 
 
             function CargoAirplane:onafterUnloaded( Airplane, From, Event, To, Cargo )
-                logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )' } )
+                if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )' } ) end
                 CargoAirplane:Pickup( PickupAirbase, speed )
             end
 
@@ -1185,7 +1202,7 @@ function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseNam
   end -- end for
 
 
-  logging('exit', 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )')
+  if debug then logging('exit', 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )') end
 
   return
 
@@ -1209,17 +1226,18 @@ end -- end function
     --
     function activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )
 
+      local debug = true
 
-      logging('enter', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )')
+      if debug then logging('enter', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
 
-      logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZone = ' .. pickupZone:GetName() .. 'deployZone = ' .. deployZone:GetName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } )
+      if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZone = ' .. pickupZone:GetName() .. 'deployZone = ' .. deployZone:GetName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
 
       local lenghtGroupCargoSet = #groupCargoSet
       local i = 1
 
       for _, group in pairs(groupHeliSet:GetSetObjects()) do
 
-            logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , ' Helicopter = ' .. group:GetName()  } )
+            if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , ' Helicopter = ' .. group:GetName()  } ) end
 
             if i <= #groupCargoSet then
 
@@ -1229,7 +1247,7 @@ end -- end function
 
                 local group = group --Wrapper.Group#GROUP
 
-                logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'i = ' .. i .. ' - Helicopter = ' .. group:GetName() .. '  - cargo selected = ' .. groupCargo:GetName() } )
+                if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'i = ' .. i .. ' - Helicopter = ' .. group:GetName() .. '  - cargo selected = ' .. groupCargo:GetName() } ) end
 
                 -- Start uncontrolled aircraft.
                 -- group:StartUncontrolled()
@@ -1246,13 +1264,13 @@ end -- end function
                 CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( inner, outer ) )
 
                 function CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )
-                    logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )' } )
+                    if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )' } ) end
                     CargoHelicopter:Deploy( DeployZone:GetRandomCoordinate( innerDeployZone, outerDeployZone ), speed )
                 end
 
 
                 function CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )
-                    logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )' } )
+                    if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )' } ) end
                     CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( innerPickIpZone, outerPickIpZone ), speed )
                 end
 
@@ -1261,7 +1279,7 @@ end -- end function
       end -- end for
 
 
-      logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )')
+      if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
 
       return
 
@@ -1277,10 +1295,11 @@ end -- end function
 --
 function activeGO_TO_ZONE_AIR( group, battlezone, speedPerc )
 
+  local debug = true
 
-  logging('enter', 'activeGO_TO_ZONE_AIR( group, battlezone )')
+  if debug then logging('enter', 'activeGO_TO_ZONE_AIR( group, battlezone )') end
 
-  logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'battlezone = ' .. battlezone[2] .. '  -  group = ' .. group:GetName() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } )
+  if debug then logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'battlezone = ' .. battlezone[2] .. '  -  group = ' .. group:GetName() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
 
   local battleZone = battlezone[1] -- the zone object
 
@@ -1301,7 +1320,7 @@ function activeGO_TO_ZONE_AIR( group, battlezone, speedPerc )
     local groupCoord = group:GetCoordinate()
     group:RouteAirTo(ToCoord, 'BARO', ToCoord.WaypointType, nil)
 
-    logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } )
+    if debug then logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
 
 
 
@@ -1309,7 +1328,7 @@ function activeGO_TO_ZONE_AIR( group, battlezone, speedPerc )
 
 
 
-  logging('exit', 'activeGO_TO_ZONE_AIR( group, battlezone )')
+  if debug then logging('exit', 'activeGO_TO_ZONE_AIR( group, battlezone )') end
 
   return
 
@@ -1326,10 +1345,11 @@ end -- end function
 --
 function activeGO_TO_ZONE_GROUND( group, battlezone, offRoad, speedPerc )
 
+    local debug = true
 
-    logging('enter', 'activeGO_TO_ZONE_GROUND( group, battlezone )')
+    if debug then logging('enter', 'activeGO_TO_ZONE_GROUND( group, battlezone )') end
 
-    logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'battlezone = ' .. battlezone[2] .. '  -  group = ' .. group:GetName() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } )
+    if debug then logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'battlezone = ' .. battlezone[2] .. '  -  group = ' .. group:GetName() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
 
     local battleZone = battlezone[1] -- the zone object
 
@@ -1349,25 +1369,25 @@ function activeGO_TO_ZONE_GROUND( group, battlezone, offRoad, speedPerc )
     local groupCoord = group:GetCoordinate()
     local route, length, exist = groupCoord:GetPathOnRoad( ToCoord )
 
-    logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } )
+    if debug then logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
 
 
     if exist and not offRoad then
 
-      logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'routeToRoad' } )
+      if debug then logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'routeToRoad' } ) end
       -- Ottimizzazione: evita il ricalcolo della route. Cmq dai un occhiata a Moose group:RouteGroundOnRoad per una eventuale modifica
       -- group:RoutePush( route )
       group:RouteGroundOnRoad( ToCoord, group:GetSpeedMax() * speedPerc )
 
     else
 
-      logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'routeToGround' } )
+      if debug then logging('finest', { 'activeGO_TO_ZONE_GROUND( group, battlezone )' , 'routeToGround' } ) end
       group:RouteGroundTo( ToCoord, group:GetSpeedMax() * speedPerc )
 
     end
 
 
-    logging('exit', 'activeGO_TO_ZONE_GROUND( group, battlezone )')
+    if debug then logging('exit', 'activeGO_TO_ZONE_GROUND( group, battlezone )') end
 
     return
 
@@ -1391,9 +1411,11 @@ end -- end function
 --
 function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPerc )
 
-        logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone )')
+        local debug = true
 
-        logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } )
+        if debug then logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone )') end
+
+        if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } ) end
 
         local battleZone = battlezone[1] -- the zone object
         local ToCoord = battleZone:GetRandomCoordinate()
@@ -1404,7 +1426,7 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
 
             activeGO_TO_ZONE_GROUND( group, battlezone, offRoad, speedPerc )
 
-            logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'task = '.. task } )
+            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'task = '.. task } ) end
 
             -- task per attacco diretto
             if task == 'enemy_attack' then
@@ -1413,7 +1435,7 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
               -- sostituisce con task per enemy attack: search & destroy
 
               SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
-              logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute enemy_attack tasking'} )
+              if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute enemy_attack tasking'} ) end
 
             end  --end if
 
@@ -1428,7 +1450,7 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
               local maxDistance = param.maxDistance
               local maxFiringRange = param.maxFiringRange
 
-              logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_firing tasking   -  ' .. 'num target zone = ' .. #listTargetInfo .. '  -  groupResupplySet = ' .. groupResupplySet:GetObjectNames() .. '-  speed = ' .. tostring(speed) .. '-  onRoad = ' .. tostring(onRoad) .. '-  maxDistance = ' .. tostring(maxDistance) .. '-  maxFiringRange = ' .. tostring(maxFiringRange) } )
+              if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_firing tasking   -  ' .. 'num target zone = ' .. #listTargetInfo .. '  -  groupResupplySet = ' .. groupResupplySet:GetObjectNames() .. '-  speed = ' .. tostring(speed) .. '-  onRoad = ' .. tostring(onRoad) .. '-  maxDistance = ' .. tostring(maxDistance) .. '-  maxFiringRange = ' .. tostring(maxFiringRange) } ) end
 
 
               ArtyPositionAndFireAtTarget(group, groupResupplySet, ToCoord, listTargetInfo, command_center, activateDetectionReport, speed, onRoad, maxDistance, maxFiringRange)
@@ -1442,7 +1464,7 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
               --qui la funzione che utilizza la func ArtyFireAtDetection
 
               -- tasking for artillery firing
-                logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_detection_and_firing tasking'} )
+                if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_detection_and_firing tasking'} ) end
 
             end  --end if
 
@@ -1450,14 +1472,14 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
             if task == 'defence' then
 
                   -- tasking for artillery firing
-                  logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute defence tasking'} )
+                  if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute defence tasking'} ) end
 
             end  --end if
 
 
         end -- end for
 
-        logging('exit', 'activeGO_TO_BATTLE( groupset, battlezone )')
+        if debug then logging('exit', 'activeGO_TO_BATTLE( groupset, battlezone )') end
 
         return
 
@@ -1475,9 +1497,11 @@ end -- end function
 --
 function activeGO_TO_ARTY( groupset, battlezone, param, onRoad, speed )
 
-  logging('enter', 'activeGO_TO_ARTY( groupset, battlezone )')
+  local debug = true
 
-  logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } )
+  if debug then logging('enter', 'activeGO_TO_ARTY( groupset, battlezone )') end
+
+  if debug then logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } ) end
 
   local battleZone = battlezone[1] -- the zone object
   local ToCoord = battleZone:GetRandomCoordinate()
@@ -1511,20 +1535,20 @@ function activeGO_TO_ARTY( groupset, battlezone, param, onRoad, speed )
     -- il numero di ammo max e' definito o illimitato?
     for _, item in pairs(listTargetInfo) do
 
-      logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'item.weaponType = ' .. tostring(item.weaponType) .. ' - item.num_shots = ' .. tostring(item.num_shots) .. '  -  item.num_engagements = ' .. tostring(item.num_engagements) .. ' -  numOtherAmmo[item.weaponType] = ' .. tostring(numOtherAmmo[item.weaponType]) } )
+      if debug then logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'item.weaponType = ' .. tostring(item.weaponType) .. ' - item.num_shots = ' .. tostring(item.num_shots) .. '  -  item.num_engagements = ' .. tostring(item.num_engagements) .. ' -  numOtherAmmo[item.weaponType] = ' .. tostring(numOtherAmmo[item.weaponType]) } ) end
       numOtherAmmo[item.weaponType] = numOtherAmmo[item.weaponType] + item.num_shots * item.num_engagements
-      logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'numOtherAmmo[item.weaponType] = ' .. tostring(numOtherAmmo[item.weaponType]) } )
+      if debug then logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'numOtherAmmo[item.weaponType] = ' .. tostring(numOtherAmmo[item.weaponType]) } ) end
 
     end
 
 
-    logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'execute artillery_firing tasking   -  ' .. 'num target zone = ' .. #listTargetInfo .. '  -  groupResupplySet = ' .. groupResupplySet:GetObjectNames() .. '-  speed = ' .. tostring(speed) .. '-  onRoad = ' .. tostring(onRoad) .. '-  maxDistance = ' .. tostring(maxDistance) .. '-  maxFiringRange = ' .. tostring(maxFiringRange) } )
+    if debug then logging('finest', { 'activeGO_TO_ARTY( groupset, battlezone )' , 'execute artillery_firing tasking   -  ' .. 'num target zone = ' .. #listTargetInfo .. '  -  groupResupplySet = ' .. groupResupplySet:GetObjectNames() .. '-  speed = ' .. tostring(speed) .. '-  onRoad = ' .. tostring(onRoad) .. '-  maxDistance = ' .. tostring(maxDistance) .. '-  maxFiringRange = ' .. tostring(maxFiringRange) } ) end
 
     ArtyPositionAndFireAtTarget(group, groupResupplySet, ToCoord, listTargetInfo, command_center, activateDetectionReport, speed, onRoad, maxDistance, maxFiringRange, numOtherAmmo)
 
   end -- end for
 
-  logging('exit', 'activeGO_TO_GO_TO_ARTYWarehouse( groupset, battlezone )')
+  if debug then logging('exit', 'activeGO_TO_GO_TO_ARTYWarehouse( groupset, battlezone )') end
 
   return
 
@@ -1544,6 +1568,8 @@ end -- end function
 --
 function RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage)
 
+    local debug = true
+
     -- determina il recceGroup selezionandolo da tutte le unita' definite Recce (Recce #001, ..)
     --RecceSetGroup = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( nameRecceUnits ):FilterStart()
 
@@ -1555,9 +1581,9 @@ function RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, 
 
     -- quindi OK LA WAREHOUSE CON OnAfterSelfRequest  genera un groupSet!!!!!!
 
-    logging('enter', 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage')
+    if debug then logging('enter', 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage') end
 
-    logging('info', { 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection)' , 'RecceSetGroup name: ' .. RecceSetGroup:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage })
+    if debug then logging('info', { 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection)' , 'RecceSetGroup name: ' .. RecceSetGroup:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage }) end
 
     local RecceDetection = DETECTION_UNITS:New( RecceSetGroup )
 
@@ -1576,19 +1602,19 @@ function RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, 
         -- @param #string To The To State string.
         function RecceDetection:OnAfterDetect(From,Event,To)
 
-          logging('enter', 'RecceDetection:OnAfterDetect(From,Event,To)')
+          if debug then logging('enter', 'RecceDetection:OnAfterDetect(From,Event,To)') end
 
           local DetectionReport = RecceDetection:DetectedReportDetailed()
 
           command_center:GetPositionable():MessageToAll( DetectionReport, persistTimeOfMessage, "" )
 
-          logging('exit', 'RecceDetection:OnAfterDetect(From,Event,To)')
+          if debug then logging('exit', 'RecceDetection:OnAfterDetect(From,Event,To)') end
 
         end
 
     end
 
-    logging('exit', 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage')
+    if debug then logging('exit', 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage') end
 
     return RecceDetection
 
@@ -1606,6 +1632,8 @@ end
 --
 function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
 
+  local debug = true
+
   -- determina il recceGroup selezionandolo da tutte le unita' definite Recce (Recce #001, ..)
   --RecceSetGroup = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( nameRecceUnits ):FilterStart()
 
@@ -1617,8 +1645,8 @@ function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
 
   -- quindi OK LA WAREHOUSE CON OnAfterSelfRequest  genera un groupSet!!!!!!
 
-  logging('enter', 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)')
-  logging('info', { 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)' , 'ArtillerySetGroup: ' .. ArtillerySetGroup  })
+  if debug then logging('enter', 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)') end
+  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)' , 'ArtillerySetGroup: ' .. ArtillerySetGroup  }) end
 
   local RecceDetection = RecceDetection
 
@@ -1641,7 +1669,7 @@ function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
   --- Tempo di attesa di attivazione del tiro (s)
   local activated_time = 0.5
 
-  logging('info', { 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)' , 'ArtilleryAim: ' .. ArtilleryAim .. ' - radiusTarget: ' .. radiusTarget .. ' - num_ammo: ' .. num_ammo .. ' - activated_time: ' .. activated_time })
+  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)' , 'ArtilleryAim: ' .. ArtilleryAim .. ' - radiusTarget: ' .. radiusTarget .. ' - num_ammo: ' .. num_ammo .. ' - activated_time: ' .. activated_time }) end
   --- OnAfter Transition Handler for Event Detect.
   -- @param Functional.Detection#DETECTION_UNITS self
   -- @param #string From The From State string.
@@ -1650,8 +1678,8 @@ function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
   -- @param Wrapper.Unit#UNIT DetectedUnits
   function RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )
 
-    logging('enter', 'RecceDetection:OnAfterDetected())')
-    logging('info', { 'RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )' , 'RecceSetGroup name: ' .. DetectedUnits:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage })
+    if debug then logging('enter', 'RecceDetection:OnAfterDetected())') end
+    if debug then logging('info', { 'RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )' , 'RecceSetGroup name: ' .. DetectedUnits:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage }) end
 
 
 
@@ -1675,10 +1703,10 @@ function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
           end
 
     end
-      logging('exit', 'RecceDetection:OnAfterDetected())')
+      if debug then logging('exit', 'RecceDetection:OnAfterDetected())') end
   end
 
-  logging('exit', 'ArtyFireAndDetection(RecceSetGroup, ArtillerySetGroup, command_Center, activateDetectionReport)')
+  if debug then logging('exit', 'ArtyFireAndDetection(RecceSetGroup, ArtillerySetGroup, command_Center, activateDetectionReport)') end
 end
 
 
@@ -1707,12 +1735,13 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
   -- ARTY.WeaponType.IlluminationShells: Use illumination shells. This works only with units that have shells and is described below.
   -- ARTY.WeaponType.SmokeShells: Use smoke shells. This works only with units that have shells and is described below.
 
+  local debug = true
 
-  logging('enter', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)')
+  if debug then logging('enter', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)') end
 
-  logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  ArtilleryGroup: ' .. ArtilleryGroup:GetName() .. '  -  groupResupplySet: ' .. groupResupplySet:GetObjectNames() .. '  -  moveCoordinate: ' .. tostring(moveCoordinate.z) .. ',' .. tostring(moveCoordinate.y) .. ',' .. tostring(moveCoordinate.z)} )
+  if debug then logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  ArtilleryGroup: ' .. ArtilleryGroup:GetName() .. '  -  groupResupplySet: ' .. groupResupplySet:GetObjectNames() .. '  -  moveCoordinate: ' .. tostring(moveCoordinate.z) .. ',' .. tostring(moveCoordinate.y) .. ',' .. tostring(moveCoordinate.z)} ) end
 
-  ARTY.Debug = true
+--  ARTY.Debug = true
 
   --- Raggio della zona di bombardamento. Il target rilevato e' al centro della zona
   local radiusTarget = 500
@@ -1750,14 +1779,14 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
   -- Define a rearming group. This is a Transport ammo truck (blue: M818, M181  red Ural-375).
   --local groupResupply = SPAWN:New( resupplyGroupTemplate ) -- prova a togliere local  QUI ***************************
 
-  local groupResupply -- solo per il logging
+  local groupResupply -- solo per il if debug then logging
   -- prende l'ultimo gruppo: da migliorare inserendo una lista di resupplyGreoup presa dal set. Il set e' costituito dal numero di gruppi inseriti nel warehouse _addRequest (vedi 31160 set di 2 gruppi)
   for _,group in pairs(groupResupplySet:GetSet()) do
 
     local group = group --Wrapper.Group#GROUP
 
     artyGroup:SetRearmingGroup( group )
-    groupResupply = group -- solo per il logging
+    groupResupply = group -- solo per il if debug then logging
 
   end
 
@@ -1786,7 +1815,7 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
 
   -- artyGroup:SetAutoRelocateToFiringRange(maxdistance, onroad)
 
-  logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  artyGroupName: ' .. artyGroup.DisplayName .. '  -   resupplyGroup' .. groupResupply:GetName()  .. '  -  shellType (total,  shells, rocket, missile): ' .. string.format('%i  %i  %i %i', artyGroup:GetAmmo( false ) ) } )
+  if debug then logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  artyGroupName: ' .. artyGroup.DisplayName .. '  -   resupplyGroup' .. groupResupply:GetName()  .. '  -  shellType (total,  shells, rocket, missile): ' .. string.format('%i  %i  %i %i', artyGroup:GetAmmo( false ) ) } ) end
 
   -- ARTY:AssignTargetCoord(coord, prio, radius, nshells, maxengage, time, weapontype, name, unique)
 
@@ -1800,8 +1829,8 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
   for _, targetInfo in pairs(listTargetInfo) do
 
     local targetDistance = moveCoordinate:Get2DDistance(targetInfo.targetCoordinate)
-    logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  targetInfo = ' .. tostring(targetInfo.targetCoordinate.x) .. ',' .. tostring(targetInfo.targetCoordinate.y)  .. ',' .. tostring(targetInfo.targetCoordinate.z) .. '  -  targetInfo.num_engagements = ' .. targetInfo.num_engagements .. '  -  targetDistance = ' .. tostring(targetDistance)} )
-    logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  targetPriority = ' .. tostring(targetInfo.priority) .. '  -  radiusTarget = ' .. tostring(targetInfo.radiusTarget)  .. '  -  num_shots = ' .. tostring(targetInfo.num_shots) .. '  -  targetInfo.weaponType = ' .. tostring(targetInfo.weaponType) } )
+    if debug then logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  targetInfo = ' .. tostring(targetInfo.targetCoordinate.x) .. ',' .. tostring(targetInfo.targetCoordinate.y)  .. ',' .. tostring(targetInfo.targetCoordinate.z) .. '  -  targetInfo.num_engagements = ' .. targetInfo.num_engagements .. '  -  targetDistance = ' .. tostring(targetDistance)} ) end
+    if debug then logging('finest', { 'ArtyPositionAndFireAtTarget()' , '  targetPriority = ' .. tostring(targetInfo.priority) .. '  -  radiusTarget = ' .. tostring(targetInfo.radiusTarget)  .. '  -  num_shots = ' .. tostring(targetInfo.num_shots) .. '  -  targetInfo.weaponType = ' .. tostring(targetInfo.weaponType) } ) end
     artyGroup:AssignTargetCoord( targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType)
 
   end
@@ -1811,7 +1840,9 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
 
   function ARTY:OnAfterOpenFire(artyGroup, From, Event, To, target)
 
-    logging('finest', { 'ArtyPositionAndFireAtTarget()' , ' TEST OnAfterOpenFire(Controllable, From, Event, To, target)'} )
+    local debug = true
+
+    if debug then logging('finest', { 'ArtyPositionAndFireAtTarget()' , ' TEST OnAfterOpenFire(Controllable, From, Event, To, target)'} ) end
 
   end
 
@@ -1867,7 +1898,7 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
   -- normandy:Start()
 
 
-  logging('exit', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)')
+  if debug then logging('exit', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)') end
 
 end -- end function
 
@@ -1886,16 +1917,16 @@ end -- end function
 --
 function activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)
 
-
+  local debug = true
   -- VEDI LE MISSIONI DES (DESIGNATE) IN PARTICOLARE LA DES 101
 
-  logging('enter', 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)')
+  if debug then logging('enter', 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)') end
 
 
   local afacZone = afaczone[1] -- the zone object
 
 
-  logging('finest', { 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)' , 'afacgroupsetName: ' .. facgroupset:GetObjectNames() .. 'attackgroupsetName: ' .. attackgroupset:GetObjectNames() .. '  -  mission: ' .. nameMission  .. '  -  zone: ' .. afaczone[2] } )
+  if debug then logging('finest', { 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)' , 'afacgroupsetName: ' .. facgroupset:GetObjectNames() .. 'attackgroupsetName: ' .. attackgroupset:GetObjectNames() .. '  -  mission: ' .. nameMission  .. '  -  zone: ' .. afaczone[2] } ) end
 
 
 
@@ -1905,7 +1936,7 @@ function activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameM
     -- muovi verso la zona
 
     local facGroup = facgroup --Wrapper.Group#GROUP
-    logging('finest', { 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)' , 'afacgroup: ' .. facGroup:GetName() } )
+    if debug then logging('finest', { 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)' , 'afacgroup: ' .. facGroup:GetName() } ) end
 
     -- GLI HELO 'FUMANO' (non e' la posizione della FARP prova a cambiare in heliport singolo: fuma uguale o prova 1 solo: fuma uguale)
     -- NON PERMANE NELLA ZONA VEDI ALTRI TASK IN CONTROLLABLE
@@ -1918,14 +1949,14 @@ function activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameM
     for _, attackgroup in pairs(attackgroupset:GetSet()) do
 
       local attackGroup = attackgroup --Wrapper.Group#GROU
-      logging('finest', { 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)' , 'attackGroup: ' .. attackGroup:GetName() } )
+      if debug then logging('finest', { 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)' , 'attackGroup: ' .. attackGroup:GetName() } ) end
       facGroup:TaskAttackGroup(attackGroup, nil, nil, nil)
 
     end --end for
 
   end --end for
 
-  logging('exit', 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)')
+  if debug then logging('exit', 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)') end
 
   return
 
@@ -1942,15 +1973,15 @@ end -- end function
 --
 function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
 
-
+  local debug = true
   -- VEDI LE MISSIONI DES (DESIGNATE) IN PARTICOLARE LA DES 101
 
-  logging('enter', 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ')
+  if debug then logging('enter', 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ') end
 
 
   local patrolZone = patrolzone[1] -- the zone object
 
-  logging('finest', { 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ' , 'attackgroupsetName: ' .. attackgroupset:GetObjectNames() .. '  -  mission: ' .. nameMission  .. '  -  patrol zone: ' .. patrolzone[2] } )
+  if debug then logging('finest', { 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ' , 'attackgroupsetName: ' .. attackgroupset:GetObjectNames() .. '  -  mission: ' .. nameMission  .. '  -  patrol zone: ' .. patrolzone[2] } ) end
 
 
   for _, attackgroup in pairs(attackgroupset:GetSet()) do
@@ -1959,7 +1990,7 @@ function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
     -- muovi verso la zona
 
     local attackGroup = attackgroup --Wrapper.Group#GROUP
-    logging('finest', { 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ' , 'attack group: ' .. attackGroup:GetName() } )
+    if debug then logging('finest', { 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ' , 'attack group: ' .. attackGroup:GetName() } ) end
     attackGroup:StartUncontrolled()
     attackGroup:TaskRouteToZone(patrolZone, true, 56, nil)
     attackGroup:PatrolZones( { patrolZone }, 200, "Vee" )
@@ -1968,7 +1999,7 @@ function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
 
   end --end for
 
-  logging('exit', 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ')
+  if debug then logging('exit', 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ') end
 
   return
 
@@ -3421,6 +3452,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         -- Didi warehouse e' una frontline warehouse: invia gli asset sul campo con task assegnato. Didi e' rifornita da Biteta Warehouse
 
+        logging('info', { 'main' , 'addAsset Didi warehouse'} )
+
         warehouse.Didi:SetSpawnZone(ZONE:New("Didi Warehouse Spawn Zone"))
         warehouse.Didi:Start()
 
@@ -3428,16 +3461,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- Didi: link and front farp-wharehouse.  Send resupply to Biteta. Receive resupply from Kvemo_sba, Beslan
 
         warehouse.Didi:AddAsset(                 "Infantry Platoon Alpha",                   6)
-        warehouse.Didi:AddAsset(                ground_group_template_red.antitankA,         6,           WAREHOUSE.Attribute.GROUND_TANK)
-        warehouse.Didi:AddAsset(                ground_group_template_red.antitankB,         6,           WAREHOUSE.Attribute.GROUND_TANK)
-        warehouse.Didi:AddAsset(                ground_group_template_red.antitankC,         6,           WAREHOUSE.Attribute.GROUND_TANK)
-        warehouse.Didi:AddAsset(                air_template_red.CAS_MI_24V,                12,           WAREHOUSE.Attribute.AIR_ATTACKHELO    ) -- attack
-        warehouse.Didi:AddAsset(                air_template_red.TRAN_MI_24,                 4,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500  ) -- attack
-        warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_24,                 4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
-        warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              4,           WAREHOUSE.Attribute.AIR_OTHER ) -- AFAC
+        warehouse.Didi:AddAsset(                ground_group_template_red.antitankA,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
+        warehouse.Didi:AddAsset(                ground_group_template_red.antitankB,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
+        warehouse.Didi:AddAsset(                ground_group_template_red.antitankC,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
+        warehouse.Didi:AddAsset(                air_template_red.CAS_MI_24V,                12,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- attack
+        warehouse.Didi:AddAsset(                air_template_red.TRAN_MI_24,                 4,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(3, 6)] ) -- attack
+        warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_24,                 4,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- AFAC
+        warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              4,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- AFAC
 
 
-        logging('info', { 'main' , 'addAsset Didi warehouse'} )
+
 
         logging('info', { 'main' , 'Define blueFrontZone = ' .. 'blueFrontZone' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
         logging('info', { 'main' , 'addrequest Didi warehouse'} )
@@ -3483,7 +3516,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         local didi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local didi_sched = SCHEDULER:New( nil,
+        local didi_sched = SCHEDULER:New( warehouse.Didi,
 
           function()
 
@@ -3491,24 +3524,25 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local depart_time = defineRequestPosition( num_mission )
             local pos_mech = defineRequestPosition( #rndTrgDidi.mechanized )
             local pos_helo = { 1, 2, 3, 4 } -- defineRequestPosition( #rndTrgDidi.helo ) -- le CAS sono connesse alle AFAC e devono essere lanciate prima delle AFAC (alle AFAC sono assegnati i gruppi CAS da dirigere)
-
+--[[
             for i = 1, num_mission do
 
-              logging('finest', { 'didi scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
+              logging('finer', { 'didi scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
 
               if i < #rndTrgDidi.mechanized then
 
-                logging('finest', { 'didi scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
+                logging('finer', { 'didi scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
                 -- logging('finest', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ 1 ] = ' .. rndTrgDidi.mechanized[ 1 ] .. '  - rndTrgDidi.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] + 1 ][ 2 ] .. 'rndTrgDidi.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] + 1 ][ 3 ] .. '  - rndTrgDidi.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 4 ][ 2 ]  .. '  - rndTrgDidi.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 5 ]} )
-                logging('finest', { 'didi scheduler function' , '#rndTrgDidi.mechanized = ' .. #rndTrgDidi.mechanized} )
-                logging('finest', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 2 ]} )
-                logging('finest', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 3 ]} )
-                logging('finest', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 4 ]} )
-                logging('finest', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
+                logging('finer', { 'didi scheduler function' , '#rndTrgDidi.mechanized = ' .. #rndTrgDidi.mechanized} )
+                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 2 ]} )
+                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 3 ]} )
+                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 4 ]} )
+                logging('finer', { 'didi scheduler function' , 'rndTrgDidi.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgDidi.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
               end
 
             end
 
+]]
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.helo[ pos_helo[ 3 ] ][ 2 ], rndTrgDidi.helo[ pos_helo[ 1 ] ][ 3 ], rndTrgDidi.helo[ pos_helo[ 1 ] ][ 4 ], nil, nil, nil, rndTrgDidi.helo[ pos_helo[ 1 ] ][ 1 ])
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.helo[ pos_helo[ 4 ] ][ 2 ], rndTrgDidi.helo[ pos_helo[ 2 ] ][ 3 ], rndTrgDidi.helo[ pos_helo[ 2 ] ][ 4 ], nil, nil, nil, rndTrgDidi.helo[ pos_helo[ 2 ] ][ 1 ])
@@ -3520,7 +3554,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 2 ], rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 3 ], rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 4 ], nil, nil, nil, rndTrgDidi.mechanized[ pos_mech[ 2 ] ][ 1 ] )
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Didi,  rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 2 ], rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 3 ], rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 4 ], nil, nil, nil, rndTrgDidi.mechanized[ pos_mech[ 3 ] ][ 1 ] )
 
-            logging('finest', { 'didi scheduler function' , 'addRequest Didi warehouse'} )
+            logging('finer', { 'didi scheduler function' , 'addRequest Didi warehouse'} )
 
           end, {}, start_ground_sched * didi_efficiency_influence, interval_ground_sched, rand_ground_sched
 
@@ -3542,7 +3576,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- Get assignment of this request.
           local assignment = warehouse.Didi:GetAssignment(request)
 
-          logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+          logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
           -- activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI, 'enemy_attack', nil, nil, nil)  end
           if assignment == rndTrgDidi.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgDidi.mechanized[ 1 ][ 5 ], rndTrgDidi.mechanized[ 1 ][ 6 ], nil, nil, nil )  end
@@ -3552,13 +3586,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == rndTrgDidi.helo[ 1 ][ 1 ] then
 
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
             if lenAttackGroupForAFACSet > 0 then
 
               local attackgroup = attackGroupForAFACSet[ lenAttackGroupForAFACSet ]
               lenAttackGroupForAFACSet = lenAttackGroupForAFACSet - 1
-              logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
+              logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
               activeAFAC( groupset, attackgroup, rndTrgDidi.helo[ 1 ][ 5 ], red_command_center, rndTrgDidi.helo[ 1 ][ 6 ] )
 
             else
@@ -3571,13 +3605,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == rndTrgDidi.helo[ 2 ][ 1 ] then
 
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
             if lenAttackGroupForAFACSet > 0 then -- verifica se c'e' almeno un gruppo CAS dedicato disponibile nella lista di CAS dedicate
 
               local attackgroup = attackGroupForAFACSet[ lenAttackGroupForAFACSet ] -- assegna il gruppo CAS disponibile prelevandolo dalla lista
               lenAttackGroupForAFACSet = lenAttackGroupForAFACSet - 1 -- diminuisce di 1 il numero di gruppi CAS dedicati disponibili
-              logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
+              logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
               activeAFAC( groupset, attackgroup, rndTrgDidi.helo[ 2 ][ 5 ], red_command_center, rndTrgDidi.helo[ 2 ][ 6 ] )
 
             else
@@ -3590,31 +3624,31 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == rndTrgDidi.helo[ 3 ][ 1 ] then
 
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Didmukha_Tsveri_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Didmukha_Tsveri_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
             lenAttackGroupForAFACSet = lenAttackGroupForAFACSet + 1
             attackGroupForAFACSet[ lenAttackGroupForAFACSet ] = groupset
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
             activeCAS_AFAC( groupset, rndTrgDidi.helo[ 4 ][ 5 ], rndTrgDidi.helo[ 4 ][ 6 ] )
 
           end
 
           if assignment == rndTrgDidi.helo[ 4 ][ 1 ] then
 
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Tskhunvali_Tkviavi_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Tskhunvali_Tkviavi_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
             lenAttackGroupForAFACSet = lenAttackGroupForAFACSet + 1
             attackGroupForAFACSet[ lenAttackGroupForAFACSet ] = groupset
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
             activeCAS_AFAC( groupset, rndTrgDidi.helo[ 4 ][ 5 ], rndTrgDidi.helo[ 4 ][ 6 ] )
 
           end
 
           if assignment == rndTrgDidi.helo[ 5 ][ 1 ] then
 
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'RECON_ZONE_HELO_Didmukha_Tsveri assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'RECON_ZONE_HELO_Didmukha_Tsveri assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
             activeGO_TO_ZONE_AIR( groupset,  rndTrgDidi.helo[ 5 ][ 5 ], speedPerc )
             RecceDetection( groupset, red_command_center, true, 10, 10 )
-            logging('finest', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
+            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
 
 
           end
@@ -3757,11 +3791,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             for i = 1, num_mission do
 
-              logging('finest', { 'didi scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
+              logging('finer', { 'didi scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
 
               if i < #rndTrgBiteta.mechanized then
-                logging('finest', { 'didi scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                logging('finest', { 'didi scheduler function' , '#rndTrgBiteta.mechanized = ' .. #rndTrgBiteta.mechanized .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgBiteta.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
+                logging('finer', { 'didi scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
+                logging('finer', { 'didi scheduler function' , '#rndTrgBiteta.mechanized = ' .. #rndTrgBiteta.mechanized .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgBiteta.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
               end
 
             end
@@ -4313,40 +4347,41 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         -- Mozdok e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
         -- Send resupply to Kvemo_Sba, Beslan
+        -- warehouse.Didi:SetSpawnZone(ZONE:New("Didi Warehouse Spawn Zone"))
 
         logging('info', { 'main' , 'addAsset Mozdok warehouse'} )
 
         warehouse.Mozdok:Start()
 
-        warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER  )
-        warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Nuke,             5,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.EWR_TU_22,                  1,         WAREHOUSE.Attribute.AIR_AWACS )
-        --warehouse.Mozdok:AddAsset(                air_template_red.EWR_Mig_25RTB,                  1,         WAREHOUSE.Attribute.AIR_AWACS )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Su_17M4_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER ) -- CAS
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Su_17M4_Bomb,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Rocket,      10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO    ) -- attack
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_L_39C_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mi_8MTV2,            10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,             1,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,        1,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HBomb,          1,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_Mig_27K_Sparse_Light, 10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_Mig_27K_ROCKET_Heavy, 10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        --warehouse.Mozdok:AddAsset(                air_template_red.GA_Mig_27K_ROCKET_Light, 10,         WAREHOUSE.Attribute.AIR_BOMBER )
-        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500   ) -- transport
-        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000  ) -- transport
-        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
+        warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_23MLD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_25PD,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_19P,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   )
+        warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Nuke,             5,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.EWR_TU_22,                  1,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.EWR_Mig_25RTB,                  1,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Su_17M4_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- CAS
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Su_17M4_Bomb,        10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Rocket,      10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(3, 6)]     ) -- attack
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_L_39C_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mi_8MTV2,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,             1,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,        1,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HBomb,          1,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GA_Mig_27K_Sparse_Light, 10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GA_Mig_27K_ROCKET_Heavy, 10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        --warehouse.Mozdok:AddAsset(                air_template_red.GA_Mig_27K_ROCKET_Light, 10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
+        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- transport
+        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(3, 6)] ) -- transport
+        warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(3, 6)] ) -- transport
         --warehouse.Mozdok:AddAsset(                air_template_red.TRAN_YAK_40,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- transport
         --warehouse.Mozdok:AddAsset(                air_template_red.REC_Mig_25RTB,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- recognition
         --warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- recognition
@@ -4354,21 +4389,21 @@ if conflictZone == 'Zone 1: South Ossetia' then
         --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_L_39C,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
         --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Mi_8MTV2,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
         --warehouse.Mozdok:AddAsset(                air_template_red.AFAC_Mi_24,                4,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000  ) -- afac
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorA,          10,                WAREHOUSE.Attribute.GROUND_TANK    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorB,          10,                WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiAkatsia,     10,                WAREHOUSE.Attribute.GROUND_ARTILLERY   ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiGwozdika,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiKatiusha,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiHeavyMortar, 10,                WAREHOUSE.Attribute.GROUND_ARTILLERY    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedA,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedB,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedC,     10,                WAREHOUSE.Attribute.GROUND_APC    ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankA,       10,                WAREHOUSE.Attribute.GROUND_TANK   ) -- Ground troops
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankB,       50,          WAREHOUSE.Attribute.GROUND_TANK  )
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankC,       50,          WAREHOUSE.Attribute.GROUND_TANK  )
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportA,       5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportB,       5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport
-        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TroopTransport,   5,                WAREHOUSE.Attribute.GROUND_TRUCK   ) -- transport troop
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorA,          10,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArmorB,          10,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiAkatsia,     10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiGwozdika,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiKatiusha,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.ArtiHeavyMortar, 10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedA,     10,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedB,     10,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.mechanizedC,     10,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankA,       10,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- Ground troops
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankB,       50,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.antitankC,       50,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportA,       5,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- transport
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TransportB,       5,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- transport
+        --warehouse.Mozdok:AddAsset(                ground_group_template_red.TroopTransport,   5,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- transport troop
         --warehouse.Mozdok:AddAsset(                ground_group_template_red.Truck,            3 )
 
 
@@ -6866,16 +6901,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             for i = 1, num_mission do
 
-              logging('finest', { 'Zestafoni scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
+              logging('finer', { 'Zestafoni scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
 
               if i < #rndTrgZestafoni.mechanized then
-                logging('finest', { 'Zestafoni scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                -- logging('finest', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ 1 ] = ' .. rndTrgZestafoni.mechanized[ 1 ] .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 2 ] .. 'rndTrgZestafoni.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 3 ] .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 4 ][ 2 ]  .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 5 ]} )
-                logging('finest', { 'Zestafoni scheduler function' , '#rndTrgZestafoni.mechanized = ' .. #rndTrgZestafoni.mechanized} )
-                logging('finest', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 2 ]} )
-                logging('finest', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 3 ]} )
-                logging('finest', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 4 ]} )
-                logging('finest', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
+                logging('finer', { 'Zestafoni scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
+                -- logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ 1 ] = ' .. rndTrgZestafoni.mechanized[ 1 ] .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 2 ] .. 'rndTrgZestafoni.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 3 ] .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 4 ][ 2 ]  .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 5 ]} )
+                logging('finer', { 'Zestafoni scheduler function' , '#rndTrgZestafoni.mechanized = ' .. #rndTrgZestafoni.mechanized} )
+                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 2 ]} )
+                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 3 ]} )
+                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 4 ]} )
+                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
               end
 
             end
@@ -7046,11 +7081,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             for i = 1, num_mission do
 
-              logging('finest', { 'khashuri scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
+              logging('finer', { 'khashuri scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
 
               if i < #rndTrgKhashuri.mechanized then
-                logging('finest', { 'khashuri scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                logging('finest', { 'khashuri scheduler function' , '#rndTrgKhashuri.mechanized = ' .. #rndTrgKhashuri.mechanized .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgKhashuri.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
+                logging('finer', { 'khashuri scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
+                logging('finer', { 'khashuri scheduler function' , '#rndTrgKhashuri.mechanized = ' .. #rndTrgKhashuri.mechanized .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgKhashuri.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
               end
 
             end
@@ -7251,12 +7286,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- only for logging
             for i = 1, 5 do
 
-              logging('finest', { 'gori scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
+              logging('finer', { 'gori scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
 
               if i < #rndTrgGori.mechanized then
 
-                logging('finest', { 'gori scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                logging('finest', { 'gori scheduler function' , '#rndTrgGori.mechanized = ' .. #rndTrgGori.mechanized .. '  - rndTrgGori.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgGori.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgGori.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgGori.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
+                logging('finer', { 'gori scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
+                logging('finer', { 'gori scheduler function' , '#rndTrgGori.mechanized = ' .. #rndTrgGori.mechanized .. '  - rndTrgGori.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgGori.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgGori.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgGori.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
 
                 end
 
@@ -7282,7 +7317,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.helo[ pos_helo[ 3 ] ][ 2 ], rndTrgGori.helo[ pos_mech[ 3 ] ][ 3 ], rndTrgGori.helo[ pos_helo[ 3 ] ][ 4 ], nil, nil, nil, rndTrgGori.helo[ pos_helo[ 3 ] ][ 1 ])
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.helo[ pos_helo[ 4 ] ][ 2 ], rndTrgGori.helo[ pos_helo[ 4 ] ][ 3 ], rndTrgGori.helo[ pos_helo[ 4 ] ][ 4 ], nil, nil, nil, rndTrgGori.helo[ pos_helo[ 4 ] ][ 1 ])
 
-            logging('finest', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
+            logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
           end, {}, start_ground_sched *  gori_efficiency_influence, interval_ground_sched, rand_ground_sched
 
