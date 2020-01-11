@@ -1063,7 +1063,10 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
 
           -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
           -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-          --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , reconDirection, reconAltitude, bombQuantity)
+          local task=group:TaskRouteToVec2(target:GetCoordinate():GetVec2(), speedReconRun, nil)
+          --TaskRouteToZone(Zone, Randomize, Speed, Formation)
+
+
 
           -- Define waypoints.
           local WayPoints={}
@@ -2470,7 +2473,113 @@ local airbase_blue = { AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Sochi_Adler, A
 
 
 
--- THE CONFLICT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------    THE CONFLICT --------------------------------------------------------------------------------------------
+
+
+
+
+
+---- CONFLICT CONFIGURATION
 
 
 -- la Zona del conflitto attivata
@@ -2487,6 +2596,64 @@ local activeGroundWar = true
 
 -- stato attivazione conflitto navale
 local activeSeaWar = false
+
+
+-- warehouse activation
+local wh_activation = {
+
+
+  Warehouse = {
+
+    blue = {
+
+       Zestafoni     =   false,
+       Gori          =   true,
+       Khashuri      =   false
+
+
+    },
+
+    red = {
+
+      Biteta        =   false,
+      Didi          =   true,
+      Kvemo_Sba     =   false,
+      Alagir        =   false
+
+    }
+
+  },
+
+  Warehouse_AB = {
+
+    blue = {
+
+      Vaziani       =   true,
+      Soganlug      =   false,
+      Tbilisi       =   true,
+      Kutaisi       =   true,
+      Kvitiri       =   false,
+      Kvitiri_Helo  =   false,
+      Batumi        =   true
+
+    },
+
+    red = {
+
+      Mozdok        =   false,
+      Mineralnye    =   true,
+      Beslan        =   true,
+      Nalchik       =   false
+
+    }
+
+  },
+
+
+}
+
+
+
 
 logging('info', { 'main' , 'conflictZone code module activated = ' ..  conflictZone } )
 logging('info', { 'main' , 'Activation code module for Warehouse, Air War, Ground War, SeaWar active = ' .. tostring(activeWarehouse) .. ' , ' .. tostring(activeAirWar) .. ' , ' .. tostring(activeGroundWar) .. ' , ' .. tostring(activeSeaWar) } )
@@ -2611,7 +2778,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       blue = {
 
         Vaziani       =   { STATIC:FindByName( "Warehouse Vaziani Airbase" ), "Warehouse Vaziani Airbase",  targetPoints.airbase },  --Functional.Warehouse#WAREHOUSE
-        Soganiug      =   { STATIC:FindByName( "Warehouse Soganiug Airbase" ), "Warehouse Soganiug Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
+        Soganlug      =   { STATIC:FindByName( "Warehouse Soganlug Airbase" ), "Warehouse Soganlug Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
         Tbilisi       =   { STATIC:FindByName( "Warehouse Tbilisi Airbase" ), "Warehouse Tbilisi Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
         Kutaisi       =   { STATIC:FindByName( "Warehouse Kutaisi Airbase"),  "Warehouse Kutaisi Airbase",  targetPoints.airbase },  --Functional.Warehouse#WAREHOUSE
         Kvitiri       =   { STATIC:FindByName( "Warehouse KVITIRI"), "Warehouse KVITIRI",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
@@ -2817,7 +2984,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         blue = {
 
           Vaziani       =   ZONE:New( "VazianiPickupZone" ),
-          Soganiug      =   ZONE:New( "TbilisiPickupZone" ),
+          Soganlug      =   ZONE:New( "TbilisiPickupZone" ),
           Tbilisi       =   ZONE:New( "TbilisiPickupZone" ),
           Kutaisi       =   ZONE:New( "KutaisiPickupZone" ),
           Kvitiri       =   ZONE:New( "KvitiriPickupZone" ),
@@ -2899,7 +3066,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       tbilisi = { ZONE:New("Patrol_Zone_Tbilisi") , "Patrol_Zone_Tbilisi", targetPoints.front_zone },
       vaziani = { ZONE:New("Patrol_Zone_Vaziani") , "Patrol_Zone_Vaziani", targetPoints.front_zone },
-      soganiug = { ZONE:New("Patrol_Zone_Soganiug") , "Patrol_Zone_Soganiug", targetPoints.front_zone },
+      soganlug = { ZONE:New("Patrol_Zone_Soganlug") , "Patrol_Zone_Soganlug", targetPoints.front_zone },
       kutaisi = { ZONE:New("Patrol_Zone_Kutaisi") , "Patrol_Zone_Kutaisi", targetPoints.front_zone }
 
 
@@ -3185,6 +3352,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     logging('info', { 'main' , ' --------------------------------------------------  INIT WAREHOUSE SYSTEM'} )
 
+
+
+
+
       -- NOTA BENE: LE WAREHOUSE VANNO INSERITE PRIMA DI TUTTO
 
 
@@ -3226,7 +3397,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         BLUE RESUPPLY LINK
 
         Tbilisi
-        Soganiug    --->  Gori
+        Soganlug    --->  Gori
         Kutaisi     --->  Zestafoni
         Zestafoni   --->  Khashuri
         Khashuri    --->  Gori
@@ -3250,6 +3421,43 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       ]]
 
+
+
+      --- WAREHOUSE SCHEDULE TIMING CONFIGURATION
+
+          -- AIR --
+    local startReqTimeAir = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
+    local waitReqTimeAir = 600 --600 -- tempo di attesa tra due request successive per asset aerei (10')
+    local start_sched = 120 -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
+    local interval_sched = 3600  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
+    local rand_sched = 0.3  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
+
+    -- GROUND --
+    local start_ground_sched = 10 -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
+    local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
+    local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
+    local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
+    local waitReqTimeGround = 600 -- tempo di attesa tra due request successive per asset terrestri (10')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     -- CREATING WAREHOUSE
     local warehouse={}
 
@@ -3272,7 +3480,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     warehouse.Gori          =   WAREHOUSE:New( staticObject.Warehouse.blue.Gori[ 1 ], staticObject.Warehouse.blue.Gori[ 2 ] )  --Functional.Warehouse#WAREHOUSE
     warehouse.Tbilisi       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Tbilisi[ 1 ], staticObject.Warehouse_AB.blue.Tbilisi[ 2 ] )  --Functional.Warehouse#WAREHOUSE                                      warehouse.Vaziani = WAREHOUSE:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ], staticObject.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
     warehouse.Vaziani       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ], staticObject.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
-    warehouse.Soganiug      =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Soganiug[ 1 ], staticObject.Warehouse_AB.blue.Soganiug[ 2 ] )  --Functional.Warehouse#WAREHOUSE
+    warehouse.Soganlug      =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Soganlug[ 1 ], staticObject.Warehouse_AB.blue.Soganlug[ 2 ] )  --Functional.Warehouse#WAREHOUSE
 
     --[[
     local warehouse = { red = { farp = {}, airbase = {} }, blue = { farp = {}, airbase = {}  }   }
@@ -3296,7 +3504,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     warehouse_.blue.farp.Gori             =   WAREHOUSE:New( staticObject.Warehouse.blue.Gori[ 1 ], staticObject.Warehouse.blue.Gori[ 2 ] )  --Functional.Warehouse#WAREHOUSE
     warehouse_.blue.airbase.Tbilisi       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Tbilisi[ 1 ], staticObject.Warehouse_AB.blue.Tbilisi[ 2 ] )  --Functional.Warehouse#WAREHOUSE                                      warehouse.Vaziani = WAREHOUSE:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ], staticObject.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
     warehouse_.blue.airbase.Vaziani       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ], staticObject.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
-    warehouse_.blue.airbase.Soganiug      =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Soganiug[ 1 ], staticObject.Warehouse_AB.blue.Soganiug[ 2 ] )  --Functional.Warehouse#WAREHOUSE
+    warehouse_.blue.airbase.Soganlug      =   WAREHOUSE:New( staticObject.Warehouse_AB.blue.Soganlug[ 1 ], staticObject.Warehouse_AB.blue.Soganlug[ 2 ] )  --Functional.Warehouse#WAREHOUSE
 
     ]]
 
@@ -3337,33 +3545,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Kvitiri_Helo,
         warehouse.Tbilisi,
         warehouse.Vaziani,
-        warehouse.Soganiug
+        warehouse.Soganlug
 
       }
     }
-
-
-
-
-    -- AIR --
-    local startReqTimeAir = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-    local waitReqTimeAir = 600 --600 -- tempo di attesa tra due request successive per asset aerei (10')
-    local start_sched = 120 -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
-    local interval_sched = 3600  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
-    local rand_sched = 0.3  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
-
-    -- GROUND --
-    local start_ground_sched = 10 -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
-    local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
-    local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
-    local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-    local waitReqTimeGround = 600 -- tempo di attesa tra due request successive per asset terrestri (10')
-
-
-
-
-
-
 
 
 
@@ -3444,9 +3629,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     -------------------------------------- red DIDI warehouse operations -------------------------------------------------------------------------------------------------------
-    local didi_wh_activation = true
 
-    if didi_wh_activation then
+    if wh_activation.Warehouse.red.Didi then
 
         -- escono i cami ma sono fermi
 
@@ -3701,9 +3885,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     ---------------------------------------------- red BITETA warehouse operations ------------------------------------------------------------------------------------------------------------
-    local biteta_wh_activation = true
 
-    if biteta_wh_activation then
+    if wh_activation.Warehouse.red.Biteta then
 
         -- Biteta warehouse e' una supply line warehouse: funziona da collegamento per il trasferimento degli asset tra i diversi nodi della supply line
 
@@ -3866,9 +4049,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------- red Warehouse KVEMO_SBA operations -------------------------------------------------------------------------------------------------------------------------
 
-    local Kvemo_Sba_wh_activation = false
-
-    if Kvemo_Sba_wh_activation then
+    if wh_activation.Warehouse.red.Kvemo_Sba then
 
 
         warehouse.Kvemo_Sba:Start()
@@ -3929,9 +4110,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------- red Warehouse ALAGIR operations -------------------------------------------------------------------------------------------------------------------------
 
-    local Alagir_wh_activation = false
 
-    if Alagir_wh_activation then
+
+    if false then
 
 
         warehouse.Alagir:Start()
@@ -3968,9 +4149,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     ---------------------------------------------------------------- red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
-    local mineralnye_wh_activation = true
 
-    if mineralnye_wh_activation then
+    if wh_activation.Warehouse_AB.red.Mineralnye then
 
 
         logging('info', { 'main' , 'init Warehouse MINERALNYE operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
@@ -4057,7 +4237,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             activeBAI( 'Interdiction from Mineralnye against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
-          end -- end if
+          --end -- end if
 
 
 
@@ -4066,7 +4246,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          if request.assignment == "PATROL" then
+          elseif request.assignment == "PATROL" then
 
             local homeAirbase =  AIRBASE.Caucasus.Mineralnye_Vody
             local patrolZone =  redPatrolZone.mineralnye[1]
@@ -4084,20 +4264,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
-          end -- end if
+          --end -- end if
 
 
           ------------------------------------------------------------------------------------------------------ assignment for GCI asset
-          if request.assignment == "GCI" then
+          elseif request.assignment == "GCI" then
 
             -- inserire la funzione
 
-          end -- end if
+          --end -- end if
 
 
 
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "BOMBING AIRBASE" then
+          elseif request.assignment == "BOMBING AIRBASE" then
 
             -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
@@ -4117,11 +4297,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
             activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-          end  --end
+          --end  --end
 
 
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "BOMBING WAREHOUSE" then
+          elseif request.assignment == "BOMBING WAREHOUSE" then
 
             -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
@@ -4141,12 +4321,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
             activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-          end  --end
+          --end  --end
 
 
 
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "BOMBING MIL ZONE" then
+          elseif request.assignment == "BOMBING MIL ZONE" then
 
             -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
@@ -4166,11 +4346,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
             activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-          end  --end
+          --end  --end
 
 
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "BOMBING FARM" then
+          elseif request.assignment == "BOMBING FARM" then
 
             -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
@@ -4190,11 +4370,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
             activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-          end  --end
+          --end  --end
 
 
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-          if request.assignment == "BOMBING STRUCTURE" then
+          elseif request.assignment == "BOMBING STRUCTURE" then
 
             -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
@@ -4214,13 +4394,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
             activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-          end  --end
+          --end  --end
 
 
 
 
             ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-            if request.assignment == "TRANSPORT INFANTRY ALAGIR" then
+            elseif request.assignment == "TRANSPORT INFANTRY ALAGIR" then
 
               --local vehicleCargoSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
               local vehicleCargoSet = SET_CARGO:New():FilterPrefixes( "Infantry" ):FilterStart()
@@ -4321,9 +4501,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     ------------------------------------------------------------------ red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
-    local mozdok_wh_activation = true
 
-    if mozdok_wh_activation then
+    if wh_activation.Warehouse_AB.red.Mozdok then
 
 
         -- Mozdok e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
@@ -4755,9 +4934,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     ------------------------------------------------------------------ red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
-    local beslan_wh_activation = true
 
-    if beslan_wh_activation then
+    if wh_activation.Warehouse_AB.red.Beslan then
 
         logging('info', { 'main' , 'addAsset Beslan warehouse'} )
 
@@ -5174,10 +5352,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    ------------------------------------------------------------------- red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
-    local nalchik_wh_activation = true
+    ------------------------------------------------------------------- red Nalchik warehouse operations ------------------------------------------------------------------------------------------------------------------------
 
-    if nalchik_wh_activation then
+    if wh_activation.Warehouse_AB.red.Nalchik then
 
 
 
@@ -5559,9 +5736,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------- blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
 
-    local Batumi_wh_activation = false
 
-    if Batumi_wh_activation then
+    if wh_activation.Warehouse_AB.blue.Batumi then
 
 
         --  Batumi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
@@ -5627,10 +5803,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         local depart_time = defineRequestPosition(10)
-        local kutaisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
+        local batumi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local kutaisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Batumi[ 1 ],
+        local batumi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Batumi[ 1 ],
 
           function()
 
@@ -5644,9 +5820,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY GORI")
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.EWR_B_1B, 1, nil, nil, nil, "EWR")
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON")
-             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  Batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
-          end, {}, start_sched *  Batumi_efficiency_influence, interval_sched, rand_sched
+          end, {}, start_sched *  batumi_efficiency_influence, interval_sched, rand_sched
 
         ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
 
@@ -5670,7 +5846,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
             local percRequestKill = math.random( 0 , 100 ) * 0.01
             local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
-            local patrolZone = bluePatrolZone.Kutaisi[1]
+            local patrolZone = bluePatrolZone.kutaisi[1]
             local engageZone = redFrontZone.TSKHINVALI[1]
 
             for _, v in pairs(redFrontZone) do
@@ -5705,7 +5881,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               }
 
               local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-              local patrolZone = bluePatrolZone.Kutaisi[1]
+              local patrolZone = bluePatrolZone.kutaisi[1]
 
               speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
@@ -5724,7 +5900,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if request.assignment == "EWR" then
 
             local homeAirbase =  AIRBASE.Caucasus.Batumi
-            local patrolZone =  bluePatrolZone.Kutaisi[1]
+            local patrolZone =  bluePatrolZone.kutaisi[1]
             local engageRange = math.random(10000, 20000)
             local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
             local patrolFloorAltitude = 7000
@@ -5958,9 +6134,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     ------------------------------------------------- blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
-    local Kutaisi_wh_activation = true
 
-    if Kutaisi_wh_activation then
+    if wh_activation.Warehouse_AB.blue.Kutaisi then
 
 
         warehouse.Kutaisi:Start()
@@ -6055,7 +6230,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
         local percRequestKill = math.random( 0 , 100 ) * 0.01
         local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
-        local patrolZone = bluePatrolZone.Kutaisi[1]
+        local patrolZone = bluePatrolZone.kutaisi[1]
         local engageZone = redFrontZone.TSKHINVALI[1]
 
         for _, v in pairs(redFrontZone) do
@@ -6413,9 +6588,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------- blue Warehouse KVITIRI operations -------------------------------------------------------------------------------------------------------------------------
 
-    local Kvitiri_wh_activation = true
-
-    if Kvitiri_wh_activation then
+    if wh_activation.Warehouse_AB.blue.Kvitiri then
 
 
         warehouse.Kvitiri:Start()
@@ -6855,9 +7028,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------- blue Warehouse KVITIRI_HELO operations -------------------------------------------------------------------------------------------------------------------------
 
-    local Kvitiri_Helo_wh_activation = false
-
-    if Kvitiri_Helo_wh_activation then
+    if wh_activation.Warehouse_AB.blue.Kvitiri_Helo then
 
 
         warehouse.Kvitiri_Helo:Start()
@@ -7122,9 +7293,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
     ------------------------------------------------- blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------------
-    local zestafoni_wh_activation = true
 
-    if zestafoni_wh_activation then
+    if wh_activation.Warehouse.blue.Zestafoni then
 
 
         warehouse.Zestafoni:SetSpawnZone(ZONE:New("Warehouse ZESTAFONI Spawn Zone"))
@@ -7307,9 +7477,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       ----------------------------------------------- blue Warehouse KHASHURI operations ------------------------------------------------------------------------------------------------------------------------
-      local khashuri_wh_activation = true
 
-      if khashuri_wh_activation then
+      if wh_activation.Warehouse.blue.Khashuri then
 
 
           -- Khashuri e' una warehouse del fronte
@@ -7477,9 +7646,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       ------------------------------------------------ blue Warehouse GORI operations ----------------------------------------------------------------------------------------------------------------------------
-      local gori_wh_activation = true
 
-      if gori_wh_activation then
+      if wh_activation.Warehouse.blue.Gori then
 
 
 
@@ -7771,7 +7939,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             -- Request resupply for dead asset from Batumi.
 
-            warehouse.Soganiug:AddRequest( warehouse.Gori, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply" )
+            warehouse.Soganlug:AddRequest( warehouse.Gori, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply" )
 
             -- Send asset to Battle zone either now or when they arrive.
             warehouse.Gori:AddRequest( warehouse.Gori, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
@@ -7834,9 +8002,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       ------------------------------------------------------------ blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
-      local tbilisi_wh_activation = true
 
-      if tbilisi_wh_activation then -- true activate tbilisi wh operations
+      if wh_activation.Warehouse_AB.blue.Tbilisi then -- true activate tbilisi wh operations
 
         -- Nota: Tipo Operazioni Bomber, Transport, EWR
 
@@ -8401,9 +8568,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       ------------------------------------------------------------ blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
-      local vaziani_wh_activation = true
 
-      if vaziani_wh_activation then
+      if wh_activation.Warehouse_AB.blue.Vaziani then
 
           logging('info', { 'main' , 'init Warehouse VAZIANI operations' } )
 
@@ -8861,89 +9027,88 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-      -------------------------------------------------------------- blue Warehouse Soganiug operations ----------------------------------------------------------------------------------------------------------------------------
-      local soganiug_wh_activation = true
+      -------------------------------------------------------------- blue Warehouse Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
-      if soganiug_wh_activation then
-
+      if wh_activation.Warehouse_AB.blue.Soganlug then
 
 
-          warehouse.Soganiug:Start()
+
+          warehouse.Soganlug:Start()
 
 
-          -- Soganiug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
+          -- Soganlug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
 
 
-          warehouse.Soganiug:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER )
-          warehouse.Soganiug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
-          warehouse.Soganiug:AddAsset(              air_template_blue.GCI_F_4,                  5,           WAREHOUSE.Attribute.AIR_FIGHTER )
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
-          warehouse.Soganiug:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-          warehouse.Soganiug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-          warehouse.Soganiug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
-          warehouse.Soganiug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-          warehouse.Soganiug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-          warehouse.Soganiug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
-          warehouse.Soganiug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
-          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000)
-          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
-          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
-          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
-          warehouse.Soganiug:AddAsset(              air_template_blue.TRAN_C_130,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000 ) -- Transport
-          warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-          warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-          warehouse.Soganiug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
-          warehouse.Soganiug:AddAsset(              ground_group_template_blue.TransportA,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-          warehouse.Soganiug:AddAsset(              ground_group_template_blue.TransportB,       4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
-          warehouse.Soganiug:AddAsset(              ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK  )-- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER  ) -- Fighter
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_4,                  5,           WAREHOUSE.Attribute.AIR_FIGHTER )
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber BAI
+          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,         10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber CAS
+          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER ) -- Bomber
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO  ) -- Heli CAS
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000)
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000 ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000  ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700 ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_C_130,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000 ) -- Transport
+          warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK  ) -- Ground troops
+          warehouse.Soganlug:AddAsset(              ground_group_template_blue.TransportA,       6,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+          warehouse.Soganlug:AddAsset(              ground_group_template_blue.TransportB,       4,          WAREHOUSE.Attribute.GROUND_TRUCK ) -- Transport
+          warehouse.Soganlug:AddAsset(              ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK  )-- Transport
 
-          logging('info', { 'main' , 'addAsset Soganiug warehouse'} )
+          logging('info', { 'main' , 'addAsset Soganlug warehouse'} )
 
 
           -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, EWR, Transport
 
 
-          logging('info', { 'main' , 'init Warehouse Soganiug operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
+          logging('info', { 'main' , 'init Warehouse Soganlug operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
-          -- Red targets at Soganiug X (late activated). for test
+          -- Red targets at Soganlug X (late activated). for test
           local RedTargets=GROUP:FindByName("Russian Antitank Defence@Sathiari")
 
 
-          -- blue Soganiug warehouse operations
+          -- blue Soganlug warehouse operations
 
-          logging('info', { 'main' , 'addrequest Soganiug warehouse'} )
+          logging('info', { 'main' , 'addrequest Soganlug warehouse'} )
 
 
           local depart_time = defineRequestPosition(9) -- list of position
 
-          local soganiug_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
+          local soganlug_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
           -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-          local soganiug_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Soganiug[ 1 ],
+          local soganlug_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Soganlug[ 1 ],
 
             function()
               -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI")
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE DIDI")
-              warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA")
-              --warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4")
-            --  warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21")
-            --  warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
-            --  warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2")
-            --  warehouse.Soganiug:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Soganiug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
-              logging('info', { 'main' , 'Soganiug scheduler - start time:' .. start_sched *  soganiug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI")
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE DIDI")
+              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA")
+              --warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4")
+            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21")
+            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
+            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2")
+            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+              logging('info', { 'main' , 'Soganlug scheduler - start time:' .. start_sched *  soganlug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
-            end, {}, start_sched *  soganiug_efficiency_influence, interval_sched, rand_sched
+            end, {}, start_sched *  soganlug_efficiency_influence, interval_sched, rand_sched
 
           )
 
@@ -8951,10 +9116,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           -- Do something with the spawned aircraft.
-          function warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)
+          function warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
-            logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
             ------------------------------------------------------------------------------------------------------ assignment for BAI asset
@@ -8966,7 +9131,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
               local percRequestKill = math.random( 0 , 100 ) * 0.01
               local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
-              local patrolZone = bluePatrolZone.soganiug[1]
+              local patrolZone = bluePatrolZone.soganlug[1]
               local engageZone = redFrontZone.DIDI_CUPTA[1]
 
               for _, v in pairs(redFrontZone) do
@@ -8981,10 +9146,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
               end -- end for
 
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-              activeBAI( 'Interdiction from Soganiug', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+              activeBAI( 'Interdiction from Soganlug', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
             end -- end if
@@ -8997,7 +9162,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
                 local percRequestKill = math.random( 0 , 100 ) * 0.01
                 local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
-                local patrolZone = bluePatrolZone.soganiug[1]
+                local patrolZone = bluePatrolZone.soganlug[1]
                 local engageZone = redFrontZone.SATIHARI[1]
 
                 for _, v in pairs(redFrontZone) do
@@ -9012,10 +9177,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 end -- end for
 
 
-                logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-                logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+                logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+                logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-                activeBAI( 'Interdiction from Soganiug', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+                activeBAI( 'Interdiction from Soganlug', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
             end -- end if
@@ -9026,8 +9191,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
             if request.assignment == "PATROL" then
 
               -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
-              local homeAirbase =  AIRBASE.Caucasus.Soganiug
-              local patrolZone =  bluePatrolZone.soganiug[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
+              local homeAirbase =  AIRBASE.Caucasus.Soganlug
+              local patrolZone =  bluePatrolZone.soganlug[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
               local engageRange = math.random(10000, 20000)
               local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
               local patrolFloorAltitude = 4000
@@ -9037,8 +9202,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local minSpeedEngage = 600
               local maxSpeedEngage = 1000
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
               activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase)
 
@@ -9071,7 +9236,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              local home = warehouse.Soganiug
+              local home = warehouse.Soganlug
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
@@ -9083,7 +9248,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
               activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
@@ -9097,7 +9262,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              local home = warehouse.Soganiug
+              local home = warehouse.Soganlug
               local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
@@ -9110,7 +9275,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
               activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
@@ -9125,7 +9290,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              local home = warehouse.Soganiug
+              local home = warehouse.Soganlug
               local target = zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges ) ][1]
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
@@ -9136,7 +9301,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
 
               activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
@@ -9150,7 +9315,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              local home = warehouse.Soganiug
+              local home = warehouse.Soganlug
               local target = zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges ) ][1]
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
@@ -9161,7 +9326,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
 
               activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
@@ -9174,7 +9339,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              local home = warehouse.Soganiug
+              local home = warehouse.Soganlug
               local target = zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges ) ][1]
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
@@ -9185,7 +9350,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
-              logging('info', { 'warehouse.Soganiug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
+              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
 
               activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
 
@@ -9216,26 +9381,26 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
             --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-            function warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)
+            function warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)
 
                   -- le diverse opzioni disponibili per la scelta casuale della missione
                   local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-                  logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+                  logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
                 --[[
                   -- manca il groupset
                   -- So we start another request.
                   if request.assignment=="PATROL" then
 
-                    logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled PATROL mission' })
-                    activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Soganiug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+                    logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'Soganlug scheduled PATROL mission' })
+                    activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Soganlug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
                   end
 
                   if request.assignment=="BAI TARGET" then
 
-                    logging('info', { 'warehouse.Soganiug:OnAfterDelivered(From,Event,To,request)' , 'Soganiug scheduled BAI TARGET mission' })
-                    activeBAIWarehouseT('Interdiction from Soganiug', groupset, 'target', redFrontZone.BAI_Zone_Soganiug[2], redFrontZone.BAI_Zone_Soganiug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+                    logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'Soganlug scheduled BAI TARGET mission' })
+                    activeBAIWarehouseT('Interdiction from Soganlug', groupset, 'target', redFrontZone.BAI_Zone_Soganlug[2], redFrontZone.BAI_Zone_Soganlug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
                   end -- end if
                   ]]
@@ -9244,7 +9409,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
       end
-      -------------------------------------------------------------END blue Soganiug operations ----------------------------------------------------------------------------------------------------------------------------
+      -------------------------------------------------------------END blue Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
 
 
