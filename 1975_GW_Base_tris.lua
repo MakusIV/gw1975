@@ -1,4 +1,4 @@
---[[
+diveBomb = falsediveBomb = false--[[
 
 
 1975 Georgian War
@@ -1038,15 +1038,9 @@ end -- function
 function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
 
-    --[[ i task sono descritti in controllable:
+    --i task sono descritti in controllable:
+    -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Controllable.html
 
-    https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Controllable.html
-
-
-
-
-
-        ]]
 
     for _,_group in pairs(groupset:GetSet()) do
 
@@ -1061,20 +1055,26 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
           -- Home coordinate.
           local HomeCoord=home:GetCoordinate():SetAltitude(toHomeAltitude)
 
-          -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
+          -- Task recon from direction <reconDirection> at altitude <reconAltitude>.
           -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-          local task=group:TaskRouteToVec2(target:GetCoordinate():GetVec2(), speedReconRun, nil)
+          -- NOTA HO INSERITO LA FORMAZIONE PROBABILMENTE OBBLIGATORIA
+          --local task=group:TaskRouteToVec2(target:GetCoordinate():GetVec2(), speedReconRun, FORMATION.Vee)
+
           --TaskRouteToZone(Zone, Randomize, Speed, Formation)
-
-
+          --TaskRoute(Points)
 
           -- Define waypoints.
           local WayPoints={}
 
           -- Take off position.
           WayPoints[1]=home:GetCoordinate():WaypointAirTakeOffParking()
+
+          -- NOTA: ho commentato il WayPoints[2] originale per testare se il gorup esegue comunque la rotta
+          -- in ogni caso prova anche l'originale.
           -- Begin bombing run 20 km south of target.
-          WayPoints[2]=ToCoord:Translate(reconRunDistance, reconRunDirection):WaypointAirTurningPoint(nil, speedBombRun, {task}, "RECON Run")
+          --WayPoints[2]=ToCoord:Translate(reconRunDistance, reconRunDirection):WaypointAirTurningPoint(nil, speedBombRun, {task}, "RECON Run")
+          WayPoints[2]=ToCoord:Translate(reconRunDistance, reconRunDirection)
+
           -- Return to base.
           WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
           -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
@@ -1092,21 +1092,23 @@ end -- end function
 
 
 
+
+
 --- Attiva il task STRATEGIC BOMBING per un asset assegnato
 --
 -- @param groupset = il gruppo (asset) proveniente dalla warehouse
 -- @param home = il nome della warehouse airbase di partenza
--- @param target = il target (es warehouse.tblisi)
+-- @param target = il target (es warehouse.tblisi o una zona)
 -- @param toTargetAltitude = altitudine relativa alla rotta verso il target
 -- @param toHomeAltitude = altitudine relativa alla rotta verso la airbase
 -- @param bombingDirection = la direzione di attacco
 -- @param bombingAltitude = altitudine di attacco
--- @param bombQuantity = quantit� di weapon da rilasciare
+-- @param diveBomb = true : esegue il bombing in picchiata
 -- @param bombRunDistance = distanza dal target per l'inizio del run
 -- @param bombRunDirection = direzione del run
--- @param speedBombRun = velocit� di attacco
+-- @param speedBombRun = velocita' di attacco
 --
-function activeBOMBING(groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombQuantity, bombRunDistance, bombRunDirection, speedBombRun )
+function activeBOMBING(groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
         for _,_group in pairs(groupset:GetSet()) do
 
@@ -1123,7 +1125,8 @@ function activeBOMBING(groupset, home, target, toTargetAltitude, toHomeAltitude,
 
               -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
               -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-              local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
+              --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
+              local task=group:TaskBombing(target:GetCoordinate():GetVec2(), true, "All", nil , bombingDirection, bombingAltitude, nil, diveBomb)
 
               -- Define waypoints.
               local WayPoints={}
@@ -1145,6 +1148,127 @@ function activeBOMBING(groupset, home, target, toTargetAltitude, toHomeAltitude,
         return
 
 end -- end function
+
+
+
+
+
+--- Attiva il task STRATEGIC BOMBING AIRBASE per un asset assegnato
+--
+-- @param groupset = il gruppo (asset) proveniente dalla warehouse
+-- @param home = il nome della warehouse airbase di partenza
+-- @param airbase = the target (es warehouse.tblisi)
+-- @param toTargetAltitude = altitudine relativa alla rotta verso il target
+-- @param toHomeAltitude = altitudine relativa alla rotta verso la airbase
+-- @param bombingDirection = la direzione di attacco
+-- @param bombingAltitude = altitudine di attacco
+-- @param diveBomb = true : esegue il bombing in picchiata
+-- @param bombRunDistance = distanza dal target per l'inizio del run
+-- @param bombRunDirection = direzione del run
+-- @param speedBombRun = velocit� di attacco
+--
+function activeBombingAirbase(groupset, home, airbase, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+    for _,_group in pairs(groupset:GetSet()) do
+
+          local group=_group --Wrapper.Group#GROUP
+
+          -- Start uncontrolled aircraft.
+          group:StartUncontrolled()
+
+          -- Target coordinate!
+          local ToCoord=target:GetCoordinate():SetAltitude(toTargetAltitude)
+
+          -- Home coordinate.
+          local HomeCoord=home:GetCoordinate():SetAltitude(toHomeAltitude)
+
+          -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
+          -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
+          --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
+          local task=group:TaskBombingRunway(airbase, nil, "All", nil , bombingDirection, true)
+
+          -- Define waypoints.
+          local WayPoints={}
+
+          -- Take off position.
+          WayPoints[1]=home:GetCoordinate():WaypointAirTakeOffParking()
+          -- Begin bombing run 20 km south of target.
+          WayPoints[2]=ToCoord:Translate(bombRunDistance, bombRunDirection):WaypointAirTurningPoint(nil, speedBombRun, {task}, "Bombing Run")
+          -- Return to base.
+          WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
+          -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
+          WayPoints[4]=home:GetCoordinate():WaypointAirLanding()
+
+          -- Route bombers.
+          group:Route(WayPoints)
+
+    end -- end for
+
+    return
+
+end -- end function
+
+
+
+--- Attiva il task STRATEGIC BOMBING GROUP per un asset assegnato
+--
+-- @param groupset = il gruppo (asset) proveniente dalla warehouse
+-- @param home = il nome della warehouse airbase di partenza
+-- @param targetGroup = the target group
+-- @param toTargetAltitude = altitudine relativa alla rotta verso il target
+-- @param toHomeAltitude = altitudine relativa alla rotta verso la airbase
+-- @param bombingDirection = la direzione di attacco
+-- @param bombingAltitude = altitudine di attacco
+-- @param bombRunDistance = distanza dal target per l'inizio del run
+-- @param bombRunDirection = direzione del run
+-- @param speedBombRun = velocit� di attacco
+--
+function activeBombingGroup(groupset, home, targetGroup, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+
+        for _,_group in pairs(groupset:GetSet()) do
+
+              local group=_group --Wrapper.Group#GROUP
+
+              -- Start uncontrolled aircraft.
+              group:StartUncontrolled()
+
+              -- Target coordinate!
+              local ToCoord=targetGroup:GetCoordinate():SetAltitude(toTargetAltitude)
+
+              -- Home coordinate.
+              local HomeCoord=home:GetCoordinate():SetAltitude(toHomeAltitude)
+
+              -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
+              -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
+              --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
+              local task=group:TaskAttackGroup(targetGroup, nil, "All", nil , bombingDirection, bombingAltitude, false)
+
+              -- Define waypoints.
+              local WayPoints={}
+
+              -- Take off position.
+              WayPoints[1]=home:GetCoordinate():WaypointAirTakeOffParking()
+              -- Begin bombing run 20 km south of target.
+              WayPoints[2]=ToCoord:Translate(bombRunDistance, bombRunDirection):WaypointAirTurningPoint(nil, speedBombRun, {task}, "Bombing Run")
+              -- Return to base.
+              WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
+              -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
+              WayPoints[4]=home:GetCoordinate():WaypointAirLanding()
+
+              -- Route bombers.
+              group:Route(WayPoints)
+
+        end -- end for
+
+        return
+
+end -- end function
+
+
+
+
+
+
 
 
 
@@ -3649,7 +3773,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Didi:AddAsset(                ground_group_template_red.antitankB,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
         warehouse.Didi:AddAsset(                ground_group_template_red.antitankC,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(3, 6)] )
         warehouse.Didi:AddAsset(                air_template_red.CAS_MI_24V,                12,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- attack
-        warehouse.Didi:AddAsset(                air_template_red.TRAN_MI_24,                 4,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(3, 6)] ) -- attack
+        warehouse.Didi:AddAsset(                air_template_red.TRAN_MI_26,                 4,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(3, 6)] ) -- attack
         warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_24,                 4,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- AFAC
         warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              4,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)] ) -- AFAC
 
@@ -3658,42 +3782,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'Define blueFrontZone = ' .. 'blueFrontZone' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
         logging('info', { 'main' , 'addrequest Didi warehouse'} )
-
-        -- fixed targets
-
-        local Didmukha_Tsveri_ATTACK_HELO = 'ATTACK_ZONE_HELO_Didmukha_Tsveri'
-        local Tskhunvali_Tkviavi_ATTACK_HELO = 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi'
-
-        -- random targets: mission parameters list for random choice
-        local rndTrgDidi = {
-
-
-          -- [1] = number of mission
-          -- [pos mission][1] = name of mission
-          -- [pos mission][2] = name of mission
-          -- [pos mission][3] = asset group name
-          -- [pos mission][4] = quantity
-          -- [pos mission][5] = target zone
-          -- [pos mission][6] = type of mission
-
-          mechanized = { -- mechanized mission parameters
-
-            {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-            {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
-            {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1 , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
-            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-          },
-
-          helo = { -- helo mission parameters: att le CAS sdevono essere successive alle AFAC in quanto sono connesse tra loro
-
-            {'AFAC_ZONE_Tskhunvali_Tkviavi', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_24, 1, afacZone.Didmukha_Tsveri, 'AFAC_HELO'},
-            {'AFAC_ZONE_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, afacZone.Tskhunvali_Tkviavi, 'AFAC_HELO'},
-            {'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi', WAREHOUSE.Descriptor.GROUPNAME,  air_template_red.CAS_MI_24V, math.random( 1 , 4 ), redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO'},
-            {'ATTACK_ZONE_HELO_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 1 , 4 ), redFrontZone.DIDMUKHA, 'ATTACK_ZONE_HELO'},
-            {'RECON_ZONE_HELO_Didmukha_Tsveri', WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( 1 , 2 ), redFrontZone.DIDMUKHA, 'RECON_ZONE_HELO'}            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-          }
-        }
-
 
 
         local didi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
@@ -3717,7 +3805,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' )
             warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[3]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' )
 
-            logging('finer', { 'didi scheduler function' , 'addRequest Didi warehouse'} )
+            logging('finer', { 'Didi scheduler function' , 'addRequest Didi warehouse'} )
 
           end, {}, start_ground_sched * didi_efficiency_influence, interval_ground_sched, rand_ground_sched
 
@@ -3742,14 +3830,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
           logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
           -- activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI, 'enemy_attack', nil, nil, nil)  end
-          if assignment == 'tkviavi_attack_1' then activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, nil, nil )  end
-          if assignment == 'tkviavi_attack_2' then activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, nil, nil  )  end
-          if assignment == 'tseveri_attack_1' then activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, nil, nil  )  end
+          if assignment == 'tkviavi_attack_1' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, nil, nil )
 
 
-          if assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
+          elseif assignment == 'tkviavi_attack_2' then
 
-            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, nil, nil  )
+
+
+          elseif assignment == 'tseveri_attack_1' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, nil, nil  )
+
+
+          elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
+
 
             if lenAttackGroupForAFACSet > 0 then
 
@@ -3768,7 +3865,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
 
-            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
             if lenAttackGroupForAFACSet > 0 then -- verifica se c'e' almeno un gruppo CAS dedicato disponibile nella lista di CAS dedicate
 
@@ -3787,7 +3883,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif assignment == 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi' then
 
-            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Didmukha_Tsveri_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
             lenAttackGroupForAFACSet = lenAttackGroupForAFACSet + 1
             attackGroupForAFACSet[ lenAttackGroupForAFACSet ] = groupset
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
@@ -3797,7 +3892,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif assignment == 'ATTACK_ZONE_HELO_Didmukha_Tsveri' then
 
-            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Tskhunvali_Tkviavi_ATTACK_HELO assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
             lenAttackGroupForAFACSet = lenAttackGroupForAFACSet + 1
             attackGroupForAFACSet[ lenAttackGroupForAFACSet ] = groupset
             logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
@@ -3807,14 +3901,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif assignment == 'RECON_ZONE_HELO_Didmukha_Tsveri' then
 
-            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'RECON_ZONE_HELO_Didmukha_Tsveri assigned = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
-
-            activeGO_TO_ZONE_AIR( groupset,  redFrontZone.DIDMUKHA, speedPerc )
+            activeGO_TO_ZONE_AIR( groupset,  redFrontZone.DIDMUKHA, 0.8 )
             RecceDetection( groupset, red_command_center, true, 10, 10 )
-            logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  - inserito un nuovo attack Group per CAS for AFAC asset' .. '  -  groupsetName: ' .. groupset:GetObjectNames() .. ' - lenAttackGroupForCASforAFACSet: ' .. lenAttackGroupForAFACSet} )
 
 
-          end
+          else
+
+            logging('warning', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
+
+          end -- if elseif else
+
 
         end -- end function warehouse.Didi:OnAfterSelfRequest( From,Event,To,groupset,request )
 
@@ -3831,14 +3928,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- Get assignment.
           local assignment = warehouse.Didi:GetAssignment( request )
 
-          logging('info', { 'warehouse.Didi:OnAfterAssetDead(From, Event, To, asset, request)' , 'assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename } )
+          logging('info', { 'warehouse.Didi:OnAfterAssetDead(From, Event, To, asset, request)' , 'Request @ Kvemo Sba   -   assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename .. ' - asset attribute = ' .. asset.attribute } )
 
-          logging('info', { 'warehouse.Didi:OnAfterAssetDead(From, Event, To, asset, request)' , 'Request @ Kvemo Sba: asset attribute = ' .. asset.attribute } )
 
           -- Request resupply for dead asset from Kvemo Sba warehouse.
           warehouse.Kvemo_Sba:AddRequest( warehouse.Didi, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, "Resupply" )
 
           logging('info', { 'warehouse.Didi:OnAfterAssetDead(From, Event, To, asset, request)' , 'Self Request: asset assignment = ' .. assignment } )
+
           -- Send asset to Battle zone either now or when they arrive.
           warehouse.Didi:AddRequest( warehouse.Didi, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
 
@@ -3913,65 +4010,30 @@ if conflictZone == 'Zone 1: South Ossetia' then
         local ambrolauri_attack_1 = 'AMBROLAURI_attack_1'
         local chiatura_attack_1 = 'CHIATURA_attack_1'
 
-        -- random targets
-        local rndTrgBiteta = {
-
-
-          -- [1] = number of mission
-          -- [pos mission][1] = name of mission
-          -- [pos mission][2] = name of mission
-          -- [pos mission][3] = asset group name
-          -- [pos mission][4] = quantity
-          -- [pos mission][5] = target zone
-          -- [pos mission][6] = type of mission
-
-          mechanized = {
-
-            {'AMBROLAURI_attack_1',  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1 , blueFrontZone.CZ_AMBROLAURI, 'mech_attack'  }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-            {'CHIATURA_attack_1',    WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2 , blueFrontZone.CZ_CHIATURA, 'mech_attack'  }, -- 3
-            {'PEREVI_APC',           WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2 , blueFrontZone.CZ_AMBROLAURI,   'mech_attack'  }, -- 4
-
-            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-          },
-
-          helo = {}
-
-        }
-
+        logging('info', { 'main' , 'addRequest Biteta warehouse'} )
 
         --local depart_time = defineRequestPosition(3)
         local biteta_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local biteta_sched = SCHEDULER:New( nil,
+        local biteta_sched = SCHEDULER:New( warehouse.Biteta,
 
           function()
 
-            local num_mission = 3 -- the number of mission request ( _addRequest() )
+            local num_mission = 2 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition( num_mission )
-            local pos_mech = defineRequestPosition( #rndTrgBiteta.mechanized )
-            -- local pos_helo = defineRequestPosition( #rndTrgBiteta.helo )
 
-            for i = 1, num_mission do
+            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'AMBROLAURI_attack_1' )
+            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CHIATURA_attack_1' )
+            --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' )
 
-              logging('finer', { 'didi scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
-
-              if i < #rndTrgBiteta.mechanized then
-                logging('finer', { 'didi scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                logging('finer', { 'didi scheduler function' , '#rndTrgBiteta.mechanized = ' .. #rndTrgBiteta.mechanized .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgBiteta.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgBiteta.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgBiteta.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
-              end
-
-            end
-
-            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Biteta,  rndTrgBiteta.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgBiteta.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgBiteta.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgBiteta.mechanized[ pos_mech[ 1 ] ][ 1 ] )
-            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Biteta,  rndTrgBiteta.mechanized[ pos_mech[ 2 ] ][ 2 ], rndTrgBiteta.mechanized[ pos_mech[ 2 ] ][ 3 ], rndTrgBiteta.mechanized[ pos_mech[ 2 ] ][ 4 ], nil, nil, nil, rndTrgBiteta.mechanized[ pos_mech[ 2 ] ][ 1 ] )
-            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  rndTrgBiteta.mechanized[ pos_mech[ 3 ] ][ 2 ], rndTrgBiteta.mechanized[ pos_mech[ 3 ] ][ 3 ], rndTrgBiteta.mechanized[ pos_mech[ 3 ] ][ 4 ], nil, nil, nil, rndTrgBiteta.mechanized[ pos_mech[ 3 ] ][ 1 ] )
+            logging('finer', { 'Biteta scheduler function' , 'addRequest Biteta warehouse'} )
 
           end, {}, start_ground_sched * biteta_efficiency_influence, interval_ground_sched, rand_ground_sched
 
-        )
+        )  -- END SCHEDULER
 
-        logging('info', { 'main' , 'addRequest Biteta warehouse'} )
+
 
         -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
         -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
@@ -3988,27 +4050,46 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-            if assignment == rndTrgBiteta.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgBiteta.mechanized[ 1 ][ 5 ], rndTrgBiteta.mechanized[ 1 ][ 6 ], nil, nil, nil)  end
-            if assignment == rndTrgBiteta.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgBiteta.mechanized[ 2 ][ 5 ], rndTrgBiteta.mechanized[ 2 ][ 6 ], nil, nil, nil)  end
+            if assignment == 'AMBROLAURI_attack_1' then
+
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI, 'mech_attack', nil, nil, nil)
+
+            elseif assignment == 'CHIATURA_attack_1' then
+
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA, 'mech_attack', nil, nil, nil)
+
+            else
+
+                logging('warning', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
+            end -- if elsif else
+
+
+            logging('exit', 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
         end -- end function
 
         -- An asset has died ==> request resupply for it.
         function warehouse.Biteta:OnAfterAssetDead(From, Event, To, asset, request)
 
-              local asset=asset       --Functional.Warehouse#WAREHOUSE.Assetitem
-              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+              logging('enter', 'warehouse.Biteta:OnAfterAssetDead( From, Event, To, asset, request )' )
+
+              local asset = asset       --Functional.Warehouse#WAREHOUSE.Assetitem
+              local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
                 -- Get assignment.
               local assignment=warehouse.Biteta:GetAssignment(request)
 
-              logging('info', { 'warehouse.Biteta:OnAfterAssetDead(From, Event, To, asset, request)' , 'assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename } )
 
-              -- Request resupply for dead asset from Batumi.
+
+              -- Request resupply for dead asset from Kvemo_Sba.
               warehouse.Kvemo_Sba:AddRequest(warehouse.Biteta, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply")
+              logging('info', { 'warehouse.Biteta:OnAfterAssetDead(From, Event, To, asset, request)' , 'Request @ Kvemo Sba   -   assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename .. ' - asset attribute = ' .. asset.attribute } )
 
               -- Send asset to Battle zone either now or when they arrive.
               warehouse.Biteta:AddRequest(warehouse.Biteta, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment)
+
+              logging('exit', 'warehouse.Biteta:OnAfterAssetDead( From, Event, To, asset, request )' )
 
         end -- end function
 
@@ -4281,14 +4362,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4305,14 +4386,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4330,14 +4411,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4354,14 +4435,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4378,14 +4459,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4695,14 +4776,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4719,14 +4800,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4744,14 +4825,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4768,14 +4849,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -4793,14 +4874,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5138,14 +5219,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5162,14 +5243,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5187,14 +5268,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5209,14 +5290,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5540,14 +5621,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5566,14 +5647,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5591,14 +5672,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5907,7 +5988,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
@@ -5916,7 +5997,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5934,14 +6015,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -5957,14 +6038,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6343,7 +6424,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
@@ -6352,7 +6433,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6371,14 +6452,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6396,14 +6477,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6767,7 +6848,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
@@ -6776,7 +6857,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6794,14 +6875,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6818,14 +6899,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -6842,14 +6923,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
             local bombingAltitude = math.random(4000, 6000)
-            local bombQuantity = 2023
+            local diveBomb = false
             local bombRunDistance = 20000
             local bombRunDirection = math.random(270, 359)
             local speedBombRun = math.random(400, 600)
 
             logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -7286,72 +7367,30 @@ if conflictZone == 'Zone 1: South Ossetia' then
         logging('info', { 'main' , 'addrequest Zestafoni warehouse'} )
 
 
-           -- random targets
-        local rndTrgZestafoni = {
-
-          -- [1] = number of mission
-          -- [pos mission][1] = name of mission
-          -- [pos mission][2] = name of mission
-          -- [pos mission][3] = asset group name
-          -- [pos mission][4] = quantity
-          -- [pos mission][5] = target zone
-          -- [pos mission][6] = type of mission
-
-          mechanized = {
-
-            {'CZ_PEREVI_attack_1',  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , redFrontZone.CZ_PEREVI, 'mech_attack'  }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-            {'CZ_PEREVI_attack_2',  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, redFrontZone.CZ_ONI, 'mech_attack'  }, -- 3
-            {'CZ_ONI_attack_3',  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, redFrontZone.CZ_PEREVI, 'mech_APC'  } -- 3
-            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-          },
-
-          helo = {}
-
-        }
-
-
         local zestafoni_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local zestafoni_sched = SCHEDULER:New( nil,
+        local zestafoni_sched = SCHEDULER:New( warehouse.Zestafoni,
 
           function()
 
             local num_mission = 3 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition(num_mission)
-            local pos_mech = defineRequestPosition( #rndTrgZestafoni.mechanized )
-            -- local pos_helo = defineRequestPosition( #rndTrgZestafoni.helo )
 
-
-            for i = 1, num_mission do
-
-              logging('finer', { 'Zestafoni scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
-
-              if i < #rndTrgZestafoni.mechanized then
-                logging('finer', { 'Zestafoni scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                -- logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ 1 ] = ' .. rndTrgZestafoni.mechanized[ 1 ] .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 2 ] .. 'rndTrgZestafoni.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 3 ] .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 4 ][ 2 ]  .. '  - rndTrgZestafoni.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] + 1 ][ 5 ]} )
-                logging('finer', { 'Zestafoni scheduler function' , '#rndTrgZestafoni.mechanized = ' .. #rndTrgZestafoni.mechanized} )
-                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 2 ]} )
-                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 3 ]} )
-                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 4 ]} )
-                logging('finer', { 'Zestafoni scheduler function' , 'rndTrgZestafoni.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgZestafoni.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
-              end
-
-            end
 
 
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Zestafoni,  rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 1 ] )
-            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Zestafoni,  rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 1 ] )
-            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Zestafoni,  rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgZestafoni.mechanized[ pos_mech[ 1 ] ][ 1 ] )
+            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'CZ_PEREVI_attack_1' )
+            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'CZ_PEREVI_attack_2' )
+            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CZ_ONI_attack_3' )
           end, {}, start_ground_sched * zestafoni_efficiency_influence, interval_ground_sched, rand_ground_sched
 
-        )
+        ) -- END SCHEDULER
 
         -- l'eventuale variazione causale dei parametri di missione la devi fare sulla AddRequest: io la farei solo sulle quantit�
 
-        logging('info', { 'main' , 'addRequest ZESTAFONI warehouse'} )
+
 
 
 
@@ -7368,11 +7407,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           logging('info', { 'warehouse.ZESTAFONI:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-          if assignment == rndTrgZestafoni.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgZestafoni.mechanized[ 1 ][ 5 ], rndTrgZestafoni.mechanized[ 1 ][ 6 ], nil, nil, nil )  end
+          if assignment == 'CZ_PEREVI_attack_1' then
 
-          if assignment == rndTrgZestafoni.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgZestafoni.mechanized[ 2 ][ 5 ], rndTrgZestafoni.mechanized[ 2 ][ 6 ], nil, nil, nil  )  end
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI, 'mech_attack', nil, nil, nil )
 
-          if assignment == rndTrgZestafoni.mechanized[ 3 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgZestafoni.mechanized[ 3 ][ 5 ], rndTrgZestafoni.mechanized[ 3 ][ 6 ], nil, nil, nil  )  end
+          elseif assignment == 'CZ_PEREVI_attack_2' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_ONI,  'mech_attack', nil, nil, nil  )
+
+          elseif assignment == 'CZ_ONI_attack_3' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI,  'mech_APC', nil, nil, nil  )
+
+          else
+
+              logging('warning', { 'warehouse.Zestafoni:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
+          end
 
         end -- end function
 
@@ -7493,32 +7544,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
         local khashuri_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local khashuri_sched = SCHEDULER:New( nil,
+        local khashuri_sched = SCHEDULER:New( warehouse.Khashuri,
 
           function()
 
             local num_mission = 2 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition( num_mission )
-            local pos_mech = defineRequestPosition( #rndTrgKhashuri.mechanized )
-            -- local pos_helo = defineRequestPosition( #rndTrgKhashuri.helo )
 
-            for i = 1, num_mission do
 
-              logging('finer', { 'khashuri scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
 
-              if i < #rndTrgKhashuri.mechanized then
-                logging('finer', { 'khashuri scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                logging('finer', { 'khashuri scheduler function' , '#rndTrgKhashuri.mechanized = ' .. #rndTrgKhashuri.mechanized .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgKhashuri.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgKhashuri.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgKhashuri.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
-              end
 
-            end
-
-            warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Khashuri,  rndTrgKhashuri.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgKhashuri.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgKhashuri.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgKhashuri.mechanized[ pos_mech[ 1 ] ][ 1 ] )
-            warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Khashuri,  rndTrgKhashuri.mechanized[ pos_mech[ 2 ] ][ 2 ], rndTrgKhashuri.mechanized[ pos_mech[ 2 ] ][ 3 ], rndTrgKhashuri.mechanized[ pos_mech[ 2 ] ][ 4 ], nil, nil, nil, rndTrgKhashuri.mechanized[ pos_mech[ 2 ] ][ 1 ] )
+            warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'DIDMUKHA_attack_1' )
+            warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'DIDMUKHA_attack_2' )
 
           end, {}, start_ground_sched * khashuri_efficiency_influence, interval_ground_sched, rand_ground_sched
 
-        )
+        )  -- END SCHEDULER
 
 
         -- l'eventuale variazione causale dei parametri di missione la devi fare sulla AddRequest: io la farei solo sulle quantit�
@@ -7540,8 +7581,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           logging('info', { 'warehouse.Khashuri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames()} )
 
-          if assignment == rndTrgKhashuri.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgKhashuri.mechanized[ 1 ][ 5 ], rndTrgKhashuri.mechanized[ 1 ][ 6 ], nil, nil, nil)  end
-          if assignment == rndTrgKhashuri.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgKhashuri.mechanized[ 2 ][ 5 ], rndTrgKhashuri.mechanized[ 2 ][ 6 ], nil, nil, nil)  end
+          if assignment == 'DIDMUKHA_attack_1' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'mech attack', nil, nil, nil)
+
+
+          elseif assignment == 'DIDMUKHA_attack_2' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'mech attack', nil, nil, nil)
+
+          else
+
+              logging('warning', { 'warehouse.Zestafoni:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
+          end -- if elsif else
+
+          logging('exit', 'warehouse.Khashuri:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
 
         end -- end function
@@ -7551,6 +7606,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
         --
         function warehouse.Khashuri:OnAfterAssetDead( From, Event, To, asset, request )
+
+            logging('enter', 'warehouse.Zestafoni:OnAfterAssetDead( From, Event, To, asset, request )' )
 
             local asset = asset       --Functional.Warehouse#WAREHOUSE.Assetitem
             local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
@@ -7566,6 +7623,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               -- Send asset to Battle zone either now or when they arrive.
               warehouse.Satihari:AddRequest( warehouse.Satihari, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
+
+              logging('exit', 'warehouse.Zestafoni:OnAfterAssetDead( From, Event, To, asset, request )' )
 
         end -- end function
 
@@ -8306,7 +8365,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
@@ -8315,7 +8374,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8333,14 +8392,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8356,14 +8415,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8724,7 +8783,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
@@ -8733,7 +8792,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8751,14 +8810,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8775,14 +8834,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8799,14 +8858,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -9166,7 +9225,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
@@ -9175,7 +9234,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -9193,7 +9252,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
@@ -9202,7 +9261,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -9221,14 +9280,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -9246,14 +9305,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -9270,14 +9329,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
               local bombingAltitude = math.random(4000, 6000)
-              local bombQuantity = 2023
+              local diveBomb = false
               local bombRunDistance = 20000
               local bombRunDirection = math.random(270, 359)
               local speedBombRun = math.random(400, 600)
 
               logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:getName() } )
 
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, bombingAltitude, bombRunDistance, bombRunDirection, speedBombRun )
+              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
