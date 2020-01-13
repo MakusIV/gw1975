@@ -1,4 +1,4 @@
-diveBomb = falsediveBomb = false--[[
+--[[
 
 
 1975 Georgian War
