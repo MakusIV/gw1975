@@ -442,12 +442,55 @@ end
 -- @param prefix_detector:  table with name of EWR unit in Mission Editor
 -- @param range:  range max of detection target
 -- @return DETECTION_AREAS
-function detection(prefix_detector, range)
+-- function detection( prefix_detector, range )
+function detection( prefix_detector, range, categories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
 
   local DetectionSetGroup = SET_GROUP:New()
   DetectionSetGroup:FilterPrefixes( prefix_detector )
   DetectionSetGroup:FilterStart()
   Detection = DETECTION_AREAS:New( DetectionSetGroup, range )
+
+
+
+  -- Filter Category
+  -- Unit.Category.AIRPLANE
+  -- Unit.Category.GROUND_UNIT
+  -- Unit.Category.HELICOPTER
+  -- Unit.Category.SHIP
+  -- Unit.Category.STRUCTURE
+  -- DetectionObject:FilterCategories( { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER } )
+  if categories ~= nil then Detection:FilterCategories(categories) end
+
+  -- when you first use the DETECTION derived classes, that you don't use these filters. Only when you experience unrealistic behaviour in your missions, these filters could be applied
+  if distanceProbability ~= nil then Detection:SetDistanceProbability(distanceProbability) end
+  if alphaProbability ~= nil then SetAlphaAngleProbability(alphaProbability) end
+  if zoneProbability ~= nil then SetZoneProbability(zoneProbability) end -- for set probability refer at cloudy zone
+  -- zoneProbability: Typically, this kind of filter would be applied for very specific areas were a detection needs to be very realisting for AI not to detect so easily targets within a forrest or village rich area.
+
+  -- type of detection
+  -- By default, detection will return detected objects with all the detection sensors available
+  if typeDetection type ~= nil then
+
+      if Detection == 'visual' then InitDetectVisual()
+
+      elseif Detection == 'optical' then InitDetectOptical()
+
+      elseif Detection == 'optical' then InitDetectRadar()
+
+      elseif Detection == 'irst' then InitDetectIRST()
+
+      elseif Detection == 'rwr' then InitDetectRWR()
+
+      elseif Detection == 'dlink' then InitDetectDLINK()
+
+      else
+
+          logging('warning', { 'detection( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } ) end
+
+      end
+
+  end
+
 
   return Detection
 
@@ -467,7 +510,7 @@ end
 -- @param engage_radius:  Initialize the dispatcher, setting up a radius of 50km where any airborne friendly without an assignment within 50km radius from a detected target, will engage that target.
 -- @param view_tactical_display:  (true/false) Visualize tactical display
 -- @return AI_A2A_DISPATCHER
-function dispatcher(detection, gci_radius, engage_radius, view_tactical_display)
+function dispatcher( detection, gci_radius, engage_radius, view_tactical_display )
 
   -- A2ADispatcher:
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
@@ -501,7 +544,7 @@ end
 --  @param squadron_name:  specific air template name created in ME
 --  @param no_aircraft:  number of aircraft assigned at airbase
 --  @param A2ADispatcher:  AI_A2A_DISPATCHER
-function assign_squadron_at_airbase (airbase_name, airbase, squadron_name, no_aircraft, A2ADispatcher)
+function assign_squadron_at_airbase ( airbase_name, airbase, squadron_name, no_aircraft, A2ADispatcher )
 
   A2ADispatcher:SetSquadron( airbase_name, airbase, squadron_name, no_aircraft )
 
@@ -2131,6 +2174,56 @@ function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
   return
 
 end -- end function
+
+
+--- Gestisce le missioni AWACS
+-- fornisce un sistema di rilevamento complementare alla detection utulizzazta in AI.A2A
+-- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
+-- @param hq: l'HQ
+function activeAWACS( awacsGroup, hq,  )
+
+
+
+
+        - The enemy is approaching.
+    --
+    -- # Test cases:
+    --
+    -- 1. Observe the detection reporting of both the Recce.
+    -- 2. Eventually all units should be detected by both Recce.
+
+    RecceSetGroup = SET_GROUP:New():FilterPrefixes( "Recce" ):FilterStart()
+
+    HQ = GROUP:FindByName( "HQ" )
+
+    CC = COMMANDCENTER:New( HQ, "HQ" )
+
+    RecceDetection = DETECTION_UNITS:New( RecceSetGroup )
+    RecceDetection:InitDetectRadar(true)
+
+    RecceDetection:Start()
+
+    --- OnAfter Transition Handler for Event Detect.
+    -- @param Functional.Detection#DETECTION_UNITS self
+    -- @param #string From The From State string.
+    -- @param #string Event The Event string.
+    -- @param #string To The To State string.
+    function RecceDetection:OnAfterDetect(From,Event,To)
+
+      self:E("Detect")
+
+      local DetectionReport = RecceDetection:DetectedReportDetailed()
+
+      CC:MessageToAll( DetectionReport, 15, "" )
+
+
+end
+
+
+
+
+
+end
 
 
 
@@ -4054,9 +4147,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI, 'mech_attack', nil, nil, nil)
 
+
             elseif assignment == 'CHIATURA_attack_1' then
 
                 activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA, 'mech_attack', nil, nil, nil)
+
 
             else
 
@@ -7710,93 +7805,40 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Gori warehouse'} )
 
-
-
-        local GORI_Artillery_Ops = 'GORI_Artillery_Ops'
-        local GORI_Artillery_Resupply = 'GORI_Artillery_Resupply'
-
-        -- random targets
-        local rndTrgGori = {
-
-
-          -- [1] = number of mission
-          -- [pos mission][1] = name of mission
-          -- [pos mission][2] = name of mission
-          -- [pos mission][3] = asset group name
-          -- [pos mission][4] = quantity
-          -- [pos mission][5] = target zone
-          -- [pos mission][6] = type of mission
-
-          mechanized = {
-
-            {'TSKHINVALI_Attack_APC', WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , redFrontZone.TSKHINVALI, 'enemy_attack'  }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-            {'TSKHINVALI_attack_2',   WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , redFrontZone.TSKHINVALI, 'enemy_attack'  }, -- 3
-            {'DIDMUKHA_attack_1',     WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , redFrontZone.SATIHARI,   'enemy_attack'  }, -- 4
-            {'SATIHARI_attack_1',     WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , redFrontZone.DIDMUKHA,   'enemy_attack'  }, -- 4
-            {'SATIHARI_attack_2',     WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , redFrontZone.DIDI_CUPTA, 'enemy_attack'  } -- 4
-            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-          },
-
-          helo = {
-
-            {'AFAC_ZONE_Tskhunvali_Tkviavi',        WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, afacZone.Didmukha_Tsveri, 'AFAC_HELO'},
-            {'AFAC_ZONE_Didmukha_Tsveri',           WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, afacZone.Tskhunvali_Tkviavi, 'AFAC_HELO'},
-            {'ATTACK_ZONE_HELO_Didmukha_Tsveri',    WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, redFrontZone.DIDMUKHA, 'ATTACK_ZONE_HELO'},
-            {'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO'}
-            -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-          }
-        } -- end rndTrgGori
-
-
         local gori_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- NOTA: lo scheduler di didi gestisce anche le missioni tipo ARTY
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local gori_sched = SCHEDULER:New( nil,
+        local gori_sched = SCHEDULER:New( warehouse.Gori,
 
           function()
 
             local num_mission = 5 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition( num_mission )
-            local pos_mech = defineRequestPosition( #rndTrgGori.mechanized )
-            local pos_helo = defineRequestPosition( #rndTrgGori.helo )
             local startReqTimeArtillery = 1 -- Arty groups have first activation
             local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
 
-            -- only for logging
-            for i = 1, 5 do
-
-              logging('finer', { 'gori scheduler function' , 'depart_time = [ ' .. i .. ' ] = ' .. depart_time[i] } )
-
-              if i <= #rndTrgGori.mechanized then
-
-                logging('finer', { 'gori scheduler function' , 'pos_mech[ ' .. i .. '] =' .. pos_mech[i] } )
-                logging('finer', { 'gori scheduler function' , '#rndTrgGori.mechanized = ' .. #rndTrgGori.mechanized .. '  - rndTrgGori.mechanized[ pos_mech[][ 2 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 2 ] .. 'rndTrgGori.mechanized[ pos_mech[][ 3 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 3 ] .. '  - rndTrgGori.mechanized[ pos_mech[][ 4 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 4 ]  .. '  - rndTrgGori.mechanized[ pos_mech[][ 5 ] = ' .. rndTrgGori.mechanized[ pos_mech[ i ] ][ 5 ][2]} )
-
-                end
-
-            end
 
             -- artillery request
-            warehouse.Gori:__AddRequest( startReqTimeArtillery, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtilleryResupply, 1, nil, nil, nil, GORI_Artillery_Resupply )
-            warehouse.Gori:__AddRequest( startReqTimeArtillery + 120 , warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtiAkatsia, 1, nil, nil, nil, GORI_Artillery_Ops)
+            warehouse.Gori:__AddRequest( startReqTimeArtillery, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtilleryResupply, 1, nil, nil, nil, 'GORI_Artillery_Resupply' )
+            warehouse.Gori:__AddRequest( startReqTimeArtillery + 120 , warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtiAkatsia, 1, nil, nil, nil, 'GORI_Artillery_Ops')
 
 
             -- mech request
             -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.mechanized[ pos_mech[ 1 ] ][ 2 ], rndTrgGori.mechanized[ pos_mech[ 1 ] ][ 3 ], rndTrgGori.mechanized[ pos_mech[ 1 ] ][ 4 ], nil, nil, nil, rndTrgGori.mechanized[ pos_mech[ 1 ] ][ 1 ] )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.mechanized[ pos_mech[ 2 ] ][ 2 ], rndTrgGori.mechanized[ pos_mech[ 2 ] ][ 3 ], rndTrgGori.mechanized[ pos_mech[ 2 ] ][ 4 ], nil, nil, nil, rndTrgGori.mechanized[ pos_mech[ 2 ] ][ 1 ] )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.mechanized[ pos_mech[ 3 ] ][ 2 ], rndTrgGori.mechanized[ pos_mech[ 3 ] ][ 3 ], rndTrgGori.mechanized[ pos_mech[ 3 ] ][ 4 ], nil, nil, nil, rndTrgGori.mechanized[ pos_mech[ 3 ] ][ 1 ] )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.mechanized[ pos_mech[ 4 ] ][ 2 ], rndTrgGori.mechanized[ pos_mech[ 4 ] ][ 3 ], rndTrgGori.mechanized[ pos_mech[ 4 ] ][ 4 ], nil, nil, nil, rndTrgGori.mechanized[ pos_mech[ 4 ] ][ 1 ] )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[5] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.mechanized[ pos_mech[ 5 ] ][ 2 ], rndTrgGori.mechanized[ pos_mech[ 5 ] ][ 3 ], rndTrgGori.mechanized[ pos_mech[ 5 ] ][ 4 ], nil, nil, nil, rndTrgGori.mechanized[ pos_mech[ 5 ] ][ 1 ] )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[5] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' )
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.helo[ pos_helo[ 1 ] ][ 2 ], rndTrgGori.helo[ pos_helo[ 1 ] ][ 3 ], rndTrgGori.helo[ pos_helo[ 1 ] ][ 4 ], nil, nil, nil, rndTrgGori.helo[ pos_helo[ 1 ] ][ 1 ])
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.helo[ pos_helo[ 2 ] ][ 2 ], rndTrgGori.helo[ pos_helo[ 2 ] ][ 3 ], rndTrgGori.helo[ pos_helo[ 2 ] ][ 4 ], nil, nil, nil, rndTrgGori.helo[ pos_helo[ 2 ] ][ 1 ])
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri')
             -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.helo[ pos_helo[ 3 ] ][ 2 ], rndTrgGori.helo[ pos_helo[ 3 ] ][ 3 ], rndTrgGori.helo[ pos_helo[ 3 ] ][ 4 ], nil, nil, nil, rndTrgGori.helo[ pos_helo[ 3 ] ][ 1 ])
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  rndTrgGori.helo[ pos_helo[ 4 ] ][ 2 ], rndTrgGori.helo[ pos_helo[ 4 ] ][ 3 ], rndTrgGori.helo[ pos_helo[ 4 ] ][ 4 ], nil, nil, nil, rndTrgGori.helo[ pos_helo[ 4 ] ][ 1 ])
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
 
             logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
@@ -7828,32 +7870,74 @@ if conflictZone == 'Zone 1: South Ossetia' then
           logging('info', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames()} )
 
           -- launch mission functions: mech
-          if assignment == rndTrgGori.mechanized[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.mechanized[ 1 ][ 5 ], rndTrgGori.mechanized[ 1 ][ 6 ] )  end
-          if assignment == rndTrgGori.mechanized[ 2 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.mechanized[ 2 ][ 5 ], rndTrgGori.mechanized[ 2 ][ 6 ] )  end
-          if assignment == rndTrgGori.mechanized[ 3 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.mechanized[ 3 ][ 5 ], rndTrgGori.mechanized[ 3 ][ 6 ] )  end
-          if assignment == rndTrgGori.mechanized[ 4 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.mechanized[ 4 ][ 5 ], rndTrgGori.mechanized[ 4 ][ 6 ] )  end
-          if assignment == rndTrgGori.mechanized[ 5 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.mechanized[ 5 ][ 5 ], rndTrgGori.mechanized[ 5 ][ 6 ] )  end
+          if assignment == 'TSKHINVALI_Attack_APC' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack' )
+
+
+
+          elseif assignment == 'TSKHINVALI_attack_2' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack' )
+
+
+
+          elseif assignment == 'DIDMUKHA_attack_1' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.SATIHARI,   'enemy_attack' )
+
+
+
+          elseif assignment == 'SATIHARI_attack_1' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA,   'enemy_attack' )
+
+
+
+          elseif assignment == 'SATIHARI_attack_2' then
+
+               activeGO_TO_BATTLE( groupset, redFrontZone.DIDI_CUPTA, 'enemy_attack' )
+
+
+
           -- launch mission functions: helo
-          if assignment == rndTrgGori.helo[ 1 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.helo[ 1 ][ 5 ], rndTrgGori.helo[ 1 ][ 6 ] )  end
-          if assignment == rndTrgGori.helo[ 2 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.helo[ 2 ][ 5 ], rndTrgGori.helo[ 2 ][ 6 ] )  end
-          if assignment == rndTrgGori.helo[ 3 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.helo[ 3 ][ 5 ], rndTrgGori.helo[ 3 ][ 6 ] )  end
-          if assignment == rndTrgGori.helo[ 4 ][ 1 ] then activeGO_TO_BATTLE( groupset, rndTrgGori.helo[ 4 ][ 5 ], rndTrgGori.helo[ 4 ][ 6 ] )  end
+          elseif assignment == 'AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+              activeGO_TO_BATTLE( groupset, afacZone.Didmukha_Tsveri, 'AFAC_HELO' )
+
+
+
+          elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+              activeGO_TO_BATTLE( groupset, afacZone.Tskhunvali_Tkviavi, 'AFAC_HELO' )
+
+
+
+          elseif assignment == 'ATTACK_ZONE_HELO_Didmukha_Tsveri' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'ATTACK_ZONE_HELO' )
+
+
+
+          elseif assignment == 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi' then
+
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO' )
 
 
 
           -- launch mission function: arty resupply
-          if assignment == GORI_Artillery_Resupply then
+          elseif assignment == 'GORI_Artillery_Resupply' then
 
             groupResupplySet = groupset
             -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
             --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
             activeGO_TO_BATTLE( groupset, targetZoneForRedArty.TSVERI_5, 'artillery_resupply' )
 
-          end
+
 
 
           -- launch mission function: arty
-          if assignment == GORI_Artillery_Ops then
+          elseif assignment == 'GORI_Artillery_Ops' then
 
               nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
               -- nameRecceUnits = recceArtyGroup.getName()  -- "Recce"
@@ -7934,7 +8018,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- activeGO_TO_BATTLE( groupset, targetZoneForRedArty.TSVERI_5, 'artillery_firing', param )
               activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_5, param, true, 70 )
 
+          else
+
+              logging('warning', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
           end
+
+          logging('exit', 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
         end -- function warehouse.Gori:OnAfterSelfRequest( From,Event,To,groupset,request )
 
@@ -7943,6 +8033,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
         --
         function warehouse.Gori:OnAfterAssetDead( From, Event, To, asset, request )
+
+          logging('enter', 'warehouse.Gori:OnAfterAssetDead( From, Event, To, asset, request )' )
 
           local asset = asset       --Functional.Warehouse#WAREHOUSE.Assetitem
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
@@ -7959,7 +8051,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- Send asset to Battle zone either now or when they arrive.
             warehouse.Gori:AddRequest( warehouse.Gori, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
 
+            logging('exit', 'warehouse.Gori:OnAfterAssetDead( From, Event, To, asset, request )' )
+
         end --  warehouse.Gori:OnAfterAssetDead( From, Event, To, asset, request )
+
 
       end -- wh_activation.Warehouse.blue.Gori then
       ----------------------------------------------- END blue Warehouse GORI operations -------------------------------------------------------------------------------------------------------------------------
@@ -9735,55 +9830,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    --[[
-
-    Risorse aeree
-    --
-    -- deve essere inizializzato in base alle unita definite come template. Quindi
-    -- ricerca delle unita con prefisso SQ NO solo in runtime
-    --
-
-    red
-
-    MIG-21Bis, fighter, 5.4k, 1.8k
-    MIG-23MLD, fighter, 10.4k, 1.9k
-    MIG-25PD, interceptor, 20 k, 1.2k
-    MIG-27K, attack , 22k, 1.9k
-    SU-17M4, attack, 10.6 k, 1.7k
-    SU-24, bomber, 22k, 1.2k
-    TU-142, bomber, 96k, 10.5k
-    TU-160, bomber, ???
-    TU-22, bomber, 50k, 5.1k
-    TU-95, bomber, 96k, 6.4k
-    MIG-25RTB, reco, 20k, 1.9k
-    SU-24MR, reco, 22.3k, 1.2k
-    L-39C, trainer, 3.4k, 1.6k
-    L-39ZA, trainer, 3.4k, 1.6k
-    AN-26, trasporto, 15.8k, 2.6k
-    IL-76MD, trasporto, 100k, 7.3k
-    YAK-40, trasporto, 9.4k, 2.5k
-
-    MI-24V, attacco, 8.2k, 0.5k
-
-
-    blue
-
-    F-5, Fighter, 4.3k, 2k
-    F-4, Fighter, 24k, 2.6k
-    A-10 A ???
-    S-3??
-    B-1B, bomber, 87k, 12k
-    B-52H, bomber, 120k, 16k
-
-
-    UH-1H, trasporto,.3k, 0.4k
-    UH-60A, trasporto, 5.7k, 0.6k
-
-    ]]--
-
-
-
-
     -- SITUATION A
 
 
@@ -9821,6 +9867,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+
+
+
+
+
+
+    ------------------------------------------------------------------------   AI A2A Dispatching ---------------------------------------------------------------
+
+
+
+
     -- RED FORCE CAP-GCI
 
     -- NOTA: UTILIZZATO SOLO PER LE CAP E GCI AI-
@@ -9845,16 +9902,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
     local activeBlueCAP = false
     local activeBlueGCI = true
 
-
+    local categories = {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km
-    local Detection_Red = detection(prefix_detector.red, 30000)
+    -- local Detection_Red = detection(prefix_detector.red, 30000)
+    local Detection_Red = detection( prefix_detector.red, 30000, categories, nil, nil, nil, nil )
 
     --- A2ADispatcher red:
-    -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
+    -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
     -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
     -- true/false: view tactital display
-    local A2ADispatcher_Red = dispatcher(Detection_Red, 70000, 40000, false)
+    local A2ADispatcher_Red = dispatcher(Detection_Red, 70000, 20000, false)
 
 
 
@@ -9953,7 +10011,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     --- detection blue: e' la distanza massima di rilevamento dei radar
     -- i distanza impostata a 100 km
-    local Detection_Blue = detection(prefix_detector.blue, 30000)
+    -- local Detection_Blue = detection(prefix_detector.blue, 30000)
+    detection( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
 
     --- A2ADispatcher blue:
     -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
@@ -10047,222 +10106,123 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -- Spawn aircraft from template  IMPORTANTE
-    -- Da utilizzare per generare traffico o voli generici
 
 
 
 
-    --[[
 
-    local Spawn_GE_Recognition_Flight =
-      { air_template_blue.REC_L_39C,
-        air_template_blue.REC_F_4,
-        air_template_blue.REC_F_4,
-        air_template_blue.REC_L_39C
-      }
 
-    local Spawn_BLUE_Air_Recon = genericSpawnSimple('Georgian Reco Flight@Tskhinvali', 15, 40, Spawn_GE_Recognition_Flight, 1, 1, 2000, 3000, 1200, 0.5)
 
 
-    local Spawn_GE_Transpor_Flight =
-      { air_template_blue.TRAN_AN_26,
-        air_template_blue.TRAN_YAK_40
-      }
 
-    local Spawn_BLUE_Air_Recon = genericSpawnSimple('Georgian Transport Flight', 15, 40, Spawn_GE_Transpor_Flight, 1, 1, 1000, 2000, 900, 0.7)
 
-    ]]
 
-          -- CAS MISSION
-      ---
-      -- Name: CAS-111 - Multiple CAS in 1 Radius Zone by Helicopter and AirPlane Groups
-      -- Author: FlightControl
-      -- Date Created: 6 February 2017
-      --
-      -- # Situation:
-      --
-      -- A group of 2 Mi-24V and 2 Su-17 are patrolling north in two engage zone for 5 minutes.
-      -- After 5 minutes, the command center orders the groups to engage the zone and execute a CAS.
 
-      -- Create a local variable (in this case called CASEngagementZone) and
-      -- using the ZONE function find the pre-defined zone called "Engagement Zone"
-      -- currently on the map and assign it to this variable
-      --CASEngagementTkviavi = ZONE:New( "TSVERI" )
 
-      --[[
 
 
-      -- Prova a generarare il group mediante uno spawn riferito ad un template:
-      --
 
-      Spawn_Russian_CAS_Flight =
-        { air_template_blue[40],
-          air_template_blue[41],
-          air_template_blue[42],
-          air_template_blue[43]
-        }
 
 
-      Spawn_Red_CAS_Missione = SPAWN
-        :New( 'Russian CAS Flight@Tskhinvali' )  -- name del percorso definito dal Ka50
-        :InitLimit( 15, 40 ) -- limiti massimi sul numero delle unita' e dei gruppi attivabili contemporaneamente
-        :InitRandomizeTemplate( Spawn_GE_Recognition_Flight ) -- scegli a caso dalla tabella dei template delle  troops di sopra
-        :InitRandomizeRoute( 1, 1, 2000, 3000 ) -- variazione random della rotta: wp iniziale, posizione del wp finale partendo dall'ultimo wp, variazione in m possibile, altezza da aggiungere a quella prevista
-        --:InitArray( 349, 30, 20, 6 * 20 ) -- visualizza i gruppi prima dello spawn: The angle in degrees how the groups and each unit of the group will be positioned, num groups on x, spazio tra groups on x, spazio tra groups on y,
-        :SpawnScheduled( 1200, 0.5 )  -- lo spawn e' schedulato per avvenire ogni 60 secondi con una variazione x% calcolata come time*(1-x%/2) - time*(1+x%/2):  600-1800 s
 
 
-      e poi continui con sotto
 
-      basta questo
 
-      local CSAR_Spawn = SPAWN:NewWithFromTemplate( Template, "CSAR", "Pilot" )
 
-      ]]--
 
 
 
 
-      -- Create a local variables (in this case called CASPlane and CASHelicopters) and
-      -- using the GROUP function find the aircraft group called "Plane" and "Helicopter" and assign to these variables
-      --CASPlane = GROUP:FindByName( "Russian CAS Mission Su_17" )
-      --CASHelicopter = GROUP:FindByName( "Russian Mission CAS Mi_24V" )
 
-      -- MODIFICA
-        --[[
-      local Spawn_Russian_CAS_Flight_Aircraft =
-        {
 
-          air_template_red.CAS_Su_17M4_Rocket,
-          air_template_red.CAS_L_39C_Rocket,
-          air_template_red.CAS_Mig_27K_Bomb
 
-        }
 
-      local Spawn_Russian_CAS_Flight_Heli =
-        {
 
-          air_template_red.CAS_MI_24V
 
-        }
 
 
-      -- NON FUNZIONA
-      --local Spawn_CASPlane = SPAWN:NewWithFromTemplate( Spawn_Russian_CAS_Flight, "CAS Aircraft@DIDMUKHA")
-      --local Spawn_CASHelicopter = SPAWN:NewWithFromTemplate( air_template_red.CAS_Su_17M4_Rocket, "CAS Heli@DIDMUKHA")
-      --CASPlane = GROUP:FindByName( "CAS Aircraft@DIDMUKHA" )
-      --CASHelicopter = GROUP:FindByName( "CAS Heli@DIDMUKHA" )
-
-
-      local route = 'Route for Russian CAS Aircraft@DIDMUKHA'
-      local max_contemp_units =  8
-      local max_contemp_groups = 4
-      local templateList = Spawn_Russian_CAS_Flight_Aircraft
-      local route_wp_start = 1
-      local route_wp_end = 1
-      local route_range = 300
-      local route_altitude = 500
-      local scheduled_time = 1200
-      local scheduled_var = 0.7
-      local patrolNameZone = "DIDMUKHA"
-      local patrolSpeedMin = "TSKHINVALI"
-      local patrolMaxSPeed = 400
-      local minAltitude = 500
-      local maxAltitude = 1000
-      local casNameZone = 2000
-      local timeOfEngage = 240
-      local timeOfStopEngage = 720
-      local engageSpeed = 400
-      local engageAltitude = 500
-      local nameOfTarget = "USA ARMOR SQUAD"
-      local targetNumToAccomplish = 5
-      local startMission =  1
-      -- Test
-      createCASMission(route, max_contemp_units, max_contemp_groups, templateList, route_wp_start, route_wp_end, route_range, route_altitude, scheduled_time, scheduled_var, patrolNameZone, patrolSpeedMin, patrolMaxSPeed, minAltitude, maxAltitude, casNameZone, timeOfEngage, timeOfStopEngage, engageSpeed, engageAltitude, nameOfTarget, targetNumToAccomplish, startMission)
-      ]]
 
+    ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
 
-      --[[
 
-      OK
+    ------------------------------------------------------------------------   NOTA DEVE ESSERE ANCORA IMPLEMENTATO IN MOOSE -----------------------
 
-      Spawn_Red_CAS_Missione_Aircraft  = genericSpawnSimple('Russian CAS Aircraft@DIDMUKHA', 8, 4, Spawn_Russian_CAS_Flight_Aircraft, 1, 1, 300, 500, 1200, 0.7)
-      Spawn_Red_CAS_Missione_Heli  = genericSpawnSimple('Russian CAS Heli@DIDMUKHA', 8, 4, Spawn_Russian_CAS_Flight_Aircraft, 1, 1, 300, 500, 1200, 0.7)
+    -- info @ https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/AI.AI_A2G_Dispatcher.html
 
+    local activeAI_A2G_Dispatching = false
 
-      CASPlane = GROUP:FindByName( "Russian CAS Aircraft@DIDMUKHA" )
-      CASHelicopter = GROUP:FindByName( "Russian CAS Heli@DIDMUKHA" )
+    if activeAI_A2G_Dispatching then
 
+        -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
+       -- Here we build the network with all the groups that have a name starting with CCCP Recce.
+       local DetectionSetGroupRed = SET_GROUP:New() -- Defene a set of group objects, caled DetectionSetGroup.
 
+       local DetectionSetGroupRed:FilterPrefixes( { "RED RECON" } ) -- The DetectionSetGroup will search for groups that start with the name "CCCP Recce".
 
-      -- Create two patrol zones, one for the Planes and one for the Helicopters.
-      PatrolZonePlanes = ZONE:New( "DIDMUKHA" )
-      PatrolZoneHelicopters = ZONE:New( "TSKHINVALI" )
+       -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+       -- which have a group name starting with "CCCP Recce", then these will be automatically added or removed from the set.
+       local DetectionSetGroupRed:FilterStart()
 
-      -- Create and object (in this case called AICasZone) and
-      -- using the functions AI_CAS_ZONE assign the parameters that define this object
-      -- (in this case PatrolZone, 500, 1000, 500, 600, CASEngagementZone)
-      AICasZonePlanes = AI_CAS_ZONE:New( PatrolZonePlanes, 400, 500, 500, 2500, CASEngagementTkviavi )
-      AICasZoneHelicopters = AI_CAS_ZONE:New( PatrolZoneHelicopters, 100, 250, 300, 1000, CASEngagementTkviavi )
+       -- This command defines the reconnaissance network.
+       -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+       -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+       local DetectionRed = DETECTION_AREAS:New( DetectionSetGroupRed, 1000 )
 
-      -- Create an object (in this case called Targets) and
-      -- using the GROUP function find the group labeled "Targets" and assign it to this object
-      Targets = GROUP:FindByName("USA ARMOR SQUAD")
+       -- Setup the A2A dispatcher, and initialize it.
+       local A2GDispatcherRed = AI_A2G_DISPATCHER:New( DetectionRed )
 
 
-      -- Tell the program to use the object (in this case called CASPlane) as the group to use in the CAS function
-      AICasZonePlanes:SetControllable( CASPlane )
-      AICasZoneHelicopters:SetControllable( CASHelicopter )
+       -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+       A2GDispatcherRed:SetDefenseRadius( 30000 ) -- 30Km
 
-      -- Tell the group CASPlane to start the mission in 1 second.
-      AICasZonePlanes:__Start( 1 ) -- Dopo 1 s They should startup, and start patrolling in the PatrolZone.
-      AICasZoneHelicopters:__Start( 1 ) -- Dopo 1 s They should startup, and start patrolling in the PatrolZone.
+       -- A2GDispatcher:SetDefenseReactivityHigh()
 
-      -- After 4 minutes, tell the group CASPlanes and CASHelicopters to engage the targets located in the engagement zone called CASEngagement Zone.
-      AICasZonePlanes:__Engage( 240, 500, 1500 ) -- Dopo 120 s  Engage with a speed of 500 km/h and 1500 meter altitude.
-      AICasZoneHelicopters:__Engage( 240, 100, 150 ) -- Dopo 120 s Engage with a speed of 100 km/h and 150 meter altitude.
 
-      -- After 12 minutes, tell the group CASPlane to abort the engagement.
-      AICasZonePlanes:__Abort( 720 ) -- Abort the engagement.
-      AICasZoneHelicopters:__Abort( 720 ) -- Abort the engagement.
 
+       -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+       -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+       -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line.
 
-      -- Qui schedula una funzione che controlla periodicamente ogni 60 secondi la situazione
-      -- Check every 60 seconds whether the Targets have been eliminated.
-      -- When the trigger completed has been fired, the Planes and Helicopters will go back to the Patrol Zone.
-      Check, CheckScheduleID = SCHEDULER:New(nil,
-        function()
-          if Targets:IsAlive() and Targets:GetSize() > 5 then
-            BASE:E( "Test Mission: " .. Targets:GetSize() .. " targets left to be destroyed.")
-          else
-            BASE:E( "Test Mission: The required targets are destroyed." )
-            Check:Stop( CheckScheduleID )
-            AICasZonePlanes:__Accomplish( 1 ) -- Now they should fly back to the patrolzone and patrol.
-            AICasZoneHelicopters:__Accomplish( 1 ) -- Now they should fly back to the patrolzone and patrol.
-          end
-        end, {}, 20, 60, 0.2 )
 
+       ------------------------------------------------------------------------   Red HQ1:  --------------------------------------------------------------
 
-      -- When the targets in the zone are destroyed, (see scheduled function), the planes will return home ...
-      function AICasZonePlanes:OnAfterAccomplish( Controllable, From, Event, To )
-        BASE:E( "Test Mission: Sending the Su-25T back to base." )
-        AICasZonePlanes:__RTB( 1 )
-      end
+       local HQ_RED_1 = GROUP:FindByName( "HQ_RED_1" )
 
-      -- When the targets in the zone are destroyed, (see scheduled function), the helicpters will return home ...
-      function AICasZoneHelicopters:OnAfterAccomplish( Controllable, From, Event, To )
-        BASE:E( "Test Mission: Sending the Ka-50 back to base." )
-        AICasZoneHelicopters:__RTB( 1 )
-      end
 
+       -- Add defense coordinates.
+       A2GDispatcherRed:AddDefenseCoordinate( HQ_RED_1:GetName(), HQ_RED_1:GetCoordinate() )
 
-      ]]--
+       A2GDispatcherRed:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
+       A2GDispatcherRed:SetSquadronSead( "Nalchik SEAD", 500, 700, 2000, 4000 )
+       -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+       -- nota: puoi usare anche:
+       -- A2GDispatcher:SetSquadronSeadPatrol( "Maykop SEAD", PatrolZone, 300, 500, 50, 80, 250, 300 ) insieme a  A2GDispatcher:SetSquadronPatrolInterval( "Maykop SEAD", 2, 30, 60, 1, "SEAD" )
+       -- permettono di avere gli aerei in patrol pronti ad intervenire
+       A2GDispatcherRed:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
+       A2ADispatcherRed:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
+       A2ADispatcherRed:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
 
 
+       A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
+       A2GDispatcherRed:SetSquadronSead( "Nalchik CAS", 500, 700, 3000, 5000 )
 
+       A2GDispatcherRed:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.BOM_SU_17_Structure }, 10 )
+       A2GDispatcherRed:SetSquadronSead( "Nalchik BAI", 500, 700, 6000, 10000 )
 
 
+
+       ------------------------------------------------------------------------   Red HQ2:  --------------------------------------------------------------
+
+       ------------------------------------------------------------------------   Red HQ3:  --------------------------------------------------------------
+
+       ------------------------------------------------------------------------   Red HQ4:  --------------------------------------------------------------
+
+
+
+
+
+
+    end --activeAI_A2G_Dispatching then
 
 
 
