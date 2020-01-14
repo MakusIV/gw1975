@@ -469,7 +469,7 @@ function detection( prefix_detector, range, categories, distanceProbability, alp
 
   -- type of detection
   -- By default, detection will return detected objects with all the detection sensors available
-  if typeDetection type ~= nil then
+  if typeDetection ~= nil then
 
       if Detection == 'visual' then InitDetectVisual()
 
@@ -477,7 +477,7 @@ function detection( prefix_detector, range, categories, distanceProbability, alp
 
       elseif Detection == 'optical' then InitDetectRadar()
 
-      elseif Detection == 'irst' then InitDetectIRST()
+      elseif Detection == 'first' then InitDetectIRST()
 
       elseif Detection == 'rwr' then InitDetectRWR()
 
@@ -485,7 +485,7 @@ function detection( prefix_detector, range, categories, distanceProbability, alp
 
       else
 
-          logging('warning', { 'detection( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } ) end
+          logging('warning', { 'detection( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } )
 
       end
 
@@ -2180,12 +2180,12 @@ end -- end function
 -- fornisce un sistema di rilevamento complementare alla detection utulizzazta in AI.A2A
 -- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
 -- @param hq: l'HQ
-function activeAWACS( awacsGroup, hq,  )
+function activeAWACS( awacsGroup, hq )
 
 
 
 
-        - The enemy is approaching.
+        --The enemy is approaching.
     --
     -- # Test cases:
     --
@@ -2217,13 +2217,13 @@ function activeAWACS( awacsGroup, hq,  )
       CC:MessageToAll( DetectionReport, 15, "" )
 
 
-end
+    end-- end function
 
 
 
 
 
-end
+end -- end function
 
 
 
@@ -10012,7 +10012,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     --- detection blue: e' la distanza massima di rilevamento dei radar
     -- i distanza impostata a 100 km
     -- local Detection_Blue = detection(prefix_detector.blue, 30000)
-    detection( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
+    local Detection_Blue = detection( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
 
     --- A2ADispatcher blue:
     -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
@@ -10155,25 +10155,25 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
        -- Here we build the network with all the groups that have a name starting with CCCP Recce.
-       local DetectionSetGroupRed = SET_GROUP:New() -- Defene a set of group objects, caled DetectionSetGroup.
+       --local DetectionSetGroupRed = SET_GROUP:New() -- Defene a set of group objects, caled DetectionSetGroup.
 
-       local DetectionSetGroupRed:FilterPrefixes( { "RED RECON" } ) -- The DetectionSetGroup will search for groups that start with the name "CCCP Recce".
+       --local DetectionSetGroupRed:FilterPrefixes( { "RED RECON" } ) -- The DetectionSetGroup will search for groups that start with the name "CCCP Recce".
 
        -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
        -- which have a group name starting with "CCCP Recce", then these will be automatically added or removed from the set.
-       local DetectionSetGroupRed:FilterStart()
+       --local DetectionSetGroupRed:FilterStart()
 
        -- This command defines the reconnaissance network.
        -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
        -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-       local DetectionRed = DETECTION_AREAS:New( DetectionSetGroupRed, 1000 )
+       --local DetectionRed = DETECTION_AREAS:New( DetectionSetGroupRed, 1000 )
 
        -- Setup the A2A dispatcher, and initialize it.
-       local A2GDispatcherRed = AI_A2G_DISPATCHER:New( DetectionRed )
+       --local A2GDispatcherRed = AI_A2G_DISPATCHER:New( DetectionRed )
 
 
        -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-       A2GDispatcherRed:SetDefenseRadius( 30000 ) -- 30Km
+       --A2GDispatcherRed:SetDefenseRadius( 30000 ) -- 30Km
 
        -- A2GDispatcher:SetDefenseReactivityHigh()
 
@@ -10186,28 +10186,28 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        ------------------------------------------------------------------------   Red HQ1:  --------------------------------------------------------------
 
-       local HQ_RED_1 = GROUP:FindByName( "HQ_RED_1" )
+       --local HQ_RED_1 = GROUP:FindByName( "HQ_RED_1" )
 
 
        -- Add defense coordinates.
-       A2GDispatcherRed:AddDefenseCoordinate( HQ_RED_1:GetName(), HQ_RED_1:GetCoordinate() )
+       --A2GDispatcherRed:AddDefenseCoordinate( HQ_RED_1:GetName(), HQ_RED_1:GetCoordinate() )
 
-       A2GDispatcherRed:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
-       A2GDispatcherRed:SetSquadronSead( "Nalchik SEAD", 500, 700, 2000, 4000 )
+       --A2GDispatcherRed:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
+       --A2GDispatcherRed:SetSquadronSead( "Nalchik SEAD", 500, 700, 2000, 4000 )
        -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
        -- nota: puoi usare anche:
        -- A2GDispatcher:SetSquadronSeadPatrol( "Maykop SEAD", PatrolZone, 300, 500, 50, 80, 250, 300 ) insieme a  A2GDispatcher:SetSquadronPatrolInterval( "Maykop SEAD", 2, 30, 60, 1, "SEAD" )
        -- permettono di avere gli aerei in patrol pronti ad intervenire
-       A2GDispatcherRed:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
-       A2ADispatcherRed:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
-       A2ADispatcherRed:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
+       --A2GDispatcherRed:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
+       --A2ADispatcherRed:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
+       --A2ADispatcherRed:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
 
 
-       A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
-       A2GDispatcherRed:SetSquadronSead( "Nalchik CAS", 500, 700, 3000, 5000 )
+       --A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
+       --A2GDispatcherRed:SetSquadronSead( "Nalchik CAS", 500, 700, 3000, 5000 )
 
-       A2GDispatcherRed:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.BOM_SU_17_Structure }, 10 )
-       A2GDispatcherRed:SetSquadronSead( "Nalchik BAI", 500, 700, 6000, 10000 )
+       --A2GDispatcherRed:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.BOM_SU_17_Structure }, 10 )
+       --A2GDispatcherRed:SetSquadronSead( "Nalchik BAI", 500, 700, 6000, 10000 )
 
 
 
