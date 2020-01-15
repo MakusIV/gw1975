@@ -216,6 +216,8 @@ end
 function setLoggingLevel(level)
 
 
+    if level == 'notlog'  then loggingLevel = 0 end
+
     if level == 'error'  then loggingLevel = 1 end
 
     if level == 'severe'  then loggingLevel = 2 end
@@ -366,7 +368,7 @@ function calcParamForBAI(type_aircraft)
   local num_attack = math.random( 1 , 4 )
 
   local time_to_engage = math.random( 1 , 300 )
-  local time_to_RTB = -3500
+  local time_to_RTB = 3600
 
 
    -- 'AI.Task.WeaponExpend.ALL , AI.Task.WeaponExpend.FOUR, AI.Task.WeaponExpend.HALF, AI.Task.WeaponExpend.ONE, AI.Task.WeaponExpend.QUARTER, AI.Task.WeaponExpend.TWO'
@@ -442,8 +444,8 @@ end
 -- @param prefix_detector:  table with name of EWR unit in Mission Editor
 -- @param range:  range max of detection target
 -- @return DETECTION_AREAS
--- function detection( prefix_detector, range )
-function detection( prefix_detector, range, categories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+-- function detection( prefix_detector, range, categories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+function detection( prefix_detector, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
 
   local DetectionSetGroup = SET_GROUP:New()
   DetectionSetGroup:FilterPrefixes( prefix_detector )
@@ -459,7 +461,7 @@ function detection( prefix_detector, range, categories, distanceProbability, alp
   -- Unit.Category.SHIP
   -- Unit.Category.STRUCTURE
   -- DetectionObject:FilterCategories( { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER } )
-  if categories ~= nil then Detection:FilterCategories(categories) end
+  if categories ~= nil then Detection:FilterCategories(filterCategories) end
 
   -- when you first use the DETECTION derived classes, that you don't use these filters. Only when you experience unrealistic behaviour in your missions, these filters could be applied
   if distanceProbability ~= nil then Detection:SetDistanceProbability(distanceProbability) end
@@ -676,7 +678,7 @@ end
 
 --- funzione per spawn gruppi generici
 -- non e' presente l'initArray
---
+--  DEPRECATED
 -- @param route = 'Georgian Reco Flight@Tskhinvali' -- name del percorso definito dal Ka50
 -- @param max_contemp_units = 15 -- limite massimo delle unita' attivabili contemporaneamente
 -- @param max_contemp_groups = 40 -- limite massimo dei gruppi attivabili contemporaneamente
@@ -889,7 +891,7 @@ end -- function
 function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, engageSpeed, engageAltitude, engageWeaponExpend, engageAttackQty, engageDirection, targets, percRequestKill, patrolFloorAltitude, patrolCeilingAltitude, minPatrolSpeed, maxPatrolSpeed, timeToEngage, timeToRTB, delayMission )
 
 
-          if typeOfBAI == 'bombing' then
+          if typeOfBAI == 'bombing' then -- bombing engageZone center
 
 
             for _, group in pairs(groupset:GetSetObjects()) do
@@ -924,13 +926,19 @@ function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, eng
                   -- RTB after timeToRTB.
                   BAI:__RTB(timeToRTB)
 
+                  -- RTB delay after first engage
+                  function BAI:OnAfterEngage(Controllable, From, Event, To)
+
+                      BAI:__RTB(600) --10'
+                  end
+
             end -- end for
 
 
 
 
 
-          elseif typeOfBAI == 'target' and targets ~= nil then
+        elseif typeOfBAI == 'target' and targets ~= nil then -- bombing targets
 
             for _,group in pairs(groupset:GetSetObjects()) do
 
@@ -988,6 +996,12 @@ function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, eng
                         BAI:__RTB(1) -- qui viene ordinato l'RTB ma potresti eliminarlo in modo che la BAI rimanga nella patrol zone in attesa di successivi comandi
 
                   end -- end function
+
+                  -- RTB delay after first engage
+                  function BAI:OnAfterEngage(Controllable, From, Event, To)
+
+                      BAI:__RTB(600) -- 10'
+                  end
 
                   -- Start BAI
                   BAI:__Start(delayMission)
