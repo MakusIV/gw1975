@@ -21,6 +21,8 @@ branch: ristrutturazione farp
 
 note sviluppo:
 
+inserisce in ME i gruppi RUSSIAN-GEORGIAN JTAC (vedi elenchi asset)
+
 
 
 5.1.2020:  assegnare un nome ai gruppi aerei/ground per poter essere utilizzati per info, come detection (awacs) e come targets
@@ -360,7 +362,7 @@ function calcParamForBAI(type_aircraft)
     altitude_patrol_min = 7000
 
   else --hely
-    -- NOTHING
+    logging('warning', { 'calcParamForBAI(type_aircraft)' , 'type_aircraft not found: ', type_aircraft} )
   end
 
 
@@ -431,7 +433,28 @@ end
 
 
 
--- DETECTION
+--- DETECTION
+--  Detection dedicata alla AI_A2A
+--  molto probabilmente i gruppi di detection devono essere già attivi in ME
+--
+function detectionAI_A2A(prefix_detector, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+
+    local debug = true
+
+    if debug then logging('enter', ' detectionAI_A2A(prefix_detector, ... )') end
+
+    local DetectionSetGroup = SET_GROUP:New() -- crea ilk set dei gruppi detection (probabilmente devono essere già attivi in ME: vedi gli EWR)
+    DetectionSetGroup:FilterPrefixes( prefix_detector )
+    DetectionSetGroup:FilterStart()
+    local detection = detectionAREAS( DetectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+
+    if debug then logging('exit', ' detectionAI_A2A(prefix_detector, ... )') end
+    return detection
+
+end
+
+
+-- detectionAREAS
 
 -- La detection non dovrebbe essere modificato in quanto serve solo ad associare al sistema di rilevamento tutte le unit� di rilevameno con nome conforme al prefix_detector.
 -- Eventualmente la posizione delle detector units (EWR) pu� essere cambiata in base alla evoluzione della situazione.
@@ -445,13 +468,15 @@ end
 -- @param range:  range max of detection target
 -- @return DETECTION_AREAS
 -- function detection( prefix_detector, range, categories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
-function detection( prefix_detector, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+function detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
 
-  local DetectionSetGroup = SET_GROUP:New()
-  DetectionSetGroup:FilterPrefixes( prefix_detector )
-  DetectionSetGroup:FilterStart()
-  Detection = DETECTION_AREAS:New( DetectionSetGroup, range )
+    local debug = true
 
+    if debug then logging('enter', 'detectionAREAS( detectionSetGroup, ... )') end
+
+    if detectionSetGroup == nil then logging('warning', { 'detectionUNITS( detectionSetGroup, ... )' , 'detectionSetGroup is nil: DetectionUNITS dont defined' } ) return nil end
+
+    local Detection = DETECTION_AREAS:New( detectionSetGroup, range )
 
 
   -- Filter Category
@@ -461,38 +486,129 @@ function detection( prefix_detector, range, filterCategories, distanceProbabilit
   -- Unit.Category.SHIP
   -- Unit.Category.STRUCTURE
   -- DetectionObject:FilterCategories( { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER } )
-  if categories ~= nil then Detection:FilterCategories(filterCategories) end
+  if filterCategories ~= nil then Detection:FilterCategories(filterCategories) end
 
   -- when you first use the DETECTION derived classes, that you don't use these filters. Only when you experience unrealistic behaviour in your missions, these filters could be applied
   if distanceProbability ~= nil then Detection:SetDistanceProbability(distanceProbability) end
-  if alphaProbability ~= nil then SetAlphaAngleProbability(alphaProbability) end
-  if zoneProbability ~= nil then SetZoneProbability(zoneProbability) end -- for set probability refer at cloudy zone
+  if alphaProbability ~= nil then Detection:SetAlphaAngleProbability(alphaProbability) end
+  if zoneProbability ~= nil then Detection:SetZoneProbability(zoneProbability) end -- for set probability refer at cloudy zone
   -- zoneProbability: Typically, this kind of filter would be applied for very specific areas were a detection needs to be very realisting for AI not to detect so easily targets within a forrest or village rich area.
 
   -- type of detection
   -- By default, detection will return detected objects with all the detection sensors available
   if typeDetection ~= nil then
 
-      if Detection == 'visual' then InitDetectVisual()
+      for _, type in pairs(typeDetection) do
 
-      elseif Detection == 'optical' then InitDetectOptical()
+          if type == 'visual' then InitDetectVisual(true)
 
-      elseif Detection == 'optical' then InitDetectRadar()
+          elseif type == 'optical' then InitDetectOptical(true)
 
-      elseif Detection == 'first' then InitDetectIRST()
+          elseif type == 'radar' then InitDetectRadar(true)
 
-      elseif Detection == 'rwr' then InitDetectRWR()
+          elseif type == 'irst' then InitDetectIRST(true)
 
-      elseif Detection == 'dlink' then InitDetectDLINK()
+          elseif type == 'rwr' then InitDetectRWR(true)
 
-      else
+          elseif type == 'dlink' then InitDetectDLINK(true)
 
-          logging('warning', { 'detection( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } )
+          else
 
-      end
+              logging('warning', { 'detectionAREAS( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } )
+
+          end -- end if then else
+
+      end -- end for
 
   end
 
+  if debug then logging('exit', 'detectionAREAS( detectionSetGroup, ... )') end
+  return Detection
+
+end
+
+
+
+-- detectionAREAS
+
+-- La detection non dovrebbe essere modificato in quanto serve solo ad associare al sistema di rilevamento tutte le unit� di rilevameno con nome conforme al prefix_detector.
+-- Eventualmente la posizione delle detector units (EWR) pu� essere cambiata in base alla evoluzione della situazione.
+
+
+--- Create a detection zone based on a group of detector units.
+--  The detector group is created utilizing detector units with name formed with prefix_detector.
+--
+--
+-- @param prefix_detector:  table with name of EWR unit in Mission Editor
+-- @param range:  range max of detection target
+-- @param typeDetection: set of sensor detector: nil for all sensor activation (visual, radar, optical, irst, rwr, dlink)
+-- @param filterCategories: set of filter for of unit: nil all category will be detected
+-- @param zoneProbability: array of a The ZONE_BASE object and a ZoneProbability pair..: ex: { { Zone1, 0.1 }, { Zone2, 0.1 } }
+-- @return DETECTION_AREAS
+-- function detection( prefix_detector, range, categories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+function detectionUNITS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+
+  local debug = true
+
+  if debug then logging('enter', 'detectionUNITS( detectionSetGroup, ... )') end
+
+  if detectionSetGroup == nil then logging('warning', { 'detectionUNITS( detectionSetGroup, ... )' , 'detectionSetGroup is nil: DetectionUNITS dont defined' } ) return nil end
+
+  local Detection = DETECTION_UNITS:New( detectionSetGroup )
+
+
+  if range ~= nil then Detection:SetAcceptRange( range ) end
+
+  -- Filter Category
+  -- Unit.Category.AIRPLANE
+  -- Unit.Category.GROUND_UNIT
+  -- Unit.Category.HELICOPTER
+  -- Unit.Category.SHIP
+  -- Unit.Category.STRUCTURE
+  -- DetectionObject:FilterCategories( { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER } )
+  if filterCategories ~= nil then Detection:FilterCategories(filterCategories) end
+
+  -- when you first use the DETECTION derived classes, that you don't use these filters. Only when you experience unrealistic behaviour in your missions, these filters could be applied
+  if distanceProbability ~= nil then Detection:SetDistanceProbability(distanceProbability) end
+
+  if alphaProbability ~= nil then Detection:SetAlphaAngleProbability(alphaProbability) end
+
+  if zoneProbability ~= nil then Detection:SetZoneProbability(zoneProbability) end -- for set probability refer at cloudy zone
+  -- zoneProbability: Typically, this kind of filter would be applied for very specific areas were a detection needs to be very realisting for AI not to detect so easily targets within a forrest or village rich area.
+
+
+  -- GetDetectedItemByIndex(Index)
+  -- GetDetectedUnitTypeName(DetectedUnit)
+
+  -- type of detection
+  -- By default, detection will return detected objects with all the detection sensors available
+  if typeDetection ~= nil then
+
+      for _, type in pairs(typeDetection) do
+
+          if type == 'visual' then InitDetectVisual(true)
+
+          elseif type == 'optical' then InitDetectOptical(true)
+
+          elseif type == 'radar' then InitDetectRadar(true)
+
+          elseif type == 'irst' then InitDetectIRST(true)
+
+          elseif type == 'rwr' then InitDetectRWR(true)
+
+          elseif type == 'dlink' then InitDetectDLINK(true)
+
+          else
+
+              logging('warning', { 'detectionAREAS( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } )
+
+          end -- end if then else
+
+      end -- end for
+
+  end -- end if
+
+  if debug then logging('exit', 'detectionUNITS( detectionSetGroup, ... )') end
 
   return Detection
 
@@ -1750,7 +1866,7 @@ end -- end function
 -- @param command_Center = il command_center
 -- @param activateDetectionReport = true: attiva la visualizzazione dei detection report false la disattiva
 --
-function RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage)
+function RecceGroundDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage)
 
     local debug = true
 
@@ -1765,15 +1881,15 @@ function RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, 
 
     -- quindi OK LA WAREHOUSE CON OnAfterSelfRequest  genera un groupSet!!!!!!
 
-    if debug then logging('enter', 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage') end
+    if debug then logging('enter', 'RecceGroundDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage') end
 
-    if debug then logging('info', { 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection)' , 'RecceSetGroup name: ' .. RecceSetGroup:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage }) end
+    if debug then logging('info', { 'RecceGroundDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection)' , 'RecceSetGroup name: ' .. RecceSetGroup:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage }) end
 
-    local RecceDetection = DETECTION_UNITS:New( RecceSetGroup )
+    local RecceGroundDetection = DETECTION_UNITS:New( RecceSetGroup )
 
-    RecceDetection:SetRefreshTimeInterval( delayDetection )
+    RecceGroundDetection:SetRefreshTimeInterval( delayDetection )
 
-    RecceDetection:Start()
+    RecceGroundDetection:Start()
 
 
 
@@ -1784,23 +1900,23 @@ function RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, 
         -- @param #string From The From State string.
         -- @param #string Event The Event string.
         -- @param #string To The To State string.
-        function RecceDetection:OnAfterDetect(From,Event,To)
+        function RecceGroundDetection:OnAfterDetect(From,Event,To)
 
-          if debug then logging('enter', 'RecceDetection:OnAfterDetect(From,Event,To)') end
+          if debug then logging('enter', 'RecceGroundDetection:OnAfterDetect(From,Event,To)') end
 
-          local DetectionReport = RecceDetection:DetectedReportDetailed()
+          local DetectionReport = RecceGroundDetection:DetectedReportDetailed()
 
           command_center:GetPositionable():MessageToAll( DetectionReport, persistTimeOfMessage, "" )
 
-          if debug then logging('exit', 'RecceDetection:OnAfterDetect(From,Event,To)') end
+          if debug then logging('exit', 'RecceGroundDetection:OnAfterDetect(From,Event,To)') end
 
         end
 
     end
 
-    if debug then logging('exit', 'RecceDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage') end
+    if debug then logging('exit', 'RecceGroundDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage') end
 
-    return RecceDetection
+    return RecceGroundDetection
 
 end
 
@@ -1814,7 +1930,7 @@ end
 -- @param command_Center = il command_center
 -- @param activateDetectionReport = true: attiva la visualizzazione dei detection report false la disattiva
 --
-function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
+function ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)
 
   local debug = true
 
@@ -1829,10 +1945,10 @@ function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
 
   -- quindi OK LA WAREHOUSE CON OnAfterSelfRequest  genera un groupSet!!!!!!
 
-  if debug then logging('enter', 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)') end
-  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)' , 'ArtillerySetGroup: ' .. ArtillerySetGroup  }) end
+  if debug then logging('enter', 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)') end
+  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)' , 'ArtillerySetGroup: ' .. ArtillerySetGroup  }) end
 
-  local RecceDetection = RecceDetection
+  local RecceDetection = RecceGroundDetection
 
   local ArtilleryTime = {}
 
@@ -1853,7 +1969,7 @@ function ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)
   --- Tempo di attesa di attivazione del tiro (s)
   local activated_time = 0.5
 
-  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceDetection, ArtillerySetGroup)' , 'ArtilleryAim: ' .. ArtilleryAim .. ' - radiusTarget: ' .. radiusTarget .. ' - num_ammo: ' .. num_ammo .. ' - activated_time: ' .. activated_time }) end
+  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)' , 'ArtilleryAim: ' .. ArtilleryAim .. ' - radiusTarget: ' .. radiusTarget .. ' - num_ammo: ' .. num_ammo .. ' - activated_time: ' .. activated_time }) end
   --- OnAfter Transition Handler for Event Detect.
   -- @param Functional.Detection#DETECTION_UNITS self
   -- @param #string From The From State string.
@@ -2191,29 +2307,36 @@ end -- end function
 
 
 --- Gestisce le missioni AWACS
--- fornisce un sistema di rilevamento complementare alla detection utulizzazta in AI.A2A
+-- fornisce un sistema di rilevamento AWACS
+-- al momento è limitato alla comunicazione dei rilevamenti mediante un commandCenter
 -- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
--- @param hq: l'HQ
-function activeAWACS( awacsGroup, hq )
+-- @param commandCenter: il command center per le comuncazioni
+-- @param rejectedZone: il set di zone da escludere nella detection { ZoneReject1, ZoneReject2 }
+function activeAWACS( awacsSetGroup, commandCenter, rejectedZone )
 
+    local debug = true
 
+    if debug then logging('enter', 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )') end
 
+    if awacsSetGroup == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup is nil: Detection dont defined' } ) return nil end
 
-        --The enemy is approaching.
+    if commandCenter == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'commandCenter is nil: Detection dont defined' } ) return nil end
+
+    if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup = ' .. awacsSetGroup:GetObjectNames() .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  commandCenter = ' .. commandCenter:GetName() } ) end
+
+    --- NOTA:  devi utilizzare un setGroup di AWAC già prodotto dalla warehouse con prefisso opportuno
+
+    -- The enemy is approaching.
     --
     -- # Test cases:
     --
     -- 1. Observe the detection reporting of both the Recce.
     -- 2. Eventually all units should be detected by both Recce.
 
-    RecceSetGroup = SET_GROUP:New():FilterPrefixes( "Recce" ):FilterStart()
+    -- detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+    RecceDetection = detectionAREAS( awacsSetGroup, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar'} )
 
-    HQ = GROUP:FindByName( "HQ" )
-
-    CC = COMMANDCENTER:New( HQ, "HQ" )
-
-    RecceDetection = DETECTION_UNITS:New( RecceSetGroup )
-    RecceDetection:InitDetectRadar(true)
+    if rejectedZone ~= nil then Detection:SetRejectZones( rejectedZone ) end
 
     RecceDetection:Start()
 
@@ -2224,20 +2347,74 @@ function activeAWACS( awacsGroup, hq )
     -- @param #string To The To State string.
     function RecceDetection:OnAfterDetect(From,Event,To)
 
-      self:E("Detect")
+      if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'Detect!' } ) end
 
       local DetectionReport = RecceDetection:DetectedReportDetailed()
 
-      CC:MessageToAll( DetectionReport, 15, "" )
+      commandCenter:MessageToAll( DetectionReport, 15, "" )
+
+    end-- end function RecceDetection:OnAfterDetect(From,Event,To)
 
 
-    end-- end function
+    if debug then logging('exit', 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )') end
+
+end -- end function activeAWACS( awacsSetGroup, commandCenter )
 
 
 
+--- Gestisce le missioni AWACS
+-- fornisce un sistema di rilevamento complementare alla detection utulizzazta in AI.A2A
+-- controllo delle azioni aeree a supporto della manovra terrestre
+-- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
+-- @param hq: l'HQ
+function activeJTAC( jtacSetGroup, commandCenter, rejectedZone )
+
+    local debug = true
+
+    if debug then logging('enter', 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )') end
+
+    if awacsSetGroup == nil then logging('warning', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup is nil: Detection dont defined' } ) return nil end
+
+    if commandCenter == nil then logging('warning', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'commandCenter is nil: Detection dont defined' } ) return nil end
+
+    if debug then logging('finest', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'jtacSetGroup = ' .. jtacSetGroup:GetObjectNames() .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  commandCenter = ' .. commandCenter:GetName() } ) end
 
 
-end -- end function
+    --- NOTA:  devi utilizzare un setGroup di AWAC già prodotto dalla warehouse con prefisso opportuno
+
+    -- Filter Category
+    -- Unit.Category.AIRPLANE
+    -- Unit.Category.GROUND_UNIT
+    -- Unit.Category.HELICOPTER
+    -- Unit.Category.SHIP
+    -- Unit.Category.STRUCTURE
+
+    -- detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+    RecceDetection = detectionUNITS( jtacSetGroup, 3000, { Unit.Category.GROUND_UNIT }, nil, nil, nil, {'visual','optical', 'irst'} )
+
+    if rejectedZone ~= nil then Detection:SetRejectZones( rejectedZone ) end
+
+    RecceDetection:Start()
+
+    --- OnAfter Transition Handler for Event Detect.
+    -- @param Functional.Detection#DETECTION_UNITS self
+    -- @param #string From The From State string.
+    -- @param #string Event The Event string.
+    -- @param #string To The To State string.
+    function RecceDetection:OnAfterDetect(From,Event,To)
+
+      if debug then logging('finest', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'Detect!' } ) end
+
+      local DetectionReport = RecceDetection:DetectedReportDetailed()
+
+      commandCenter:MessageToAll( DetectionReport, 15, "" )
+
+    end-- end function RecceDetection:OnAfterDetect(From,Event,To)
+
+
+    if debug then logging('exit', 'activeAWACS( awacsSetGroup, commandCenter )') end
+
+end -- end function activeAWACS( awacsSetGroup, commandCenter )
 
 
 
@@ -2541,7 +2718,8 @@ local air_template_blue = {
     TransportB = 'RUSSIAN TRANSPORT SQUAD BIS',
     TroopTransport = 'RUSSIAN TROOP TRANSPORT SQUAD',
     Truck = 'Red_Truck',
-    ArtilleryResupply = 'RUSSIAN ARTILLERY RESUPPLY TRUCK'
+    ArtilleryResupply = 'RUSSIAN ARTILLERY RESUPPLY TRUCK',
+    jtac = 'RUSSIAN JTAC SQUAD'
 
   }
 
@@ -2597,7 +2775,8 @@ local ground_group_template_blue = {
   TransportB = 'GEORGIAN TRANSPORT SQUAD BIS',
   TroopTransport = 'GEORGIAN TROOP TRANSPORT SQUAD',
   Truck = 'Blue_Truck',
-  ArtilleryResupply = 'GEORGIAN ARTILLERY RESUPPLY TRUCK'
+  ArtilleryResupply = 'GEORGIAN ARTILLERY RESUPPLY TRUCK',
+  jtac = 'GEORGIAN JTAC SQUAD'
 
 }
 
@@ -4009,7 +4188,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           elseif assignment == 'RECON_ZONE_HELO_Didmukha_Tsveri' then
 
             activeGO_TO_ZONE_AIR( groupset,  redFrontZone.DIDMUKHA, 0.8 )
-            RecceDetection( groupset, red_command_center, true, 10, 10 )
+            RecceGroundDetection( groupset, red_command_center, true, 10, 10 )
 
 
           else
@@ -7828,8 +8007,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
-            local num_mission = 5 -- the number of mission request ( _addRequest() )
+            local num_mission = 7 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition( num_mission )
+
+            local num_mission_helo = 5 -- the number of mission request ( _addRequest() )
+            local depart_time_helo = defineRequestPosition( num_mission_helo )
+
             local startReqTimeArtillery = 1 -- Arty groups have first activation
             local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
 
@@ -7846,13 +8029,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' )
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' )
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[5] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[6] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' )
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[7] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' )
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi')
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[1] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri')
             -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[4] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
+            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[5] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi')
 
             logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
@@ -7936,6 +8122,28 @@ if conflictZone == 'Zone 1: South Ossetia' then
           elseif assignment == 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi' then
 
               activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO' )
+
+
+
+          elseif assignment == 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi' then
+
+              activeGO_TO_ZONE_AIR( groupset, redFrontZone.TSKHINVALI, 'ATTACK_ZONE_HELO' )
+              activeJTAC( groupset, blue_command_center, nil )
+
+
+
+          elseif assignment == 'JTAC_SATIHARI' then
+
+              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.redFrontZone.SATIHARI, true, 1 )
+              activeJTAC( groupset, blue_command_center, nil )
+
+
+
+          elseif assignment == 'JTAC_TSKHINVALI' then
+
+              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI, true, 1 )
+              activeJTAC( groupset, blue_command_center, nil )
+
 
 
 
@@ -8304,7 +8512,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT 2")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.EWR_F_4, math.random( 1 , 2 ), nil, nil, nil, "EWR")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.EWR_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
+
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  tblisi_efficiency_influence, interval_sched, rand_sched
@@ -8381,24 +8590,24 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
 
-          elseif request.assignment == "EWR" then
+      elseif request.assignment == "AWACS" then
 
-            local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
+            --local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
             local patrolZone =  bluePatrolZone.tbilisi[1]
-            local engageRange = math.random(10000, 20000)
-            local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-            local patrolFloorAltitude = 7000
-            local patrolCeilAltitude = 9000
-            local minSpeedPatrol = 400
-            local maxSpeedPatrol = 600
-            local minSpeedEngage = 600
-            local maxSpeedEngage = 1000
+            --local engageRange = math.random(10000, 20000)
+            --local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+            --local patrolFloorAltitude = 7000
+            --local patrolCeilAltitude = 9000
+            --local minSpeedPatrol = 400
+            --local maxSpeedPatrol = 600
+            --local minSpeedEngage = 600
+            --local maxSpeedEngage = 1000
 
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
-
+            activeGO_TO_ZONE_AIR( groupset, patrolZone, 1 )
+            activeAWACS( groupset, blue_command_center, nil )
 
 
 
@@ -9920,7 +10129,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km
     -- local Detection_Red = detection(prefix_detector.red, 30000)
-    local Detection_Red = detection( prefix_detector.red, 30000, categories, nil, nil, nil, nil )
+
+    local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, categories, nil, nil, nil, nil )
 
     --- A2ADispatcher red:
     -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
@@ -10026,7 +10236,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     --- detection blue: e' la distanza massima di rilevamento dei radar
     -- i distanza impostata a 100 km
     -- local Detection_Blue = detection(prefix_detector.blue, 30000)
-    local Detection_Blue = detection( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
+    local Detection_Blue = detectionAI_A2A( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
 
     --- A2ADispatcher blue:
     -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
