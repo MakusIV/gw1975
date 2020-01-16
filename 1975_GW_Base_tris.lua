@@ -1593,17 +1593,16 @@ end -- end function
 -- @param offRoad (optional - default = false): se true
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
 --
-function activeGO_TO_ZONE_AIR( group, battlezone, speedPerc )
+function activeGO_TO_ZONE_AIR( groupset, battlezone, speedPerc )
 
   local debug = true
 
   if debug then logging('enter', 'activeGO_TO_ZONE_AIR( group, battlezone )') end
 
-  if debug then logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'battlezone = ' .. battlezone[2] .. '  -  group = ' .. group:GetName() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
+  if debug then logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'battlezone = ' .. battlezone[2] .. '  -  group = ' .. group:GetObjectNames() .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
 
   local battleZone = battlezone[1] -- the zone object
 
-  if nil == offRoad or offRoad ~= true then offRoad = false end
 
   if nil == speedPerc or speedPerc > 1 or speedPerc < 0.1 then speedPerc = 0.7 end
 
@@ -1620,12 +1619,7 @@ function activeGO_TO_ZONE_AIR( group, battlezone, speedPerc )
     local groupCoord = group:GetCoordinate()
     group:RouteAirTo(ToCoord, 'BARO', ToCoord.WaypointType, nil)
 
-    if debug then logging('finest', { 'activeGO_TO_ZONE_AIR( group, battlezone )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
-
-
-
   end -- end for
-
 
 
   if debug then logging('exit', 'activeGO_TO_ZONE_AIR( group, battlezone )') end
@@ -3016,19 +3010,19 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   true,
+       Zestafoni     =   false,
        Gori          =   true,
-       Khashuri      =   true
+       Khashuri      =   false
 
 
     },
 
     red = {
 
-      Biteta        =   true,
+      Biteta        =   false,
       Didi          =   true,
-      Kvemo_Sba     =   true,
-      Alagir        =   true
+      Kvemo_Sba     =   false,
+      Alagir        =   false
 
     }
 
@@ -3038,21 +3032,21 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   true,
-      Soganlug      =   true,
+      Vaziani       =   false,
+      Soganlug      =   false,
       Tbilisi       =   true,
-      Kutaisi       =   true,
-      Kvitiri       =   true,
-      Kvitiri_Helo  =   true,
+      Kutaisi       =   false,
+      Kvitiri       =   false,
+      Kvitiri_Helo  =   false,
       Batumi        =   true
 
     },
 
     red = {
 
-      Mozdok        =   true,
-      Mineralnye    =   true,
-      Beslan        =   true,
+      Mozdok        =   false,
+      Mineralnye    =   false,
+      Beslan        =   false,
       Nalchik       =   true
 
     }
