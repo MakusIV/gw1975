@@ -427,31 +427,7 @@ end
 
 
 
-
-
-
-
-
-
 --- DETECTION
---  Detection dedicata alla AI_A2A
---  molto probabilmente i gruppi di detection devono essere già attivi in ME
---
-function detectionAI_A2A(prefix_detector, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
-
-    local debug = true
-
-    if debug then logging('enter', ' detectionAI_A2A(prefix_detector, ... )') end
-
-    local DetectionSetGroup = SET_GROUP:New() -- crea ilk set dei gruppi detection (probabilmente devono essere già attivi in ME: vedi gli EWR)
-    DetectionSetGroup:FilterPrefixes( prefix_detector )
-    DetectionSetGroup:FilterStart()
-    local detection = detectionAREAS( DetectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
-
-    if debug then logging('exit', ' detectionAI_A2A(prefix_detector, ... )') end
-    return detection
-
-end
 
 
 -- detectionAREAS
@@ -523,13 +499,14 @@ function detectionAREAS( detectionSetGroup, range, filterCategories, distancePro
   end
 
   if debug then logging('exit', 'detectionAREAS( detectionSetGroup, ... )') end
+
   return Detection
 
 end
 
 
 
--- detectionAREAS
+-- detectionUNITS
 
 -- La detection non dovrebbe essere modificato in quanto serve solo ad associare al sistema di rilevamento tutte le unit� di rilevameno con nome conforme al prefix_detector.
 -- Eventualmente la posizione delle detector units (EWR) pu� essere cambiata in base alla evoluzione della situazione.
@@ -613,6 +590,169 @@ function detectionUNITS( detectionSetGroup, range, filterCategories, distancePro
   return Detection
 
 end
+
+
+
+
+
+
+
+--  Detection dedicata alla AI_A2A
+--  molto probabilmente i gruppi di detection devono essere già attivi in ME
+--
+function detectionAI_A2A(prefix_detector, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+
+    local debug = true
+
+    if debug then logging('enter', ' detectionAI_A2A(prefix_detector, ... )') end
+
+    local DetectionSetGroup = SET_GROUP:New() -- crea ilk set dei gruppi detection (probabilmente devono essere già attivi in ME: vedi gli EWR)
+    DetectionSetGroup:FilterPrefixes( prefix_detector )
+    DetectionSetGroup:FilterStart()
+    local detection = detectionAREAS( DetectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+
+    if debug then logging('exit', ' detectionAI_A2A(prefix_detector, ... )') end
+    return detection
+
+end
+
+
+
+--- Gestisce le missioni AWACS
+-- fornisce un sistema di rilevamento AWACS
+-- al momento è limitato alla comunicazione dei rilevamenti mediante un commandCenter
+-- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
+-- @param commandCenter: il command center per le comuncazioni
+-- @param rejectedZone: il set di zone da escludere nella detection { ZoneReject1, ZoneReject2 }
+function activeAWACS( awacsSetGroup, commandCenter, rejectedZone )
+
+    local debug = true
+
+    if debug then logging('enter', 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )') end
+
+    if awacsSetGroup == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup is nil: Detection dont defined' } ) return nil end
+
+    if commandCenter == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'commandCenter is nil: Detection dont defined' } ) return nil end
+
+    if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup = ' .. awacsSetGroup:GetObjectNames() .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  commandCenter = ' .. commandCenter:GetName() } ) end
+
+    --- NOTA:  devi utilizzare un setGroup di AWAC già prodotto dalla warehouse con prefisso opportuno
+
+    -- The enemy is approaching.
+    --
+    -- # Test cases:
+    --
+    -- 1. Observe the detection reporting of both the Recce.
+    -- 2. Eventually all units should be detected by both Recce.
+
+    -- detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+    RecceDetection = detectionAREAS( awacsSetGroup, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar'} )
+
+    if rejectedZone ~= nil then Detection:SetRejectZones( rejectedZone ) end
+
+    RecceDetection:Start()
+
+    --- OnAfter Transition Handler for Event Detect.
+    -- @param Functional.Detection#DETECTION_UNITS self
+    -- @param #string From The From State string.
+    -- @param #string Event The Event string.
+    -- @param #string To The To State string.
+    function RecceDetection:OnAfterDetect(From,Event,To)
+
+      if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'Detect!' } ) end
+
+      local DetectionReport = RecceDetection:DetectedReportDetailed()
+
+      commandCenter:MessageToAll( DetectionReport, 15, "" )
+
+    end-- end function RecceDetection:OnAfterDetect(From,Event,To)
+
+
+    if debug then logging('exit', 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )') end
+
+end -- end function activeAWACS( awacsSetGroup, commandCenter )
+
+
+
+--- Gestisce le missioni JTAC
+-- fornisce un sistema di rilevamento complementare alla detection utulizzazta in AI.A2A
+-- controllo delle azioni aeree a supporto della manovra terrestre
+-- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
+-- @param hq: l'HQ
+function activeJTAC( jtacSetGroup, commandCenter, rejectedZone )
+
+    local debug = true
+
+    if debug then logging('enter', 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )') end
+
+    if awacsSetGroup == nil then logging('warning', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup is nil: Detection dont defined' } ) return nil end
+
+    if commandCenter == nil then logging('warning', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'commandCenter is nil: Detection dont defined' } ) return nil end
+
+    if debug then logging('finest', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'jtacSetGroup = ' .. jtacSetGroup:GetObjectNames() .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  commandCenter = ' .. commandCenter:GetName() } ) end
+
+
+    --- NOTA:  devi utilizzare un setGroup di JTAC già prodotto dalla warehouse con prefisso opportuno
+
+    -- Filter Category
+    -- Unit.Category.AIRPLANE
+    -- Unit.Category.GROUND_UNIT
+    -- Unit.Category.HELICOPTER
+    -- Unit.Category.SHIP
+    -- Unit.Category.STRUCTURE
+
+    -- detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
+    RecceDetection = detectionUNITS( jtacSetGroup, 3000, { Unit.Category.GROUND_UNIT }, nil, nil, nil, {'visual','optical', 'irst'} )
+
+    if rejectedZone ~= nil then Detection:SetRejectZones( rejectedZone ) end
+
+    RecceDetection:Start()
+
+    --- OnAfter Transition Handler for Event Detect.
+    -- @param Functional.Detection#DETECTION_UNITS self
+    -- @param #string From The From State string.
+    -- @param #string Event The Event string.
+    -- @param #string To The To State string.
+    function RecceDetection:OnAfterDetect(From,Event,To)
+
+      if debug then logging('finest', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'Detect!' } ) end
+
+      local DetectionReport = RecceDetection:DetectedReportDetailed()
+
+      commandCenter:MessageToAll( DetectionReport, 15, "" )
+
+    end-- end function RecceDetection:OnAfterDetect(From,Event,To)
+
+
+    if debug then logging('exit', 'activeAWACS( awacsSetGroup, commandCenter )') end
+
+end -- end function activeAWACS( awacsSetGroup, commandCenter )
+
+
+
+
+function designateTarget(recceSetGroup, attackSetGroup, commanCenter, Detection)
+
+    RecceDesignation = DESIGNATE:New( CC, RecceDetection, AttackSet )
+
+    -- This sets the threat level prioritization on
+    RecceDesignation:SetThreatLevelPrioritization( true )
+
+    -- Set the possible laser codes.
+    RecceDesignation:GenerateLaserCodes()
+
+    RecceDesignation:AddMenuLaserCode( 1113, "Lase with %d for Su-25T" )
+
+    RecceDesignation:AddMenuLaserCode( 1680, "Lase with %d for A-10A" )
+
+    -- Start the detection process in 5 seconds.
+    RecceDesignation:__Detect( -5 )
+
+
+end
+
+
+
 
 
 -- DISPATCHER
@@ -2298,118 +2438,6 @@ function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
   return
 
 end -- end function
-
-
---- Gestisce le missioni AWACS
--- fornisce un sistema di rilevamento AWACS
--- al momento è limitato alla comunicazione dei rilevamenti mediante un commandCenter
--- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
--- @param commandCenter: il command center per le comuncazioni
--- @param rejectedZone: il set di zone da escludere nella detection { ZoneReject1, ZoneReject2 }
-function activeAWACS( awacsSetGroup, commandCenter, rejectedZone )
-
-    local debug = true
-
-    if debug then logging('enter', 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )') end
-
-    if awacsSetGroup == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup is nil: Detection dont defined' } ) return nil end
-
-    if commandCenter == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'commandCenter is nil: Detection dont defined' } ) return nil end
-
-    if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup = ' .. awacsSetGroup:GetObjectNames() .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  commandCenter = ' .. commandCenter:GetName() } ) end
-
-    --- NOTA:  devi utilizzare un setGroup di AWAC già prodotto dalla warehouse con prefisso opportuno
-
-    -- The enemy is approaching.
-    --
-    -- # Test cases:
-    --
-    -- 1. Observe the detection reporting of both the Recce.
-    -- 2. Eventually all units should be detected by both Recce.
-
-    -- detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
-    RecceDetection = detectionAREAS( awacsSetGroup, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar'} )
-
-    if rejectedZone ~= nil then Detection:SetRejectZones( rejectedZone ) end
-
-    RecceDetection:Start()
-
-    --- OnAfter Transition Handler for Event Detect.
-    -- @param Functional.Detection#DETECTION_UNITS self
-    -- @param #string From The From State string.
-    -- @param #string Event The Event string.
-    -- @param #string To The To State string.
-    function RecceDetection:OnAfterDetect(From,Event,To)
-
-      if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'Detect!' } ) end
-
-      local DetectionReport = RecceDetection:DetectedReportDetailed()
-
-      commandCenter:MessageToAll( DetectionReport, 15, "" )
-
-    end-- end function RecceDetection:OnAfterDetect(From,Event,To)
-
-
-    if debug then logging('exit', 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )') end
-
-end -- end function activeAWACS( awacsSetGroup, commandCenter )
-
-
-
---- Gestisce le missioni AWACS
--- fornisce un sistema di rilevamento complementare alla detection utulizzazta in AI.A2A
--- controllo delle azioni aeree a supporto della manovra terrestre
--- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
--- @param hq: l'HQ
-function activeJTAC( jtacSetGroup, commandCenter, rejectedZone )
-
-    local debug = true
-
-    if debug then logging('enter', 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )') end
-
-    if awacsSetGroup == nil then logging('warning', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup is nil: Detection dont defined' } ) return nil end
-
-    if commandCenter == nil then logging('warning', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'commandCenter is nil: Detection dont defined' } ) return nil end
-
-    if debug then logging('finest', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'jtacSetGroup = ' .. jtacSetGroup:GetObjectNames() .. 'deployAirbaseName = ' .. deployAirbaseName .. '  -  group = ' .. groupPlaneSet:GetObjectNames() .. '  -  commandCenter = ' .. commandCenter:GetName() } ) end
-
-
-    --- NOTA:  devi utilizzare un setGroup di AWAC già prodotto dalla warehouse con prefisso opportuno
-
-    -- Filter Category
-    -- Unit.Category.AIRPLANE
-    -- Unit.Category.GROUND_UNIT
-    -- Unit.Category.HELICOPTER
-    -- Unit.Category.SHIP
-    -- Unit.Category.STRUCTURE
-
-    -- detectionAREAS( detectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
-    RecceDetection = detectionUNITS( jtacSetGroup, 3000, { Unit.Category.GROUND_UNIT }, nil, nil, nil, {'visual','optical', 'irst'} )
-
-    if rejectedZone ~= nil then Detection:SetRejectZones( rejectedZone ) end
-
-    RecceDetection:Start()
-
-    --- OnAfter Transition Handler for Event Detect.
-    -- @param Functional.Detection#DETECTION_UNITS self
-    -- @param #string From The From State string.
-    -- @param #string Event The Event string.
-    -- @param #string To The To State string.
-    function RecceDetection:OnAfterDetect(From,Event,To)
-
-      if debug then logging('finest', { 'activeJTAC( jtacSetGroup, commandCenter, rejectedZone )' , 'Detect!' } ) end
-
-      local DetectionReport = RecceDetection:DetectedReportDetailed()
-
-      commandCenter:MessageToAll( DetectionReport, 15, "" )
-
-    end-- end function RecceDetection:OnAfterDetect(From,Event,To)
-
-
-    if debug then logging('exit', 'activeAWACS( awacsSetGroup, commandCenter )') end
-
-end -- end function activeAWACS( awacsSetGroup, commandCenter )
-
 
 
 ------------------------------------------------------------------------------- END DEFINE FUNCTIONS -------------------------------------------------------------------------------
