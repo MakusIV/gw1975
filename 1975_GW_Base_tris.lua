@@ -478,21 +478,21 @@ function detectionAREAS( detectionSetGroup, range, filterCategories, distancePro
 
       for _, type in pairs(typeDetection) do
 
-          if type == 'visual' then InitDetectVisual(true)
+          if type == 'visual' then Detection:InitDetectVisual(true)
 
-          elseif type == 'optical' then InitDetectOptical(true)
+          elseif type == 'optical' then Detection:InitDetectOptical(true)
 
-          elseif type == 'radar' then InitDetectRadar(true)
+          elseif type == 'radar' then Detection:InitDetectRadar(true)
 
-          elseif type == 'irst' then InitDetectIRST(true)
+          elseif type == 'irst' then Detection:InitDetectIRST(true)
 
-          elseif type == 'rwr' then InitDetectRWR(true)
+          elseif type == 'rwr' then Detection:InitDetectRWR(true)
 
-          elseif type == 'dlink' then InitDetectDLINK(true)
+          elseif type == 'dlink' then Detection:InitDetectDLINK(true)
 
           else
 
-              logging('warning', { 'detectionAREAS( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. detectionType  } )
+              logging('warning', { 'detectionAREAS( prefix_detector, range, categories, distanceProbability, typeDetection )' , 'detectionType not recognized: ' .. type  } )
 
           end -- end if then else
 
@@ -1659,7 +1659,7 @@ function activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGrou
 
     else
 
-        logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type not found:' .. type .. ' - Exit!' } ) return nil end
+        logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type not found:' .. type .. ' - Exit!' } )
 
     end
 
@@ -3138,19 +3138,19 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   true,
+       Zestafoni     =   false,
        Gori          =   true,
-       Khashuri      =   true
+       Khashuri      =   false
 
 
     },
 
     red = {
 
-      Biteta        =   true,
+      Biteta        =   false,
       Didi          =   true,
-      Kvemo_Sba     =   true,
-      Alagir        =   true
+      Kvemo_Sba     =   false,
+      Alagir        =   false
 
     }
 
@@ -3160,22 +3160,22 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   true,
-      Soganlug      =   true,
+      Vaziani       =   false,
+      Soganlug      =   false,
       Tbilisi       =   true,
       Kutaisi       =   true,
-      Kvitiri       =   true,
-      Kvitiri_Helo  =   true,
+      Kvitiri       =   false,
+      Kvitiri_Helo  =   false,
       Batumi        =   true
 
     },
 
     red = {
 
-      Mozdok        =   true,
-      Mineralnye    =   true,
-      Beslan        =   true,
-      Nalchik       =   true
+      Mozdok        =   false,
+      Mineralnye    =   false,
+      Beslan        =   false,
+      Nalchik       =   false
 
     }
 
@@ -6312,15 +6312,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           function()
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-<<<<<<< HEAD
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, 1, nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING WAREHOUSE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE VAZIANI")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY GORI")
-=======
+
              --warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
              --warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, 1, nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
              --warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE")
@@ -6328,7 +6320,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
              --warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE")
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
->>>>>>> 212c43ab74460f71e71f27eaf391d2fadfb8551c
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS")
              warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON")
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
@@ -6524,7 +6515,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-              local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+              local destination = AIRBASE.Caucasus.Tbilisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
               local speed = math.random( 300 , 500 )
 
               --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - vehicleCargoSet: ' .. vehicleCargoSet:GetObjectNames() .. ' - cargo.count: ' .. vehicleCargoSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
@@ -6563,7 +6554,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, infantryCargoSet )
 
-            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
             activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Batumi", speed)
 
 
@@ -6582,7 +6573,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local reconRunDistance = 20000
               local reconRunDirection = math.random(270, 359)
               local speedReconRun = math.random(400, 600)
-              local target = airbase_red[ math.random( 1 , #airbase_red ) ]
+              local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
               --local param = {
@@ -6717,7 +6708,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        local depart_time = defineRequestPosition(11)
+        local depart_time = defineRequestPosition(5)
         local kutaisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -6726,17 +6717,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
           function()
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON")
+             --warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
+             --warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
+             --warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
+             --warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
+             --warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
+             --warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE")
+             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
+             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
+             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
+             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON")
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  kutaisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  kutaisi_efficiency_influence, interval_sched, rand_sched
@@ -6988,7 +6979,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             --local vehicleCargoSet = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
             local vehicleCargoSet = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
 
-            local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+            local destination = AIRBASE.Caucasus.Batumi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
             local speed = math.random( 300 , 500 )
 
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - vehicleCargoSet: ' .. vehicleCargoSet:GetObjectNames() .. ' - cargo.count' .. vehicleCargoSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
@@ -7039,7 +7030,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local reconRunDistance = 20000
             local reconRunDirection = math.random(270, 359)
             local speedReconRun = math.random(400, 600)
-            local target = airbase_red[ math.random( 1 , #airbase_red ) ]
+            local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
 
             -- le diverse opzioni disponibili per la scelta casuale della missione
             --local param = {
@@ -7202,9 +7193,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE")
                 warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE")
                 warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
+                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP")
+                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
                 logging('info', { 'main' , 'Kvitiri scheduler - start time:' .. start_sched *  kvitiri_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
             end, {}, start_sched * kvitiri_efficiency_influence, interval_sched, rand_sched
@@ -7500,7 +7491,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local reconRunDistance = 20000
             local reconRunDirection = math.random(270, 359)
             local speedReconRun = math.random(400, 600)
-            local target = airbase_red[ math.random( 1 , #airbase_red ) ]
+            local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
 
             activeRECON(groupset, warehouse.Kvitiri, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -7657,12 +7648,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 --warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE")
                 --warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE")
                 --warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEICHLE AIRBASE")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON AIRBASE")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI")
+                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI")
+                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI")
+                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEICHLE AIRBASE")
+                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON AIRBASE")
+                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
                 logging('info', { 'main' , 'Kvitiri_Helo scheduler - start time:' .. start_sched *  kvitiri_helo_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
             end, {}, start_sched * kvitiri_helo_efficiency_influence, interval_sched, rand_sched
@@ -7811,7 +7802,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local reconRunDistance = 20000
             local reconRunDirection = math.random(270, 359)
             local speedReconRun = math.random(400, 600)
-            local target = airbase_red[ math.random( 1 , #airbase_red ) ]
+            local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
 
             activeRECON(groupset, warehouse.Kvitiri_Helo, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8298,10 +8289,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             -- mech request
             --riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' )
+            --warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' )
+            --warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' )
+            --warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' )
+            --warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' )
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' )
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' )
             warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' )
@@ -8774,17 +8765,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           function()
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-<<<<<<< HEAD
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT 2")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE")
-=======
+
              --warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
              --warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
              --warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
@@ -8794,7 +8775,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
->>>>>>> 212c43ab74460f71e71f27eaf391d2fadfb8551c
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
 
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched * tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
@@ -9045,7 +9025,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             --local vehicleCargoSet = SET_CARGO:New():FilterPrefixes('Cargo Vehicles'):FilterStart()
 
 
-              local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+              local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
               local speed = math.random( 300 , 500 )
 
               --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - vehicleCargoSet: ' .. vehicleCargoSet:GetObjectNames() .. ' - cargo.count' .. vehicleCargoSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
@@ -9074,7 +9054,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             --local infantryCargoSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
 
-            local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+            local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
             local speed = math.random( 300 , 500 )
 
             --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - infantryCargoSet: ' .. infantryCargoSet:GetObjectNames() .. ' - cargo.count' .. infantryCargoSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
@@ -9109,7 +9089,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local speed = math.random( 100 , 250 )
 
               --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - infantryCargoSet: ' .. infantryCargoSet:GetObjectNames() .. ' - cargo.count' .. infantryCargoSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
               activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Tbilisi", speed)
               --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, infantryCargoSet )
 
@@ -9129,7 +9109,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local reconRunDistance = 20000
               local reconRunDirection = math.random(270, 359)
               local speedReconRun = math.random(400, 600)
-              local target = airbase_red[ math.random( 1 , #airbase_red ) ]
+              local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
               --local param = {
@@ -9594,7 +9574,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local reconRunDistance = 20000
               local reconRunDirection = math.random(270, 359)
               local speedReconRun = math.random(400, 600)
-              local target = airbase_red[ math.random( 1 , #airbase_red ) ]
+              local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
 
               activeRECON(groupset, warehouse.Vaziani, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
