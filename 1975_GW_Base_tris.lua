@@ -1638,7 +1638,7 @@ function activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGrou
     if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'group: ' .. group:GetName() } ) end
 
     -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-    local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, 5000 )
+    local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, 5000)
     if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'cargoGroup: ' .. cargoGroup:GetName() } ) end
 
     local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
@@ -1749,73 +1749,149 @@ end -- end function
 
 
 
-    --- Attiva l'invio di cargo
-    -- @param groupHeliSet = il gruppo di elicotteri utilizzati per il trasporto
-    -- @param pickupAirbaseName = il nome della airbase di partenza (es: pickupAirbaseName = AIRBASE.Caucasus.Kobuleti)
-    -- @deployAirbaseName =  il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
-    -- @groupCargoSet = il carico da trasportare
-    -- @speed = velocita' del trasporto
-    --
-    function activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )
+--- Attiva l'invio di cargo
+-- @param groupHeliSet = il gruppo di elicotteri utilizzati per il trasporto
+-- @param pickupAirbaseName = il nome della airbase di partenza (es: pickupAirbaseName = AIRBASE.Caucasus.Kobuleti)
+-- @deployAirbaseName =  il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
+-- @groupCargoSet = il carico da trasportare
+-- @speed = velocita' del trasporto
+--
+function activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )
 
-      local debug = true
+  local debug = true
 
-      if debug then logging('enter', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
+  if debug then logging('enter', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
 
-      if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZone = ' .. pickupZone:GetName() .. 'deployZone = ' .. deployZone:GetName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
+  if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZone = ' .. pickupZone:GetName() .. 'deployZone = ' .. deployZone:GetName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
 
-      local lenghtGroupCargoSet = #groupCargoSet
-      local i = 1
+  local lenghtGroupCargoSet = #groupCargoSet
+  local i = 1
 
-      for _, group in pairs(groupHeliSet:GetSetObjects()) do
+  for _, group in pairs(groupHeliSet:GetSetObjects()) do
 
-            if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , ' Helicopter = ' .. group:GetName()  } ) end
+        if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , ' Helicopter = ' .. group:GetName()  } ) end
 
-            if i <= #groupCargoSet then
+        if i <= #groupCargoSet then
 
-                local groupCargo = groupCargoSet[i]
+            local groupCargo = groupCargoSet[i]
 
-                i = i + 1
+            i = i + 1
 
-                local group = group --Wrapper.Group#GROUP
+            local group = group --Wrapper.Group#GROUP
 
-                if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'i = ' .. i .. ' - Helicopter = ' .. group:GetName() .. '  - cargo selected = ' .. groupCargo:GetName() } ) end
+            if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'i = ' .. i .. ' - Helicopter = ' .. group:GetName() .. '  - cargo selected = ' .. groupCargo:GetName() } ) end
 
-                -- Start uncontrolled aircraft.
-                -- group:StartUncontrolled()
+            -- Start uncontrolled aircraft.
+            -- group:StartUncontrolled()
 
-                CargoHelicopter = AI_CARGO_HELICOPTER:New( group, groupCargo )
-
-                local innerDeployZone = 500 -- Minimal distance from the center of the zone . Default is 0.
-                local outerDeployZone = 200 -- Maximal distance from the outer edge of the zone. Default is the radius of the zone
-
-                local innerPickIpZone = 500
-                local outerPickIpZone = 200
+            CargoHelicopter = AI_CARGO_HELICOPTER:New( group, groupCargo )
 
 
-                CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( inner, outer ) )
+            local innerDeployZone = 10 -- Minimal distance from the center of the zone . Default is 0.
+            local outerDeployZone = 500 -- Maximal distance from the outer edge of the zone. Default is the radius of the zone
 
-                function CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )
-                    if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )' } ) end
+            local innerPickUpZone = 10
+            local outerPickUpZone = 500
+
+
+
+            CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( inner, outer ), speed )
+
+            function CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )
+                if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterLoaded( Helicopter, From, Event, To, Cargo )' } ) end
                     CargoHelicopter:Deploy( DeployZone:GetRandomCoordinate( innerDeployZone, outerDeployZone ), speed )
-                end
+            end
 
 
-                function CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )
-                    if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )' } ) end
-                    CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( innerPickIpZone, outerPickIpZone ), speed )
-                end
+            function CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )
+                if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'CargoHelicopter:onafterUnloaded( Helicopter, From, Event, To, Cargo )' } ) end
+                CargoHelicopter:Pickup( PickupZone:GetRandomCoordinate( innerPickUpZone, outerPickUpZone ), speed )
+            end
 
-              end -- end if
+          end -- end if
 
-      end -- end for
+  end -- end for
 
 
-      if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
+  if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
 
-      return
+  return
 
-    end -- end function
+end -- end function
+
+
+
+--- Attiva l'invio di cargo
+-- @param groupHeliSet = il gruppo di elicotteri utilizzati per il trasporto
+-- @param pickupAirbaseName = il nome della airbase di partenza (es: pickupAirbaseName = AIRBASE.Caucasus.Kobuleti)
+-- @deployAirbaseName =  il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
+-- @groupCargoSet = il carico da trasportare
+-- @speed = velocita' del trasporto
+--
+function activeCargoHelicopterBIS( groupHeliSet, pickupZoneSet, deployZoneSet, speed, groupCargoSet )
+
+  local debug = true
+
+  if debug then logging('enter', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
+
+  if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZone = ' .. pickupZone:GetName() .. 'deployZone = ' .. deployZone:GetName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
+
+ local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+ local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
+ local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
+ local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+
+
+  --AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones )    AICargoDispatcherHelicopter:Start()
+  local CargoHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( groupHeliSet, groupCargoSet, SetPickupZones, SetDeployZones )
+
+
+  if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
+
+  return
+
+end -- end function
+
+
+
+
+
+function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+
+    local debug = true
+
+    if debug then logging('enter', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
+
+    if nil == loadRadius then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'type is nil. Exit!' } ) return nil end
+    if nil == typeCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo is nil. Exit!' } ) return nil end
+    if nil == nameGroupCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
+
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'type: ' .. type .. ' - groupSet:' .. groupSet:GetObjectNames() ..  ' - pickUpZone:' .. pickUpZone .. ' - deployZone:' .. deployZone .. ' - typeCargo:' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - speed:' .. speed } ) end
+
+
+    -- vedi:
+    -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
+    -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
+    -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
+
+
+    local group = GROUP:FindByName( nameGroupCargo )
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'group: ' .. group:GetName() } ) end
+
+    -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
+    local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, LoadRadius, nearRadius)
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroup:GetName() } ) end
+
+    local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. vehicleCargoSet:Count() .. '  - speed: ' .. speed } ) end
+
+    if debug then logging('exit', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
+
+    return cargoGroupSet
+
+end
+
+
 
 
 
@@ -6978,6 +7054,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             --local vehicleCargoSet = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
             local vehicleCargoSet = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
+
+            local vehicleCargoSet = generateCargoSet('Vehicles', "Cargo Vehicles Kutaisi", 5000)
 
             local destination = AIRBASE.Caucasus.Batumi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
             local speed = math.random( 300 , 500 )
