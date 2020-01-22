@@ -611,6 +611,7 @@ function detectionAI_A2A(prefix_detector, range, filterCategories, distanceProba
     local detection = detectionAREAS( DetectionSetGroup, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
 
     if debug then logging('exit', ' detectionAI_A2A(prefix_detector, ... )') end
+
     return detection
 
 end
@@ -1611,23 +1612,24 @@ end -- end function
 
 
 
--- typeCargo: Veichles, Infantry, Crate, ...
-function activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)
+
+
+--- Generate a set of cargo (CARGO_SET)
+--  @param typeCargo:    'Veichles', 'Infantry', 'Crate'
+--  @param nameGroupCargo:  the name of group in mission editor
+--  @param loadRadius: the radius for cargo loading
+--  @param nearRadius: the radius for immediate loading
+function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
 
     local debug = true
 
-    if debug then logging('enter', 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)') end
+    if debug then logging('enter', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
 
-    if nil == type then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type is nil. Exit!' } ) return nil end
-    if nil == pickUpZone then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'pickUpZone is nil. Exit!' } ) return nil end
-    if nil == deployZone then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'deployZone is nil. Exit!' } ) return nil end
-    if nil == typeCargo then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'typeCargo is nil. Exit!' } ) return nil end
-    if nil == nameGroupCargo then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
-    if nil == speed or speed <= 0 or speed > 1 then speed = 1 end
+    if nil == loadRadius then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'type is nil. Exit!' } ) return nil end
+    if nil == typeCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo is nil. Exit!' } ) return nil end
+    if nil == nameGroupCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
 
-    if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type: ' .. type .. ' - groupSet:' .. groupSet:GetObjectNames() ..  ' - pickUpZone:' .. pickUpZone .. ' - deployZone:' .. deployZone .. ' - typeCargo:' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - speed:' .. speed } ) end
-
-
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo: ' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - loadRadius:' .. loadRadius.. ' - nearRadius:' .. nearRadius } ) end
 
 
     -- vedi:
@@ -1636,40 +1638,26 @@ function activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGrou
     -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
 
 
-    --local group = GROUP:FindByName( nameGroupCargo )
-    --if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'group: ' .. group:GetName() } ) end
+    local group = GROUP:FindByName( nameGroupCargo )
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'group: ' .. group:GetName() } ) end
 
     -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-    --local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, 5000)
-    --if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'cargoGroup: ' .. cargoGroup:GetName() } ) end
+    local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, LoadRadius, nearRadius)
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroup:GetName() } ) end
 
-    --local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
-    --if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. :Count() .. '  - speed: ' .. speed } ) end
+    local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
 
-    local cargoGroupSet = generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nil)
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. cargoGroupSet:Count() .. '  - speed: ' .. speed } ) end
 
+    if debug then logging('exit', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
 
-    if type == 'airplane' then
-
-
-        activeCargoAirPlane( groupSet, pickUpZone, deployZone, speed, cargoGroupSet )
-
-
-
-    elseif type == 'helicopter' then
-
-         activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-    else
-
-        logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type not found:' .. type .. ' - Exit!' } )
-
-    end
-
-    if debug then logging('exit', 'activeCargo(type, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)') end
-
+    return cargoGroupSet
 
 end
+
+
+
+
 
 
 
@@ -1752,13 +1740,20 @@ end -- end function
 
 
 
+
+
+
+
+
+
+
+
 --- Attiva l'invio di cargo
--- @param groupHeliSet = il gruppo di elicotteri utilizzati per il trasporto
--- @param pickupAirbaseName = il nome della airbase di partenza (es: pickupAirbaseName = AIRBASE.Caucasus.Kobuleti)
--- @deployAirbaseName =  il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
--- @groupCargoSet = il carico da trasportare
--- @speed = velocita' del trasporto
---
+-- @param groupHeliSet =        il gruppo di elicotteri utilizzati per il trasporto
+-- @param pickupAirbaseName =   il nome della airbase di partenza (es: pickupAirbaseName = AIRBASE.Caucasus.Kobuleti)
+-- @deployAirbaseName =         il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
+-- @groupCargoSet =             il carico da trasportare
+-- @speed =                     velocita' del trasporto
 function activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )
 
   local debug = true
@@ -1824,6 +1819,84 @@ end -- end function
 
 
 
+
+
+
+
+
+
+
+
+    -- typeCargo: Veichles, Infantry, Crate, ...
+    -- deprecated
+    --[[
+    function activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)
+
+        local debug = true
+
+        if debug then logging('enter', 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)') end
+
+        if nil == type then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type is nil. Exit!' } ) return nil end
+        if nil == pickUpZone then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'pickUpZone is nil. Exit!' } ) return nil end
+        if nil == deployZone then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'deployZone is nil. Exit!' } ) return nil end
+        if nil == typeCargo then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'typeCargo is nil. Exit!' } ) return nil end
+        if nil == nameGroupCargo then logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
+        if nil == speed or speed <= 0 or speed > 1 then speed = 1 end
+
+        if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type: ' .. type .. ' - groupSet:' .. groupSet:GetObjectNames() ..  ' - pickUpZone:' .. pickUpZone .. ' - deployZone:' .. deployZone .. ' - typeCargo:' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - speed:' .. speed } ) end
+
+
+
+
+        -- vedi:
+        -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
+        -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
+        -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
+
+
+        --local group = GROUP:FindByName( nameGroupCargo )
+        --if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'group: ' .. group:GetName() } ) end
+
+        -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
+        --local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, 5000)
+        --if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'cargoGroup: ' .. cargoGroup:GetName() } ) end
+
+        --local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
+        --if debug then logging('finest', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. :Count() .. '  - speed: ' .. speed } ) end
+
+        local cargoGroupSet = generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nil)
+
+
+        if type == 'airplane' then
+
+
+            activeCargoAirPlane( groupSet, pickUpZone, deployZone, speed, cargoGroupSet )
+
+
+
+        elseif type == 'helicopter' then
+
+             activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+
+        else
+
+            logging('warning', { 'activeCargo(type, groupSet, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)' , 'type not found:' .. type .. ' - Exit!' } )
+
+        end
+
+        if debug then logging('exit', 'activeCargo(type, pickUpZone, deployZone, typeCargo, nameGroupCargo, speed)') end
+
+
+    end
+    ]]
+
+
+
+
+
+
+
+
 --- Attiva l'invio di cargo
 -- @param groupHeliSet = il gruppo di elicotteri utilizzati per il trasporto
 -- @param pickupAirbaseName = il nome della airbase di partenza (es: pickupAirbaseName = AIRBASE.Caucasus.Kobuleti)
@@ -1832,73 +1905,217 @@ end -- end function
 -- @speed = velocita' del trasporto
 --
 function activeDispatcherCargo( groupHeliSet, pickupZoneSet, deployZoneSet, speed, groupCargoSet )
---[[
+
   local debug = true
 
   if debug then logging('enter', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
 
-  if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZone = ' .. pickupZone:GetName() .. 'deployZone = ' .. deployZone:GetName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
+  if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZoneSet = ' .. pickupZoneSet:GetObjectName() .. 'deployZoneSet = ' .. deployZoneSet:GetObjectName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
 
- local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
- local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
- local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
- local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
+  --[[
+  -- An AI dispatcher object for a helicopter squadron, moving infantry from pickup zones to deploy zones
 
+      local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+      local SetHelicopter = SET_GROUP:New():FilterPrefixes( "Helicopter" ):FilterStart()
+      local SetPickupZones = SET_ZONE:New():FilterPrefixes( "Pickup" ):FilterStart()
+      local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
-  --AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones )    AICargoDispatcherHelicopter:Start()
-  local CargoHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( groupHeliSet, groupCargoSet, SetPickupZones, SetDeployZones )
-
-
-  if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
-
-  return
-]]
-end -- end function
+      AI_CARGO_DISPATCHER_HELICOPTER:New( SetHelicopter, SetCargoInfantry, SetPickupZones, SetDeployZones )    AICargoDispatcherHelicopter:Start()
 
 
 
+  -- An AI dispatcher object for a vehicle squadron, moving infantry from pickup zones to deploy zones.
 
---- Generate a set of cargo (CARGO_SET)
---  @param typeCargo:    'Veichles', 'Infantry', 'Crate'
---  @param nameGroupCargo:  the name of group in mission editor
---  @param loadRadius: the radius for cargo loading
---  @param nearRadius: the radius for immediate loading
---
-function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+     local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+     local SetAPC = SET_GROUP:New():FilterPrefixes( "APC" ):FilterStart()
+     local SetDeployZones = SET_ZONE:New():FilterPrefixes( "Deploy" ):FilterStart()
 
-    local debug = true
-
-    if debug then logging('enter', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
-
-    if nil == loadRadius then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'type is nil. Exit!' } ) return nil end
-    if nil == typeCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo is nil. Exit!' } ) return nil end
-    if nil == nameGroupCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
-
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo: ' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - loadRadius:' .. loadRadius.. ' - nearRadius:' .. nearRadius } ) end
+     AICargoDispatcherAPC = AI_CARGO_DISPATCHER_APC:New( SetAPC, SetCargoInfantry, nil, SetDeployZones )
+     AICargoDispatcherAPC:Start()
 
 
-    -- vedi:
-    -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-    -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-    -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
 
 
-    local group = GROUP:FindByName( nameGroupCargo )
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'group: ' .. group:GetName() } ) end
+ -- An AI dispatcher object for an airplane squadron, moving infantry and vehicles from pickup airbases to deploy airbases.
 
-    -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-    local cargoGroup = CARGO_GROUP:New( group, typeCargo, nameGroupCargo, LoadRadius, nearRadius)
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroup:GetName() } ) end
+      local CargoInfantrySet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+      local AirplanesSet = SET_GROUP:New():FilterPrefixes( "Airplane" ):FilterStart()
+      local PickupZoneSet = SET_ZONE:New()
+      local DeployZoneSet = SET_ZONE:New()
 
-    local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
+      PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Gudauta ) )
+      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Sochi_Adler ) )
+      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Maykop_Khanskaya ) )
+      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Mineralnye_Vody ) )
+      DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Vaziani ) )
 
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. cargoGroupSet:Count() .. '  - speed: ' .. speed } ) end
+      AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, CargoInfantrySet, PickupZoneSet, DeployZoneSet )
+      AICargoDispatcherAirplanes:Start()
 
-    if debug then logging('exit', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
 
-    return cargoGroupSet
+      --- Loaded event handler OnAfter for CLASS.
+ -- Use this event handler to tailor the event when a CarrierUnit of a CarrierGroup has loaded a cargo object.
+ -- You can use this event handler to post messages to players, or provide status updates etc.
+ -- Note that if more cargo objects were loading or boarding into the CarrierUnit, then this event can be triggered multiple times for each different Cargo/CarrierUnit.
+ -- A CarrierUnit can be part of the larger CarrierGroup.
+ -- @param #CLASS self
+ -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+ -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+ -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+ -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+ -- @param Cargo.Cargo#CARGO Cargo The cargo object.
+ -- @param Wrapper.Unit#UNIT CarrierUnit The carrier unit that is executing the cargo loading operation.
+ -- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
+ function CLASS:OnAfterLoaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, PickupZone )
+
+   -- Write here your own code.
+
+ end
+
+
+
+
+ --- PickedUp event handler OnAfter for CLASS.
+ -- Use this event handler to tailor the event when a carrier has picked up all cargo objects into the CarrierGroup.
+ -- You can use this event handler to post messages to players, or provide status updates etc.
+ -- @param #CLASS self
+ -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+ -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+ -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+ -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+ -- @param Core.Zone#ZONE_AIRBASE PickupZone (optional) The zone from where the cargo is picked up. Note that the zone is optional and may not be provided, but for AI_CARGO_DISPATCHER_AIRBASE there will always be a PickupZone, as the pickup location is an airbase zone.
+ function CLASS:OnAfterPickedUp( From, Event, To, CarrierGroup, PickupZone )
+
+   -- Write here your own code.
+
+ end
+
+
+
+
+    --- Deploy event handler OnAfter for CLASS.
+ -- Use this event handler to tailor the event when a CarrierGroup is routed to a deploy coordinate, to Unload all cargo objects in each CarrierUnit.
+ -- You can use this event handler to post messages to players, or provide status updates etc.
+ -- @param #CLASS self
+ -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+ -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+ -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+ -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+ -- @param Core.Point#COORDINATE Coordinate The deploy coordinate.
+ -- @param #number Speed The velocity in meters per second on which the CarrierGroup is routed towards the deploy Coordinate.
+ -- @param #number Height Height in meters to move to the deploy coordinate.
+ -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+ function CLASS:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
+
+   -- Write here your own code.
+
+ end
+
+
+ --- Unload event handler OnAfter for CLASS.
+ -- Use this event handler to tailor the event when a CarrierGroup has initiated the unloading or unboarding of cargo.
+ -- You can use this event handler to post messages to players, or provide status updates etc.
+ -- @param #CLASS self
+ -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+ -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+ -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+ -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+ -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+ function CLASS:OnAfterUnload( From, Event, To, CarrierGroup, DeployZone )
+
+   -- Write here your own code.
+
+ end
+
+
+
+ --- UnLoading event handler OnAfter for CLASS.
+ -- Use this event handler to tailor the event when a CarrierUnit of a CarrierGroup is in the process of unloading or unboarding of a cargo object.
+ -- You can use this event handler to post messages to players, or provide status updates etc.
+ -- Note that this event is triggered repeatedly until all cargo (units) have been unboarded from the CarrierUnit.
+ -- @param #CLASS self
+ -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+ -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+ -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+ -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+ -- @param Cargo.Cargo#CARGO Cargo The cargo object.
+ -- @param Wrapper.Unit#UNIT CarrierUnit The carrier unit that is executing the cargo unloading operation.
+ -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+ function CLASS:OnAfterUnload( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
+
+   -- Write here your own code.
+
+ end
+
+
+
+ --- Unloaded event handler OnAfter for CLASS.
+-- Use this event handler to tailor the event when a CarrierUnit of a CarrierGroup has unloaded a cargo object.
+-- You can use this event handler to post messages to players, or provide status updates etc.
+-- Note that if more cargo objects were unloading or unboarding from the CarrierUnit, then this event can be triggered multiple times for each different Cargo/CarrierUnit.
+-- A CarrierUnit can be part of the larger CarrierGroup.
+-- @param #CLASS self
+-- @param #string From A string that contains the "*from state name*" when the event was triggered.
+-- @param #string Event A string that contains the "*event name*" when the event was triggered.
+-- @param #string To A string that contains the "*to state name*" when the event was triggered.
+-- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+-- @param Cargo.Cargo#CARGO Cargo The cargo object.
+-- @param Wrapper.Unit#UNIT CarrierUnit The carrier unit that is executing the cargo unloading operation.
+-- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+function CLASS:OnAfterUnloaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
+
+  -- Write here your own code.
 
 end
+
+
+
+--- Deployed event handler OnAfter for CLASS.
+ -- Use this event handler to tailor the event when a carrier has deployed all cargo objects from the CarrierGroup.
+ -- You can use this event handler to post messages to players, or provide status updates etc.
+ -- @param #CLASS self
+ -- @param #string From A string that contains the "*from state name*" when the event was triggered.
+ -- @param #string Event A string that contains the "*event name*" when the event was triggered.
+ -- @param #string To A string that contains the "*to state name*" when the event was triggered.
+ -- @param Wrapper.Group#GROUP CarrierGroup The group object that contains the CarrierUnits.
+ -- @param Core.Zone#ZONE DeployZone The zone wherein the cargo is deployed. This can be any zone type, like a ZONE, ZONE_GROUP, ZONE_AIRBASE.
+ function CLASS:OnAfterDeployed( From, Event, To, CarrierGroup, DeployZone )
+
+   -- Write here your own code.
+
+ end
+
+
+
+    AI_CARGO_DISPATCHER.SetPickupRadius(): Sets or randomizes the pickup location for the carrier around the cargo coordinate in a radius defined an outer and optional inner radius.
+    AI_CARGO_DISPATCHER.SetPickupSpeed(): Set the speed or randomizes the speed in km/h to pickup the cargo.
+    AI_CARGO_DISPATCHER.SetPickupHeight(): Set the height or randomizes the height in meters to pickup the cargo.
+
+5) Set the deploy parameters.
+
+Several parameters can be set to deploy cargo:
+
+    AI_CARGO_DISPATCHER.SetDeployRadius(): Sets or randomizes the deploy location for the carrier around the cargo coordinate in a radius defined an outer and an optional inner radius.
+    AI_CARGO_DISPATCHER.SetDeploySpeed(): Set the speed or randomizes the speed in km/h to deploy the cargo.
+    AI_CARGO_DISPATCHER.SetDeployHeight(): Set the height or randomizes the height in meters to deploy the cargo.
+
+ AI_CARGO_DISPATCHER.SetHomeZone()
+
+
+
+
+
+
+    local CargoHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( groupHeliSet, groupCargoSet, SetPickupZones, SetDeployZones )
+]]
+
+    if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
+
+    return
+
+ end -- end function
+
+
 
 
 
