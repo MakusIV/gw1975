@@ -21,6 +21,11 @@ branch: ristrutturazione farp
 
 note sviluppo:
 
+una delle cargoZone.Warehouse.red e' nil
+
+
+
+
 commentate le addRequest di Tbilisi, Gori, Batumi (da decommentare)
 ridotti i tempi di gestione dei  warehouse SCHEDULER
 
@@ -6789,7 +6794,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local destination = AIRBASE.Caucasus.Tbilisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
               local speed = math.random( 300 , 500 )
 
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. :GetObjectNames() .. ' - cargo.count: ' .. :Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
               activeCargoAirPlane( groupset, AIRBASE.Caucasus.Batumi, destination, speed, cargoGroupSet )
 
@@ -6859,7 +6864,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               -- local pos = math.random( 1 , #param )
 
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' ..  target .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
               activeRECON(groupset, warehouse.Batumi, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8079,7 +8084,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               --local cargoGroupSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
               -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              local  = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo #002", 5000, nil)
+              local  cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo #002", 5000, nil)
 
 
               local destination = AIRBASE.Caucasus.Vaziani
