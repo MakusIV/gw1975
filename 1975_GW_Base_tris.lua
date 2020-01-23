@@ -1630,7 +1630,7 @@ function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
 
     if debug then logging('enter', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
 
-    if nil == loadRadius then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'type is nil. Exit!' } ) return nil end
+    if nil == loadRadius then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'loadRadius is nil. Exit!' } ) return nil end
     if nil == typeCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo is nil. Exit!' } ) return nil end
     if nil == nameGroupCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
 
@@ -1909,7 +1909,7 @@ end -- end function
 -- @groupCargoSet = il carico da trasportare
 -- @speed = velocita' del trasporto
 --
-function activeDispatcherCargo( groupHeliSet, pickupZoneSet, deployZoneSet, speed, groupCargoSet )
+function activeDispatcherCargo( type, groupHeliSet, pickupZoneSet, deployZoneSet, speed, groupCargoSet )
 
   local debug = true
 
