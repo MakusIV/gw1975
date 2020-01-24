@@ -1,3 +1,4 @@
+
 --[[
 
 
@@ -1652,13 +1653,45 @@ function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
 
     local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
 
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. cargoGroupSet:Count() .. '  - speed: ' .. speed } ) end
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. cargoGroupSet:Count() } ) end
 
     if debug then logging('exit', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
 
     return cargoGroupSet
 
 end
+
+
+
+--- Generate a set of cargo (CARGO_SET)
+--  @param typeCargo:    'Veichles', 'Infantry', 'Crate'
+--  @param nameGroupCargo:  the name of group in mission editor
+--  @param loadRadius: the radius for cargo loading
+--  @param nearRadius: the radius for immediate loading
+--  less sense: ONE FUNCTION FO A SINGLE INSTRUCTION
+function generateCargoSetTag(typeCargo)
+
+    local debug = true
+
+    if debug then logging('enter', 'generateCargoSetTag(typeCargo)') end
+
+    if nil == typeCargo then logging('warning', { 'generateCargoSetTag(typeCargo)' , 'typeCargo is nil. Exit!' } ) return nil end
+
+    if debug then logging('finest', { 'generateCargoSetTag(typeCargo)' , 'typeCargo: ' .. typeCargo } ) end
+
+    -- vedi:
+    -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
+
+    local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
+
+    if debug then logging('finest', { 'generateCargoSetTag(typeCargo)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. cargoGroupSet:Count() } ) end
+
+    if debug then logging('exit', 'generateCargoSetTag(typeCargo)') end
+
+    return cargoGroupSet
+
+end
+
 
 
 
@@ -9320,20 +9353,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
           elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/PLN%20-%20Airplane/AIC-PLN-000%20-%20Airplane/AIC-PLN-000%20-%20Airplane.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Airplane.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            --local vehicleGroup = GROUP:FindByName( "Cargo Vehicles Tbilisi" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-            --local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
-
-            --local  = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-            --local  = SET_CARGO:New():FilterPrefixes('Cargo Vehicles'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Tbilisi", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Tbilisi", 5000, nil)
+
+
+            -- devi creare dei cargo vehicles con GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
+            -- esempio VehicleA #CARGO(T=Vehicles,RR=500,NR=30)
+            -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
+            local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Vehicles' ):FilterStart()
 
 
               local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
@@ -9354,19 +9382,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
           elseif request.assignment == "TRANSPORT INFANTRY AIRBASE" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
 
-            --local infantryGroup = GROUP:FindByName( "Cargo Infantry Tbilisi" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-            --local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-            --local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-            --local cargoGroupSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
+            --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
+
+            -- devi creare dei cargo vehicles con GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
+            -- esempio InfantryA #CARGO(T=Infantry,RR=500,NR=30)
+            -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
+            local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+
 
             local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
             local speed = math.random( 300 , 500 )
@@ -9388,22 +9412,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
             ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
             elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-              -- vedi:
-              -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
 
-              --local infantryGroup = GROUP:FindByName( "Cargo Infantry Tbilisi" )
-              -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-              --local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-              --local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
               -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
+              -- local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
 
 
-              local pickupZone =  cargoZone.Warehouse_AB.red.Mineralnye
-              local deployZone =  cargoZone.Warehouse.red.Alagir
+              -- devi creare dei cargo vehicles con GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
+              -- esempio InfantryA #CARGO(T=Infantry,RR=500,NR=30)
+              -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
+              local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+
+
+              local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
+              local deployZone =  cargoZone.Warehouse.blue.Gori
               local speed = math.random( 100 , 250 )
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
@@ -9412,6 +9433,30 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
               -- activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Tbilisi", speed)
 
+
+
+              ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+          elseif request.assignment == "TRANSPORT CRATE FARP" then
+
+                -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+                -- local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
+
+
+                -- devi creare dei cargo vehicles con StaticName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
+                -- esempio Materials #CARGO(T=Workmaterials,RR=500,NR=30)
+                -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
+                local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Workmaterials' ):FilterStart()
+
+
+                local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
+                local deployZone =  cargoZone.Warehouse.blue.Gori
+                local speed = math.random( 100 , 250 )
+
+                logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+                activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+
+                -- logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
+                -- activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Tbilisi", speed)
 
 
 
