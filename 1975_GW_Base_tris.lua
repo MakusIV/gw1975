@@ -1635,7 +1635,7 @@ function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
     if nil == typeCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo is nil. Exit!' } ) return nil end
     if nil == nameGroupCargo then logging('warning', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'nameGroupCargo is nil. Exit!' } ) return nil end
 
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo: ' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - loadRadius:' .. loadRadius.. ' - nearRadius:' .. nearRadius } ) end
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'typeCargo: ' .. typeCargo .. ' - nameGroupCargo:' .. nameGroupCargo .. ' - loadRadius:' .. loadRadius } ) end
 
 
     -- vedi:
@@ -1653,7 +1653,7 @@ function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
 
     local cargoGroupSet = SET_CARGO:New():FilterTypes( typeCargo ):FilterStart()
 
-    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNamesName() .. '  - cargo.count:' .. cargoGroupSet:Count() } ) end
+    if debug then logging('finest', { 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)' , 'cargoGroup: ' .. cargoGroupSet:GetObjectNames() .. '  - cargo.count:' .. cargoGroupSet:Count() } ) end
 
     if debug then logging('exit', 'generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)') end
 
@@ -1665,10 +1665,8 @@ end
 
 --- Generate a set of cargo (CARGO_SET)
 --  @param typeCargo:    'Veichles', 'Infantry', 'Crate'
---  @param nameGroupCargo:  the name of group in mission editor
---  @param loadRadius: the radius for cargo loading
---  @param nearRadius: the radius for immediate loading
 --  less sense: ONE FUNCTION FO A SINGLE INSTRUCTION
+--  Delete
 function generateCargoSetTag(typeCargo)
 
     local debug = true
@@ -1742,20 +1740,20 @@ function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseNam
             -- group:StartUncontrolled()
 
             pickupAirbase = AIRBASE:FindByName( pickupAirbaseName )
-            DeployAirbase = AIRBASE:FindByName( deployAirbaseName )
+            deployAirbase = AIRBASE:FindByName( deployAirbaseName )
 
             CargoAirplane = AI_CARGO_AIRPLANE:New( group, groupCargo )
-            CargoAirplane:Pickup( PickupAirbase )
+            CargoAirplane:Pickup( pickupAirbase )
 
             function CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )
                 if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )' } ) end
-                CargoAirplane:Deploy( DeployAirbase, speed )
+                CargoAirplane:Deploy( deployAirbase, speed )
             end
 
 
             function CargoAirplane:onafterUnloaded( Airplane, From, Event, To, Cargo )
                 if debug then logging('finest', { 'activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )' , 'CargoAirplane:onafterLoaded( Airplane, From, Event, To, Cargo )' } ) end
-                CargoAirplane:Pickup( PickupAirbase, speed )
+                CargoAirplane:Pickup( pickupAirbase, speed )
             end
 
           end -- end if
@@ -6824,7 +6822,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
               local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
 
-              local destination = AIRBASE.Caucasus.Tbilisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+              local destination = AIRBASE.Caucasus.Tbilisi_Lochini --airbase_blue[ math.random( 1 , #airbase_blue ) ]
               local speed = math.random( 300 , 500 )
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
@@ -6884,7 +6882,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local reconRunDistance = 20000
               local reconRunDirection = math.random(270, 359)
               local speedReconRun = math.random(400, 600)
-              local target = cargoZone.Warehouse.red[ math.random( 1 , #cargoZone.Warehouse.red ) ]
+              local pos = math.random( 1 , #cargoZone.Warehouse.red )
+              local target = cargoZone.Warehouse.red[ pos ]
 
               -- le diverse opzioni disponibili per la scelta casuale della missione
               --local param = {
@@ -6897,7 +6896,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               -- local pos = math.random( 1 , #param )
 
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' ..  target .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - pos: ' .. pos .. ' of ' .. #cargoZone.Warehouse.red .. ' - target: ' ..  target .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
               activeRECON(groupset, warehouse.Batumi, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -9097,7 +9096,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
 
-        local depart_time = defineRequestPosition(4)
+        local depart_time = defineRequestPosition(5)
         local tblisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -9116,7 +9115,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE")
              warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP")
+             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
 
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched * tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -9368,10 +9368,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local speed = math.random( 300 , 500 )
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi, destination, speed, cargoGroupSet )
+              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, speed, cargoGroupSet )
 
               --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-              --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi, destination, 'Vehicles',"Cargo Vehicles Tbilisi", speed)
+              --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, 'Vehicles',"Cargo Vehicles Tbilisi", speed)
 
 
 
@@ -9396,10 +9396,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local speed = math.random( 300 , 500 )
 
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-            activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi, destination, speed, cargoGroupSet )
+            activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, speed, cargoGroupSet )
 
             --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-            --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi, destination, 'Infantry',"Cargo Infantry Tbilisi", speed)
+            --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, 'Infantry',"Cargo Infantry Tbilisi", speed)
 
 
 
