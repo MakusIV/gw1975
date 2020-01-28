@@ -3543,6 +3543,12 @@ local wh_activation = {
 local min_red_ground_skill = 4
 local max_red_ground_skill = 6
 
+local min_red_artillery_skill = 4
+local max_red_artillery_skill = 6
+
+local min_red_sam_skill = 4
+local max_red_sam_skill = 6
+
 local min_red_fighter_skill = 4
 local max_red_fighter_skill = 6
 
@@ -3571,6 +3577,11 @@ local max_red_recon_skill = 6
 local min_blue_ground_skill = 3
 local max_blue_ground_skill = 6
 
+local min_blue_artillery_skill = 4
+local max_blue_artillery_skill = 6
+
+local min_blue_sam_skill = 4
+local max_blue_sam_skill = 6
 
 local min_blue_fighter_skill = 4
 local max_blue_fighter_skill = 6
@@ -4618,19 +4629,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
-            local num_mission = 3 -- the number of mission request ( _addRequest() )
-            local depart_time = defineRequestPosition( num_mission )
+            --local num_mission = 3 -- the number of mission request ( _addRequest() )
+            local depart_time_heli = defineRequestPosition( 2 ) -- heli mission
+            local depart_time = defineRequestPosition( 3 ) -- ground mission
+
+            local pos = 1
+            local pos_heli = 1
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
             -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time[1] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO')
-            warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time[2] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO')
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO')
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO')
             -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[1]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' )
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[2]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' )
-            warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[3]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' )
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
+            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
 
             logging('finer', { 'Didi scheduler function' , 'addRequest Didi warehouse'} )
 
@@ -4977,10 +4992,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Kvemo_Sba:AddAsset(               air_template_red.AFAC_Mi_8MTV2,             4,                WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_red_afac_skill, max_red_afac_skill) ) -- AFAC
         warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArmorA,          10,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]    ) -- Ground troops
         warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArmorB,          10,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]   ) -- Ground troops
-        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiAkatsia,     10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]   ) -- Ground troops
-        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiGwozdika,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]    ) -- Ground troops
-        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiKatiusha,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]    ) -- Ground troops
-        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]    ) -- Ground troops
+        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiAkatsia,     10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_artillery_skill, max_red_artillery_skill)]   ) -- Ground troops
+        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiGwozdika,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_artillery_skill, max_red_artillery_skill)]    ) -- Ground troops
+        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiKatiusha,    10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_artillery_skill, max_red_artillery_skill)]    ) -- Ground troops
+        warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 10,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_red_artillery_skill, max_red_artillery_skill)]    ) -- Ground troops
         warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.mechanizedA,     10,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]    ) -- Ground troops
         warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.mechanizedB,     10,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]    ) -- Ground troops
         warehouse.Kvemo_Sba:AddAsset(               ground_group_template_red.mechanizedC,     10,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_red_ground_skill, max_red_ground_skill)]   ) -- Ground troops
@@ -6631,10 +6646,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- warehouse.Batumi:AddAsset(               ground_group_template_blue.antitankC,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
         -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArmorA,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
         -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArmorB,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
-        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
-        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
-        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
-        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
+        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]   ) -- Ground troops
+        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill]   ) -- Ground troops
+        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]   ) -- Ground troops
+        -- warehouse.Batumi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]   ) -- Ground troops
         -- warehouse.Batumi:AddAsset(               ground_group_template_blue.mechanizedA,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Ground troops
         -- warehouse.Batumi:AddAsset(               ground_group_template_blue.mechanizedB,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]     ) -- Ground troops
         -- warehouse.Batumi:AddAsset(               ground_group_template_blue.mechanizedC,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]     ) -- Ground troops
@@ -7108,10 +7123,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankC,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
         warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArmorA,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
         warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArmorB,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
+        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
+        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
+        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
+        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
         warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
         warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]    ) -- Ground troops
         warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]    ) -- Ground troops
@@ -8659,10 +8674,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Gori:AddAsset(               ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
         warehouse.Gori:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
         warehouse.Gori:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  )
-        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
-        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]  ) -- Ground troops
+        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  )
+        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
+        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
+        warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill))]  ) -- Ground troops
         warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedA,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]    ) -- Ground troops
         warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedB,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]    ) -- Ground troops
         warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill))]    ) -- Ground troops
@@ -9039,51 +9054,51 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- non decollano elicotteri
 
 
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Fighter
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_14A,                10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_L_39ZA,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Fighter
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Rocket,           2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS  EXPERIMENTAL PROTOTYPE
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Cluster,          2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS EXPERIMENTAL PROTOTYPE
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Bomb,             2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_SA_342,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber CAS
-         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_AN_26,                 10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Transport
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_1H,                10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Transport
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_60A,               10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Transport
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_MI_24,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Transport
-         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_C_130,               5,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,               9000, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Transport
-         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_CH_47,               5,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Transport
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_SU_24_Bomb,           15,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_52H,                10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.B_1B_HBomb,             10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Structure,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_1B,                 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Bomber
-         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Heli CAS
-         warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_B_1B,                 2,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AWACS
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_F_4,                 2,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AWACS
-         warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,               7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_MI_24,              7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_SA342L,              7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC
-         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_UH_1H,              7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC
-         warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_AV_88,                2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
-         warehouse.Tbilisi:AddAsset(               air_template_blue.REC_L_39C,                 2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
-         warehouse.Tbilisi:AddAsset(               air_template_blue.REC_F_4,                   2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]  ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.GCI_F_14A,                10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_L_39ZA,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Rocket,           2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS  EXPERIMENTAL PROTOTYPE
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Cluster,          2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS EXPERIMENTAL PROTOTYPE
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Bomb,             2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_SA_342,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_AN_26,                 10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]   ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_1H,                10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]   ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_UH_60A,               10,        WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]    ) -- Transport
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_MI_24,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]    ) -- Transport
+         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_C_130,               5,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,               9000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]    ) -- Transport
+         warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_CH_47,               5,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]   ) -- Transport
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_SU_24_Bomb,           15,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_52H,                10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_bomber_skill, max_blue_bomber_skill)]   ) -- Bomber
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.B_1B_HBomb,             10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_bomber_skill, max_blue_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Structure,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_1B,                 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_bomber_skill, max_blue_bomber_skill)]   ) -- Bomber
+         warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]    ) -- Heli CAS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_B_1B,                 2,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_blue_awacs_skill, max_blue_awacs_skill)]   ) -- AWACS
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_F_4,                 2,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_blue_awacs_skill, max_blue_awacs_skill)]   ) -- AWACS
+         warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,               7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_MI_24,              7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_SA342L,              7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC
+         --warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_UH_1H,              7,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC
+         warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_AV_88,                2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
+         warehouse.Tbilisi:AddAsset(               air_template_blue.REC_L_39C,                 2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
+         warehouse.Tbilisi:AddAsset(               air_template_blue.REC_F_4,                   2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
 
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
@@ -9093,10 +9108,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]      ) -- Ground troops
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
-         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
-         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
-         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
-         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]    ) -- Ground troops
+         warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(min_blue_artillery_skill, max_blue_artillery_skill)]    ) -- Ground troops
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportA,      12,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Transport
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportB,       6,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Transport
          warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TroopTransport,   4,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]   ) -- Transport
@@ -9747,20 +9762,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- Vaziani e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas transport
 
-          warehouse.Vaziani:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAP_L_39ZA,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  )
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Bomber BAI
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Bomber BAI
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Bomber BAI
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Bomber BAI
-          warehouse.Vaziani:AddAsset(              air_template_blue.BOM_SU_24_Bomb,           10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Bomber BAI
-          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Heli CAS
-          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(3, 6)]  ) -- Transport
-          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(3, 6)]    ) -- Transport
-          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_CH_47,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Transport
-          --warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_MI_24,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500, nil, nil, AI.Skill[ math.random(3, 6)]   ) -- Transport
-          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(3, 6)]  )
+          warehouse.Vaziani:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]  )
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]  )
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAP_L_39ZA,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]  )
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.BOM_SU_24_Bomb,           10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
+          warehouse.Vaziani:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Heli CAS
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]  ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]    ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_CH_47,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]   ) -- Transport
+          --warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_MI_24,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              1500, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]   ) -- Transport
+          warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]  )
           warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
           warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
           warehouse.Vaziani:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground troops
@@ -10232,27 +10247,27 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- Soganlug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
 
 
-          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] )
-          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] )
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Fighter
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] )
-          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_4,                  5,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] )
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber BAI
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber BAI
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber BAI
-          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber CAS
-          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber CAS
-          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber CAS
-          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber
-          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber
-          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Bomber
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Heli CAS
-          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Heli CAS
-          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] )
-          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
-          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Transport
-          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
-          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_C_130,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_Mig_21Bis,             5,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)] )
+          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)] )
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]  ) -- Fighter
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)] )
+          warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_4,                  5,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)] )
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber BAI
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber BAI
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber BAI
+          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
+          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
+          warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
+          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber
+          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber
+          warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Heli CAS
+          warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Heli CAS
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_AN_26,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)] )
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_1H,                5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)] ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_60A,               5,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]  ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_CH_47,                3,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)] ) -- Transport
+          warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_C_130,                6,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)] ) -- Transport
           warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Ground troops
           warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Ground troops
           warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]  ) -- Ground troops
@@ -10809,7 +10824,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
       RU_PlanesClientSet[3] = SET_CLIENT:New():FilterPrefixes("RU Client Mineralnye Vody AB")
       RU_PlanesClientSet[4] = SET_CLIENT:New():FilterPrefixes("RU Client Nalchik AB")
 
+      local num_bal = #RU_PlanesClientSet
 
+      if num_bal > #RU_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set client higher('.. num_bal ..') of set plane spawn(' .. #RU_PlanesSpawn .. ')' } )  end
 
       -- We setup an array to store all the AI_BALANCERS that are going to be created. Basically one
       -- per airbase. We loop through and create an AI_BALANCER as well as a separate OnAfterSpawned
@@ -10822,7 +10839,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       RU_AI_Balancer = {}
 
-      for i = 1, 4 do
+      for i = 1, #RU_PlanesClientSet do
 
         RU_AI_Balancer[i] = AI_BALANCER:New(RU_PlanesClientSet[i], RU_PlanesSpawn[i])
 
