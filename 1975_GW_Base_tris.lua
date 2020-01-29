@@ -4629,23 +4629,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
-            --local num_mission = 3 -- the number of mission request ( _addRequest() )
-            local depart_time_heli = defineRequestPosition( 2 ) -- heli mission
-            local depart_time = defineRequestPosition( 3 ) -- ground mission
-
+            local num_mission = 3
+            local num_mission_helo = 2
+            local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+            local depart_time = defineRequestPosition( num_mission ) -- ground mission
             local pos = 1
             local pos_heli = 1
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
+            if true and pos_heli <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+            if true and pos_heli <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
             -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
+            if true and (pos_heli-2) <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
+            if true and (pos_heli-1) <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
             -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
-            if true then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
 
             logging('finer', { 'Didi scheduler function' , 'addRequest Didi warehouse'} )
 
@@ -4862,12 +4862,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
-            local num_mission = 2 -- the number of mission request ( _addRequest() )
-            local depart_time = defineRequestPosition( num_mission )
+            --local num_mission = 2 -- the number of mission request ( _addRequest() )
+            local depart_time = defineRequestPosition( 2 )
+            --local depart_time_heli = defineRequestPosition( 2 ) -- heli mission
+            local pos = 1
+            --local pos_heli = 1
 
-            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'AMBROLAURI_attack_1' )
-            warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CHIATURA_attack_1' )
-            --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' )
+            if true then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
+            if true then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
+            --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' ) pos = pos + 1 end
 
             logging('finer', { 'Biteta scheduler function' , 'addRequest Biteta warehouse'} )
 
@@ -5109,7 +5112,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Mineralnye warehouse'} )
 
-        local depart_time = defineRequestPosition(8)
+
+
 
         local mineralnye_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
@@ -5117,16 +5121,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
         local mineralnye_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Mineralnye[ 1 ],
 
           function()
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI POINT")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING FARM")
-            warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-            logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+
+            local num_mission = 8
+            local depart_time = defineRequestPosition( num_mission )
+            local pos = 1
+
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+            logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * ( 1 + rand_sched)} )
 
           end, {}, start_sched * mineralnye_efficiency_influence, interval_sched, rand_sched
 
@@ -5476,23 +5484,27 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
 
-        local depart_time = defineRequestPosition(9)
+
         local mozdok_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
         local mozdok_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Mozdok[ 1 ],
 
           function()
+
+            local num_mission = 9
+            local depart_time = defineRequestPosition(9)
+            local pos = 1
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(2, 4), nil, nil, nil, "PATROL")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random(4, 6), nil, nil, nil, "BOMBING AIRBASE")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING WAREHOUSE")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(4, 6), nil, nil, nil, "BOMBING MIL ZONE")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING FARM")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING STRUCTURE")
-            warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(4, 6), nil, nil, nil, "TRANSPORT INFANTRY FARP")
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random(4, 6), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(2, 4), nil, nil, nil, "PATROL") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(4, 6), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(4, 6), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
 
             logging('info', { 'main' , 'Mozdok scheduler - start time:' .. start_sched *  mozdok_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -5870,7 +5882,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        local depart_time = defineRequestPosition(9)
+
         local beslan_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -5878,17 +5890,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 4), nil, nil, nil, "BAI TARGET")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, math.random(1, 2), nil, nil, nil, "AWACS")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random(3, 4), nil, nil, nil, "BAI TARGET 2")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BAI BOMBING STRUCTURE")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING WAREHOUSE")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE GORI")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE TBILISI")
-            warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-            logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+            local num_mission = 9
+            local depart_time = defineRequestPosition( num_mission )
+            local pos = 1
+
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 4), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random(3, 4), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, math.random(1, 2), nil, nil, nil, "AWACS") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BAI BOMBING STRUCTURE") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE GORI") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE TBILISI") pos = pos + 1  end
+            if true and pos <= num_mission then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+            logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * ( 1 + rand_sched)} )
 
           end, {}, start_sched * beslan_efficiency_influence, interval_sched, rand_sched
 
@@ -6265,7 +6280,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Nalchik warehouse'} )
 
-        local depart_time = defineRequestPosition(8)
+
         local nalchik_efficiency_influence = 1 -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -6273,15 +6288,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
+            local num_mission = 8
+            local depart_time = defineRequestPosition( num_mission )
+
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(3, 5), nil, nil, nil, "PATROL")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random(3, 5), nil, nil, nil, "BAI TARGET 2")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING AIRBASE")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING WAREHOUSE")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random(3, 5), nil, nil, nil, "BOMBING STRUCTURE KHASHURI")
-            warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP")
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(3, 5), nil, nil, nil, "PATROL") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random(3, 5), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random(3, 5), nil, nil, nil, "BOMBING STRUCTURE KHASHURI") pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
             logging('info', { 'main' , 'Nalchik scheduler - start time:' .. start_sched *  nalchik_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched * nalchik_efficiency_influence, interval_sched, rand_sched
@@ -6661,7 +6679,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        local depart_time = defineRequestPosition(9)
+
         local batumi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -6669,17 +6687,21 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
+             local num_mission = 9
+             local depart_time = defineRequestPosition( num_mission )
+             local pos = 1
+
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, 1, nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING WAREHOUSE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS")
-             warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON AIRBASE")
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, 1, nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS") pos = pos + 1  end
+             if true and pos <= num_mission  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON AIRBASE") pos = pos + 1  end
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  batumi_efficiency_influence, interval_sched, rand_sched
@@ -7139,7 +7161,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        local depart_time = defineRequestPosition(11)
+
         local kutaisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -7147,18 +7169,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
+             local num_mission = 11
+             local depart_time = defineRequestPosition( num_mission )
+             local pos = 1
+
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
-             warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON FARP")
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
+             if true and pos <= num_mission warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON FARP") pos = pos + 1  end
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  kutaisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  kutaisi_efficiency_influence, interval_sched, rand_sched
@@ -7588,7 +7614,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Kvitiri warehouse'} )
 
-        local depart_time = defineRequestPosition(11)
+
 
         local kvitiri_efficiency_influence = 1
 
@@ -7596,19 +7622,24 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             function()
 
+
+                local num_mission = 11
+                local depart_time = defineRequestPosition( num_mission )
+                local pos = 1
+
               -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_L_39ZA_HRocket, math.random(2, 3), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-                warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_L_39ZA_HRocket, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                 logging('info', { 'main' , 'Kvitiri scheduler - start time:' .. start_sched *  kvitiri_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
             end, {}, start_sched * kvitiri_efficiency_influence, interval_sched, rand_sched
@@ -8053,7 +8084,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Kvitiri_Helo warehouse'} )
 
-        local depart_time = defineRequestPosition(6)
+
 
         local kvitiri_helo_efficiency_influence = 1
 
@@ -8061,15 +8092,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             function()
 
-              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+                local num_mission = 6
+                local depart_time = defineRequestPosition( num_mission )
+                local pos = 1
 
-
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON FARP")
-                warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                if true and pos <= num_mission warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON FARP") pos = pos + 1  end
+                if true and pos <= num_mission warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                 logging('info', { 'main' , 'Kvitiri_Helo scheduler - start time:' .. start_sched *  kvitiri_helo_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
             end, {}, start_sched * kvitiri_helo_efficiency_influence, interval_sched, rand_sched
@@ -8365,14 +8397,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local num_mission = 3 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition(num_mission)
+            local pos = 1
 
-
-
-
-            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'CZ_PEREVI_attack_1' )
-            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'CZ_PEREVI_attack_2' )
-            warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CZ_ONI_attack_3' )
+            if true and pos <= num_mission warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'CZ_PEREVI_attack_1' ) pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'CZ_PEREVI_attack_2' ) pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CZ_ONI_attack_3' ) pos = pos + 1  end
           end, {}, start_ground_sched * zestafoni_efficiency_influence, interval_ground_sched, rand_ground_sched
 
         ) -- END SCHEDULER
@@ -8539,12 +8568,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local num_mission = 2 -- the number of mission request ( _addRequest() )
             local depart_time = defineRequestPosition( num_mission )
+            local pos = 1
 
-
-
-
-            warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'DIDMUKHA_attack_1' )
-            warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'DIDMUKHA_attack_2' )
+            if true and pos <= num_mission warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
+            if true and pos <= num_mission warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'DIDMUKHA_attack_2' ) pos = pos + 1  end
 
           end, {}, start_ground_sched * khashuri_efficiency_influence, interval_ground_sched, rand_ground_sched
 
@@ -8714,6 +8741,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local num_mission_helo = 5 -- the number of mission request ( _addRequest() )
             local depart_time_helo = defineRequestPosition( num_mission_helo )
 
+            local pos = 1
+            local pos_heli = 1
+
             local startReqTimeArtillery = 1 -- Arty groups have first activation
             local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
 
@@ -8725,21 +8755,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             -- mech request
             --riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[4] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[5] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[6] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[7] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[1] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' )
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' )
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
+
+            -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if true and pos_heli <= num_mission_helo warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
+            if true and pos_heli <= num_mission_helo warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+            if true and pos_heli <= num_mission_helo warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[1] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi')
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[2] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri')
-            -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[3] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri')
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[4] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi')
-            warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[5] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi')
+            if true and (pos_heli-2)warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi')
+            if true and (pos_heli-1)warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri')
 
             logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
@@ -9192,7 +9223,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
 
-        local depart_time = defineRequestPosition(12)
         local tblisi_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -9200,20 +9230,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
-             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+             local num_mission = 12
+             local depart_time = defineRequestPosition( num_mission )
+             local pos = 1
 
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[12] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS")
-             warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT")
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT") pos = pos + 1  end
 
              logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched * tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -9791,7 +9823,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           logging('info', { 'main' , 'addrequest Vaziani warehouse'} )
 
-          local depart_time = defineRequestPosition(11)
 
           local vaziani_efficiency_influence = 1
 
@@ -9799,19 +9830,21 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               function()
 
-                -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+                  local num_mission = 11
+                  local depart_time = defineRequestPosition( num_mission )
+                  local pos = 1
 
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random(2, 3), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") -- BAI_ZONE1, BAI2_ZONE2, ...
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[10] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP")
-                  warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[11] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                   logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
               end, {}, start_sched * vaziani_efficiency_influence, interval_sched, rand_sched
@@ -10300,20 +10333,24 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local soganlug_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Soganlug[ 1 ],
 
             function()
-              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[1] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") -- BAI_ZONE1, BAI2_ZONE2, ...
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[2] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") -- BAI_ZONE1, BAI2_ZONE2, ...
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[3] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL")
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[4] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE")
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE")
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI")
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE DIDI")
-              warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA")
-              --warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[5] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4")
-            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[6] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21")
-            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[7] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT")
-            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[8] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2")
-            --  warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[9] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED")
+
+              local num_mission = 8
+              local depart_time = defineRequestPosition( num_mission )
+              local pos = 1
+
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI") pos = pos + 1  end
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE DIDI") pos = pos + 1  end
+              if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA") pos = pos + 1  end
+              --if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4") pos = pos + 1  end
+            --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21") pos = pos + 1  end
+            --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT") pos = pos + 1  end
+            --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2") pos = pos + 1  end
+            --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
               logging('info', { 'main' , 'Soganlug scheduler - start time:' .. start_sched *  soganlug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
             end, {}, start_sched *  soganlug_efficiency_influence, interval_sched, rand_sched
