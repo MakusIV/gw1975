@@ -2310,14 +2310,16 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
 
         if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } ) end
 
-        local battleZone = battlezone[1] -- the zone object
-        local ToCoord = battleZone:GetRandomCoordinate()
+        local battle_Zone = battlezone[1] -- the zone object
+        local ToCoord = battle_Zone:GetRandomCoordinate()
+
+        activeGO_TO_ZONE_GROUND( groupset, battle_Zone, offRoad, speedPerc )
 
           for _,group in pairs(groupset:GetSet()) do
 
             local group = group --Wrapper.Group#GROUP
 
-            activeGO_TO_ZONE_GROUND( group, battlezone, offRoad, speedPerc )
+
 
             if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'task = '.. task } ) end
 
@@ -4694,19 +4696,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack_1' then
 
-              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
 
 
           elseif assignment == 'tkviavi_attack_2' then
 
-              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1  )
 
 
           elseif assignment == 'tseveri_attack_1' then
 
-              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1  )
 
 
@@ -4926,7 +4928,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             elseif assignment == 'CHIATURA_attack_1' then
 
                 --activeGO_TO_ZONE_GROUND( groupset, blueFrontZone.CZ_CHIATURA[1], false, 1)
-                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', nil, false, 1 )
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA, 'enemy_attack', nil, false, 1 )
 
             else
 
@@ -5066,7 +5068,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('finer', { 'Kvemo_Sba scheduler function' , 'addRequest Kvemo_Sba warehouse'} )
 
-          end, {}, start_ground_sched * didi_efficiency_influence, interval_ground_sched, rand_ground_sched
+          end, {}, start_ground_sched * kvemo_sba_efficiency_influence, interval_ground_sched, rand_ground_sched
 
         ) -- END SCHEDULER
 
@@ -5265,7 +5267,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         logging('info', { 'main' , 'addrequest Alagir warehouse'} )
 
-        local kvemo_sba_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
+        local alagir_efficiency_influence = 1  -- Influence start_sched (from 1 to inf)
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
         local kvemo_sba_sched = SCHEDULER:New( warehouse.Alagir,
@@ -5285,13 +5287,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- inserisci missioni cargoSet
 
             -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-            if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Batumi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'Trasnfert to Batumi' ) pos = pos + 1  end
+            if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'Trasnfert to Batumi' ) pos = pos + 1  end
             if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
             if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
 
             logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
 
-          end, {}, start_ground_sched * didi_efficiency_influence, interval_ground_sched, rand_ground_sched
+          end, {}, start_ground_sched * alagir_efficiency_influence, interval_ground_sched, rand_ground_sched
 
         ) -- END SCHEDULER
 
@@ -6539,8 +6541,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           function()
 
+
             local num_mission = 8
             local depart_time = defineRequestPosition( num_mission )
+            local pos = 1
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
             if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
@@ -9025,25 +9029,25 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if assignment == 'TSKHINVALI_Attack_APC' then
 
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
-              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
 
 
           elseif assignment == 'TSKHINVALI_attack_2' then
 
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
-              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
 
 
           elseif assignment == 'DIDMUKHA_attack_1' then
 
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1],   false, 1 )
-              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
 
 
 
           elseif assignment == 'SATIHARI_attack_1' then
 
-              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.SATIHARI[1],   false, 1 )
+              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.SATIHARI,   false, 1 )
 
 
 
