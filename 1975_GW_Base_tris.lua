@@ -2382,6 +2382,93 @@ end -- end function
 
 
 
+--- Attiva l'invio di gorund asset nella battlezone.
+-- NOTA: Nella funzione � presente la schedulazione dell'autodistruzione degli asset
+--  al raggiungimento della zona. L'autodistruzione � stata inserita per testare il reinvio degli asset
+-- @param groupset = il set dei gruppo (asset) proveniente dalla warehouse
+-- @param battlezone = la WRAPPER: ZONE d'invio asset
+-- @param task = il task essegnato al groupset
+-- @param param (optional) : lista contenente ulteriori parametri
+-- @param offRoad (optional - default = false): se true
+-- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
+-- DA IMPLEMENTARE I DIVERSI TASK DI ESECUZIONI
+function activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )
+
+        local debug = true
+
+        local debug = true
+
+        if debug then logging('enter', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )') end
+
+        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'group is nil. Exit!' } ) return nil end
+
+        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'battleZone is nil. Exit!' } ) return nil end
+
+        if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
+
+        if nil == offRoad or offRoad ~= true then offRoad = false end
+
+        if nil == speedPerc or speedPerc > 1 or speedPerc < 0.1 then speedPerc = 0.7 end
+
+        -- radius=radius or 100
+
+
+        for _,group in pairs(groupset:GetSet()) do
+          -- seleziona ogni gruppo appartenente al set
+
+
+          local group = group --Wrapper.Group#GROUP
+          --group:StartUncontrolled()
+
+          -- Route group to Battle zone.
+          local ToCoord = battleZone:GetRandomCoordinate()
+          local groupCoord = group:GetCoordinate()
+          local route, length, exist = groupCoord:GetPathOnRoad( ToCoord )
+
+          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
+
+
+          if exist and not offRoad then
+
+            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'routeToRoad' } ) end
+            -- Ottimizzazione: evita il ricalcolo della route. Cmq dai un occhiata a Moose group:RouteGroundOnRoad per una eventuale modifica
+            -- group:RoutePush( route )
+            group:RouteGroundOnRoad( ToCoord, group:GetSpeedMax() * speedPerc )
+
+          else
+
+            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'execute routeToGround' } ) end
+            group:RouteGroundTo( ToCoord, group:GetSpeedMax() * speedPerc )
+
+          end -- end if then
+
+          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'task = '.. task } ) end
+
+          -- task per attacco diretto
+          if task == 'enemy_attack' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group:TaskFireAtPoint(ToCoord, 200, nil, nil)
+
+
+          end  --end if
+
+
+        end -- end for
+
+
+        if debug then logging('exit', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )') end
+
+        return
+
+end -- end function
+
+
+
+
 
 --- Invia il groupset artillery asset nella firing zone e attiva il fuoco sulla zona target.
 -- @param groupset = il set dei gruppo (asset)
@@ -3509,19 +3596,19 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   true,
+       Zestafoni     =   false,
        Gori          =   true,
-       Khashuri      =   true
+       Khashuri      =   false
 
 
     },
 
     red = {
 
-      Biteta        =   true,
+      Biteta        =   false,
       Didi          =   true,
-      Kvemo_Sba     =   true,
-      Alagir        =   true
+      Kvemo_Sba     =   false,
+      Alagir        =   false
 
     }
 
@@ -3531,22 +3618,22 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   true,
-      Soganlug      =   true,
+      Vaziani       =   false,
+      Soganlug      =   false,
       Tbilisi       =   true,
       Kutaisi       =   true,
-      Kvitiri       =   true,
-      Kvitiri_Helo  =   true,
+      Kvitiri       =   false,
+      Kvitiri_Helo  =   false,
       Batumi        =   true
 
     },
 
     red = {
 
-      Mozdok        =   true,
-      Mineralnye    =   true,
+      Mozdok        =   false,
+      Mineralnye    =   false,
       Beslan        =   true,
-      Nalchik       =   true
+      Nalchik       =   false
 
     }
 
@@ -4696,13 +4783,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack_1' then
 
-              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1  )
+              --activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
 
 
           elseif assignment == 'tkviavi_attack_2' then
 
-              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1  )
+              --activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1  )
 
 
