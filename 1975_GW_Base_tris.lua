@@ -24,6 +24,7 @@ note sviluppo:
 
 sono disabilitate diverse request x didi, batumi, kutaisi, tbilisi e GORI
 sono disabilitati i voli civili
+disabilitato l'airbalancer
 
 
 30.1.2020:
@@ -674,7 +675,7 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
 
     if battleZone == nil then logging('warning', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'battleZone is nil: Exit!' } ) return nil end
 
-    if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup = ' .. awacsSetGroup:GetObjectNames() ..  '  -  commandCenter = ' .. commandCenter:GetName() .. ' - battleZone: ' .. battleZone:GetName() } ) end
+    if debug then logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'awacsSetGroup = ' .. awacsSetGroup:GetObjectNames() ..  '  -  commandCenter = ' .. commandCenter:GetName() .. ' - battleZone: ' .. battleZone:GetName() .. ' - awacsAltitude: ' .. awacsAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude } ) end
 
 
     --- NOTA:  devi utilizzare un setGroup di AWAC già prodotto dalla warehouse con prefisso opportuno
@@ -696,9 +697,8 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
           group:EnRouteTaskAWACS()
 
 
-          -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
-          -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-          --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
+
+          -- IL TASK e' NELLA CLASSE WRAPPER CONTROLLABLE
 
           local task = group:TaskHoldPosition(3600) -- 1h
 
@@ -794,6 +794,10 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 
     if debug then logging('finest', { 'activeJTAC( type, jtacSetGroup, commandCenter, rejectedZone )' , 'jtacSetGroup = ' .. jtacSetGroup:GetObjectNames() .. 'type = ' .. type .. '  -  commandCenter = ' .. commandCenter:GetName() .. ' - battleZone: ' .. battleZone:GetName() } ) end
 
+    local ToCoord = battleZone:GetRandomCoordinate()
+    -- Home coordinate.
+    local HomeCoord=home:GetCoordinate()
+
 
     -- go to battleZone
     if type =='ground' then --activeGO_TO_ZONE_GROUND( jtacSetGroup, battleZone, false, 1 )
@@ -808,7 +812,7 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
         group:EnRouteTaskEWR()
 
         -- Route group to Battle zone.
-        local ToCoord = battleZone:GetRandomCoordinate()
+
         local groupCoord = group:GetCoordinate()
         local route, length, exist = groupCoord:GetPathOnRoad( ToCoord )
 
@@ -836,6 +840,10 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 
     elseif type =='air' then --activeGO_TO_ZONE_AIR( jtacSetGroup, battleZone, 1 )
 
+      ToCoord:SetAltitude(toTargetAltitude)
+      HomeCoord:SetAltitude(toHomeAltitude)
+
+
       for _, _group in pairs(jtacSetGroup:GetSet()) do
 
             local group = _group --Wrapper.Group#GROUP
@@ -858,7 +866,7 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
             -- Take off position.
             WayPoints[1] = home:GetCoordinate():WaypointAirTakeOffParking()
             -- Begin bombing run 20 km south of target.
-            WayPoints[2]=ToCoord:WaypointAirTurningPoint(nil, group:GetSpeedMax(), {task}, "Fac action!")
+            WayPoints[2] = ToCoord:WaypointAirTurningPoint(nil, group:GetSpeedMax(), {task}, "Fac action!")
             -- Return to base.
             WayPoints[3] = HomeCoord:WaypointAirTurningPoint()
             -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
@@ -4311,6 +4319,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  local redAwacsZone = {
+
+    nalchik =       ZONE:New("Red AWACS ZONE NALCHIK"),
+    beslan =        ZONE:New("Red AWACS ZONE BESLAN") ,
+    alagir =        ZONE:New("Red AWACS ZONE ALAGIR")
+
+  }
+
+  local blueAwacsZone = {
+
+    kutaisi =       ZONE:New("Blue AWACS ZONE KUTAISI"),
+    gori =          ZONE:New("Blue AWACS ZONE GORI") ,
+    tbilisi =       ZONE:New("Blue AWACS ZONE TBILISI")
+
+  }
+
+
 
   local redGroundGroup = {
 
@@ -4617,7 +4642,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- AIR --
     local startReqTimeAir = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-    local waitReqTimeAir = 200 --600 -- tempo di attesa tra due request successive per asset aerei (10')
+    local waitReqTimeAir = 600 --600 -- tempo di attesa tra due request successive per asset aerei (10')
     local start_sched = 120 -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
     local interval_sched = 3600  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
     local rand_sched = 0.3  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
@@ -4627,7 +4652,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
     local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
     local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-    local waitReqTimeGround = 300 -- 600 tempo di attesa tra due request successive per asset terrestri (10')
+    local waitReqTimeGround = 600 -- 600 tempo di attesa tra due request successive per asset terrestri (10')
 
 
 
@@ -6429,7 +6454,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. redPatrolZone.beslan[1]:GetName() } )
             --logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activeAWACS( groupset, warehouse.Beslan, blue_command_center, nil, redPatrolZone.beslan[1], 7000, 5000 )
+            activeAWACS( groupset, warehouse.Beslan, blue_command_center, nil, redAwacsZone.beslan, math.random(6000, 9000), 6000 )
 
 
 
@@ -7242,7 +7267,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName() } )
             --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activeAWACS( groupset, warehouse.Batumi, blue_command_center, nil, bluePatrolZone.kutaisi[1], 7000, 5000 )
+            activeAWACS( groupset, warehouse.Batumi, blue_command_center, nil, blueAwacsZone.gori, math.random(6000,8000), 5000 )
 
 
 
@@ -7724,7 +7749,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName()} )
           --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-          activeAWACS( groupset, warehouse.Kutaisi, blue_command_center, nil, bluePatrolZone.kutaisi[1], 7000, 5000 )
+          activeAWACS( groupset, warehouse.Kutaisi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(5000, 9000), 5000 )
 
 
 
@@ -7941,8 +7966,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local reconRunDirection = math.random(270, 359)
             local speedReconRun = math.random(400, 600)
             local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
-            local target = warehouse.Didi--cargoZone.Warehouse.red.Biteta --targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.Kutaisi
+            local target = targets[ math.random( 1 , #targets ) ]
+            local home = warehouse.warehouse.Kutaisi
 
 
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
@@ -8700,7 +8725,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local speedReconRun = math.random(400, 600)
             local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
             local target = targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.Kvitiri_Helo
+            local home = warehouse.warehouse.Kvitiri_Helo
 
             logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
@@ -9777,7 +9802,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.tbilisi[1]:GetName() } )
             --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activeAWACS( groupset, warehouse.Tbilisi, blue_command_center, nil, bluePatrolZone.tbilisi[1], 7000, 5000 )
+            activeAWACS( groupset, warehouse.Tbilisi, blue_command_center, nil, blueAwacsZone.tbilisi, math.random(5000, 9000), 5000 )
 
 
 
@@ -10123,7 +10148,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local speedReconRun = math.random(400, 600)
               local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
               local target = targets[ math.random( 1 , #targets ) ]
-              local home = warehouse.Tbilisi
+              local home = warehouse.warehouse.Tbilisi
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
@@ -11234,7 +11259,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- Attualmente i solt gestiti dalla AI effettuano CAP, considerando che le CAP e le CGI sono gestiti tramite l'apposita sezione,
     -- cambia il task delle AI facendogli effettuare missioni BAI, CAS o RECO
 
-    local activeBlueBelancer = true
+    local activeBlueBelancer = false
 
     if activeBalancer then
 
