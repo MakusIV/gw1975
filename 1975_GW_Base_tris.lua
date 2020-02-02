@@ -1437,7 +1437,7 @@ function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, eng
 
                         else
 
-                          MESSAGE:New("BAI Mission: " .. nameMission .. ": The required red targets are destroyed. Mission accomplish!", 30):ToAll()
+                          MESSAGE:New("BAI Mission: " .. nameMission .. ": The required red targets are destroyed. Mission accomplish!", 10):ToAll()
                           BAI:__Accomplish(1) -- Now they should fly back to the patrolzone and patrol (nota che l'accomplish nella funzione evento ordina l'RTB vedi sotto).
 
                         end -- end if
@@ -1445,9 +1445,9 @@ function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, eng
                   end  -- end local function
 
 
-                    -- Schedula la funzione locale CheckTargets() con un ritardo iniziale di 60 secondi e successivamente una frequenza di ripetizione di 60 secondi.
+                    -- Schedula la funzione locale CheckTargets() con un ritardo iniziale di 600 secondi (10') e successivamente una frequenza di ripetizione di 300 (5') secondi.
                     -- Start scheduler to monitor number of targets and so order RTB.
-                    Check, CheckScheduleID = SCHEDULER:New(group, CheckTargets, {}, 60, 60)
+                    Check, CheckScheduleID = SCHEDULER:New(group, CheckTargets, {}, 600, 300)
 
                   -- inserire una funzione evento se le munizioni sono finite -- accomplish, rtb se non e' automatico
 
@@ -1572,7 +1572,7 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
 
     if debug and nil == home then logging('warning', { 'activeRECON( .. )' , 'homebase is nil. Exit!' } ) return nil end
 
-    if debug then logging('finest', { 'activeRECON( .. )' , 'battleZone = ' .. target:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  home = ' .. home:GetName() } ) end
+    if debug then logging('finest', { 'activeRECON( .. )' , 'group = ' .. groupset:GetObjectNames() } ) end
 
 
     for _, _group in pairs(groupset:GetSet()) do
@@ -7367,7 +7367,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Batumi, destination, speed, cargoGroupSet )
+              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Batumi, speed, cargoGroupSet )
 
               --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
               --activeCargo('airplane', groupset, AIRBASE.Caucasus.Batumi, destination, 'Vehicles',"Cargo Vehicles Batumi", speed)
@@ -7506,9 +7506,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local home =  warehouse.Batumi
 
 
+              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
           else
 
@@ -7961,10 +7962,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local speedReconRun = math.random(400, 600)
             local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
             local target = targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.warehouse.Kutaisi
+            local home = warehouse.Kutaisi
 
 
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8412,10 +8413,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local target = targets[ math.random( 1 , #targets ) ]
             local home =  warehouse.Kvitiri
 
+            logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
-            logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
 
 
@@ -8719,9 +8721,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local speedReconRun = math.random(400, 600)
             local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
             local target = targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.warehouse.Kvitiri_Helo
+            local home = warehouse.Kvitiri_Helo
 
-            logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+            logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -9943,7 +9945,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local speed = math.random( 300 , 500 )
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, speed, cargoGroupSet )
+              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
 
               --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
               --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, 'Vehicles',"Cargo Vehicles Tbilisi", speed)
@@ -9971,7 +9973,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local speed = math.random( 300 , 500 )
 
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-            activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, speed, cargoGroupSet )
+            activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
 
             --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
             --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, 'Infantry',"Cargo Infantry Tbilisi", speed)
@@ -10133,7 +10135,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local target = targets[ math.random( 1 , #targets ) ]
               local home = warehouse.warehouse.Tbilisi
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -10536,7 +10538,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 -- local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
 
-                -- local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+                local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
 
                 -- local  = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
                 -- local  = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
@@ -10598,7 +10600,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local target = targets[ math.random( 1 , #targets ) ]
               local home = warehouse.Vaziani
 
-              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home:GetName() .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+              logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -10964,7 +10966,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
               local home = warehouse.Soganlug
-              local target = zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges ) ][1]
+              local target = zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges ) ][1]
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
@@ -10989,7 +10991,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
               local home = warehouse.Soganlug
-              local target = zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges ) ][1]
+              local target = zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges ) ][1]
               local toTargetAltitude = math.random(5000, 7000)
               local toHomeAltitude = math.random(3000, 5000)
               local bombingDirection = math.random(270, 359)
@@ -11242,7 +11244,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- Attualmente i solt gestiti dalla AI effettuano CAP, considerando che le CAP e le CGI sono gestiti tramite l'apposita sezione,
     -- cambia il task delle AI facendogli effettuare missioni BAI, CAS o RECO
 
-    local activeBlueBelancer = false
+    local activeBalancer = true
 
     if activeBalancer then
 
@@ -11270,10 +11272,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       local RedPatrolZone = {}
 
-      RedPatrolZone[1] = ZONE:New( cap_zone_db_red[1] ) -- beslan
-      RedPatrolZone[2] = ZONE:New( cap_zone_db_red[2] ) -- nalchik
-      RedPatrolZone[3] = ZONE:New( cap_zone_db_red[3] ) -- teberda
-      RedPatrolZone[4] = ZONE:New( cap_zone_db_red[4] ) -- sochi
+
+      RedPatrolZone[1] = ZONE_POLYGON:New( cap_zone_db_red[1], GROUP:FindByName( cap_zone_db_red[1] ) ) -- beslan
+      RedPatrolZone[2] = ZONE_POLYGON:New( cap_zone_db_red[2], GROUP:FindByName( cap_zone_db_red[2] ) ) -- nalchik
+      RedPatrolZone[3] = ZONE_POLYGON:New( cap_zone_db_red[3], GROUP:FindByName( cap_zone_db_red[3] ) ) -- teberda
+      RedPatrolZone[4] = ZONE_POLYGON:New( cap_zone_db_red[4], GROUP:FindByName( cap_zone_db_red[4] ) ) -- sochi
 
 
       -- Russian CAP Aircraft
@@ -11336,7 +11339,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         function curAIBalancer:OnAfterSpawned( SetGroup, From, Event, To, AIGroup )
 
-          local Patrol = AI_PATROL_ZONE:New( RedPatrolZone[math.random( 1, table.getn(RedPatrolZone))], 1500, 5500, 700, 1400 )
+          local Patrol = AI_PATROL_ZONE:New( RedPatrolZone[math.random( 1, table.getn(RedPatrolZone))], 3500, 7500, 700, 1400 )
           Patrol:ManageFuel( 0.2, 60 )
           Patrol:SetControllable( AIGroup )
           Patrol:Start()
@@ -11357,10 +11360,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
       -- Create the Blue Patrol Zone Array
       local BluePatrolZone = {}
 
-      BluePatrolZone[1] = ZONE:New( cap_zone_db_blue[1] ) -- tbilisi
-      BluePatrolZone[2] = ZONE:New( cap_zone_db_blue[2] ) -- kutaisi
-      BluePatrolZone[3] = ZONE:New( cap_zone_db_blue[3] ) -- sukumi
-      BluePatrolZone[4] = ZONE:New( cap_zone_db_blue[4] ) -- sochi - gudauta
+      BluePatrolZone[1] = ZONE_POLYGON:New( cap_zone_db_blue[1], GROUP:FindByName( cap_zone_db_blue[1] ) ) -- tbilisi
+      BluePatrolZone[2] = ZONE_POLYGON:New( cap_zone_db_blue[2], GROUP:FindByName( cap_zone_db_blue[2] ) ) -- kutaisi
+      BluePatrolZone[3] = ZONE_POLYGON:New( cap_zone_db_blue[3], GROUP:FindByName( cap_zone_db_blue[3] ) ) -- sukumi
+      BluePatrolZone[4] = ZONE_POLYGON:New( cap_zone_db_blue[4], GROUP:FindByName( cap_zone_db_blue[4] ) ) -- sochi - gudauta
 
 
       --United States CAP Aircraft (these are used as templates for AI)
@@ -11403,7 +11406,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         function curAIBalancer:OnAfterSpawned( SetGroup, From, Event, To, AIGroup )
 
-          local Patrol = AI_PATROL_ZONE:New( BluePatrolZone[math.random( 1, table.getn(BluePatrolZone))], 1500, 5500, 700, 1400 )
+          local Patrol = AI_PATROL_ZONE:New( BluePatrolZone[math.random( 1, table.getn(BluePatrolZone))], 3500, 7500, 700, 1400 )
           Patrol:ManageFuel( 0.2, 60 )
           Patrol:SetControllable( AIGroup )
           Patrol:Start()
@@ -11493,9 +11496,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     -- Setup generale
 
-    local activeRedCAP = true
+    local activeRedCAP = false
     local activeRedGCI = true
-    local activeBlueCAP = true
+    local activeBlueCAP = false
     local activeBlueGCI = true
 
     local categories = {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}
