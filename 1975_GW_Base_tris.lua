@@ -22,6 +22,7 @@ branch: ristrutturazione farp
 
 note sviluppo:
 
+sono disabilitate diverse warehouse
 sono disabilitate diverse request x didi, batumi, kutaisi, tbilisi e GORI
 sono disabilitati i voli civili
 disabilitato l'airbalancer
@@ -700,7 +701,8 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
 
           -- IL TASK e' NELLA CLASSE WRAPPER CONTROLLABLE
 
-          local task = group:TaskHoldPosition(3600) -- 1h
+          --local task = group:TaskHoldPosition(3600) -- 1h
+          local task = group:TaskOrbitCircle(awacsAltitude, group:GetSpeedMax() * 0.5, ToCoord)
 
           -- Define waypoints.
           local WayPoints = {}
@@ -778,7 +780,7 @@ end -- end function activeAWACS( awacsSetGroup, commandCenter )
 -- controllo delle azioni aeree a supporto della manovra terrestre
 -- @param awacsGroup: il gruppo generato dalla warehouse che effettua l'awacs
 -- @param hq: l'HQ
-function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, battleZone )
+function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, battleZone)
 
     local debug = true
 
@@ -833,15 +835,16 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 
         end -- end if then
 
-        if debug then logging('finest', { 'activeJTAC( type, jtacSetGroup, commandCenter, rejectedZone, battleZone )' , 'task = '.. task } ) end
+        --if debug then logging('finest', { 'activeJTAC( type, jtacSetGroup, commandCenter, rejectedZone, battleZone )' , 'task = '.. task } ) end
 
       end -- end for
 
 
     elseif type =='air' then --activeGO_TO_ZONE_AIR( jtacSetGroup, battleZone, 1 )
 
-      ToCoord:SetAltitude(toTargetAltitude)
-      HomeCoord:SetAltitude(toHomeAltitude)
+      local altitude = math.random(300, 1000)
+      ToCoord:SetAltitude(altitude)
+      HomeCoord:SetAltitude(1000)
 
 
       for _, _group in pairs(jtacSetGroup:GetSet()) do
@@ -853,12 +856,9 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 
             group:EnRouteTaskAWACS()
 
+            --local task = group:TaskHoldPosition(1800) -- 30'
+            local task = group:TaskOrbitCircle(altitude, group:GetSpeedMax() * 0.5, ToCoord)
 
-            -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
-            -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-            --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
-
-            local task = group:TaskHoldPosition(1800) -- 30'
 
             -- Define waypoints.
             local WayPoints = {}
@@ -866,7 +866,7 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
             -- Take off position.
             WayPoints[1] = home:GetCoordinate():WaypointAirTakeOffParking()
             -- Begin bombing run 20 km south of target.
-            WayPoints[2] = ToCoord:WaypointAirTurningPoint(nil, group:GetSpeedMax(), {task}, "Fac action!")
+            WayPoints[2] = ToCoord:WaypointAirTurningPoint(nil, group:GetSpeedMax(), {task}, "JTAC action!")
             -- Return to base.
             WayPoints[3] = HomeCoord:WaypointAirTurningPoint()
             -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
@@ -1575,9 +1575,9 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
     if debug then logging('finest', { 'activeRECON( .. )' , 'battleZone = ' .. target:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  home = ' .. home:GetName() } ) end
 
 
-    for _,_group in pairs(groupset:GetSet()) do
+    for _, _group in pairs(groupset:GetSet()) do
 
-          local group=_group --Wrapper.Group#GROUP
+          local group = _group --Wrapper.Group#GROUP
 
           -- Start uncontrolled aircraft.
           group:StartUncontrolled()
@@ -1589,16 +1589,15 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
           local HomeCoord=home:GetCoordinate():SetAltitude(toHomeAltitude)
 
           -- Task recon from direction <reconDirection> at altitude <reconAltitude>.
-          -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
-          -- NOTA HO INSERITO LA FORMAZIONE PROBABILMENTE OBBLIGATORIA
-          --local task=group:TaskRouteToVec2(target:GetCoordinate():GetVec2(), speedReconRun, FORMATION.Vee)
+
 
           --TaskRouteToZone(Zone, Randomize, Speed, Formation)
           --TaskRoute(Points)
 
 
           --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
-          local task = group:TaskHoldPosition(20) -- 20 s for recognition
+          --local task = group:TaskHoldPosition(20) -- 20 s for recognition
+          local task = group:TaskOrbitCircle(toTargetAltitude, speedReconRun, ToCoord)
 
 
           -- Define waypoints.
@@ -2355,7 +2354,6 @@ end -- end function
 -- @param battlezone = la WRAPPER: ZONE d'invio asset
 -- @param offRoad (optional - default = false): se true
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
---
 function activeGO_TO_ZONE_GROUND( groupset, battleZone, offRoad, speedPerc )
 
     local debug = true
@@ -2428,7 +2426,8 @@ end -- end function
 -- @param param (optional) : lista contenente ulteriori parametri
 -- @param offRoad (optional - default = false): se true
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
--- DA IMPLEMENTARE I DIVERSI TASK DI ESECUZIONI
+-- DEPRECATED
+--[[
 function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPerc )
 
         local debug = true
@@ -2506,7 +2505,7 @@ function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPe
         return
 
 end -- end function
-
+]]
 
 
 --- Attiva l'invio di gorund asset nella battlezone.
@@ -4926,21 +4925,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if assignment == 'tkviavi_attack_1' then
 
               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1  )
-              --activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
 
 
           elseif assignment == 'tkviavi_attack_2' then
 
               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1  )
-              --activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1  )
 
 
           elseif assignment == 'tseveri_attack_1' then
 
-              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1 )
 
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
@@ -5154,13 +5148,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             if assignment == 'AMBROLAURI_attack_1' then
 
-                activeGO_TO_ZONE_GROUND( groupset, blueFrontZone.CZ_AMBROLAURI[1], false, 1)
+                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1)
 
 
             elseif assignment == 'CHIATURA_attack_1' then
 
-                --activeGO_TO_ZONE_GROUND( groupset, blueFrontZone.CZ_CHIATURA[1], false, 1)
-                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA, 'enemy_attack', nil, false, 1 )
+                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1 )
+
 
             else
 
@@ -5325,7 +5319,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack' then
 
-             activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
+             activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
 
 
 
@@ -8883,15 +8877,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'CZ_PEREVI_attack_1' then
 
-              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.CZ_PEREVI[1], false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1 )
 
           elseif assignment == 'CZ_PEREVI_attack_2' then
 
-              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.CZ_ONI[1],  false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1  )
 
           elseif assignment == 'CZ_ONI_attack_3' then
 
-              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.CZ_PEREVI[1],  false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1  )
 
           else
 
@@ -9055,12 +9049,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1)
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1)
 
 
           elseif assignment == 'DIDMUKHA_attack_2' then
 
-              activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1], false, 1)
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1)
 
           else
 
@@ -9260,39 +9254,29 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- launch mission functions: mech
           if assignment == 'TSKHINVALI_Attack_APC' then
 
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
-              --activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
 
 
           elseif assignment == 'TSKHINVALI_attack_2' then
 
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.TSKHINVALI[1], false, 1 )
-              --activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI, 'enemy_attack', nil, false, 1 )
               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
 
 
           elseif assignment == 'DIDMUKHA_attack_1' then
 
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDMUKHA[1],   false, 1 )
-              --activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA, 'enemy_attack', nil, false, 1 )
               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1 )
 
 
 
           elseif assignment == 'SATIHARI_attack_1' then
 
-              --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.SATIHARI[1],   false, 1 )
               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1 )
-
 
 
 
           elseif assignment == 'SATIHARI_attack_2' then
 
-               --activeGO_TO_ZONE_GROUND( groupset, redFrontZone.DIDI_CUPTA[1], false, 1 )
                activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1 )
-
 
 
           -- launch mission functions: helo
@@ -9429,7 +9413,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               logging('info', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
 
-              -- activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_5, 'artillery_firing', param )
               activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_5[1], param, true, 70 )
 
           else
