@@ -460,6 +460,92 @@ end
 
 
 
+--- SUPPRESSION
+
+--- applica la Functionality SUPPRESSION al group passato come parametro
+-- @param: group:         single group
+-- @param: retreatZone:   the retreat zone
+-- @param: fallback:      if true active fallBack action during enemy attack
+-- @param: takeCover:     if true active takeCover action during enemy attack
+-- @param: delay:         suppression start delay
+function suppressionGroup(group, retreatZone, fallBack, takeCover, delay)
+
+    --SUPPRESSION.SetSuppressionTime() can be used to set the time a goup gets suppressed.
+    --SUPPRESSION.SetRetreatZone() sets the retreat zone and enables the possiblity for the group to retreat.
+    --SUPPRESSION.SetFallbackDistance() sets a value how far the unit moves away from the attacker after the fallback event.
+    --SUPPRESSION.SetFallbackWait() sets the time after which the group resumes its mission after a FallBack event.
+    --SUPPRESSION.SetTakecoverWait() sets the time after which the group resumes its mission after a TakeCover event.
+    --SUPPRESSION.SetTakecoverRange() sets the radius in which hideouts are searched.
+    --SUPPRESSION.SetTakecoverPlace() explicitly sets the place where the group will run at a TakeCover event.
+    --SUPPRESSION.SetMinimumFleeProbability() sets the minimum probability that a group flees (FallBack or TakeCover) after a hit. Note taht the probability increases with damage.
+    --SUPPRESSION.SetMaximumFleeProbability() sets the maximum probability that a group flees (FallBack or TakeCover) after a hit. Default is 90%.
+    --SUPPRESSION.SetRetreatDamage() sets the damage a group/unit can take before it is ordered to retreat.
+    --SUPPRESSION.SetRetreatWait() sets the time a group waits in the retreat zone after a retreat.
+    --SUPPRESSION.SetDefaultAlarmState() sets the alarm state a group gets after it becomes CombatReady again.
+    --SUPPRESSION.SetDefaultROE() set the rules of engagement a group gets after it becomes CombatReady again.
+    --SUPPRESSION.FlareOn() is mainly for debugging. A flare is fired when a unit is hit, gets suppressed, recovers, dies.
+    --SUPPRESSION.SmokeOn() is mainly for debugging. Puts smoke on retreat zone, hideouts etc.
+    --SUPPRESSION.MenuON() is mainly for debugging. Activates a radio menu item where certain functions like retreat etc. can be triggered manually.
+
+
+    local debug = false
+
+    if debug then logging('enter', 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)') end
+
+    delay = delay or 1
+    fallBack = fallBack or false
+    takeCover = takeCover or false
+
+    if nil == group or not group:IsGround() then logging('warning', { 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)' , 'group is nil or not ground unit: Suppression dont defined! Exit' } ) return nil end
+
+
+    local groupSuppression = SUPPRESSION:New(group)
+    groupSuppression:Fallback(fallBack)
+    groupSuppression:Takecover(takeCover)
+
+    groupSuppression:__Start(delay)
+
+    if debug then logging('exit', 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)') end
+
+    return
+
+end -- end function
+
+
+  --- applica la Functionality SUPPRESSION al groupset passato come parametro
+  -- @param: group:         single group
+  -- @param: retreatZone:   the retreat zone
+  -- @param: fallback:      if true active fallBack action during enemy attack
+  -- @param: takeCover:     if true active takeCover action during enemy attack
+  -- @param: delay:         suppression start delay
+function suppressionGroupSet(groupSet, retreatZone, fallBack, takeCover, delay)
+
+    local debug = false
+
+    if debug then logging('enter', 'suppressionGroupSet(group, retreatZone, fallBack, takeCover, delay)') end
+
+    delay = delay or 1
+    fallBack = fallBack or false
+    takeCover = takeCover or false
+
+    if nil == group or not group:IsGround() then logging('warning', { 'suppressionGroupSet(group, retreatZone, fallBack, takeCover, delay)' , 'group is nil or not ground unit: Suppression dont defined! Exit' } ) return nil end
+
+
+    for _, _group in pairs(groupSet:GetSet()) do
+
+      local group = _group --Wrapper.Group#GROUP
+      suppressionGroup(group, retreatZone, fallBack, takeCover, delay)
+
+    end -- end for
+
+    if debug then logging('exit', 'suppressionGroupSet(group, retreatZone, fallBack, takeCover, delay)') end
+
+    return
+
+end -- end function
+
+
+
 
 --- DETECTION
 
@@ -2514,59 +2600,65 @@ end -- end function
 -- @param groupset = il set dei gruppo (asset) proveniente dalla warehouse
 -- @param battlezone = la WRAPPER: ZONE d'invio asset
 -- @param task = il task essegnato al groupset
--- @param param (optional) : lista contenente ulteriori parametri
--- @param offRoad (optional - default = false): se true
+-- @param offRoad (optional - default = false): se true utilizza il percorso fuori strada
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
+-- @param suppression (optional) : applica la suppression a tutti i gruppi del groupset
+-- @param suppr_param (optional) : lista contenente i parametri necessari per applicare la suppression.
 -- DA IMPLEMENTARE I DIVERSI TASK DI ESECUZIONI
-function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc )
+function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc, suppression, suppr_param )
 
         local debug = true
 
-        if debug then logging('enter', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )') end
+        if debug then logging('enter', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
-        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'group is nil. Exit!' } ) return nil end
+        offRoad = offRoad or false
+        suppression = suppression or false
 
-        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'battleZone is nil. Exit!' } ) return nil end
+        if supp_param == nil then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'suppr_param is nil. No suppression applied!' } ) suppression = nil end
 
-        if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
+        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'group is nil. Exit!' } ) return nil end
 
-        if nil == offRoad or offRoad ~= true then offRoad = false end
+        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battleZone is nil. Exit!' } ) return nil end
+
+        if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
 
         if nil == speedPerc or speedPerc > 1 or speedPerc < 0.1 then speedPerc = 0.7 end
 
         -- radius=radius or 100
 
 
-        for _,group in pairs(groupset:GetSet()) do
+        for _, _group in pairs(groupset:GetSet()) do
           -- seleziona ogni gruppo appartenente al set
 
 
-          local group = group --Wrapper.Group#GROUP
+          local group = _group --Wrapper.Group#GROUP
           --group:StartUncontrolled()
+
+          if suppression then suppressionGroup(group, suppr_param.retreatZone, suppr_param.fallBack, suppr_param.takeCover, suppr_param.delay) end
 
           -- Route group to Battle zone.
           local ToCoord = battleZone:GetRandomCoordinate()
           local groupCoord = group:GetCoordinate()
           local route, length, exist = groupCoord:GetPathOnRoad( ToCoord )
 
-          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
+          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
 
 
           if exist and not offRoad then
 
-            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'routeToRoad' } ) end
+            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad' } ) end
             -- Ottimizzazione: evita il ricalcolo della route. Cmq dai un occhiata a Moose group:RouteGroundOnRoad per una eventuale modifica
             -- group:RoutePush( route )
             group:RouteGroundOnRoad( ToCoord, group:GetSpeedMax() * speedPerc )
 
           else
 
-            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'execute routeToGround' } ) end
+            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'execute routeToGround' } ) end
             group:RouteGroundTo( ToCoord, group:GetSpeedMax() * speedPerc )
 
           end -- end if then
 
-          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'task = '.. task } ) end
+          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'task = '.. task } ) end
 
           -- task per attacco diretto
           if task == 'enemy_attack' then
@@ -2584,7 +2676,7 @@ function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc 
         end -- end for
 
 
-        if debug then logging('exit', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )') end
+        if debug then logging('exit', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
         return
 
@@ -4651,7 +4743,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
     local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
     local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-    local waitReqTimeGround = 600 -- 600 tempo di attesa tra due request successive per asset terrestri (10')
+    local waitReqTimeGround = 300 -- 600 tempo di attesa tra due request successive per asset terrestri (10')
 
 
 
@@ -4915,6 +5007,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Didi:GetAssignment(request)
@@ -4922,19 +5015,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
           logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
 
+
           if assignment == 'tkviavi_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
           elseif assignment == 'tkviavi_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
           elseif assignment == 'tseveri_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
@@ -5140,6 +5234,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local groupset = groupset --Core.Set#SET_GROUP
             local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+            local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
             -- Get assignment of this request.
             local assignment=warehouse.Biteta:GetAssignment(request)
@@ -5148,12 +5243,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             if assignment == 'AMBROLAURI_attack_1' then
 
-                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1)
+                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
 
 
             elseif assignment == 'CHIATURA_attack_1' then
 
-                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1 )
+                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
             else
@@ -5311,6 +5406,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
+
           -- Get assignment of this request.
           local assignment = warehouse.Kvemo_Sba:GetAssignment(request)
 
@@ -5319,7 +5416,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack' then
 
-             activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
+             activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
@@ -8871,6 +8968,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Zestafoni:GetAssignment(request)
@@ -8879,15 +8977,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'CZ_PEREVI_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param )
 
           elseif assignment == 'CZ_PEREVI_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
           elseif assignment == 'CZ_ONI_attack_3' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
           else
 
@@ -9043,6 +9141,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Khashuri:GetAssignment(request)
@@ -9051,12 +9150,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1)
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
 
 
           elseif assignment == 'DIDMUKHA_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1)
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
 
           else
 
@@ -9247,6 +9346,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Gori:GetAssignment(request)
@@ -9256,29 +9356,29 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- launch mission functions: mech
           if assignment == 'TSKHINVALI_Attack_APC' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           elseif assignment == 'TSKHINVALI_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           elseif assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
           elseif assignment == 'SATIHARI_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
           elseif assignment == 'SATIHARI_attack_2' then
 
-               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1 )
+               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           -- launch mission functions: helo
