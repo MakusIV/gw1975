@@ -2583,7 +2583,7 @@ function activeGO_TO_BATTLE( groupset, battleZone, task, offRoad, speedPerc, sup
             -- sostituisce con task per enemy attack: search & destroy
 
             --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
-            group::EnRouteTaskEngageTargets(500, Group.Category.GROUND, 1) --boh
+            group:EnRouteTaskEngageTargets(500, Group.Category.GROUND, 1) --boh
 
 
           elseif task == 'fire_at_point' then
@@ -4419,7 +4419,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 ---- MOMEMENT ---------------------
-
+--[[
 local MovePrefixesBlue = {
 
     'GEORGIAN ANTITANK',
@@ -4447,12 +4447,15 @@ local MovePrefixesRed = {
     'RUSSIAN AAA'
 }
 
+]]
+
 -- Necessario verificare :
 -- 1 - i group generati dalle wh mantengono come prefix il prefisso utilizzato per i template in ME
 -- 2 - la classe MOVEMENT gestisce i gruppi generati (spawn) dalle WH.
-local blueMovement = MOVEMENT:New(MovePrefixesBlue, 16)
-local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
+--local blueMovement = MOVEMENT:New(MovePrefixesBlue, 16)
+--local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
 
+--   NON FUNZIONA
 
 --------------------------------
 
@@ -11230,7 +11233,7 @@ local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
 
       local num_bal = #RU_PlanesClientSet
 
-      if num_bal > #RU_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set client higher('.. num_bal ..') of set plane spawn(' .. #RU_PlanesSpawn .. ')' } )  end
+      if num_bal > #RU_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set red client higher('.. num_bal ..') of set plane spawn(' .. #RU_PlanesSpawn .. ')' } )  end
 
       -- We setup an array to store all the AI_BALANCERS that are going to be created. Basically one
       -- per airbase. We loop through and create an AI_BALANCER as well as a separate OnAfterSpawned
@@ -11314,9 +11317,13 @@ local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
       BLUE_PlanesClientSet[3] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Vaziani AB")
       BLUE_PlanesClientSet[4] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Tbilisi AB")
 
+      num_bal = #BLUE_PlanesClientSet
+
+      if num_bal > #BLUE_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set blue client higher('.. num_bal ..') of set plane spawn(' .. #BLUE_PlanesSpawn .. ')' } )  end
+
       BLUE_AI_Balancer = {}
 
-      for i = 1, 4 do
+      for i = 1, #BLUE_PlanesClientSet do
 
         BLUE_AI_Balancer[i] = AI_BALANCER:New( BLUE_PlanesClientSet[i], BLUE_PlanesSpawn[i] )
 
