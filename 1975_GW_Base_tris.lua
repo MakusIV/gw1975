@@ -547,6 +547,12 @@ end -- end function
 
 
 
+
+
+
+
+
+
 --- DETECTION
 
 
@@ -780,7 +786,7 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
 
           -- Start uncontrolled aircraft.
           group:StartUncontrolled()
-
+          group:OptionROEHoldFire()
           group:EnRouteTaskAWACS()
 
 
@@ -939,7 +945,7 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 
             -- Start uncontrolled aircraft.
             group:StartUncontrolled()
-
+            group:OptionROEHoldFire()
             group:EnRouteTaskAWACS()
 
             --local task = group:TaskHoldPosition(1800) -- 30'
@@ -1667,6 +1673,7 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
 
           -- Start uncontrolled aircraft.
           group:StartUncontrolled()
+          group:OptionROTEvadeFire()
 
           -- Target coordinate!
           local ToCoord=target:GetCoordinate():SetAltitude(toTargetAltitude)
@@ -2509,118 +2516,27 @@ end -- end function
 -- @param groupset = il set dei gruppo (asset) proveniente dalla warehouse
 -- @param battlezone = la WRAPPER: ZONE d'invio asset
 -- @param task = il task essegnato al groupset
--- @param param (optional) : lista contenente ulteriori parametri
--- @param offRoad (optional - default = false): se true
--- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
--- DEPRECATED
---[[
-function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPerc )
-
-        local debug = true
-
-        if debug then logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone )') end
-
-        if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } ) end
-
-        local battle_Zone = battlezone[1] -- the zone object
-        local ToCoord = battle_Zone:GetRandomCoordinate()
-
-        activeGO_TO_ZONE_GROUND( groupset, battle_Zone, offRoad, speedPerc )
-
-          for _,group in pairs(groupset:GetSet()) do
-
-            local group = group --Wrapper.Group#GROUP
-
-
-
-            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'task = '.. task } ) end
-
-            -- task per attacco diretto
-            if task == 'enemy_attack' then
-
-              -- After 3-5 minutes we create an explosion to destroy the group.
-              -- sostituisce con task per enemy attack: search & destroy
-
-              SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
-              if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute enemy_attack tasking'} ) end
-
-            end  --end if
-
-            -- task per fuoco di artiglieria di bersagli fissi
-            if task == 'artillery_firing' then
-
-              local listTargetInfo = param.listTargetInfo
-              local command_center = param.commandCenter
-              local groupResupplySet = param.resupplySet
-              local speed = param.speed
-              local onRoad = param.onRoad
-              local maxDistance = param.maxDistance
-              local maxFiringRange = param.maxFiringRange
-
-              if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_firing tasking   -  ' .. 'num target zone = ' .. #listTargetInfo .. '  -  groupResupplySet = ' .. groupResupplySet:GetObjectNames() .. '-  speed = ' .. tostring(speed) .. '-  onRoad = ' .. tostring(onRoad) .. '-  maxDistance = ' .. tostring(maxDistance) .. '-  maxFiringRange = ' .. tostring(maxFiringRange) } ) end
-
-
-              ArtyPositionAndFireAtTarget(group, groupResupplySet, ToCoord, listTargetInfo, command_center, activateDetectionReport, speed, onRoad, maxDistance, maxFiringRange)
-
-            end  --end if
-
-            -- task per ricognizione e fuoco di artiglieria su bersagli mobili
-            if task == 'artillery_detection_and_firing' then
-
-
-              --qui la funzione che utilizza la func ArtyFireAtDetection
-
-              -- tasking for artillery firing
-                if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_detection_and_firing tasking'} ) end
-
-            end  --end if
-
-            -- task per posizione difensiva
-            if task == 'defence' then
-
-                  -- tasking for artillery firing
-                  if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute defence tasking'} ) end
-
-            end  --end if
-
-
-        end -- end for
-
-        if debug then logging('exit', 'activeGO_TO_BATTLE( groupset, battlezone )') end
-
-        return
-
-end -- end function
-]]
-
-
---- Attiva l'invio di gorund asset nella battlezone.
--- NOTA: Nella funzione � presente la schedulazione dell'autodistruzione degli asset
---  al raggiungimento della zona. L'autodistruzione � stata inserita per testare il reinvio degli asset
--- @param groupset = il set dei gruppo (asset) proveniente dalla warehouse
--- @param battlezone = la WRAPPER: ZONE d'invio asset
--- @param task = il task essegnato al groupset
 -- @param offRoad (optional - default = false): se true utilizza il percorso fuori strada
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
 -- @param suppression (optional) : applica la suppression a tutti i gruppi del groupset
 -- @param suppr_param (optional) : lista contenente i parametri necessari per applicare la suppression.
 -- DA IMPLEMENTARE I DIVERSI TASK DI ESECUZIONI
-function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc, suppression, suppr_param )
+function activeGO_TO_BATTLE( groupset, battleZone, task, offRoad, speedPerc, suppression, suppr_param )
 
         local debug = true
 
-        if debug then logging('enter', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
+        if debug then logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
         offRoad = offRoad or false
         suppression = suppression or false
 
-        if suppr_param == nil then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'suppr_param is nil. No suppression applied!' } ) suppression = nil end
+        if suppr_param == nil then logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'suppr_param is nil. No suppression applied!' } ) suppression = nil end
 
-        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'group is nil. Exit!' } ) return nil end
+        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'group is nil. Exit!' } ) return nil end
 
-        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battleZone is nil. Exit!' } ) return nil end
+        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battleZone is nil. Exit!' } ) return nil end
 
-        if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
+        if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
 
         if nil == speedPerc or speedPerc > 1 or speedPerc < 0.1 then speedPerc = 0.7 end
 
@@ -2641,24 +2557,24 @@ function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc,
           local groupCoord = group:GetCoordinate()
           local route, length, exist = groupCoord:GetPathOnRoad( ToCoord )
 
-          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
+          if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
 
 
           if exist and not offRoad then
 
-            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad' } ) end
+            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad' } ) end
             -- Ottimizzazione: evita il ricalcolo della route. Cmq dai un occhiata a Moose group:RouteGroundOnRoad per una eventuale modifica
             -- group:RoutePush( route )
             group:RouteGroundOnRoad( ToCoord, group:GetSpeedMax() * speedPerc )
 
           else
 
-            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'execute routeToGround' } ) end
+            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'execute routeToGround' } ) end
             group:RouteGroundTo( ToCoord, group:GetSpeedMax() * speedPerc )
 
           end -- end if then
 
-          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'task = '.. task } ) end
+          if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'task = '.. task } ) end
 
           -- task per attacco diretto
           if task == 'enemy_attack' then
@@ -2667,8 +2583,48 @@ function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc,
             -- sostituisce con task per enemy attack: search & destroy
 
             --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group::EnRouteTaskEngageTargets(500, Group.Category.GROUND, 1) --boh
+
+
+          elseif task == 'fire_at_point' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
             group:TaskFireAtPoint(ToCoord, 200, nil, nil)
 
+
+          elseif task == 'patrol' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group:TaskFireAtPoint(ToCoord, 200, nil, nil)
+
+        elseif task == 'hold' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group:OptionROEHoldFire()
+            group:OptionROEReturnFire()
+
+        elseif task == 'jtac' then
+
+          -- After 3-5 minutes we create an explosion to destroy the group.
+          -- sostituisce con task per enemy attack: search & destroy
+
+          --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+          group:OptionROEHoldFire()
+          group:EnRouteTaskEWR()
+
+
+          else
+
+            logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'task unknow: '.. task } )
 
           end  --end if
 
@@ -2676,7 +2632,7 @@ function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc,
         end -- end for
 
 
-        if debug then logging('exit', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
+        if debug then logging('exit', 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
         return
 
@@ -3553,7 +3509,7 @@ local ground_group_template_blue = {
   antitankA = 'GEORGIAN ANTITANK SQUAD', -- ANTITANK: WAREHOUSE.Attribute.GROUND_TANK
   antitankB = 'GEORGIAN ANTITANK SQUAD BIS',
   antitankC = 'GEORGIAN ANTITANK SQUAD TRIS',
-  mechanizedA = 'GEORGIAN MECHANIZED SQUAD', -- MECHANIZED: WAREHOUSE.Attribute.GROUND_APC
+  mechanizedA = 'GEORGIAN ANTITANK SQUAD', -- MECHANIZED: WAREHOUSE.Attribute.GROUND_APC
   mechanizedB = 'GEORGIAN MECHANIZED SQUAD BIS',
   mechanizedC = 'GEORGIAN MECHANIZED SQUAD TRIS',
   ArtiKatiusha = 'GEORGIAN ARTILLERY KATIUSHA SQUAD', -- ARTILLERY: WAREHOUSE.Attribute.GROUND_ARTILLERY
@@ -4462,9 +4418,43 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+---- MOMEMENT ---------------------
+
+local MovePrefixesBlue = {
+
+    'GEORGIAN ANTITANK',
+    'GEORGIAN ANTITANK',
+    'GEORGIAN MECHANIZED',
+    'GEORGIAN ARTILLERY',
+    'GEORGIAN HEAVY MORTAR',
+    'GEORGIAN ARMOR',
+    'GEORGIAN TRANSPORT',
+    'GEORGIAN JTAC',
+    'GEORGIAN AAA'
+
+    }
+
+local MovePrefixesRed = {
+
+    'RUSSIAN ANTITANK',
+    'RUSSIAN ANTITANK',
+    'RUSSIAN MECHANIZED',
+    'RUSSIAN ARTILLERY',
+    'RUSSIAN HEAVY MORTAR',
+    'RUSSIAN ARMOR',
+    'RUSSIAN TRANSPORT',
+    'RUSSIAN JTAC',
+    'RUSSIAN AAA'
+}
+
+-- Necessario verificare :
+-- 1 - i group generati dalle wh mantengono come prefix il prefisso utilizzato per i template in ME
+-- 2 - la classe MOVEMENT gestisce i gruppi generati (spawn) dalle WH.
+local blueMovement = MOVEMENT:New(MovePrefixesBlue, 16)
+local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
 
 
-
+--------------------------------
 
 
 
@@ -5018,17 +5008,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
           elseif assignment == 'tkviavi_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
           elseif assignment == 'tseveri_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
@@ -5243,12 +5233,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             if assignment == 'AMBROLAURI_attack_1' then
 
-                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
 
 
             elseif assignment == 'CHIATURA_attack_1' then
 
-                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
             else
@@ -5416,7 +5406,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack' then
 
-             activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
+             activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
@@ -8862,15 +8852,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'CZ_PEREVI_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param )
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param )
 
           elseif assignment == 'CZ_PEREVI_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1, true, suppr_param  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
           elseif assignment == 'CZ_ONI_attack_3' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
           else
 
@@ -9035,12 +9025,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
 
 
           elseif assignment == 'DIDMUKHA_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
 
           else
 
@@ -9241,29 +9231,29 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- launch mission functions: mech
           if assignment == 'TSKHINVALI_Attack_APC' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           elseif assignment == 'TSKHINVALI_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           elseif assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
           elseif assignment == 'SATIHARI_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1, true, suppr_param )
+              activeGO_TO_BATTLE( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
           elseif assignment == 'SATIHARI_attack_2' then
 
-               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1, true, suppr_param )
+               activeGO_TO_BATTLE( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           -- launch mission functions: helo
