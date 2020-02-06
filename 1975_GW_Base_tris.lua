@@ -11666,15 +11666,24 @@ local MovePrefixesRed = {
            local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
 
            -- QUI generazione gruppi Detection
-           local detectionGroup = SPAWN:NewFromTemplate(air_template_red.AFAC_L_39C, 'RED AIR RECON A2G', 'RED AIR RECON A2G')
-           detectionGroup:SpawnAtAirbase(AIRBASE.Caucasus.Beslan, SPAWN.Takeoff.Cold)
+           local spawnDetectionGroup = SPAWN:New(air_template_red.AFAC_L_39C)
+
+           local airbase = AIRBASE:FindByName(AIRBASE.Caucasus.Beslan)
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() } )
+
+           detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
            detectionGroup:StartUncontrolled()
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'detectionGroup = ' .. detectionGroup:GetName() } )
 
            -- Route group to afac zone.
            local ToCoord = afacZone.Didi_South[1]:GetRandomCoordinate()
-           local groupCoord = group:GetCoordinate()
-           detectionGroup:RouteAirTo(ToCoord, POINT_VEC3.RoutePointAltType.BARO, POINT_VEC3.RoutePointType.TurningPoint, POINT_VEC3.RoutePointAction.TurningPoint, group:GetSpeedMax(), nil)
+           local groupCoord = detectionGroup:GetCoordinate() -- NON SERVE
+           detectionGroup:RouteAirTo(ToCoord, POINT_VEC3.RoutePointAltType.BARO, POINT_VEC3.RoutePointType.TurningPoint, POINT_VEC3.RoutePointAction.TurningPoint, detectionGroup:GetSpeedMax(), nil)
+           -- inserisci un task come orbitATPoint
+           --GROUP:OptionROTPassiveDefense()
+           --GROUP:TaskOrbitCircle(Altitude, Speed, Coordinate)
 
             -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
            local detectionSetGroup = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
@@ -11699,7 +11708,7 @@ local MovePrefixesRed = {
            -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
            A2GDispatcher:SetDefenseRadius( 30000 ) -- 30Km
            A2GDispatcher:SetDefenseReactivityHigh()
-           A2GDispatcher.SetDefaultPatrolTimeInterval(600)
+           A2GDispatcher:SetDefaultPatrolTimeInterval(600)
 
 
            -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
@@ -11710,21 +11719,21 @@ local MovePrefixesRed = {
            A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
 
            A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
-
            -- SEAD MISSION: invia attacchi se rilevata minaccia SAM
            -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
            A2GDispatcher:SetSquadronSead( "Beslan SEAD", 500, 700, 2000, 4000 )
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
-           A2ADispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-           A2ADispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
+           --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+           --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
 
            -- dispatching per aerei in patrol pronti ad intervenire (da schedulare? ogni ora e/o dopo la distruzione del gruppo?)
+           --[[
            A2GDispatcher:SetSquadron( "Nalchik PATROL SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 5 )
            A2GDispatcher:SetSquadronSeadPatrol( "Nalchik PATROL SEAD", PatrolZone, 300, 500, 50, 80, 250, 300 )
            A2GDispatcher:SetSquadronPatrolInterval( "Nalchik PATROL SEAD", 2, 30, 60, 1, "SEAD" )
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik PATROL SEAD" )
-           A2ADispatcher:SetSquadronTakeOffInterval( "Nalchik PATROL SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
-           A2ADispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik PATROL SEAD" )
+           A2GDispatcher:SetSquadronTakeOffInterval( "Nalchik PATROL SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
+           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik PATROL SEAD" )
 
            -- CAS MISSION: invia attacchi se rilevata minaccia a friend ground group
            A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
@@ -11736,7 +11745,7 @@ local MovePrefixesRed = {
            --AI_A2G_DISPATCHER:SetSquadronBaiPatrol(SquadronName, Zone, FloorAltitude, CeilingAltitude, PatrolMinSpeed, PatrolMaxSpeed, EngageMinSpeed, EngageMaxSpeed, AltType)
            local zone = {redPatrolZone.mineralnye[1], redPatrolZone.nalchik[1], redPatrolZone.beslan[1] } -- att se nil vuol dire che redPatrolZone è local in una diversa sezione del codice
            A2GDispatcherRed:SetSquadronBaiPatrol( "Nalchik BAI", zone[ math.random( 1, #zone ) ], 4000, 10000, 500, 700, 700, 900, 'BARO')
-
+           ]]
 
         end -- end if
 
