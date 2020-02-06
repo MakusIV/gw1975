@@ -13,7 +13,7 @@ autor: Marco Bellafante
 
 stato:   sviluppo
 
-branch: ristrutturazione farp
+branch: cargo
 
 
 
@@ -28,24 +28,7 @@ sono disabilitati i voli civili
 disabilitato l'airbalancer
 
 
-30.1.2020:
-Fai un test abilitando solo AI_DISPATCH_CARGO, RECON e AWACS
 
-
-
-
-26.1.2020:
-- organizzare il task AWACS in modo che effettui un task orbit di durata definita ad una determinata altezza
-- Recon @ batumi non partono
-- i cargoHeli e Plane decollano ma orbitano intorno alla airbase e poiu atterrano: rivedere funzioni di pickup, deploy, load ecc.
-
-
-
-
-
-
-commentate le addRequest di Tbilisi, Gori, Batumi (da decommentare)
-ridotti i tempi di gestione dei  warehouse SCHEDULER
 
 
 
@@ -53,18 +36,10 @@ ridotti i tempi di gestione dei  warehouse SCHEDULER
  vedere come la detection agisce nella AI.AI.A2A per utilizzarla nelle patrol da warehouse e/o nel balancer
 
 
-23.12.2019
-
+23.12.2019:
 la funzione OnAfterDelivered(From,Event,To,request) per tutte le WH puo' essere eliminata: lo scheduler si occupa del rinvio degli asset
 Aggiornare il codice nelle funzioni OnAfterSelfRequest, OnAfterAssetDead come per le _addRequest
 
-
-
-30.5.19:
-
-in activeGO_TO_ZONE_GROUND modificare il parametro battlezone in toCoord in qnuanto queste sono rilevate nella activeGO_TO_ZONE_GROUND
-in  ArtyPositionAndFireAtTarget inserire e gestire i parametri moveCoordinate, speed e onroad e  e modificare le chiamate a questa funzione prima in activeGO_TO_ZONE_GROUND
-dopo verificato il funziomanento inserirla solo in activeGO_TO_ARTY
 
 
 in tutte le warehouse c'e un gruppo sconosciuto
@@ -11670,85 +11645,117 @@ local MovePrefixesRed = {
     ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
 
 
-    ------------------------------------------------------------------------   NOTA DEVE ESSERE ANCORA IMPLEMENTATO IN MOOSE -----------------------
 
     -- info @ https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/AI.AI_A2G_Dispatcher.html
 
-    local activeAI_A2G_Dispatching = false
+    local activeAI_A2G_Dispatching_Red = true
+    local activeAI_A2G_Dispatching_Blue = false
 
-    if activeAI_A2G_Dispatching then
+    if activeAI_A2G_Dispatching_Red then
 
-        -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
-       -- Here we build the network with all the groups that have a name starting with CCCP Recce.
-       --local DetectionSetGroupRed = SET_GROUP:New() -- Defene a set of group objects, caled DetectionSetGroup.
-
-       --local DetectionSetGroupRed:FilterPrefixes( { "RED RECON" } ) -- The DetectionSetGroup will search for groups that start with the name "CCCP Recce".
-
-       -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
-       -- which have a group name starting with "CCCP Recce", then these will be automatically added or removed from the set.
-       --local DetectionSetGroupRed:FilterStart()
-
-       -- This command defines the reconnaissance network.
-       -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-       -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-       --local DetectionRed = DETECTION_AREAS:New( DetectionSetGroupRed, 1000 )
-
-       -- Setup the A2A dispatcher, and initialize it.
-       --local A2GDispatcherRed = AI_A2G_DISPATCHER:New( DetectionRed )
+        logging('enter', 'activeAI_A2G_Dispatching_Red' )
 
 
-       -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-       --A2GDispatcherRed:SetDefenseRadius( 30000 ) -- 30Km
+        local activeAI_A2G_Dispatching_HQ1 = true
+        local activeAI_A2G_Dispatching_HQ2 = false
+        local activeAI_A2G_Dispatching_HQ3 = false
 
-       -- A2GDispatcher:SetDefenseReactivityHigh()
+        -- A2G Dispatching for Red HQ1
+        if activeAI_A2G_Dispatching_HQ1 then
 
+           local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
 
+           -- QUI generazione gruppi Detection
+           local detectionGroup = SPAWN:NewFromTemplate(air_template_red.AFAC_L_39C, 'RED AIR RECON A2G', 'RED AIR RECON A2G')
+           detectionGroup:SpawnAtAirbase(AIRBASE.Caucasus.Beslan, SPAWN.Takeoff.Cold)
+           detectionGroup:StartUncontrolled()
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'detectionGroup = ' .. detectionGroup:GetName() } )
 
-       -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-       -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-       -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line.
+           -- Route group to afac zone.
+           local ToCoord = afacZone.Didi_South[1]:GetRandomCoordinate()
+           local groupCoord = group:GetCoordinate()
+           detectionGroup:RouteAirTo(ToCoord, POINT_VEC3.RoutePointAltType.BARO, POINT_VEC3.RoutePointType.TurningPoint, POINT_VEC3.RoutePointAction.TurningPoint, group:GetSpeedMax(), nil)
 
+            -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
+           local detectionSetGroup = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+           detectionSetGroup:FilterPrefixes( { "RED GROUND RECON A2G", "RED AIR RECON A2G", "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+           detectionSetGroup:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+           detectionSetGroup:AddGroup(detectionGroup)
 
-       ------------------------------------------------------------------------   Red HQ1:  --------------------------------------------------------------
+           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
 
-       --local HQ_RED_1 = GROUP:FindByName( "HQ_RED_1" )
+           -- This command defines the reconnaissance network.
+           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           local detection = DETECTION_AREAS:New( detectionSetGroup, 1000 )
 
+           -- Setup the A2A dispatcher, and initialize it.
+           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       -- Add defense coordinates.
-       --A2GDispatcherRed:AddDefenseCoordinate( HQ_RED_1:GetName(), HQ_RED_1:GetCoordinate() )
-
-       --A2GDispatcherRed:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
-       --A2GDispatcherRed:SetSquadronSead( "Nalchik SEAD", 500, 700, 2000, 4000 )
-       -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-       -- nota: puoi usare anche:
-       -- A2GDispatcher:SetSquadronSeadPatrol( "Maykop SEAD", PatrolZone, 300, 500, 50, 80, 250, 300 ) insieme a  A2GDispatcher:SetSquadronPatrolInterval( "Maykop SEAD", 2, 30, 60, 1, "SEAD" )
-       -- permettono di avere gli aerei in patrol pronti ad intervenire
-       --A2GDispatcherRed:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
-       --A2ADispatcherRed:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
-       --A2ADispatcherRed:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
-
-
-       --A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
-       --A2GDispatcherRed:SetSquadronSead( "Nalchik CAS", 500, 700, 3000, 5000 )
-
-       --A2GDispatcherRed:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.BOM_SU_17_Structure }, 10 )
-       --A2GDispatcherRed:SetSquadronSead( "Nalchik BAI", 500, 700, 6000, 10000 )
-
-
-
-       ------------------------------------------------------------------------   Red HQ2:  --------------------------------------------------------------
-
-       ------------------------------------------------------------------------   Red HQ3:  --------------------------------------------------------------
-
-       ------------------------------------------------------------------------   Red HQ4:  --------------------------------------------------------------
-
-
+           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+           A2GDispatcher:SetDefenseRadius( 30000 ) -- 30Km
+           A2GDispatcher:SetDefenseReactivityHigh()
+           A2GDispatcher.SetDefaultPatrolTimeInterval(600)
 
 
+           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+           -- Add defense coordinates.
+           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+           A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
+
+           -- SEAD MISSION: invia attacchi se rilevata minaccia SAM
+           -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           A2GDispatcher:SetSquadronSead( "Beslan SEAD", 500, 700, 2000, 4000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
+           A2ADispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+           A2ADispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
+
+           -- dispatching per aerei in patrol pronti ad intervenire (da schedulare? ogni ora e/o dopo la distruzione del gruppo?)
+           A2GDispatcher:SetSquadron( "Nalchik PATROL SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 5 )
+           A2GDispatcher:SetSquadronSeadPatrol( "Nalchik PATROL SEAD", PatrolZone, 300, 500, 50, 80, 250, 300 )
+           A2GDispatcher:SetSquadronPatrolInterval( "Nalchik PATROL SEAD", 2, 30, 60, 1, "SEAD" )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik PATROL SEAD" )
+           A2ADispatcher:SetSquadronTakeOffInterval( "Nalchik PATROL SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
+           A2ADispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik PATROL SEAD" )
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a friend ground group
+           A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
+           --AI_A2G_DISPATCHER:SetSquadronCas(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           A2GDispatcherRed:SetSquadronCas( "Nalchik CAS", 500, 700, 3000, 5000 )
+
+           -- BAI MISSION: invia attacchi BAI
+           A2GDispatcherRed:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.BOM_SU_17_Structure }, 10 )
+           --AI_A2G_DISPATCHER:SetSquadronBaiPatrol(SquadronName, Zone, FloorAltitude, CeilingAltitude, PatrolMinSpeed, PatrolMaxSpeed, EngageMinSpeed, EngageMaxSpeed, AltType)
+           local zone = {redPatrolZone.mineralnye[1], redPatrolZone.nalchik[1], redPatrolZone.beslan[1] } -- att se nil vuol dire che redPatrolZone è local in una diversa sezione del codice
+           A2GDispatcherRed:SetSquadronBaiPatrol( "Nalchik BAI", zone[ math.random( 1, #zone ) ], 4000, 10000, 500, 700, 700, 900, 'BARO')
 
 
-    end --activeAI_A2G_Dispatching then
+        end -- end if
 
+        if activeAI_A2G_Dispatching_HQ2 then
+        end
+
+        if activeAI_A2G_Dispatching_HQ3 then
+        end
+
+    end -- end if activeAI_A2G_Dispatching_Red
+
+
+    if activeAI_A2G_Dispatching_Blue then
+
+    end
+
+
+
+    ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
 
 
 
