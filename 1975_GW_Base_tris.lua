@@ -13,7 +13,7 @@ autor: Marco Bellafante
 
 stato:   sviluppo
 
-branch: ristrutturazione farp
+branch: cargo
 
 
 
@@ -28,24 +28,7 @@ sono disabilitati i voli civili
 disabilitato l'airbalancer
 
 
-30.1.2020:
-Fai un test abilitando solo AI_DISPATCH_CARGO, RECON e AWACS
 
-
-
-
-26.1.2020:
-- organizzare il task AWACS in modo che effettui un task orbit di durata definita ad una determinata altezza
-- Recon @ batumi non partono
-- i cargoHeli e Plane decollano ma orbitano intorno alla airbase e poiu atterrano: rivedere funzioni di pickup, deploy, load ecc.
-
-
-
-
-
-
-commentate le addRequest di Tbilisi, Gori, Batumi (da decommentare)
-ridotti i tempi di gestione dei  warehouse SCHEDULER
 
 
 
@@ -53,18 +36,10 @@ ridotti i tempi di gestione dei  warehouse SCHEDULER
  vedere come la detection agisce nella AI.AI.A2A per utilizzarla nelle patrol da warehouse e/o nel balancer
 
 
-23.12.2019
-
+23.12.2019:
 la funzione OnAfterDelivered(From,Event,To,request) per tutte le WH puo' essere eliminata: lo scheduler si occupa del rinvio degli asset
 Aggiornare il codice nelle funzioni OnAfterSelfRequest, OnAfterAssetDead come per le _addRequest
 
-
-
-30.5.19:
-
-in activeGO_TO_ZONE_GROUND modificare il parametro battlezone in toCoord in qnuanto queste sono rilevate nella activeGO_TO_ZONE_GROUND
-in  ArtyPositionAndFireAtTarget inserire e gestire i parametri moveCoordinate, speed e onroad e  e modificare le chiamate a questa funzione prima in activeGO_TO_ZONE_GROUND
-dopo verificato il funziomanento inserirla solo in activeGO_TO_ARTY
 
 
 in tutte le warehouse c'e un gruppo sconosciuto
@@ -366,7 +341,7 @@ end
 -- @param: type_aircraft ('fighter_bomber', 'bomber', 'helicopter')
 function calcParamForBAI(type_aircraft)
 
-    local debug = false
+  local debug = false
 
   if debug then logging('enter', 'calcParamForBAI(type_aircraft)') end
 
@@ -431,6 +406,43 @@ function calcParamForBAI(type_aircraft)
 end
 
 
+function addGroupSet(targetGroupSet, groupSet)
+
+  local debug = true
+
+  if debug then logging('enter', 'addGroupSet(targetGroupSet, groupSet)') end
+
+  for _, _group in pairs(groupSet:GetSet()) do
+
+    local group = _group --Wrapper.Group#GROUP
+    targetGroupSet:AddGroup(group)
+    if debug then logging('finest', { 'addGroupSet(targetGroupSet, groupSet)' , 'added group: ' .. group:GetName() .. ' in set_group: ' .. targetGroupSet:GetObjectNames()} ) end
+
+  end -- end for
+
+  if debug then logging('exit', 'addGroupSet(targetGroupSet, groupSet)') end
+
+end
+
+
+function printGroupSet( groupSet )
+
+  local names = 'Name for ' .. groupSet:GetObjectNames()
+
+  for _, _group in pairs( groupSet:GetSet()) do
+
+    local group = _group --Wrapper.Group#GROUP
+
+    names = names .. ' - ' .. group:GetName()
+
+  end -- end for
+
+  return names
+
+end
+
+
+
 
 -- END UTILITY FUNCTION
 
@@ -457,6 +469,98 @@ end
 
 ------------------------------------------------------------------------------    MISSION FUNCTIONS  -------------------------------------------------------------------------
 -- Mission's use functions
+
+
+
+--- SUPPRESSION
+
+--- applica la Functionality SUPPRESSION al group passato come parametro
+-- @param: group:         single group
+-- @param: retreatZone:   the retreat zone
+-- @param: fallback:      if true active fallBack action during enemy attack
+-- @param: takeCover:     if true active takeCover action during enemy attack
+-- @param: delay:         suppression start delay
+function suppressionGroup(group, retreatZone, fallBack, takeCover, delay)
+
+    --SUPPRESSION.SetSuppressionTime() can be used to set the time a goup gets suppressed.
+    --SUPPRESSION.SetRetreatZone() sets the retreat zone and enables the possiblity for the group to retreat.
+    --SUPPRESSION.SetFallbackDistance() sets a value how far the unit moves away from the attacker after the fallback event.
+    --SUPPRESSION.SetFallbackWait() sets the time after which the group resumes its mission after a FallBack event.
+    --SUPPRESSION.SetTakecoverWait() sets the time after which the group resumes its mission after a TakeCover event.
+    --SUPPRESSION.SetTakecoverRange() sets the radius in which hideouts are searched.
+    --SUPPRESSION.SetTakecoverPlace() explicitly sets the place where the group will run at a TakeCover event.
+    --SUPPRESSION.SetMinimumFleeProbability() sets the minimum probability that a group flees (FallBack or TakeCover) after a hit. Note taht the probability increases with damage.
+    --SUPPRESSION.SetMaximumFleeProbability() sets the maximum probability that a group flees (FallBack or TakeCover) after a hit. Default is 90%.
+    --SUPPRESSION.SetRetreatDamage() sets the damage a group/unit can take before it is ordered to retreat.
+    --SUPPRESSION.SetRetreatWait() sets the time a group waits in the retreat zone after a retreat.
+    --SUPPRESSION.SetDefaultAlarmState() sets the alarm state a group gets after it becomes CombatReady again.
+    --SUPPRESSION.SetDefaultROE() set the rules of engagement a group gets after it becomes CombatReady again.
+    --SUPPRESSION.FlareOn() is mainly for debugging. A flare is fired when a unit is hit, gets suppressed, recovers, dies.
+    --SUPPRESSION.SmokeOn() is mainly for debugging. Puts smoke on retreat zone, hideouts etc.
+    --SUPPRESSION.MenuON() is mainly for debugging. Activates a radio menu item where certain functions like retreat etc. can be triggered manually.
+
+
+    local debug = true
+
+    if debug then logging('enter', 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)') end
+
+    delay = delay or 1
+    fallBack = fallBack or false
+    takeCover = takeCover or false
+
+    if nil == group or not group:IsGround() then logging('warning', { 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)' , 'group is nil or not ground unit: Suppression dont defined! Exit' } ) return nil end
+
+
+    local groupSuppression = SUPPRESSION:New(group)
+    groupSuppression:Fallback(fallBack)
+    groupSuppression:Takecover(takeCover)
+
+    groupSuppression:__Start(delay)
+
+    if debug then logging('exit', 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)') end
+
+    return
+
+end -- end function
+
+
+  --- applica la Functionality SUPPRESSION al groupset passato come parametro
+  -- @param: group:         single group
+  -- @param: retreatZone:   the retreat zone
+  -- @param: fallback:      if true active fallBack action during enemy attack
+  -- @param: takeCover:     if true active takeCover action during enemy attack
+  -- @param: delay:         suppression start delay
+function suppressionGroupSet(groupSet, retreatZone, fallBack, takeCover, delay)
+
+    local debug = false
+
+    if debug then logging('enter', 'suppressionGroupSet(group, retreatZone, fallBack, takeCover, delay)') end
+
+    delay = delay or 1
+    fallBack = fallBack or false
+    takeCover = takeCover or false
+
+    if nil == group or not group:IsGround() then logging('warning', { 'suppressionGroupSet(group, retreatZone, fallBack, takeCover, delay)' , 'group is nil or not ground unit: Suppression dont defined! Exit' } ) return nil end
+
+
+    for _, _group in pairs(groupSet:GetSet()) do
+
+      local group = _group --Wrapper.Group#GROUP
+      suppressionGroup(group, retreatZone, fallBack, takeCover, delay)
+
+    end -- end for
+
+    if debug then logging('exit', 'suppressionGroupSet(group, retreatZone, fallBack, takeCover, delay)') end
+
+    return
+
+end -- end function
+
+
+
+
+
+
 
 
 
@@ -694,7 +798,7 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
 
           -- Start uncontrolled aircraft.
           group:StartUncontrolled()
-
+          group:OptionROEHoldFire()
           group:EnRouteTaskAWACS()
 
 
@@ -853,7 +957,7 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 
             -- Start uncontrolled aircraft.
             group:StartUncontrolled()
-
+            group:OptionROEHoldFire()
             group:EnRouteTaskAWACS()
 
             --local task = group:TaskHoldPosition(1800) -- 30'
@@ -1581,6 +1685,7 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
 
           -- Start uncontrolled aircraft.
           group:StartUncontrolled()
+          group:OptionROTEvadeFire()
 
           -- Target coordinate!
           local ToCoord=target:GetCoordinate():SetAltitude(toTargetAltitude)
@@ -2423,150 +2528,66 @@ end -- end function
 -- @param groupset = il set dei gruppo (asset) proveniente dalla warehouse
 -- @param battlezone = la WRAPPER: ZONE d'invio asset
 -- @param task = il task essegnato al groupset
--- @param param (optional) : lista contenente ulteriori parametri
--- @param offRoad (optional - default = false): se true
+-- @param offRoad (optional - default = false): se true utilizza il percorso fuori strada
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
--- DEPRECATED
---[[
-function activeGO_TO_BATTLE( groupset, battlezone, task, param, offRoad, speedPerc )
 
-        local debug = true
-
-        if debug then logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone )') end
-
-        if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'gorupsetName: ' .. groupset:GetObjectNames() } ) end
-
-        local battle_Zone = battlezone[1] -- the zone object
-        local ToCoord = battle_Zone:GetRandomCoordinate()
-
-        activeGO_TO_ZONE_GROUND( groupset, battle_Zone, offRoad, speedPerc )
-
-          for _,group in pairs(groupset:GetSet()) do
-
-            local group = group --Wrapper.Group#GROUP
-
-
-
-            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'task = '.. task } ) end
-
-            -- task per attacco diretto
-            if task == 'enemy_attack' then
-
-              -- After 3-5 minutes we create an explosion to destroy the group.
-              -- sostituisce con task per enemy attack: search & destroy
-
-              SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
-              if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute enemy_attack tasking'} ) end
-
-            end  --end if
-
-            -- task per fuoco di artiglieria di bersagli fissi
-            if task == 'artillery_firing' then
-
-              local listTargetInfo = param.listTargetInfo
-              local command_center = param.commandCenter
-              local groupResupplySet = param.resupplySet
-              local speed = param.speed
-              local onRoad = param.onRoad
-              local maxDistance = param.maxDistance
-              local maxFiringRange = param.maxFiringRange
-
-              if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_firing tasking   -  ' .. 'num target zone = ' .. #listTargetInfo .. '  -  groupResupplySet = ' .. groupResupplySet:GetObjectNames() .. '-  speed = ' .. tostring(speed) .. '-  onRoad = ' .. tostring(onRoad) .. '-  maxDistance = ' .. tostring(maxDistance) .. '-  maxFiringRange = ' .. tostring(maxFiringRange) } ) end
-
-
-              ArtyPositionAndFireAtTarget(group, groupResupplySet, ToCoord, listTargetInfo, command_center, activateDetectionReport, speed, onRoad, maxDistance, maxFiringRange)
-
-            end  --end if
-
-            -- task per ricognizione e fuoco di artiglieria su bersagli mobili
-            if task == 'artillery_detection_and_firing' then
-
-
-              --qui la funzione che utilizza la func ArtyFireAtDetection
-
-              -- tasking for artillery firing
-                if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute artillery_detection_and_firing tasking'} ) end
-
-            end  --end if
-
-            -- task per posizione difensiva
-            if task == 'defence' then
-
-                  -- tasking for artillery firing
-                  if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone )' , 'execute defence tasking'} ) end
-
-            end  --end if
-
-
-        end -- end for
-
-        if debug then logging('exit', 'activeGO_TO_BATTLE( groupset, battlezone )') end
-
-        return
-
-end -- end function
-]]
-
-
---- Attiva l'invio di gorund asset nella battlezone.
--- NOTA: Nella funzione � presente la schedulazione dell'autodistruzione degli asset
---  al raggiungimento della zona. L'autodistruzione � stata inserita per testare il reinvio degli asset
--- @param groupset = il set dei gruppo (asset) proveniente dalla warehouse
--- @param battlezone = la WRAPPER: ZONE d'invio asset
--- @param task = il task essegnato al groupset
--- @param param (optional) : lista contenente ulteriori parametri
--- @param offRoad (optional - default = false): se true
--- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
+-- @param suppression (optional) : applica la suppression a tutti i gruppi del groupset
+-- @param suppr_param (optional) : lista contenente i parametri necessari per applicare la suppression.
 -- DA IMPLEMENTARE I DIVERSI TASK DI ESECUZIONI
-function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc )
+function activeGO_TO_BATTLE( groupset, battleZone, task, offRoad, speedPerc, suppression, suppr_param )
 
         local debug = true
 
-        if debug then logging('enter', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )') end
+        if debug then logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
-        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'group is nil. Exit!' } ) return nil end
+        offRoad = offRoad or false
+        suppression = suppression or false
 
-        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'battleZone is nil. Exit!' } ) return nil end
+        if suppr_param == nil then logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'suppr_param is nil. No suppression applied!' } ) suppression = nil end
 
-        if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
+        if debug and nil == groupset then logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'group is nil. Exit!' } ) return nil end
 
-        if nil == offRoad or offRoad ~= true then offRoad = false end
+        if debug and nil == battleZone then logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battleZone is nil. Exit!' } ) return nil end
+
+        if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'battlezone = ' .. battleZone:GetName() .. '  -  group = ' .. groupset:GetObjectNames() .. '  -  offRoad = ' .. tostring(offRoad) .. '  -  speedPerc = ' .. tostring(speedPerc) } ) end
 
         if nil == speedPerc or speedPerc > 1 or speedPerc < 0.1 then speedPerc = 0.7 end
 
         -- radius=radius or 100
 
 
-        for _,group in pairs(groupset:GetSet()) do
+        for _, _group in pairs(groupset:GetSet()) do
           -- seleziona ogni gruppo appartenente al set
 
 
-          local group = group --Wrapper.Group#GROUP
+          local group = _group --Wrapper.Group#GROUP
           --group:StartUncontrolled()
+
+          if suppression then suppressionGroup(group, suppr_param.retreatZone, suppr_param.fallBack, suppr_param.takeCover, suppr_param.delay) end
 
           -- Route group to Battle zone.
           local ToCoord = battleZone:GetRandomCoordinate()
           local groupCoord = group:GetCoordinate()
           local route, length, exist = groupCoord:GetPathOnRoad( ToCoord )
 
-          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
+          if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad exist = ' .. tostring(exist) .. '  -  length = ' .. tostring(length) } ) end
 
 
           if exist and not offRoad then
 
-            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'routeToRoad' } ) end
+            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'routeToRoad' } ) end
             -- Ottimizzazione: evita il ricalcolo della route. Cmq dai un occhiata a Moose group:RouteGroundOnRoad per una eventuale modifica
             -- group:RoutePush( route )
             group:RouteGroundOnRoad( ToCoord, group:GetSpeedMax() * speedPerc )
 
           else
 
-            if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'execute routeToGround' } ) end
+            if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'execute routeToGround' } ) end
             group:RouteGroundTo( ToCoord, group:GetSpeedMax() * speedPerc )
 
           end -- end if then
 
-          if debug then logging('finest', { 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )' , 'task = '.. task } ) end
+          if debug then logging('finest', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'task = '.. task } ) end
 
           -- task per attacco diretto
           if task == 'enemy_attack' then
@@ -2575,8 +2596,48 @@ function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc 
             -- sostituisce con task per enemy attack: search & destroy
 
             --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group:EnRouteTaskEngageTargets(500, Group.Category.GROUND, 1) --boh
+
+
+          elseif task == 'fire_at_point' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
             group:TaskFireAtPoint(ToCoord, 200, nil, nil)
 
+
+          elseif task == 'patrol' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group:TaskFireAtPoint(ToCoord, 200, nil, nil)
+
+        elseif task == 'hold' then
+
+            -- After 3-5 minutes we create an explosion to destroy the group.
+            -- sostituisce con task per enemy attack: search & destroy
+
+            --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+            group:OptionROEHoldFire()
+            group:OptionROEReturnFire()
+
+        elseif task == 'jtac' then
+
+          -- After 3-5 minutes we create an explosion to destroy the group.
+          -- sostituisce con task per enemy attack: search & destroy
+
+          --SCHEDULER:New(nil, Explosion, {group, 50}, math.random(180, 300))
+          group:OptionROEHoldFire()
+          group:EnRouteTaskEWR()
+
+
+          else
+
+            logging('warning', { 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )' , 'task unknow: '.. task } )
 
           end  --end if
 
@@ -2584,7 +2645,7 @@ function activeGO_TO_BATTLE_BIS( groupset, battleZone, task, offRoad, speedPerc 
         end -- end for
 
 
-        if debug then logging('exit', 'activeGO_TO_BATTLE_BIS( groupset, battlezone, task, offRoad, speedPerc )') end
+        if debug then logging('exit', 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
         return
 
@@ -3114,6 +3175,68 @@ function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
 end -- end function
 
 
+
+
+--- Genera un gruppo dedicato alla detection AI_A2G
+-- @param name = il nome del gruppo
+-- @param aircraftTemplate = il template dell'aereo
+-- @param routeAltitude = la quota della rotta
+-- @param detectionAltitude = la quota del task detection
+-- @param homeAirbase = l'airbase di partenza'
+-- @param detectionZone = la zona relativa la task detection
+function generateDetectioA2G_Group(name, detectionGroup, aircraftTemplate, routeAltitude, detectionAltitude, airbase, detectionZone)
+
+  local debug = true
+
+  if debug then logging('enter', 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)') end
+
+  --local airbase = AIRBASE:FindByName(homeAirbase)
+  --logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'airbase = ' .. airbase:GetName() } )
+
+  --detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+  logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+  detectionGroup:StartUncontrolled()
+  detectionGroup:OptionROTPassiveDefense()
+
+  -- Route group to afac zone.
+  local ToCoord = afacZone.detectionZone:GetRandomCoordinate():SetAltitude(routeAltitude)
+
+  -- Home coordinate.
+  local HomeCoord=airbase:GetCoordinate():SetAltitude(routeAltitude)
+
+  --local groupCoord = detectionGroup:GetCoordinate() -- NON SERVE
+  --detectionGroup:RouteAirTo(ToCoord, POINT_VEC3.RoutePointAltType.BARO, POINT_VEC3.RoutePointType.TurningPoint, POINT_VEC3.RoutePointAction.TurningPoint, detectionGroup:GetSpeedMax(), nil)
+  -- inserisci un task come orbitATPoint
+  --GROUP:OptionROTPassiveDefense()
+  --GROUP:TaskOrbitCircle(Altitude, Speed, Coordinate)
+
+  -- Task bomb Sukhumi warehouse using all bombs (2032) from direction 180 at altitude 5000 m.
+  -- IL TASK � NELLA CLASSE WRAPPER CONTROLLABLE
+  --local task=group:TaskBombing(target:GetCoordinate():GetVec2(), false, "All", nil , bombingDirection, bombingAltitude, bombQuantity)
+  local task = detectionGroup:TaskOrbitCircle(detectionAltitude, detectionGroup:GetSpeedMax() * 0.6, ToCoord)
+
+  -- Define waypoints.
+  local WayPoints={}
+
+  -- Take off position.
+  WayPoints[1]=airbase:GetCoordinate():WaypointAirTakeOffParking()
+  -- Begin bombing run 20 km south of target.
+  WayPoints[2]=ToCoord:WaypointAirTurningPoint(nil, detectionGroup:GetSpeedMax() * 0.6, {task}, "Detection for ground threat")
+  -- Return to base.
+  WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
+  -- Land at homebase. Bombers are added back to stock and can be employed in later assignments.
+  WayPoints[4]=airbase:GetCoordinate():WaypointAirLanding()
+
+  detectionGroup:Route(WayPoints)
+
+
+  if debug then logging('exit', 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)') end
+
+  return
+
+end
+
 ------------------------------------------------------------------------------- END DEFINE FUNCTIONS -------------------------------------------------------------------------------
 
 
@@ -3461,7 +3584,7 @@ local ground_group_template_blue = {
   antitankA = 'GEORGIAN ANTITANK SQUAD', -- ANTITANK: WAREHOUSE.Attribute.GROUND_TANK
   antitankB = 'GEORGIAN ANTITANK SQUAD BIS',
   antitankC = 'GEORGIAN ANTITANK SQUAD TRIS',
-  mechanizedA = 'GEORGIAN MECHANIZED SQUAD', -- MECHANIZED: WAREHOUSE.Attribute.GROUND_APC
+  mechanizedA = 'GEORGIAN ANTITANK SQUAD', -- MECHANIZED: WAREHOUSE.Attribute.GROUND_APC
   mechanizedB = 'GEORGIAN MECHANIZED SQUAD BIS',
   mechanizedC = 'GEORGIAN MECHANIZED SQUAD TRIS',
   ArtiKatiusha = 'GEORGIAN ARTILLERY KATIUSHA SQUAD', -- ARTILLERY: WAREHOUSE.Attribute.GROUND_ARTILLERY
@@ -4370,9 +4493,46 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+---- MOMEMENT ---------------------
+--[[
+local MovePrefixesBlue = {
 
+    'GEORGIAN ANTITANK',
+    'GEORGIAN ANTITANK',
+    'GEORGIAN MECHANIZED',
+    'GEORGIAN ARTILLERY',
+    'GEORGIAN HEAVY MORTAR',
+    'GEORGIAN ARMOR',
+    'GEORGIAN TRANSPORT',
+    'GEORGIAN JTAC',
+    'GEORGIAN AAA'
 
+    }
 
+local MovePrefixesRed = {
+
+    'RUSSIAN ANTITANK',
+    'RUSSIAN ANTITANK',
+    'RUSSIAN MECHANIZED',
+    'RUSSIAN ARTILLERY',
+    'RUSSIAN HEAVY MORTAR',
+    'RUSSIAN ARMOR',
+    'RUSSIAN TRANSPORT',
+    'RUSSIAN JTAC',
+    'RUSSIAN AAA'
+}
+
+]]
+
+-- Necessario verificare :
+-- 1 - i group generati dalle wh mantengono come prefix il prefisso utilizzato per i template in ME
+-- 2 - la classe MOVEMENT gestisce i gruppi generati (spawn) dalle WH.
+--local blueMovement = MOVEMENT:New(MovePrefixesBlue, 16)
+--local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
+
+--   NON FUNZIONA
+
+--------------------------------
 
 
 
@@ -4528,6 +4688,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
   -- Crea il blue command center selezionando l'unita' HQ
   HQ_RED = GROUP:FindByName( 'RED_HQ' )
   red_command_center = COMMANDCENTER:New( HQ_RED, 'RED_HQ' )
+
+
+  -- SET_Group dedicati alla Detection A2G
+  -- Red side
+  detectionGroupSetRed = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+  detectionGroupSetRed:FilterPrefixes( { "SQ red REC", "SQ red FAC", "RUSSIAN JTAC", "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+  detectionGroupSetRed:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+
+
+  -- Blue side
+  detectionGroupSetBlue = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+  detectionGroupSetBlue:FilterPrefixes( { "SQ blue REC", "SQ blue FAC", "GEORGIAN JTAC", "DF GEORGIA AWACS", "DF GEORGIA EWR", "DF USA EWR", "DF USA AWACS", "SQ blue AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+  detectionGroupSetBlue:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
 
 
 
@@ -4915,6 +5088,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Didi:GetAssignment(request)
@@ -4922,22 +5096,28 @@ if conflictZone == 'Zone 1: South Ossetia' then
           logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
 
+
           if assignment == 'tkviavi_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
+
 
 
           elseif assignment == 'tkviavi_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
+
 
 
           elseif assignment == 'tseveri_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
+
 
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+            addGroupSet(detectionGroupSetRed, groupset)
 
 
             if lenAttackGroupForAFACSet > 0 then
@@ -4945,6 +5125,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local attackgroup = attackGroupForAFACSet[ lenAttackGroupForAFACSet ]
               lenAttackGroupForAFACSet = lenAttackGroupForAFACSet - 1
               logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
+
               activeAFAC( groupset, attackgroup, afacZone.Didmukha_Tsveri, afacZone.Didmukha_Tsveri, red_command_center, 'AFAC_HELO' )
 
             else
@@ -4956,6 +5137,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+            addGroupSet(detectionGroupSetRed, groupset)
 
 
             if lenAttackGroupForAFACSet > 0 then -- verifica se c'e' almeno un gruppo CAS dedicato disponibile nella lista di CAS dedicate
@@ -5140,20 +5323,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             local groupset = groupset --Core.Set#SET_GROUP
             local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+            local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
             -- Get assignment of this request.
             local assignment=warehouse.Biteta:GetAssignment(request)
 
             logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
+
             if assignment == 'AMBROLAURI_attack_1' then
 
-                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1)
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
+
 
 
             elseif assignment == 'CHIATURA_attack_1' then
 
-                activeGO_TO_BATTLE_BIS( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1 )
+                activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
             else
@@ -5311,6 +5497,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
+
           -- Get assignment of this request.
           local assignment = warehouse.Kvemo_Sba:GetAssignment(request)
 
@@ -5319,11 +5507,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'tkviavi_attack' then
 
-             activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
+             activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
+
 
 
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+            addGroupSet(detectionGroupSetRed, groupset)
 
 
             if lenAttackGroupForAFACSet > 0 then
@@ -5342,6 +5533,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+            addGroupSet(detectionGroupSetRed, groupset)
 
 
             if lenAttackGroupForAFACSet > 0 then -- verifica se c'e' almeno un gruppo CAS dedicato disponibile nella lista di CAS dedicate
@@ -6448,6 +6641,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. redPatrolZone.beslan[1]:GetName() } )
             --logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+            addGroupSet(detectionGroupSetRed, groupset)
+
             activeAWACS( groupset, warehouse.Beslan, blue_command_center, nil, redAwacsZone.beslan, math.random(6000, 9000), 6000 )
 
 
@@ -7164,11 +7359,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
              if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
              if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-             if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-             if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+             if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
              if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS") pos = pos + 1  end
              if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON AIRBASE") pos = pos + 1  end
-             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
+             logging('info', { 'main' , 'Batumi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  batumi_efficiency_influence, interval_sched, rand_sched
 
@@ -7261,6 +7456,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
             logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName() } )
             --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+            -- addGroupSet(detectionGroupSetBlue, groupset)
+
             activeAWACS( groupset, warehouse.Batumi, blue_command_center, nil, blueAwacsZone.gori, math.random(6000,8000), 5000 )
 
 
@@ -7346,31 +7543,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-              -- vedi:
-              -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/PLN%20-%20Airplane/AIC-PLN-000%20-%20Airplane/AIC-PLN-000%20-%20Airplane.lua
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Airplane.html
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-              --local vehicleGroup = GROUP:FindByName( "Cargo Vehicles Batumi" )
-              -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-              --local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
-
-              --local cargoGroupSet = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-              --local  = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
-
-
               -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
+              --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
 
-              local destination = AIRBASE.Caucasus.Tbilisi_Lochini --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-              local speed = math.random( 300 , 500 )
+              --local destination = AIRBASE.Caucasus.Tbilisi_Lochini --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+              --local speed = math.random( 300 , 500 )
 
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+              --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Batumi, speed, cargoGroupSet )
-
-              --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-              --activeCargo('airplane', groupset, AIRBASE.Caucasus.Batumi, destination, 'Vehicles',"Cargo Vehicles Batumi", speed)
+              --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Batumi, speed, cargoGroupSet )
 
 
 
@@ -7382,29 +7563,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
       elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            --local infantryGroup = GROUP:FindByName( "Cargo Infantry Batumi" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-            --local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-            --local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
+            --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
 
-            local pickupZone =  cargoZone.Warehouse_AB.blue.Batumi
-            local deployZone =  cargoZone.Warehouse.blue.Gori
-            local speed = math.random( 100 , 250 )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Batumi
+            --local deployZone =  cargoZone.Warehouse.blue.Gori
+            --local speed = math.random( 100 , 250 )
 
-            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-            activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+            --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
-            --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
-            --activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Batumi", speed)
 
 
 
@@ -7507,6 +7676,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -7647,8 +7819,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-             if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-             if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON FARP") pos = pos + 1  end
@@ -7743,6 +7915,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName()} )
           --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+          -- addGroupSet(detectionGroupSetBlue, groupset)
 
           activeAWACS( groupset, warehouse.Kutaisi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(5000, 9000), 5000 )
 
@@ -7891,27 +8065,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
           elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/PLN%20-%20Airplane/AIC-PLN-000%20-%20Airplane/AIC-PLN-000%20-%20Airplane.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Airplane.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            --local vehicleGroup = GROUP:FindByName( "Cargo Vehicles Kutaisi" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-            --local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
-
-            --local  = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-            --local  = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kutaisi", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kutaisi", 5000, nil)
 
-            local destination = AIRBASE.Caucasus.Batumi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-            local speed = math.random( 300 , 500 )
+            --local destination = AIRBASE.Caucasus.Batumi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+            --local speed = math.random( 300 , 500 )
 
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+            --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-            activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, destination, speed, cargoGroupSet )
+            --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, destination, speed, cargoGroupSet )
 
 
 
@@ -7922,27 +8085,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
         ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
     elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            -- local infantryGroup = GROUP:FindByName( "Cargo Infantry Kutaisi" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-            --local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-            -- local cargoGroupSet = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kutaisi", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kutaisi", 5000, nil)
 
-            local pickupZone =  cargoZone.Warehouse_AB.blue.Kutaisi
-            local deployZone =  cargoZone.Warehouse.blue.Gori
-            local speed = math.random( 100 , 250 )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Kutaisi
+            --local deployZone =  cargoZone.Warehouse.blue.Gori
+            --local speed = math.random( 100 , 250 )
 
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+            --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -7964,8 +8117,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local target = targets[ math.random( 1 , #targets ) ]
             local home = warehouse.Kutaisi
 
-
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+            -- -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8104,8 +8258,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
                 if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
                 if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
                 if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                 logging('info', { 'main' , 'Kvitiri scheduler - start time:' .. start_sched *  kvitiri_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -8342,28 +8496,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
       elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
 
-              -- vedi:
-              -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/PLN%20-%20Airplane/AIC-PLN-000%20-%20Airplane/AIC-PLN-000%20-%20Airplane.lua
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Airplane.html
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-              -- local vehicleGroup = GROUP:FindByName( "Cargo Vehicles Kvitiri" )
-              -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-              -- local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
-
-              -- local  = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-              --local  = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
 
               -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kvitiri", 5000, nil)
+              --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kvitiri", 5000, nil)
 
 
-              local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
-              local speed = math.random( 300 , 500 )
+              --local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+              --local speed = math.random( 300 , 500 )
 
-              logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+              --logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kvitiri, destination, speed, cargoGroupSet )
+              --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kvitiri, destination, speed, cargoGroupSet )
 
 
 
@@ -8373,28 +8516,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
       elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            --local infantryGroup = GROUP:FindByName( "Cargo Infantry Kvitiri" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-            --local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-            --local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-            --local cargoGroupSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri", 5000, nil)
 
-            local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri
-            local deployZone =  cargoZone.Warehouse.blue.Zestafoni
-            local speed = math.random( 100 , 250 )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri
+            --local deployZone =  cargoZone.Warehouse.blue.Zestafoni
+            --local speed = math.random( 100 , 250 )
 
-            logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+            --logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -8415,6 +8547,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
+            -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8548,11 +8681,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 local depart_time = defineRequestPosition( num_mission )
                 local pos = 1
 
-                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri_Helo, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON FARP") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+                if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON FARP") pos = pos + 1  end
                 if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                 logging('info', { 'main' , 'Kvitiri_Helo scheduler - start time:' .. start_sched *  kvitiri_helo_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -8577,29 +8710,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
           if request.assignment == "TRANSPORT INFANTRY FARP GORI" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            --local infantryGroup = GROUP:FindByName( "Cargo Infantry Kvitiri_Helo" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-            --local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-            --local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-            --local cargoGroupSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo", 5000, nil)
 
 
-            local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri_Helo
-            local deployZone =  cargoZone.Warehouse.blue.Gori
-            local speed = math.random( 100 , 250 )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri_Helo
+            --local deployZone =  cargoZone.Warehouse.blue.Gori
+            --local speed = math.random( 100 , 250 )
 
-            logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+            --logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -8611,29 +8733,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
       elseif request.assignment == "TRANSPORT INFANTRY FARP KHASHURI" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            -- local infantryGroup = GROUP:FindByName( "Cargo Infantry Kvitiri_Helo #001" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-            -- local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-            -- local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-            -- local cargoGroupSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo #001", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo #001", 5000, nil)
 
 
-            local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri_Helo
-            local deployZone =  cargoZone.Warehouse.blue.Khashuri
-            local speed = math.random( 100 , 250 )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri_Helo
+            --local deployZone =  cargoZone.Warehouse.blue.Khashuri
+            --local speed = math.random( 100 , 250 )
 
-            logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+            --logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -8645,29 +8756,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
       elseif request.assignment == "TRANSPORT VEHICLE FARP ZESTAFONI" then
 
-            -- vedi:
-            -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/PLN%20-%20Airplane/AIC-PLN-000%20-%20Airplane/AIC-PLN-000%20-%20Airplane.lua
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Airplane.html
-            -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-            -- local vehicleGroup = GROUP:FindByName( "Cargo Vehicles Kvitiri_Helo" )
-            -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
-            -- local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
-
-            -- local  = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-            -- local  = SET_CARGO:New():FilterPrefixes('Cargo Vehicles'):FilterStart()
 
             -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kvitiri_Helo", 5000, nil)
+            --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kvitiri_Helo", 5000, nil)
 
 
-            local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri_Helo
-            local deployZone =  cargoZone.Warehouse.blue.Zestafoni
-            local speed = math.random( 100 , 250 )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Kvitiri_Helo
+            --local deployZone =  cargoZone.Warehouse.blue.Zestafoni
+            --local speed = math.random( 100 , 250 )
 
-            logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+            --logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -8680,28 +8780,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
       elseif request.assignment == "TRANSPORT INFANTRY AIRBASE" then
 
 
-              -- vedi:
-              -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-              -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-              -- local infantryGroup = GROUP:FindByName( "Cargo Infantry Kvitiri_Helo #002" )
-              -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-              -- local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-              -- local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-              --local cargoGroupSet: = SET_CARGO:New():FilterPrefixes('Cargo Infantry'):FilterStart()
 
               -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              local  cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo #002", 5000, nil)
+              --local  cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kvitiri_Helo #002", 5000, nil)
 
 
-              local destination = AIRBASE.Caucasus.Vaziani
-              local speed = math.random( 100 , 250 )
+              --local destination = AIRBASE.Caucasus.Vaziani
+              --local speed = math.random( 100 , 250 )
 
-              logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+              --logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kvitiri_Helo, destination, speed, cargoGroupSet )
+              --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kvitiri_Helo, destination, speed, cargoGroupSet )
 
 
 
@@ -8724,6 +8813,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local home = warehouse.Kvitiri_Helo
 
             logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+            -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8871,6 +8962,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Zestafoni:GetAssignment(request)
@@ -8879,15 +8971,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'CZ_PEREVI_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param )
 
           elseif assignment == 'CZ_PEREVI_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
           elseif assignment == 'CZ_ONI_attack_3' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1  )
+              activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param  )
+
 
           else
 
@@ -9043,6 +9136,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Khashuri:GetAssignment(request)
@@ -9051,12 +9145,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1)
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
+
 
 
           elseif assignment == 'DIDMUKHA_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1)
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param)
+
 
           else
 
@@ -9247,6 +9343,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local groupset = groupset --Core.Set#SET_GROUP
           local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
           -- Get assignment of this request.
           local assignment = warehouse.Gori:GetAssignment(request)
@@ -9256,33 +9353,38 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- launch mission functions: mech
           if assignment == 'TSKHINVALI_Attack_APC' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
+
 
 
           elseif assignment == 'TSKHINVALI_attack_2' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
+
 
 
           elseif assignment == 'DIDMUKHA_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
+
 
 
 
           elseif assignment == 'SATIHARI_attack_1' then
 
-              activeGO_TO_BATTLE_BIS( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1 )
+              activeGO_TO_BATTLE( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
 
           elseif assignment == 'SATIHARI_attack_2' then
 
-               activeGO_TO_BATTLE_BIS( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1 )
+               activeGO_TO_BATTLE( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
           -- launch mission functions: helo
           elseif assignment == 'AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeGO_TO_ZONE_AIR( groupset, afacZone.Didmukha_Tsveri[1], 1 )
 
@@ -9290,11 +9392,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeGO_TO_ZONE_AIR( groupset, afacZone.Tskhunvali_Tkviavi[1], 1 )
 
 
 
           elseif assignment == 'ATTACK_ZONE_HELO_Didmukha_Tsveri' then
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeGO_TO_ZONE_AIR( groupset, redFrontZone.DIDMUKHA[1], 1 )
 
@@ -9308,17 +9414,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif assignment == 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeJTAC( 'air', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[1] )
 
 
 
           elseif assignment == 'JTAC_SATIHARI' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeJTAC( 'ground', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.SATIHARI[1] )
 
 
 
           elseif assignment == 'JTAC_TSKHINVALI' then
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeJTAC( 'ground', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[1] )
 
@@ -9688,10 +9800,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
-             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+             if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
+
              if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
              if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT") pos = pos + 1  end
 
@@ -9786,6 +9899,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.tbilisi[1]:GetName() } )
             --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+            -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeAWACS( groupset, warehouse.Tbilisi, blue_command_center, nil, blueAwacsZone.tbilisi, math.random(5000, 9000), 5000 )
 
@@ -9931,24 +10046,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
           elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
 
-            -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Tbilisi", 5000, nil)
+
+              --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Vehicles' ):FilterStart()
 
 
-            -- devi creare dei cargo vehicles con GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
-            -- esempio VehicleA #CARGO(T=Vehicles,RR=500,NR=30)
-            -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
-            local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Vehicles' ):FilterStart()
+              --local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+              --local speed = math.random( 300 , 500 )
 
+              --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+              --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
 
-              local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-              local speed = math.random( 300 , 500 )
-
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-              activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
-
-              --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-              --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, 'Vehicles',"Cargo Vehicles Tbilisi", speed)
 
 
 
@@ -9960,23 +10067,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
           elseif request.assignment == "TRANSPORT INFANTRY AIRBASE" then
 
 
-            -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
 
-            -- devi creare dei cargo vehicles con GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
-            -- esempio InfantryA #CARGO(T=Infantry,RR=500,NR=30)
-            -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
-            local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+            --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
 
 
-            local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-            local speed = math.random( 300 , 500 )
+            --local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+            --local speed = math.random( 300 , 500 )
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-            activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
 
-            --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-            --activeCargo('airplane', groupset, AIRBASE.Caucasus.Tbilisi_Lochini, destination, 'Infantry',"Cargo Infantry Tbilisi", speed)
+            --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+            --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
 
 
 
@@ -9990,50 +10090,32 @@ if conflictZone == 'Zone 1: South Ossetia' then
             elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
 
-              -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              -- local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
+
+              --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
 
 
-              -- devi creare dei cargo vehicles con GroupName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
-              -- esempio InfantryA #CARGO(T=Infantry,RR=500,NR=30)
-              -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
-              local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+              --local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
+              --local deployZone =  cargoZone.Warehouse.blue.Gori
+              --local speed = math.random( 100 , 250 )
 
-
-              local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
-              local deployZone =  cargoZone.Warehouse.blue.Gori
-              local speed = math.random( 100 , 250 )
-
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-              activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-              -- logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
-              -- activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Tbilisi", speed)
+              --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+              --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
           ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
           elseif request.assignment == "TRANSPORT CRATE FARP" then
 
-                -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-                -- local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Tbilisi", 5000, nil)
+
+                --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Workmaterials' ):FilterStart()
 
 
-                -- devi creare dei cargo vehicles con StaticName #CARGO(T=CargoTypeName,RR=Range,NR=Range)
-                -- esempio Materials #CARGO(T=Workmaterials,RR=500,NR=30)
-                -- vedi: https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.Cargo.html
-                local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Workmaterials' ):FilterStart()
+                --local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
+                --local deployZone =  cargoZone.Warehouse.blue.Gori
+                --local speed = math.random( 100 , 250 )
 
-
-                local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
-                local deployZone =  cargoZone.Warehouse.blue.Gori
-                local speed = math.random( 100 , 250 )
-
-                logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-                activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-                -- logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - speed: ' .. speed .. ' - destination: ' .. deployZone:GetName() } )
-                -- activeCargo('helicopter', groupset, pickupZone, deployZone, 'Infantry',"Cargo Infantry Tbilisi", speed)
+                --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+                --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -10136,6 +10218,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local home = warehouse.warehouse.Tbilisi
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -10290,8 +10375,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
                   if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
                   if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
                   if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
-                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+                  if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
                   if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                   logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -10528,30 +10613,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
             elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
 
-                -- vedi:
-                -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/PLN%20-%20Airplane/AIC-PLN-000%20-%20Airplane/AIC-PLN-000%20-%20Airplane.lua
-                -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Airplane.html
-                -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
 
-                -- local vehicleGroup = GROUP:FindByName( "Cargo Vehicles Vaziani" )
-                -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :
+                --local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
 
-                -- local vehicleCargo = CARGO_GROUP:New( vehicleGroup, "Vehicles", "Cargo Vehicles", 5000 )
+                --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles", 5000, nil)
+
 
                 local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
 
-                -- local  = SET_CARGO:New():FilterTypes( "Vehicles" ):FilterStart()
-                -- local  = SET_CARGO:New():FilterPrefixes('Vehicles'):FilterStart()
+                --local speed = math.random( 300 , 500 )
 
-                -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-                local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles", 5000, nil)
+                --logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-
-                local speed = math.random( 300 , 500 )
-
-                logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-
-                activeCargoAirPlane( groupset, AIRBASE.Caucasus.Vaziani, destination, speed, cargoGroupSet )
+                --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Vaziani, destination, speed, cargoGroupSet )
 
 
 
@@ -10560,28 +10634,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
             ----------------------------------------------------------------------------------------------------- assignment for TRASNPORT asset
         elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-                -- vedi:
-                -- https://github.com/FlightControl-Master/MOOSE_MISSIONS/blob/master/AIC%20-%20AI%20Cargo/HEL%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter/AIC-HEL-000%20-%20Helicopter.lua
-                -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_Cargo_Helicopter.html
-                -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-
-                -- local infantryGroup = GROUP:FindByName( "Cargo Infantry Vaziani" )
-                -- CARGO_GROUP:New(CargoGroup, Type, Name, LoadRadius, NearRadius) :   https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Cargo.CargoGroup.html##(CARGO_GROUP).New
-                -- local infantryCargo = CARGO_GROUP:New( infantryGroup, "Infantry", "Cargo Infantry", 5000 )
-
-                -- local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-
-                -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-                local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Vaziani", 5000, nil)
 
 
-                local pickupZone =  cargoZone.Warehouse_AB.blue.Vaziani
-                local deployZone =  cargoZone.Warehouse.blue.Khashuri
-                local speed = math.random( 100 , 250 )
+                --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Vaziani", 5000, nil)
 
-                logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-                activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+                --local pickupZone =  cargoZone.Warehouse_AB.blue.Vaziani
+                --local deployZone =  cargoZone.Warehouse.blue.Khashuri
+                --local speed = math.random( 100 , 250 )
+
+                --logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+
+                --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
@@ -10601,6 +10665,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local home = warehouse.Vaziani
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -11244,7 +11311,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- Attualmente i solt gestiti dalla AI effettuano CAP, considerando che le CAP e le CGI sono gestiti tramite l'apposita sezione,
     -- cambia il task delle AI facendogli effettuare missioni BAI, CAS o RECO
 
-    local activeBalancer = true
+
+    local activeBalancer = false
+
 
     if activeBalancer then
 
@@ -11312,7 +11381,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       local num_bal = #RU_PlanesClientSet
 
-      if num_bal > #RU_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set client higher('.. num_bal ..') of set plane spawn(' .. #RU_PlanesSpawn .. ')' } )  end
+      if num_bal > #RU_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set red client higher('.. num_bal ..') of set plane spawn(' .. #RU_PlanesSpawn .. ')' } )  end
 
       -- We setup an array to store all the AI_BALANCERS that are going to be created. Basically one
       -- per airbase. We loop through and create an AI_BALANCER as well as a separate OnAfterSpawned
@@ -11396,9 +11465,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
       BLUE_PlanesClientSet[3] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Vaziani AB")
       BLUE_PlanesClientSet[4] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Tbilisi AB")
 
+      num_bal = #BLUE_PlanesClientSet
+
+      if num_bal > #BLUE_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set blue client higher('.. num_bal ..') of set plane spawn(' .. #BLUE_PlanesSpawn .. ')' } )  end
+
       BLUE_AI_Balancer = {}
 
-      for i = 1, 4 do
+      for i = 1, #BLUE_PlanesClientSet do
 
         BLUE_AI_Balancer[i] = AI_BALANCER:New( BLUE_PlanesClientSet[i], BLUE_PlanesSpawn[i] )
 
@@ -11496,9 +11569,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     -- Setup generale
 
-    local activeRedCAP = false
+    local activeRedCAP = true
     local activeRedGCI = true
-    local activeBlueCAP = false
+    local activeBlueCAP = true
     local activeBlueGCI = true
 
     local categories = {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}
@@ -11745,85 +11818,227 @@ if conflictZone == 'Zone 1: South Ossetia' then
     ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
 
 
-    ------------------------------------------------------------------------   NOTA DEVE ESSERE ANCORA IMPLEMENTATO IN MOOSE -----------------------
 
     -- info @ https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/AI.AI_A2G_Dispatcher.html
 
-    local activeAI_A2G_Dispatching = false
+    local activeAI_A2G_Dispatching_Red = true
+    local activeAI_A2G_Dispatching_Blue = false
 
-    if activeAI_A2G_Dispatching then
-
-        -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
-       -- Here we build the network with all the groups that have a name starting with CCCP Recce.
-       --local DetectionSetGroupRed = SET_GROUP:New() -- Defene a set of group objects, caled DetectionSetGroup.
-
-       --local DetectionSetGroupRed:FilterPrefixes( { "RED RECON" } ) -- The DetectionSetGroup will search for groups that start with the name "CCCP Recce".
-
-       -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
-       -- which have a group name starting with "CCCP Recce", then these will be automatically added or removed from the set.
-       --local DetectionSetGroupRed:FilterStart()
-
-       -- This command defines the reconnaissance network.
-       -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-       -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-       --local DetectionRed = DETECTION_AREAS:New( DetectionSetGroupRed, 1000 )
-
-       -- Setup the A2A dispatcher, and initialize it.
-       --local A2GDispatcherRed = AI_A2G_DISPATCHER:New( DetectionRed )
+    if activeAI_A2G_Dispatching_Red then
 
 
-       -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-       --A2GDispatcherRed:SetDefenseRadius( 30000 ) -- 30Km
+        logging('enter', 'activeAI_A2G_Dispatching_Red' )
 
-       -- A2GDispatcher:SetDefenseReactivityHigh()
+        -- il detectionSetGroup va istanziato globalmente e suddiviso nelle diverse zone:
+        -- detectionSetGroupHq1, ..
+        -- dalle Farp vengono generati voli FAC e addizionati ai detectionSetGroup di competenza
+        -- conviene suddividere tra gli aeroporti le tipologie SEAD, BAI e CAS
+        -- local detectionGroup = generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude)
 
 
 
-       -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-       -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-       -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line.
+        printGroupSet( detectionGroupSetRed )
 
 
-       ------------------------------------------------------------------------   Red HQ1:  --------------------------------------------------------------
+        local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1
+        local activeAI_A2G_Dispatching_HQ2 = false -- per il teatro 2
+        local activeAI_A2G_Dispatching_HQ3 = false -- per il teatro 3
 
-       --local HQ_RED_1 = GROUP:FindByName( "HQ_RED_1" )
-
-
-       -- Add defense coordinates.
-       --A2GDispatcherRed:AddDefenseCoordinate( HQ_RED_1:GetName(), HQ_RED_1:GetCoordinate() )
-
-       --A2GDispatcherRed:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
-       --A2GDispatcherRed:SetSquadronSead( "Nalchik SEAD", 500, 700, 2000, 4000 )
-       -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-       -- nota: puoi usare anche:
-       -- A2GDispatcher:SetSquadronSeadPatrol( "Maykop SEAD", PatrolZone, 300, 500, 50, 80, 250, 300 ) insieme a  A2GDispatcher:SetSquadronPatrolInterval( "Maykop SEAD", 2, 30, 60, 1, "SEAD" )
-       -- permettono di avere gli aerei in patrol pronti ad intervenire
-       --A2GDispatcherRed:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
-       --A2ADispatcherRed:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti
-       --A2ADispatcherRed:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
+        -- A2G Dispatching for Red HQ1
+        if activeAI_A2G_Dispatching_HQ1 then
 
 
-       --A2GDispatcherRed:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.CAS_Su_17M4_Rocket,  air_template_red.CAS_Su_17M4_Cluster }, 12 )
-       --A2GDispatcherRed:SetSquadronSead( "Nalchik CAS", 500, 700, 3000, 5000 )
+           local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
+           local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
 
-       --A2GDispatcherRed:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, { air_template_red.CAS_Su_17M4_Bomb, air_template_red.BOM_SU_17_Structure }, 10 )
-       --A2GDispatcherRed:SetSquadronSead( "Nalchik BAI", 500, 700, 6000, 10000 )
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() } )
 
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-       ------------------------------------------------------------------------   Red HQ2:  --------------------------------------------------------------
+           -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
 
-       ------------------------------------------------------------------------   Red HQ3:  --------------------------------------------------------------
-
-       ------------------------------------------------------------------------   Red HQ4:  --------------------------------------------------------------
+           detectionGroup:StartUncontrolled()
+           detectionGroup:OptionROTPassiveDefense()
+           local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
+           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+           local WayPoints = {}
+           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+           detectionGroup:Route( WayPoints )
 
 
 
 
+            -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
+           --local detectionSetGroup = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+
+           --detectionGroupSetRed:AddGroup(detectionGroup)
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , ' - ' .. printGroupSet( detectionGroupSetRed ) } )
+
+           --detectionGroup:HandleEvent( EVENTS.Dead,  )
+
+           function detectionGroup:OnEventDead( EventData )
+
+              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+              logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+              -- When the last detectionGroup of the group is declared dead, respawn the group.
+              if detectionGroup:GetSize() == 1 then
+
+                local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                -- NON RILEVA L'EVENTO!!
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                detectionGroup:StartUncontrolled()
+                detectionGroup:OptionROTPassiveDefense()
+                detectionGroup:Route(WayPoints)
+
+              end
+
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+           function detectionGroup:OnEventCrash( EventData )
+
+                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                logging('info', { 'detectionGroup:OnEventCrash( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                -- When the last detectionGroup of the group is declared dead, respawn the group.
+                if detectionGroup:GetSize() == 1 then
+
+                  local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                  -- NON RILEVA L'EVENTO!!
+                  logging('info', { 'detectionGroup:OnEventCrash( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                  detectionGroup:StartUncontrolled()
+                  detectionGroup:OptionROTPassiveDefense()
+                  detectionGroup:Route(WayPoints)
+
+                end
+
+            end -- end function detectionGroup:OnEventCrash( EventData )
 
 
-    end --activeAI_A2G_Dispatching then
+            function detectionGroup:OnEventLand( EventData )
 
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                     -- NON RILEVA L'EVENTO!!
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     detectionGroup:StartUncontrolled()
+                     detectionGroup:OptionROTPassiveDefense()
+                     detectionGroup:Route(WayPoints)
+
+                   end
+
+             end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+           -- This command defines the reconnaissance network.
+           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
+
+           -- Setup the A2A dispatcher, and initialize it.
+           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+           A2GDispatcher:SetTacticalDisplay(true)
+
+           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+           A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+           -- Add defense coordinates.
+           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+           -- default Setting
+           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+           --A2GDispatcher:SetDefaultLandingAtRunway()
+           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+           A2GDispatcher:SetDefaultOverhead( 0.2 )
+           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+           A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+           A2GDispatcher:SetDefaultPatrolLimit(2)
+
+           --A2GDispatcher:SetDefaultGrouping()
+
+
+
+
+           A2GDispatcher:SetSquadron( "Beslan CAS", AIRBASE.Caucasus.Beslan, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           A2GDispatcher:SetSquadronCas( "Beslan CAS", 500, 700, 2000, 4000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
+           --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+           --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
+
+           A2GDispatcher:SetSquadron( "Beslan BAI", AIRBASE.Caucasus.Beslan, { air_template_red.GA_SU_24M_Bomb }, 10 )
+           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           A2GDispatcher:SetSquadronBai( "Beslan BAI", 500, 700, 3000, 5000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan BAI" )
+
+
+           A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, { air_template_red.GA_Mig_27K_ROCKET_Light }, 10 )
+           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           A2GDispatcher:SetSquadronSeadPatrol( "Beslan SEAD", redPatrolZone.nalchik[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronSeadPatrolInterval("Beslan SEAD", 2)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
+
+
+
+
+        end -- end if
+
+        if activeAI_A2G_Dispatching_HQ2 then
+        end
+
+        if activeAI_A2G_Dispatching_HQ3 then
+        end
+
+    end -- end if activeAI_A2G_Dispatching_Red
+
+
+    if activeAI_A2G_Dispatching_Blue then
+
+    end
+
+
+
+    ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
 
 
 
