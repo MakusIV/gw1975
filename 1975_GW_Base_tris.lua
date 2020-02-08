@@ -341,7 +341,7 @@ end
 -- @param: type_aircraft ('fighter_bomber', 'bomber', 'helicopter')
 function calcParamForBAI(type_aircraft)
 
-    local debug = false
+  local debug = false
 
   if debug then logging('enter', 'calcParamForBAI(type_aircraft)') end
 
@@ -404,6 +404,43 @@ function calcParamForBAI(type_aircraft)
   return speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB
 
 end
+
+
+function addGroupSet(targetGroupSet, groupSet)
+
+  local debug = true
+
+  if debug then logging('enter', 'addGroupSet(targetGroupSet, groupSet)') end
+
+  for _, _group in pairs(groupSet:GetSet()) do
+
+    local group = _group --Wrapper.Group#GROUP
+    targetGroupSet:AddGroup(group)
+    if debug then logging('finest', { 'addGroupSet(targetGroupSet, groupSet)' , 'added group: ' .. group:GetName() .. ' in set_group: ' .. targetGroupSet:GetObjectNames()} ) end
+
+  end -- end for
+
+  if debug then logging('exit', 'addGroupSet(targetGroupSet, groupSet)') end
+
+end
+
+
+function printGroupSet( groupSet )
+
+  local names = 'Name for ' .. groupSet:GetObjectNames()
+
+  for _, _group in pairs( groupSet:GetSet()) do
+
+    local group = _group --Wrapper.Group#GROUP
+
+    names = names .. ' - ' .. group:GetName()
+
+  end -- end for
+
+  return names
+
+end
+
 
 
 
@@ -3146,18 +3183,16 @@ end -- end function
 -- @param detectionAltitude = la quota del task detection
 -- @param homeAirbase = l'airbase di partenza'
 -- @param detectionZone = la zona relativa la task detection
-function generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)
+function generateDetectioA2G_Group(name, detectionGroup, aircraftTemplate, routeAltitude, detectionAltitude, airbase, detectionZone)
 
   local debug = true
 
   if debug then logging('enter', 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)') end
 
-  local spawnDetectionGroup = SPAWN:New(aircraftTemplate)
+  --local airbase = AIRBASE:FindByName(homeAirbase)
+  --logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'airbase = ' .. airbase:GetName() } )
 
-  local airbase = AIRBASE:FindByName(homeAirbase)
-  logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'airbase = ' .. airbase:GetName() } )
-
-  local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+  --detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
   logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
   detectionGroup:StartUncontrolled()
@@ -3197,7 +3232,7 @@ function generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detect
 
   if debug then logging('exit', 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)') end
 
-  return detectionGroup
+  return
 
 end
 
@@ -4654,6 +4689,19 @@ local MovePrefixesRed = {
   red_command_center = COMMANDCENTER:New( HQ_RED, 'RED_HQ' )
 
 
+  -- SET_Group dedicati alla Detection A2G
+  -- Red side
+  detectionGroupSetRed = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+  detectionGroupSetRed:FilterPrefixes( { "SQ red REC", "SQ red FAC", "RUSSIAN JTAC", "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+  detectionGroupSetRed:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+
+
+  -- Blue side
+  detectionGroupSetBlue = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+  detectionGroupSetBlue:FilterPrefixes( { "SQ blue REC", "SQ blue FAC", "GEORGIAN JTAC", "DF GEORGIA AWACS", "DF GEORGIA EWR", "DF USA EWR", "DF USA AWACS", "SQ blue AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+  detectionGroupSetBlue:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+
+
 
 
 
@@ -5065,12 +5113,15 @@ local MovePrefixesRed = {
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
 
+            addGroupSet(detectionGroupSetRed, groupset)
+
 
             if lenAttackGroupForAFACSet > 0 then
 
               local attackgroup = attackGroupForAFACSet[ lenAttackGroupForAFACSet ]
               lenAttackGroupForAFACSet = lenAttackGroupForAFACSet - 1
               logging('finer', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - lenAttackGroupForAFACSet = ' .. lenAttackGroupForAFACSet .. '  -  attack Group assegnati a AFAC asset:  ' .. attackgroup:GetObjectNames()} )
+
               activeAFAC( groupset, attackgroup, afacZone.Didmukha_Tsveri, afacZone.Didmukha_Tsveri, red_command_center, 'AFAC_HELO' )
 
             else
@@ -5082,6 +5133,8 @@ local MovePrefixesRed = {
 
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+            addGroupSet(detectionGroupSetRed, groupset)
 
 
             if lenAttackGroupForAFACSet > 0 then -- verifica se c'e' almeno un gruppo CAS dedicato disponibile nella lista di CAS dedicate
@@ -5454,6 +5507,8 @@ local MovePrefixesRed = {
 
           elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
 
+            addGroupSet(detectionGroupSetRed, groupset)
+
 
             if lenAttackGroupForAFACSet > 0 then
 
@@ -5471,6 +5526,8 @@ local MovePrefixesRed = {
 
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+            addGroupSet(detectionGroupSetRed, groupset)
 
 
             if lenAttackGroupForAFACSet > 0 then -- verifica se c'e' almeno un gruppo CAS dedicato disponibile nella lista di CAS dedicate
@@ -6577,6 +6634,8 @@ local MovePrefixesRed = {
             logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. redPatrolZone.beslan[1]:GetName() } )
             --logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+            addGroupSet(detectionGroupSetRed, groupset)
+
             activeAWACS( groupset, warehouse.Beslan, blue_command_center, nil, redAwacsZone.beslan, math.random(6000, 9000), 6000 )
 
 
@@ -7390,6 +7449,8 @@ local MovePrefixesRed = {
             logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName() } )
             --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+            -- addGroupSet(detectionGroupSetBlue, groupset)
+
             activeAWACS( groupset, warehouse.Batumi, blue_command_center, nil, blueAwacsZone.gori, math.random(6000,8000), 5000 )
 
 
@@ -7608,6 +7669,8 @@ local MovePrefixesRed = {
 
 
               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -7845,6 +7908,8 @@ local MovePrefixesRed = {
           logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName()} )
           --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+          -- addGroupSet(detectionGroupSetBlue, groupset)
+
           activeAWACS( groupset, warehouse.Kutaisi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(5000, 9000), 5000 )
 
 
@@ -8046,6 +8111,8 @@ local MovePrefixesRed = {
 
 
             logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+            -- -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8473,6 +8540,7 @@ local MovePrefixesRed = {
 
             logging('info', { 'warehouse.Kvitiri:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
+            -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -8738,6 +8806,8 @@ local MovePrefixesRed = {
             local home = warehouse.Kvitiri_Helo
 
             logging('info', { 'warehouse.Kvitiri_Helo:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+            -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -9301,17 +9371,23 @@ local MovePrefixesRed = {
           -- launch mission functions: helo
           elseif assignment == 'AFAC_ZONE_Tskhunvali_Tkviavi' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeGO_TO_ZONE_AIR( groupset, afacZone.Didmukha_Tsveri[1], 1 )
 
 
 
           elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeGO_TO_ZONE_AIR( groupset, afacZone.Tskhunvali_Tkviavi[1], 1 )
 
 
 
           elseif assignment == 'ATTACK_ZONE_HELO_Didmukha_Tsveri' then
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeGO_TO_ZONE_AIR( groupset, redFrontZone.DIDMUKHA[1], 1 )
 
@@ -9325,17 +9401,23 @@ local MovePrefixesRed = {
 
           elseif assignment == 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeJTAC( 'air', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[1] )
 
 
 
           elseif assignment == 'JTAC_SATIHARI' then
 
+              -- addGroupSet(detectionGroupSetBlue, groupset)
+
               activeJTAC( 'ground', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.SATIHARI[1] )
 
 
 
           elseif assignment == 'JTAC_TSKHINVALI' then
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeJTAC( 'ground', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[1] )
 
@@ -9804,6 +9886,8 @@ local MovePrefixesRed = {
             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.tbilisi[1]:GetName() } )
             --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+            -- addGroupSet(detectionGroupSetBlue, groupset)
+
             activeAWACS( groupset, warehouse.Tbilisi, blue_command_center, nil, blueAwacsZone.tbilisi, math.random(5000, 9000), 5000 )
 
 
@@ -10119,6 +10203,8 @@ local MovePrefixesRed = {
               local home = warehouse.warehouse.Tbilisi
 
               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -10561,6 +10647,8 @@ local MovePrefixesRed = {
               local home = warehouse.Vaziani
 
               logging('info', { 'warehouse.Vaziani:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+              -- addGroupSet(detectionGroupSetBlue, groupset)
 
               activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
@@ -11720,23 +11808,28 @@ local MovePrefixesRed = {
 
         logging('enter', 'activeAI_A2G_Dispatching_Red' )
 
-        -- il detectionSetGroup va istanziato globalmente e suddiviso nelle divverse zone:
+        -- il detectionSetGroup va istanziato globalmente e suddiviso nelle diverse zone:
         -- detectionSetGroupHq1, ..
         -- dalle Farp vengono generati voli FAC e addizionati ai detectionSetGroup di competenza
         -- conviene suddividere tra gli aeroporti le tipologie SEAD, BAI e CAS
         -- local detectionGroup = generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude)
 
 
-        local activeAI_A2G_Dispatching_HQ1 = true
-        local activeAI_A2G_Dispatching_HQ2 = false
-        local activeAI_A2G_Dispatching_HQ3 = false
+
+        printGroupSet( detectionGroupSetRed )
+
+
+        local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1
+        local activeAI_A2G_Dispatching_HQ2 = false -- per il teatro 2
+        local activeAI_A2G_Dispatching_HQ3 = false -- per il teatro 3
 
         -- A2G Dispatching for Red HQ1
         if activeAI_A2G_Dispatching_HQ1 then
 
+
            local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
-           local spawnDetectionGroup = SPAWN:New(air_template_red.REC_SU_24MR)
-           local airbase = AIRBASE:FindByName(AIRBASE.Caucasus.Beslan)
+           local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() } )
 
@@ -11744,28 +11837,34 @@ local MovePrefixesRed = {
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
+           -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
+
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Tskhunvali_Tkviavi[1]:GetRandomCoordinate():SetAltitude(7000)
-           local HomeCoord=airbase:GetCoordinate():SetAltitude(7000)
-           local task = detectionGroup:TaskOrbitCircle(2000, detectionGroup:GetSpeedMax()*0.5, ToCoord)
-           local WayPoints={}
-           WayPoints[1]=airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[2]=ToCoord:WaypointAirTurningPoint(nil, detectionGroup:GetSpeedMax()*0.5, {task}, "Detection for ground threat")
-           WayPoints[3]=HomeCoord:WaypointAirTurningPoint()
-           WayPoints[4]=airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route(WayPoints)
+           local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
+           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+           local WayPoints = {}
+           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+           detectionGroup:Route( WayPoints )
 
 
-           -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', air_template_red.REC_SU_24MR, 7000, 2000, AIRBASE.Caucasus.Beslan, afacZone.Tskhunvali_Tkviavi[1])
+
 
             -- Define a SET_GROUP object that builds a collection of groups that define the recce network.
-           local detectionSetGroup = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
-           detectionSetGroup:FilterPrefixes( { "RED GROUND RECON A2G", "RED AIR RECON A2G", "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
-           detectionSetGroup:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
-           detectionSetGroup:AddGroup(detectionGroup)
+           --local detectionSetGroup = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
 
-           detectionGroup:HandleEvent( EVENTS.Dead )
+           --detectionGroupSetRed:AddGroup(detectionGroup)
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , ' - ' .. printGroupSet( detectionGroupSetRed ) } )
+
+           --detectionGroup:HandleEvent( EVENTS.Dead,  )
+
            function detectionGroup:OnEventDead( EventData )
 
               --self:E( { "Size ", Size = detectionGroup:GetSize() } )
@@ -11777,7 +11876,7 @@ local MovePrefixesRed = {
                 local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
                 -- NON RILEVA L'EVENTO!!
-                logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
                 detectionGroup:StartUncontrolled()
                 detectionGroup:OptionROTPassiveDefense()
@@ -11785,7 +11884,50 @@ local MovePrefixesRed = {
 
               end
 
-           end
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+           function detectionGroup:OnEventCrash( EventData )
+
+                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                logging('info', { 'detectionGroup:OnEventCrash( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                -- When the last detectionGroup of the group is declared dead, respawn the group.
+                if detectionGroup:GetSize() == 1 then
+
+                  local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                  -- NON RILEVA L'EVENTO!!
+                  logging('info', { 'detectionGroup:OnEventCrash( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                  detectionGroup:StartUncontrolled()
+                  detectionGroup:OptionROTPassiveDefense()
+                  detectionGroup:Route(WayPoints)
+
+                end
+
+            end -- end function detectionGroup:OnEventCrash( EventData )
+
+
+            function detectionGroup:OnEventLand( EventData )
+
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                     -- NON RILEVA L'EVENTO!!
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     detectionGroup:StartUncontrolled()
+                     detectionGroup:OptionROTPassiveDefense()
+                     detectionGroup:Route(WayPoints)
+
+                   end
+
+             end -- end function detectionGroup:OnEventLand( EventData )
 
 
 
@@ -11798,7 +11940,7 @@ local MovePrefixesRed = {
            -- This command defines the reconnaissance network.
            -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
            -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           local detection = DETECTION_AREAS:New( detectionSetGroup, 1000 )
+           local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
            -- Setup the A2A dispatcher, and initialize it.
            local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
@@ -11834,25 +11976,25 @@ local MovePrefixesRed = {
 
 
            A2GDispatcher:SetSquadron( "Beslan CAS", AIRBASE.Caucasus.Beslan, { air_template_red.CAS_Su_17M4_Rocket }, 10 )
-           -- SEAD MISSION: invia attacchi se rilevata minaccia SAM
-           -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
            A2GDispatcher:SetSquadronCas( "Beslan CAS", 500, 700, 2000, 4000 )
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
            --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
            --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
 
            A2GDispatcher:SetSquadron( "Beslan BAI", AIRBASE.Caucasus.Beslan, { air_template_red.GA_SU_24M_Bomb }, 10 )
-           -- SEAD MISSION: invia attacchi se rilevata minaccia SAM
-           -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
            A2GDispatcher:SetSquadronBai( "Beslan BAI", 500, 700, 3000, 5000 )
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan BAI" )
 
 
            A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, { air_template_red.GA_Mig_27K_ROCKET_Light }, 10 )
-           -- SEAD MISSION: invia attacchi se rilevata minaccia SAM
-           -- AI_A2G_DISPATCHER:SetSquadronSead(SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
            A2GDispatcher:SetSquadronSeadPatrol( "Beslan SEAD", redPatrolZone.nalchik[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronBaiPatrolInterval("Beslan SEAD", 2)
+           A2GDispatcher:SetSquadronSeadPatrolInterval("Beslan SEAD", 2)
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
 
 
