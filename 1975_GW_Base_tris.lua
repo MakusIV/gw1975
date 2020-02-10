@@ -501,9 +501,9 @@ function configureAI_A2GDispatcher(A2GDispatcher, defenceRadius, defenceReactivi
     -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
     A2GDispatcher:SetDefenseRadius( defenceRadius ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
 
-    if defenceReactivity = 'low' then SetDefenseReactivityLow()
-    elseif defenceReactivity = 'medium' then SetDefenseReactivityMedium()
-    elseif defenceReactivity = 'high' then SetDefenseReactivityHigh()
+    if defenceReactivity == 'low' then A2GDispatcher:SetDefenseReactivityLow()
+    elseif defenceReactivity == 'medium' then A2GDispatcher:SetDefenseReactivityMedium()
+    elseif defenceReactivity == 'high' then A2GDispatcher:SetDefenseReactivityHigh()
     else SetDefenseReactivityLow() end
 
 
@@ -11995,9 +11995,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
 
-             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-             --[[
+
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
@@ -12009,7 +12009,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-             ]]
+
 
 
 
@@ -12082,10 +12082,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
              -- Setup the A2A dispatcher, and initialize it.
              local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-             configureAI_A2GDispatcher(A2GDispatcher, 5000, 'high', HQ1, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 2,true )
+             --configureAI_A2GDispatcher(A2GDispatcher, 5000, 'high', HQ1, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 2,true )
 
 
-             --[[
+
              A2GDispatcher:SetTacticalDisplay(true)
 
              -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
@@ -12112,7 +12112,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
              A2GDispatcher:SetDefaultPatrolLimit(2)
 
-             ]]
+
 
 
 
@@ -12174,8 +12174,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
 
-             assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 7000, 2000, 0.5 )
-             --[[
+             --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 7000, 2000, 0.5 )
+
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
@@ -12187,7 +12187,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-             ]]
+
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12309,7 +12309,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
 
 
-             A2GDispatcher:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchikn, baiTemplate, 10 )
+             A2GDispatcher:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, baiTemplate, 10 )
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
              -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
              A2GDispatcher:SetSquadronBai( "Nalchik BAI", 500, 700, 3000, 5000 )
@@ -12703,7 +12703,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = Farp Gori' } )
 
-           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Gori[1] )
+           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Gori[1] )
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12852,7 +12852,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     if activeAI_A2G_Dispatching_HQ3 then
     end
 
-  end
+  end -- if activeAI_A2G_Dispatching_Blue
 
 
 
