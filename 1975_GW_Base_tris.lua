@@ -9,7 +9,7 @@ oggetto:    lua script file dedicato alla realizzazione di un server DCS in cui 
 
 
 
-autor: Marco Bellafante
+autor: MarkusIV
 
 stato:   sviluppo
 
@@ -32,23 +32,6 @@ disabilitato l'airbalancer
 
 
 
-5.1.2020:  assegnare un nome ai gruppi aerei/ground per poter essere utilizzati per info, come detection (awacs) e come targets
- vedere come la detection agisce nella AI.AI.A2A per utilizzarla nelle patrol da warehouse e/o nel balancer
-
-
-23.12.2019:
-la funzione OnAfterDelivered(From,Event,To,request) per tutte le WH puo' essere eliminata: lo scheduler si occupa del rinvio degli asset
-Aggiornare il codice nelle funzioni OnAfterSelfRequest, OnAfterAssetDead come per le _addRequest
-
-
-
-in tutte le warehouse c'e un gruppo sconosciuto
-
-
-
-NOTA: il file dcs.log in C:\Users\marco\Saved Games\DCS.openbeta\Logs aggiunge in coda tutti gli eventi di una sessione DCS: se non viene chiuso DCS
-      i log di diverse missioni vengono accodati, guarda l'orario degli eventi per distinguerli tra le diverse missioni.
-
 definisci in ME tutti i template relativi alle unit� da utilizzare: Aircraft, Veichle, Ship, ecc. utilizzando la nomenclatura definita in Moose:
 
 per Aircraft:
@@ -56,10 +39,6 @@ name, pilot: = SQ <coalition> <role> <aircraft>
 <role> : = GCI , CAP_Long, CAP_Medium, ATTACK_1, ... ecc..
 <aircraft> := SU-27, ....
 <coalition> := red, blue
-
-per Veichle:
-
-warhouse:
 
 
 verifica se in runtime riesci ad interrogare il database di DCS sugli aerei:
@@ -5198,18 +5177,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
         function()
 
           local num_mission = 3
-          local num_mission_helo = 2
-          local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+          --local num_mission_helo = 2
+          --local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
           local depart_time = defineRequestPosition( num_mission ) -- ground mission
           local pos = 1
-          local pos_heli = 1
+          --local pos_heli = 1
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if true and pos_heli <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-          if true and pos_heli <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
+          --if true and pos_heli <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+          --if true and pos_heli <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
           -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          if true and (pos_heli-2) <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
-          if true and (pos_heli-1) <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
+          --if true and (pos_heli-2) <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
+          --if true and (pos_heli-1) <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
           if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
           if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
@@ -5256,7 +5235,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
 
-
+        --[[
         elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
 
           addGroupSet(detectionGroupSetRed, groupset)
@@ -5322,7 +5301,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           --activeGO_TO_ZONE_AIR( groupset,  redFrontZone.DIDMUKHA[1], 0.8 )
           --RecceGroundDetection( groupset, red_command_center, true, 10, 10 )
 
-
+]]
         else
 
           logging('warning', { 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
@@ -5601,18 +5580,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
         function()
 
           local num_mission = 3
-          local num_mission_helo = 2
-          local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+          --local num_mission_helo = 2
+          --local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
           local depart_time = defineRequestPosition( num_mission ) -- ground mission
           local pos = 1
-          local pos_heli = 1
+          --local pos_heli = 1
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if true and pos_heli <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-          if true and pos_heli <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
+          -- if true and pos_heli <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+          -- if true and pos_heli <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
           -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          if true and (pos_heli-2) <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
-          if true and (pos_heli-1) <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
+          -- if true and (pos_heli-2) <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
+          -- if true and (pos_heli-1) <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
           if true and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack' ) pos = pos + 1  end
           if true and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
@@ -5649,7 +5628,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
 
-
+         --[[
 
         elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
 
@@ -5713,7 +5692,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           activeGO_TO_ZONE_AIR( groupset,  redFrontZone.DIDMUKHA[1], 0.8 )
           RecceGroundDetection( groupset, red_command_center, true, 10, 10 )
-
+]]
 
         else
 
@@ -11962,23 +11941,46 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       detectionGroupSetRed:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
 
+      -- This command defines the reconnaissance network.
+      -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+      -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
 
 
       --printGroupSet( detectionGroupSetRed )
 
-
-      local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1
+      local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1: Ossetia Scenario
       local activeAI_A2G_Dispatching_HQ2 = false -- per il teatro 2
       local activeAI_A2G_Dispatching_HQ3 = false -- per il teatro 3
 
-      -- A2G Dispatching for Red HQ1
+      -- A2G Dispatching for Red HQ1 OSSETIA SCENARIO
       if activeAI_A2G_Dispatching_HQ1 then
 
 
          local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
 
+         local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
-         -- A2G BESLAN
+         -- Setup the A2A dispatcher, and initialize it.
+         local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+         A2GDispatcher:SetTacticalDisplay(true)
+         -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+         A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+         A2GDispatcher:SetDefenseReactivityHigh()
+         -- Add defense coordinates.
+         A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+         -- default Setting
+         -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+         A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+         A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+         A2GDispatcher:SetDefaultOverhead( 0.2 )
+         A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+         -- A2GDispatcher:SetDefaultPatrolTimeInterval(600) --defautl 180-600
+         A2GDispatcher:SetDefaultPatrolLimit(2)
+
+
+
+         -- A2G BESLAN (Squadron Su-17, Su-24)
 
          if wh_activation.Warehouse_AB.red.Beslan then
 
@@ -11986,18 +11988,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
-
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() } )
-
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
+             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-
+             --[[
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
@@ -12009,7 +12006,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-
+             ]]
 
 
 
@@ -12074,19 +12071,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
              -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
              -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
 
-             -- This command defines the reconnaissance network.
-             -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-             -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-             local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
-             -- Setup the A2A dispatcher, and initialize it.
-             local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
              --configureAI_A2GDispatcher(A2GDispatcher, 5000, 'high', HQ1, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 2,true )
 
 
+             --[[
 
-             A2GDispatcher:SetTacticalDisplay(true)
 
              -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
              A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
@@ -12111,45 +12102,37 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
              --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
              A2GDispatcher:SetDefaultPatrolLimit(2)
+             ]]
 
 
 
+
+              -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+              -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+              -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
 
 
              local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_SU_24M_HRocket }
-             local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
              local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
 
 
-             A2GDispatcher:SetSquadron( "Beslan CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             A2GDispatcher:SetSquadron( "Beslan CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
              A2GDispatcher:SetSquadronCas( "Beslan CAS", 500, 700, 2000, 4000 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
-             --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
 
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             -- PATROL CAS MISSION
              A2GDispatcher:SetSquadronCasPatrol( "Beslan CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
              A2GDispatcher:SetSquadronCasPatrolInterval("Beslan CAS", 1)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
-             --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
 
-
+              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
              A2GDispatcher:SetSquadron( "Beslan BAI", AIRBASE.Caucasus.Beslan, baiTemplate, 10 )
-             -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
              A2GDispatcher:SetSquadronBai( "Beslan BAI", 500, 700, 3000, 5000 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan BAI" )
 
-
-             A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, seadTemplate, 10 )
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, seadTemplate, 10 )
              A2GDispatcher:SetSquadronSeadPatrol( "Beslan SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
              A2GDispatcher:SetSquadronSeadPatrolInterval("Beslan SEAD", 1)
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
@@ -12157,24 +12140,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
          end -- if wh_activation.Warehouse_AB.red.Beslan
 
 
-         -- A2G Nalchik
+         -- A2G Nalchik (Squadron Su-17, Mig-27, Reco Mig 25)
 
          if wh_activation.Warehouse_AB.red.Nalchik then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
-             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
-
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() } )
-
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
-
-             --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 7000, 2000, 0.5 )
+             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
@@ -12250,16 +12228,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
              -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
              -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
 
-             -- This command defines the reconnaissance network.
-             -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-             -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-             local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
-             -- Setup the A2A dispatcher, and initialize it.
-             local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-             A2GDispatcher:SetTacticalDisplay(true)
 
              -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+             --[[
              A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
              A2GDispatcher:SetDefenseReactivityHigh()
 
@@ -12282,48 +12254,323 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
              --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
              A2GDispatcher:SetDefaultPatrolLimit(2)
+             ]]
 
              --A2GDispatcher:SetDefaultGrouping()
 
-             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_SU_24M_HRocket }
-             local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
-             local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
-             local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
+             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_Mig_27K_Bomb_Light }
+             local baiTemplate = { air_template_red.BOM_MIG_27K_Airbase, air_template_red.BOM_MIG_27K_Structure, air_template_red.BOM_SU_17_Structure, , air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
+             local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17 }
 
 
-             A2GDispatcher:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             A2GDispatcher:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
              A2GDispatcher:SetSquadronCas( "Nalchik CAS", 500, 700, 2000, 4000 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
-             --A2GDispatcher:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
+             A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik CAS" )
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
              A2GDispatcher:SetSquadronCasPatrol( "Nalchik CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
              A2GDispatcher:SetSquadronCasPatrolInterval("Nalchik CAS", 1)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
-             --A2GDispatcher:SetSquadronTakeOffInterval( "Nalchik SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik SEAD" )
+             --A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
+             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik CAS" )
 
-
-             A2GDispatcher:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, baiTemplate, 10 )
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             A2GDispatcher:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, baiTemplate, 10 )
              A2GDispatcher:SetSquadronBai( "Nalchik BAI", 500, 700, 3000, 5000 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik BAI" )
 
-
-             A2GDispatcher:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, seadTemplate, 10 )
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             A2GDispatcher:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, seadTemplate, 10 )
              A2GDispatcher:SetSquadronSeadPatrol( "Nalchik SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
              A2GDispatcher:SetSquadronSeadPatrolInterval("Nalchik SEAD", 1)
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
 
          end -- if wh_activation.Warehouse_AB.red.Nalchik
+
+
+         -- A2G Mineralnye (squadron Mig-27 CAS e BAI, Su_24 Sead)
+
+         if wh_activation.Warehouse_AB.red.Mineralnye then
+
+             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+             local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
+             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+             detectionGroup:StartUncontrolled()
+             detectionGroup:OptionROTPassiveDefense()
+             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
+             local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
+             local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+             local WayPoints = {}
+             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+             detectionGroup:Route( WayPoints )
+
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+             function detectionGroup:OnEventDead( EventData )
+
+                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                -- When the last detectionGroup of the group is declared dead, respawn the group.
+                if detectionGroup:GetSize() == 1 then
+
+                  detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                  logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                  detectionGroup:StartUncontrolled()
+                  detectionGroup:OptionROTPassiveDefense()
+                  detectionGroup:Route(WayPoints)
+
+                end
+
+             end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+             function detectionGroup:OnEventLand( EventData )
+
+                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                     -- When the last detectionGroup of the group is declared dead, respawn the group.
+                     if detectionGroup:GetSize() == 1 then
+
+                       detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                       logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                       detectionGroup:StartUncontrolled()
+                       detectionGroup:OptionROTPassiveDefense()
+                       detectionGroup:Route(WayPoints)
+
+                     end
+
+             end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+
+
+             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+             --[[
+             A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+             A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+             -- Add defense coordinates.
+             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+             -- default Setting
+             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+             --A2GDispatcher:SetDefaultLandingAtRunway()
+             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+             A2GDispatcher:SetDefaultOverhead( 0.2 )
+             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+             A2GDispatcher:SetDefaultPatrolLimit(2)
+             ]]
+
+             --A2GDispatcher:SetDefaultGrouping()
+
+             local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
+             local baiTemplate = { air_template_red.BOM_MIG_27K_Airbase, air_template_red.BOM_MIG_27K_Structure }
+             local seadTemplate = { air_template_red.SEAD_SU_24 }
+
+
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             A2GDispatcher:SetSquadron( "Mineralnye CAS", AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 10 )
+             A2GDispatcher:SetSquadronCas( "Mineralnye CAS", 500, 700, 2000, 4000 )
+             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mineralnye CAS" )
+             A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Mineralnye CAS" )
+
+
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             A2GDispatcher:SetSquadronCasPatrol( "Mineralnye CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+             A2GDispatcher:SetSquadronCasPatrolInterval("Mineralnye CAS", 1)
+             --A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
+             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik CAS" )
+
+             -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+             A2GDispatcher:SetSquadron( "Mineralnye BAI", AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 10 )
+             A2GDispatcher:SetSquadronBai( "Mineralnye BAI", 500, 700, 3000, 5000 )
+             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mineralnye BAI" )
+
+             -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+             A2GDispatcher:SetSquadron( "Mineralnye SEAD", AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 10 )
+             A2GDispatcher:SetSquadronSeadPatrol( "Mineralnyek SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+             A2GDispatcher:SetSquadronSeadPatrolInterval("Mineralnye SEAD", 1)
+             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mineralnye SEAD" )
+
+         end -- if wh_activation.Warehouse_AB.red.Mineralnye
+
+
+
+         -- A2G Mozdok (Squadron Tu-22, Su-24 solo Bai)
+
+         if wh_activation.Warehouse_AB.red.Mozdok then
+
+             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+             local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
+             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+             detectionGroup:StartUncontrolled()
+             detectionGroup:OptionROTPassiveDefense()
+             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
+             local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
+             local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+             local WayPoints = {}
+             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+             detectionGroup:Route( WayPoints )
+
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+             function detectionGroup:OnEventDead( EventData )
+
+                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                -- When the last detectionGroup of the group is declared dead, respawn the group.
+                if detectionGroup:GetSize() == 1 then
+
+                  detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                  logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                  detectionGroup:StartUncontrolled()
+                  detectionGroup:OptionROTPassiveDefense()
+                  detectionGroup:Route(WayPoints)
+
+                end
+
+             end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+             function detectionGroup:OnEventLand( EventData )
+
+                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                     -- When the last detectionGroup of the group is declared dead, respawn the group.
+                     if detectionGroup:GetSize() == 1 then
+
+                       detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                       logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                       detectionGroup:StartUncontrolled()
+                       detectionGroup:OptionROTPassiveDefense()
+                       detectionGroup:Route(WayPoints)
+
+                     end
+
+             end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+
+
+             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+             --[[
+             A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+             A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+             -- Add defense coordinates.
+             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+             -- default Setting
+             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+             --A2GDispatcher:SetDefaultLandingAtRunway()
+             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+             A2GDispatcher:SetDefaultOverhead( 0.2 )
+             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+             A2GDispatcher:SetDefaultPatrolLimit(2)
+             ]]
+
+             --A2GDispatcher:SetDefaultGrouping()
+
+             --local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
+             local baiTemplate = { air_template_red.BOM_TU_22_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.GA_SU_24M_HRocket }
+             --local seadTemplate = { air_template_red.SEAD_SU_24 }
+
+
+             -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+             A2GDispatcher:SetSquadron( "Mozdok BAI", AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
+             A2GDispatcher:SetSquadronBai( "Mozdok BAI", 500, 700, 3000, 5000 )
+             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mozdok BAI" )
+
+
+         end -- if wh_activation.Warehouse_AB.red.Mozdok
 
 
 
@@ -12334,15 +12581,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-
-
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = Warehouse Didi' } )
-
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Didi[1] )
-
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
              local airbase = warehouse.Didi
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
@@ -12423,6 +12667,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              -- This command defines the reconnaissance network.
              -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
              -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+             --[[
              local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
              -- Setup the A2A dispatcher, and initialize it.
@@ -12454,23 +12699,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetDefaultPatrolLimit(3)
 
              --A2GDispatcher:SetDefaultGrouping()
+             ]]
 
 
              local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
              local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
-
-             A2GDispatcher:SetSquadron( "Didi CAS", "FARP Didi", casTemplateHeli, 10 )
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             A2GDispatcher:SetSquadron( "Didi CAS", "FARP Didi", casTemplateHeli, 10 )
              A2GDispatcher:SetSquadronCas( "Didi CAS", 200, 300, 700, 1500 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Didi CAS" )
              A2GDispatcher:SetSquadronTakeoffInterval( "Didi CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
 
-
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
              A2GDispatcher:SetSquadronCasPatrol( "Didi CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'BARO' )
              A2GDispatcher:SetSquadronCasPatrolInterval("Didi CAS", 4)
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Didi CAS" )
@@ -12480,14 +12721,156 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+         -- A2G Biteta
+
+         if wh_activation.Warehouse.red.Biteta then
+
+             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+             local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
+             local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.Biteta[1] )
+             local airbase = warehouse.Biteta
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+             --assignDetectionGroupTask(detectionGroup, afacZone.afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
+
+             detectionGroup:StartUncontrolled()
+             detectionGroup:OptionROTPassiveDefense()
+             local ToCoord = afacZone.Didi_South[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
+             local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
+             local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+             local WayPoints = {}
+             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+             detectionGroup:Route( WayPoints )
+
+
+             --detectionGroupSetRed:AddGroup(detectionGroup)
+
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+             function detectionGroup:OnEventDead( EventData )
+
+                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                -- When the last detectionGroup of the group is declared dead, respawn the group.
+                if detectionGroup:GetSize() == 1 then
+
+                  detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.Biteta[1] )
+
+                  logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                  detectionGroup:StartUncontrolled()
+                  detectionGroup:OptionROTPassiveDefense()
+                  detectionGroup:Route(WayPoints)
+
+                end
+
+             end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+            function detectionGroup:OnEventLand( EventData )
+
+                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                     -- When the last detectionGroup of the group is declared dead, respawn the group.
+                     if detectionGroup:GetSize() == 1 then
+
+                       detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.Biteta[1] )
+
+                       logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                       detectionGroup:StartUncontrolled()
+                       detectionGroup:OptionROTPassiveDefense()
+                       detectionGroup:Route(WayPoints)
+
+                     end
+
+             end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+             -- This command defines the reconnaissance network.
+             -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+             -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+             --[[
+             local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
+
+             -- Setup the A2A dispatcher, and initialize it.
+             local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+             A2GDispatcher:SetTacticalDisplay(true)
+
+             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+             A2GDispatcher:SetDefenseRadius( 30000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+             A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+             -- Add defense coordinates.
+             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+             -- default Setting
+             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+             --A2GDispatcher:SetDefaultLandingAtRunway()
+             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+             A2GDispatcher:SetDefaultOverhead( 0.40 )
+             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+             A2GDispatcher:SetDefaultPatrolLimit(3)
+
+             --A2GDispatcher:SetDefaultGrouping()
+             ]]
+
+
+             local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
+             --local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
+
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             A2GDispatcher:SetSquadron( "Biteta CAS", "FARP Biteta", casTemplateHeli, 10 )
+             A2GDispatcher:SetSquadronCas( "Biteta CAS", 200, 300, 700, 1500 )
+             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Biteta CAS" )
+             A2GDispatcher:SetSquadronTakeoffInterval( "Biteta CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+
+             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             A2GDispatcher:SetSquadronCasPatrol( "Didi CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'RADIO' )
+             A2GDispatcher:SetSquadronCasPatrolInterval("Biteta CAS", 4)
+             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Biteta CAS" )
+
+
+         end -- if wh_activation.Warehouse_AB.red.Biteta
+
+
+
 
       end -- if activeAI_A2G_Dispatching_HQ1
 
-      if activeAI_A2G_Dispatching_HQ2 then
-      end
-
-      if activeAI_A2G_Dispatching_HQ3 then
-      end
 
   end -- if activeAI_A2G_Dispatching_Red
 
@@ -12521,28 +12904,70 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        local HQ1 = HQ_BLUE
 
+       -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
 
-       -- A2G BESLAN
 
-       if wh_activation.Warehouse_AB.blue.Kutaisi then
+       -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+       -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+       -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+       -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+       -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+       -- This command defines the reconnaissance network.
+       -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+       -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+       local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
+
+       -- Setup the A2A dispatcher, and initialize it.
+       local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+       A2GDispatcher:SetTacticalDisplay(true)
+
+       -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+       A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+       A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+       -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+       -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+       -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+       -- Add defense coordinates.
+       A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+       -- default Setting
+       -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+       --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+       --A2GDispatcher:SetDefaultLandingAtRunway()
+       A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+       A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+       A2GDispatcher:SetDefaultOverhead( 0.4 )
+       A2GDispatcher:SetDefaultDamageThreshold( 0.6 )
+       --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+       A2GDispatcher:SetDefaultPatrolLimit( 3 )
+
+       --A2GDispatcher:SetDefaultGrouping()
+
+
+
+       -- A2G Vaziani (Squadron B1-B, B-52, F4 Rec)
+
+       if wh_activation.Warehouse_AB.blue.Batumi then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
-           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
-
-           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() } )
-
+           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           -- non funziona probabilmente devi mettere  in global -local detectionGroup = generateDetectioA2G_Group('Detection_HQ1', detectionGroup, air_template_red.REC_SU_24MR, 7000, 2000, airbase, afacZone.Tskhunvali_Tkviavi[1])
+           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
+           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
            local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
            local WayPoints = {}
            WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
@@ -12616,6 +13041,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            -- This command defines the reconnaissance network.
            -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
            -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           --[[
            local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
 
            -- Setup the A2A dispatcher, and initialize it.
@@ -12647,46 +13073,671 @@ if conflictZone == 'Zone 1: South Ossetia' then
            A2GDispatcher:SetDefaultPatrolLimit(2)
 
            --A2GDispatcher:SetDefaultGrouping()
+           ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket }
-           local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
-           local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb }
-           local seadTemplate = { air_template_blue.CAS_F_5E_3_Cluster }
-
-
-           A2GDispatcher:SetSquadron( "Kutaisi CAS", AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 10 )
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-           A2GDispatcher:SetSquadronCas( "Kutaisi CAS", 500, 700, 2000, 4000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
-           --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-           --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
+           --local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
+           --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
+           local baiTemplate = { air_template_blue.BOM_B_1B, air_template_blue.BOM_B_52H}
+           --local seadTemplate = { air_template_blue.CAS_Su_17M4_Cluster }
 
 
            -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-           A2GDispatcher:SetSquadronCasPatrol( "Kutaisi CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronCasPatrolInterval("Kutaisi CAS", 1)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
-           --A2GDispatcher:SetSquadronTakeOffInterval( "Kutaisi SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-           --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kutaisi SEAD" )
+           -- A2GDispatcher:SetSquadron( "Batumi CAS", AIRBASE.Caucasus.Batumi, casTemplateAirplane, 10 )
+           -- A2GDispatcher:SetSquadronCas( "Batumi CAS", 500, 700, 2000, 4000 )
+           -- A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi CAS" )
+           -- A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Batumi SEAD" )
 
 
-           A2GDispatcher:SetSquadron( "Kutaisi BAI", AIRBASE.Caucasus.Kutaisi, baiTemplate, 10 )
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           -- A2GDispatcher:SetSquadronCasPatrol( "Batumi CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           -- A2GDispatcher:SetSquadronCasPatrolInterval("Batumi CAS", 2)
+           -- A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi CAS" )
+
+
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-           A2GDispatcher:SetSquadronBai( "Kutaisi BAI", 500, 700, 3000, 5000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi BAI" )
+           A2GDispatcher:SetSquadron( "Batumi BAI", AIRBASE.Caucasus.Batumi, baiTemplate, 10 )
+           A2GDispatcher:SetSquadronBai( "Batumi BAI", 500, 700, 3000, 5000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi BAI" )
 
 
-           A2GDispatcher:SetSquadron( "Kutaisi SEAD", AIRBASE.Caucasus.Kutaisi, seadTemplate, 10 )
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           -- A2GDispatcher:SetSquadron( "Batumi SEAD", AIRBASE.Caucasus.Batumi, seadTemplate, 10 )
+           -- A2GDispatcher:SetSquadronSeadPatrol( "Batumi SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           -- A2GDispatcher:SetSquadronSeadPatrolInterval("Batumi SEAD", 1)
+           -- A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi SEAD" )
+
+       end -- if wh_activation.Warehouse_AB.red.Batumi
+
+
+
+
+       -- A2G Vaziani (Squadron Su-17, F4 Rec)
+
+       if wh_activation.Warehouse_AB.blue.Vaziani then
+
+           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+           detectionGroup:StartUncontrolled()
+           detectionGroup:OptionROTPassiveDefense()
+           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
+           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+           local WayPoints = {}
+           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+           detectionGroup:Route( WayPoints )
+
+
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+           function detectionGroup:OnEventDead( EventData )
+
+              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+              logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+              -- When the last detectionGroup of the group is declared dead, respawn the group.
+              if detectionGroup:GetSize() == 1 then
+
+                detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                detectionGroup:StartUncontrolled()
+                detectionGroup:OptionROTPassiveDefense()
+                detectionGroup:Route(WayPoints)
+
+              end
+
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+          function detectionGroup:OnEventLand( EventData )
+
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     detectionGroup:StartUncontrolled()
+                     detectionGroup:OptionROTPassiveDefense()
+                     detectionGroup:Route(WayPoints)
+
+                   end
+
+           end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+           -- This command defines the reconnaissance network.
+           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           --[[
+           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+
+           -- Setup the A2A dispatcher, and initialize it.
+           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+           A2GDispatcher:SetTacticalDisplay(true)
+
+           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+           A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+           -- Add defense coordinates.
+           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+           -- default Setting
+           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+           --A2GDispatcher:SetDefaultLandingAtRunway()
+           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+           A2GDispatcher:SetDefaultOverhead( 0.2 )
+           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+           A2GDispatcher:SetDefaultPatrolLimit(2)
+
+           --A2GDispatcher:SetDefaultGrouping()
+           ]]
+
+           local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
+           --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
+           local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb}
+           local seadTemplate = { air_template_blue.CAS_Su_17M4_Cluster }
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadron( "Vaziani CAS", AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 10 )
+           A2GDispatcher:SetSquadronCas( "Vaziani CAS", 500, 700, 2000, 4000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Vaziani CAS" )
+           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Vaziani SEAD" )
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadronCasPatrol( "Vaziani CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronCasPatrolInterval("Vaziani CAS", 2)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Vaziani CAS" )
+
+
+           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+           A2GDispatcher:SetSquadron( "Vaziani BAI", AIRBASE.Caucasus.Vaziani, baiTemplate, 10 )
+           A2GDispatcher:SetSquadronBai( "Vaziani BAI", 500, 700, 3000, 5000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Vaziani BAI" )
+
+
+           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+           A2GDispatcher:SetSquadron( "Kutaisi SEAD", AIRBASE.Caucasus.Vaziani, seadTemplate, 10 )
            A2GDispatcher:SetSquadronSeadPatrol( "Kutaisi SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
            A2GDispatcher:SetSquadronSeadPatrolInterval("Kutaisi SEAD", 1)
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi SEAD" )
 
        end -- if wh_activation.Warehouse_AB.red.Kutaisi
+
+
+
+
+
+
+       -- A2G Kutaisi (Squadron F4, F5)
+
+       if wh_activation.Warehouse_AB.blue.Kutaisi then
+
+           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+           detectionGroup:StartUncontrolled()
+           detectionGroup:OptionROTPassiveDefense()
+           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
+           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+           local WayPoints = {}
+           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+           detectionGroup:Route( WayPoints )
+
+
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+           function detectionGroup:OnEventDead( EventData )
+
+              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+              logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+              -- When the last detectionGroup of the group is declared dead, respawn the group.
+              if detectionGroup:GetSize() == 1 then
+
+                detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                detectionGroup:StartUncontrolled()
+                detectionGroup:OptionROTPassiveDefense()
+                detectionGroup:Route(WayPoints)
+
+              end
+
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+          function detectionGroup:OnEventLand( EventData )
+
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     detectionGroup:StartUncontrolled()
+                     detectionGroup:OptionROTPassiveDefense()
+                     detectionGroup:Route(WayPoints)
+
+                   end
+
+           end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+           -- This command defines the reconnaissance network.
+           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           --[[
+           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+
+           -- Setup the A2A dispatcher, and initialize it.
+           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+           A2GDispatcher:SetTacticalDisplay(true)
+
+           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+           A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+           -- Add defense coordinates.
+           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+           -- default Setting
+           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+           --A2GDispatcher:SetDefaultLandingAtRunway()
+           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+           A2GDispatcher:SetDefaultOverhead( 0.2 )
+           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+           A2GDispatcher:SetDefaultPatrolLimit(2)
+
+           --A2GDispatcher:SetDefaultGrouping()
+           ]]
+
+           local casTemplateAirplane = { air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
+           --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
+           local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.BOM_F_4_E_Sparse_Heavy}
+           local seadTemplate = { air_template_blue.CAS_F_5E_3_Cluster }
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadron( "Kutaisi CAS", AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 10 )
+           A2GDispatcher:SetSquadronCas( "Kutaisi CAS", 500, 700, 2000, 4000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
+           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kutaisi SEAD" )
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadronCasPatrol( "Kutaisi CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronCasPatrolInterval("Kutaisi CAS", 2)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
+
+
+           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+           A2GDispatcher:SetSquadron( "Kutaisi BAI", AIRBASE.Caucasus.Kutaisi, baiTemplate, 10 )
+           A2GDispatcher:SetSquadronBai( "Kutaisi BAI", 500, 700, 3000, 5000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi BAI" )
+
+
+           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+           A2GDispatcher:SetSquadron( "Kutaisi SEAD", AIRBASE.Caucasus.Kutaisi, seadTemplate, 10 )
+           A2GDispatcher:SetSquadronSeadPatrol( "Kutaisi SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronSeadPatrolInterval("Kutaisi SEAD", 1)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi SEAD" )
+
+       end -- if wh_activation.Warehouse_AB.red.Kutaisi
+
+
+
+
+       -- A2G Kvitiri (Squadron F5, L-39)
+
+       if wh_activation.Warehouse_AB.blue.Kvitiri then
+
+           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kvitiri ) -- ATT PROBABILMENTE NON ESISTE AIRBASE: Sostotuisci con Farp
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+           detectionGroup:StartUncontrolled()
+           detectionGroup:OptionROTPassiveDefense()
+           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
+           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+           local WayPoints = {}
+           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+           detectionGroup:Route( WayPoints )
+
+
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+           function detectionGroup:OnEventDead( EventData )
+
+              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+              logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+              -- When the last detectionGroup of the group is declared dead, respawn the group.
+              if detectionGroup:GetSize() == 1 then
+
+                detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                detectionGroup:StartUncontrolled()
+                detectionGroup:OptionROTPassiveDefense()
+                detectionGroup:Route(WayPoints)
+
+              end
+
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+          function detectionGroup:OnEventLand( EventData )
+
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     detectionGroup:StartUncontrolled()
+                     detectionGroup:OptionROTPassiveDefense()
+                     detectionGroup:Route(WayPoints)
+
+                   end
+
+           end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+           -- This command defines the reconnaissance network.
+           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           --[[
+           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+
+           -- Setup the A2A dispatcher, and initialize it.
+           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+           A2GDispatcher:SetTacticalDisplay(true)
+
+           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+           A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+           -- Add defense coordinates.
+           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+           -- default Setting
+           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+           --A2GDispatcher:SetDefaultLandingAtRunway()
+           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+           A2GDispatcher:SetDefaultOverhead( 0.2 )
+           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+           A2GDispatcher:SetDefaultPatrolLimit(2)
+
+           --A2GDispatcher:SetDefaultGrouping()
+           ]]
+
+           local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
+           --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
+           local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
+           local seadTemplate = { air_template_blue.CAS_F_5E_3_Cluster }
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadron( "Kvitiri CAS", AIRBASE.Caucasus.Kvitiri, casTemplateAirplane, 10 )
+           A2GDispatcher:SetSquadronCas( "Kvitiri CAS", 500, 700, 2000, 4000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri CAS" )
+           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kvitiri CAS" )
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadronCasPatrol( "Kvitiri CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronCasPatrolInterval("Kvitiri CAS", 2)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri CAS" )
+
+
+           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+           A2GDispatcher:SetSquadron( "Kvitiri BAI", AIRBASE.Caucasus.Kvitiri, baiTemplate, 10 )
+           A2GDispatcher:SetSquadronBai( "Kvitiri BAI", 500, 700, 3000, 5000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri BAI" )
+
+
+           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+           A2GDispatcher:SetSquadron( "Kvitiri SEAD", AIRBASE.Caucasus.Kvitiri, seadTemplate, 10 )
+           A2GDispatcher:SetSquadronSeadPatrol( "Kvitiri SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronSeadPatrolInterval("Kvitiri SEAD", 1)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri SEAD" )
+
+       end -- if wh_activation.Warehouse_AB.red.Kvitiri
+
+
+
+
+       -- A2G Kvitiri_Helo
+
+       if wh_activation.Warehouse_AB.blue.Kvitiri_Helo then
+
+           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
+           local airbase = warehouse.Kvitiri_Helo
+           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Kvitiri_Helo[1] )
+
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+           --assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
+
+           detectionGroup:StartUncontrolled()
+           detectionGroup:OptionROTPassiveDefense()
+           local ToCoord = redFrontZone.CZ_PEREVI[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
+           local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
+           local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
+           local WayPoints = {}
+           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
+           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
+           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
+           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
+           detectionGroup:Route( WayPoints )
+
+
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+           function detectionGroup:OnEventDead( EventData )
+
+              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+              logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+              -- When the last detectionGroup of the group is declared dead, respawn the group.
+              if detectionGroup:GetSize() == 1 then
+
+                detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Kvitiri_Helo[1] )
+
+                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                detectionGroup:StartUncontrolled()
+                detectionGroup:OptionROTPassiveDefense()
+                detectionGroup:Route(WayPoints)
+
+              end
+
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+          function detectionGroup:OnEventLand( EventData )
+
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Kvitiri_Helo[1] )
+
+                     logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     detectionGroup:StartUncontrolled()
+                     detectionGroup:OptionROTPassiveDefense()
+                     detectionGroup:Route(WayPoints)
+
+                   end
+
+           end -- end function detectionGroup:OnEventLand( EventData )
+
+
+
+           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
+           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+
+
+
+           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
+
+
+           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
+
+           -- This command defines the reconnaissance network.
+           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+           --[[
+           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+
+           -- Setup the A2A dispatcher, and initialize it.
+           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+           A2GDispatcher:SetTacticalDisplay(true)
+
+           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
+           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
+           A2GDispatcher:SetDefenseReactivityHigh()
+
+
+
+           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
+
+           -- Add defense coordinates.
+           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
+
+           -- default Setting
+           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
+           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
+           --A2GDispatcher:SetDefaultLandingAtRunway()
+           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
+           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
+           A2GDispatcher:SetDefaultOverhead( 0.2 )
+           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
+           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
+           A2GDispatcher:SetDefaultPatrolLimit(2)
+
+           --A2GDispatcher:SetDefaultGrouping()
+           ]]
+
+           local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadron( "Farp Kvitiri", "Kvitiri_Helo CAS", AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 50 ) -- ATT NON ESISTE FARP
+           A2GDispatcher:SetSquadronCas( "Kvitiri_Helo CAS", 500, 700, 2000, 4000 )
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri_Helo CAS" )
+           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kvitiri_Helo CAS" )
+
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           A2GDispatcher:SetSquadronCasPatrol( "Kvitiri_Helo CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
+           A2GDispatcher:SetSquadronCasPatrolInterval("Kvitiri_Helo CAS", 2)
+           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri_Helo CAS" )
+
+       end -- if wh_activation.Warehouse_AB.red.Kvitiri_Helo
+
 
 
 
@@ -12699,15 +13750,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-
-
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = Farp Gori' } )
-
+           local airbase = warehouse.Gori
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Gori[1] )
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           local airbase = warehouse.Gori
+           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 7000, 2000, 0.5 )
+
+
+
 
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
@@ -12746,7 +13797,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
            end -- end function detectionGroup:OnEventDead( EventData )
 
 
-
           function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
@@ -12774,83 +13824,27 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-           -- This command defines the reconnaissance network.
-           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
-
-           -- Setup the A2A dispatcher, and initialize it.
-           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-           A2GDispatcher:SetTacticalDisplay(true)
-
-           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-           A2GDispatcher:SetDefenseRadius( 30000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-           A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-           -- Add defense coordinates.
-           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-           -- default Setting
-           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-           --A2GDispatcher:SetDefaultLandingAtRunway()
-           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-           A2GDispatcher:SetDefaultOverhead( 0.40 )
-           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-           A2GDispatcher:SetDefaultPatrolLimit(3)
-
-           --A2GDispatcher:SetDefaultGrouping()
-
-
            local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
-           local seadTemplateHeli = { air_template_blue.CAS_MI_24V }
+           --local seadTemplateHeli = { air_template_blue.CAS_MI_24V }
 
-
-           A2GDispatcher:SetSquadron( "Gori CAS", "FARP GORI", casTemplateHeli, 10 )
            -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
+           A2GDispatcher:SetSquadron( "Gori CAS", "FARP GORI", casTemplateHeli, 10 )
            A2GDispatcher:SetSquadronCas( "Gori CAS", 200, 300, 700, 1500 )
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Gori CAS" )
            A2GDispatcher:SetSquadronTakeoffInterval( "Gori CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
 
 
-
            -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-           A2GDispatcher:SetSquadronCasPatrol( "Gori CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'BARO' )
+           A2GDispatcher:SetSquadronCasPatrol( "Gori CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'RADIO' )
            A2GDispatcher:SetSquadronCasPatrolInterval("Gori CAS", 4)
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Gori CAS" )
-
 
        end -- if wh_activation.Warehouse_AB.red.Gori
 
 
-
-
     end -- if activeAI_A2G_Dispatching_HQ1
 
-    if activeAI_A2G_Dispatching_HQ2 then
-    end
 
-    if activeAI_A2G_Dispatching_HQ3 then
-    end
 
   end -- if activeAI_A2G_Dispatching_Blue
 
@@ -12975,7 +13969,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ) -- end  scheduler
 
-  end -- end if
+  end -- end if red_civilian_traffic
 
   ------------------------------------------- END RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
 
