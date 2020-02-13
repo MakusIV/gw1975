@@ -12152,8 +12152,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
+             --[[
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
@@ -12165,7 +12166,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-
+             ]]
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12259,7 +12260,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              --A2GDispatcher:SetDefaultGrouping()
 
              local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_Mig_27K_Bomb_Light }
-             local baiTemplate = { air_template_red.BOM_MIG_27K_Airbase, air_template_red.BOM_MIG_27K_Structure, air_template_red.BOM_SU_17_Structure, , air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
+             local baiTemplate = { air_template_red.BOM_MIG_27K_Airbase, air_template_red.BOM_MIG_27K_Structure, air_template_red.BOM_SU_17_Structure, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17 }
 
 
@@ -12302,8 +12303,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
+             --[[
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
@@ -12315,7 +12317,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-
+             ]]
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12453,8 +12455,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
+             --[[
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
@@ -12466,7 +12469,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-
+             ]]
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12584,10 +12587,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Didi[1] )
              local airbase = warehouse.Didi
 
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             --assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
+             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
+             --[[
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
@@ -12599,7 +12603,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-
+             ]]
 
              --detectionGroupSetRed:AddGroup(detectionGroup)
 
@@ -12731,10 +12735,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.Biteta[1] )
              local airbase = warehouse.Biteta
 
-             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+             logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             --assignDetectionGroupTask(detectionGroup, afacZone.afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
+             assignDetectionGroupTask(detectionGroup, afacZone.afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
 
+             --[[
              detectionGroup:StartUncontrolled()
              detectionGroup:OptionROTPassiveDefense()
              local ToCoord = afacZone.Didi_South[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
@@ -12746,7 +12751,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
              WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
              detectionGroup:Route( WayPoints )
-
+             ]]
 
              --detectionGroupSetRed:AddGroup(detectionGroup)
 
@@ -12960,10 +12965,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
+           --[[
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
            local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
@@ -12975,7 +12981,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
            WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
            detectionGroup:Route( WayPoints )
-
+           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -13121,10 +13127,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
+           --[[
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
            local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
@@ -13136,7 +13143,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
            WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
            detectionGroup:Route( WayPoints )
-
+           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -13284,10 +13291,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
+           --[[
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
            local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
@@ -13299,7 +13307,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
            WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
            detectionGroup:Route( WayPoints )
-
+           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -13409,7 +13417,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            A2GDispatcher:SetSquadron( "Kutaisi CAS", AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 10 )
            A2GDispatcher:SetSquadronCas( "Kutaisi CAS", 500, 700, 2000, 4000 )
            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
-           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kutaisi SEAD" )
+           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kutaisi CAS" )
 
 
            -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
@@ -13447,8 +13455,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
+           --[[
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
            local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
@@ -13460,7 +13469,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
            WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
            detectionGroup:Route( WayPoints )
-
+           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -13606,10 +13615,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local airbase = warehouse.Kvitiri_Helo
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Kvitiri_Helo[1] )
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           --assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
+           assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
 
+           --[[
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
            local ToCoord = redFrontZone.CZ_PEREVI[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
@@ -13621,7 +13631,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
            WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
            detectionGroup:Route( WayPoints )
-
+           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -13753,16 +13763,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local airbase = warehouse.Gori
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Gori[1] )
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           --assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 7000, 2000, 0.5 )
-
-
+           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
 
+
+           --[[
            detectionGroup:StartUncontrolled()
            detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
+           local ToCoord = :GetRandomCoordinate():SetAltitude( 1000 )
            local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
            local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
            local WayPoints = {}
@@ -13771,7 +13781,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
            WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
            detectionGroup:Route( WayPoints )
-
+           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
