@@ -32,7 +32,7 @@ disabilitato l'airbalancer
 
 
 
-definisci in ME tutti i template relativi alle unit� da utilizzare: Aircraft, Veichle, Ship, ecc. utilizzando la nomenclatura definita in Moose:
+definisci in ME tutti i template relativi alle unita' da utilizzare: Aircraft, Veichle, Ship, ecc. utilizzando la nomenclatura definita in Moose:
 
 per Aircraft:
 name, pilot: = SQ <coalition> <role> <aircraft>
@@ -447,12 +447,15 @@ end
 
 
 ------------------------------------------------------------------------------    MISSION FUNCTIONS  -------------------------------------------------------------------------
+
 -- Mission's use functions
 
 
 -- Configure the detectionGroup with route and task
 -- @param detectionGroup, targetZone, airbase, altitude, altitudeDetection, speedPerc
 function assignDetectionGroupTask(detectionGroup, targetZone, airbase, altitude, altitudeDetection, speedPerc )
+
+    logging( 'enter', 'assignDetectionGroupTask()' )
 
     detectionGroup:StartUncontrolled()
     detectionGroup:OptionROTPassiveDefense()
@@ -466,18 +469,19 @@ function assignDetectionGroupTask(detectionGroup, targetZone, airbase, altitude,
     WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
     detectionGroup:Route( WayPoints )
 
+    logging( 'exit', 'assignDetectionGroupTask()' )
+
 end
 
 
 --- Configure the AI-A2G Dispatcher
-function configureAI_A2GDispatcher(A2GDispatcher, defenceRadius, defenceReactivity, HQ, takeoff, landing, overhead, damageThrs, patrolLimit, tacticalDisplay )
+function configureAI_A2GDispatcher( A2GDispatcher, defenceRadius, defenceReactivity, HQ, takeoff, landing, overhead, damageThrs, patrolLimit, tacticalDisplay )
+
+    logging( 'enter', 'configureAI_A2GDispatcher()' )
 
     tacticalDisplay = tacticalDisplay or false
     defenceReactivity = defenceReactivity or 'low'
-
     A2GDispatcher:SetTacticalDisplay( tacticalDisplay )
-
-    -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
     A2GDispatcher:SetDefenseRadius( defenceRadius ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
 
     if defenceReactivity == 'low' then A2GDispatcher:SetDefenseReactivityLow()
@@ -485,28 +489,45 @@ function configureAI_A2GDispatcher(A2GDispatcher, defenceRadius, defenceReactivi
     elseif defenceReactivity == 'high' then A2GDispatcher:SetDefenseReactivityHigh()
     else SetDefenseReactivityLow() end
 
-
-
-    -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-    -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-    -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-    -- Add defense coordinates.
     A2GDispatcher:AddDefenseCoordinate( HQ:GetName(), HQ:GetCoordinate() )
-
-    -- default Setting
-    -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-    --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-    --A2GDispatcher:SetDefaultLandingAtRunway()
     A2GDispatcher:SetDefaultTakeoff( takeoff )
     A2GDispatcher:SetDefaultLanding( landing )
     A2GDispatcher:SetDefaultOverhead( overhead )
     A2GDispatcher:SetDefaultDamageThreshold( damageThrs )
     A2GDispatcher:SetDefaultPatrolLimit( patrolLimit )
 
+    logging( 'exit', 'configureAI_A2GDispatcher()' )
+
 end
 
---[[
+
+--- Configura A2GDispatcher per l'esecuzione di missioni CAS
+--  @param:
+function configureAI_A2G_CAS_Mission( A2GDispatcher, airbase, template, numMaxAircraft, takeoff, landing, takeoffInterval, overHead)
+
+    logging( 'enter', 'configureAI_A2G_CAS_Mission()' )
+
+    if airbase == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'airbase is nil!! EXIT' } ) return end
+    if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
+    if template == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'template is nil!! EXIT' } ) return end
+
+    numMaxAircraft = numMaxAircraft or 1
+    local name = airbase .. ' CAS'
+    A2GDispatcher:SetSquadron( name, airbase, template, numAircraft )
+    A2GDispatcher:SetSquadronCas( name, 500, 700, 2000, 4000 )
+    if takeoff then A2ADispatcher:SetSquadronTakeoff( name, takeoff ) end
+    if landing then A2ADispatcher:SetSquadronLanding( name, landing ) end
+    if takeoffInterval then A2GDispatcher:SetSquadronTakeOffInterval( name, takeoffInterval ) end -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+    if overHead then A2GDispatcher:SetSquadronOverhead(name, overhead) end
+
+    logging( 'exit', 'configureAI_A2G_CAS_Mission()' )
+
+end
+
+
+
+
+
 function configureAI_A2GMission( A2GDispatcher, typeMission, airbase, template, numAircraft, takeoff, landing, takeoffInterval, patrol, patrolZone, patrolInterval, flightData)
 
 
@@ -584,16 +605,9 @@ function configureAI_A2GMission( A2GDispatcher, typeMission, airbase, template, 
         logging('warning', { 'detectionGroup:OnEventDead( EventData )' , 'typeMission not found!!' } )
     end
 
-
-
-
-
-
-
-
 end
 
-]]
+
 
 --- SUPPRESSION
 
@@ -11958,10 +11972,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
          local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
 
+
          local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
+
+         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 2, true )
+
+         --[[
          A2GDispatcher:SetTacticalDisplay(true)
          -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
          A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
@@ -11977,7 +11996,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
          A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
          -- A2GDispatcher:SetDefaultPatrolTimeInterval(600) --defautl 180-600
          A2GDispatcher:SetDefaultPatrolLimit(2)
-
+         ]]
 
 
          -- A2G BESLAN (Squadron Su-17, Su-24)
@@ -12055,72 +12074,26 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              end -- end function detectionGroup:OnEventLand( EventData )
 
-
-
              --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
              --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-
-
-             --configureAI_A2GDispatcher(A2GDispatcher, 5000, 'high', HQ1, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 2,true )
-
-
-             --[[
-
-
-             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-             A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-             A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-             -- Add defense coordinates.
-             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-             -- default Setting
-             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-             --A2GDispatcher:SetDefaultLandingAtRunway()
-             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-             A2GDispatcher:SetDefaultOverhead( 0.2 )
-             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-             A2GDispatcher:SetDefaultPatrolLimit(2)
-             ]]
-
-
 
 
               -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
               -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
               -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
 
-
              local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_SU_24M_HRocket }
              local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
 
-
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+
+             configureAI_A2G_CAS_Mission( A2GDispatcher, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20, A2GDispatcher.Takeoff.Cold, , takeoffInterval, overHead)
+             --[[
              A2GDispatcher:SetSquadron( "Beslan CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
              A2GDispatcher:SetSquadronCas( "Beslan CAS", 500, 700, 2000, 4000 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
+             ]]
 
              -- PATROL CAS MISSION
              A2GDispatcher:SetSquadronCasPatrol( "Beslan CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
@@ -12153,20 +12126,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
              assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-             --[[
-             detectionGroup:StartUncontrolled()
-             detectionGroup:OptionROTPassiveDefense()
-             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
-             local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
-             local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-             local WayPoints = {}
-             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-             detectionGroup:Route( WayPoints )
-             ]]
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12212,50 +12171,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                      end
 
              end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-
-
-             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-             --[[
-             A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-             A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-             -- Add defense coordinates.
-             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-             -- default Setting
-             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-             --A2GDispatcher:SetDefaultLandingAtRunway()
-             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-             A2GDispatcher:SetDefaultOverhead( 0.2 )
-             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-             A2GDispatcher:SetDefaultPatrolLimit(2)
-             ]]
 
              --A2GDispatcher:SetDefaultGrouping()
 
@@ -12305,20 +12220,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-             --[[
-             detectionGroup:StartUncontrolled()
-             detectionGroup:OptionROTPassiveDefense()
-             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
-             local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
-             local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-             local WayPoints = {}
-             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-             detectionGroup:Route( WayPoints )
-             ]]
-
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -12363,50 +12264,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                      end
 
              end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-
-
-             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-             --[[
-             A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-             A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-             -- Add defense coordinates.
-             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-             -- default Setting
-             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-             --A2GDispatcher:SetDefaultLandingAtRunway()
-             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-             A2GDispatcher:SetDefaultOverhead( 0.2 )
-             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-             A2GDispatcher:SetDefaultPatrolLimit(2)
-             ]]
 
              --A2GDispatcher:SetDefaultGrouping()
 
@@ -12457,20 +12314,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-             --[[
-             detectionGroup:StartUncontrolled()
-             detectionGroup:OptionROTPassiveDefense()
-             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
-             local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
-             local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-             local WayPoints = {}
-             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-             detectionGroup:Route( WayPoints )
-             ]]
-
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -12516,51 +12359,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              end -- end function detectionGroup:OnEventLand( EventData )
 
-
-
-             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-
-
-             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-             --[[
-             A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-             A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-             -- Add defense coordinates.
-             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-             -- default Setting
-             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-             --A2GDispatcher:SetDefaultLandingAtRunway()
-             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-             A2GDispatcher:SetDefaultOverhead( 0.2 )
-             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-             A2GDispatcher:SetDefaultPatrolLimit(2)
-             ]]
-
-             --A2GDispatcher:SetDefaultGrouping()
+                 --A2GDispatcher:SetDefaultGrouping()
 
              --local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
              local baiTemplate = { air_template_red.BOM_TU_22_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.GA_SU_24M_HRocket }
@@ -12590,20 +12389,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
              assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
-
-             --[[
-             detectionGroup:StartUncontrolled()
-             detectionGroup:OptionROTPassiveDefense()
-             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
-             local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
-             local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-             local WayPoints = {}
-             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-             detectionGroup:Route( WayPoints )
-             ]]
 
              --detectionGroupSetRed:AddGroup(detectionGroup)
 
@@ -12652,60 +12437,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              end -- end function detectionGroup:OnEventLand( EventData )
 
-
-
-             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-             -- This command defines the reconnaissance network.
-             -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-             -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-             --[[
-             local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
-
-             -- Setup the A2A dispatcher, and initialize it.
-             local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-             A2GDispatcher:SetTacticalDisplay(true)
-
-             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-             A2GDispatcher:SetDefenseRadius( 30000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-             A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-             -- Add defense coordinates.
-             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-             -- default Setting
-             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-             --A2GDispatcher:SetDefaultLandingAtRunway()
-             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-             A2GDispatcher:SetDefaultOverhead( 0.40 )
-             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-             A2GDispatcher:SetDefaultPatrolLimit(3)
-
-             --A2GDispatcher:SetDefaultGrouping()
-             ]]
-
-
              local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
              local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
@@ -12738,22 +12469,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
              assignDetectionGroupTask(detectionGroup, afacZone.afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
-
-             --[[
-             detectionGroup:StartUncontrolled()
-             detectionGroup:OptionROTPassiveDefense()
-             local ToCoord = afacZone.Didi_South[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
-             local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
-             local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-             local WayPoints = {}
-             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-             detectionGroup:Route( WayPoints )
-             ]]
-
-             --detectionGroupSetRed:AddGroup(detectionGroup)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12799,60 +12514,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                      end
 
              end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-             -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-             -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-             -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-             -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-             -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-             -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-             -- This command defines the reconnaissance network.
-             -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-             -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-             --[[
-             local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
-
-             -- Setup the A2A dispatcher, and initialize it.
-             local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-             A2GDispatcher:SetTacticalDisplay(true)
-
-             -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-             A2GDispatcher:SetDefenseRadius( 30000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-             A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-             -- Add defense coordinates.
-             A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-             -- default Setting
-             -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-             --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-             --A2GDispatcher:SetDefaultLandingAtRunway()
-             A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-             A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-             A2GDispatcher:SetDefaultOverhead( 0.40 )
-             A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-             --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-             A2GDispatcher:SetDefaultPatrolLimit(3)
-
-             --A2GDispatcher:SetDefaultGrouping()
-             ]]
-
 
              local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
              --local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
@@ -12969,20 +12630,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-           --[[
-           detectionGroup:StartUncontrolled()
-           detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
-           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-           local WayPoints = {}
-           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route( WayPoints )
-           ]]
-
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -13027,59 +12674,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-           -- This command defines the reconnaissance network.
-           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           --[[
-           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
-
-           -- Setup the A2A dispatcher, and initialize it.
-           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-           A2GDispatcher:SetTacticalDisplay(true)
-
-           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-           A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-           -- Add defense coordinates.
-           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-           -- default Setting
-           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-           --A2GDispatcher:SetDefaultLandingAtRunway()
-           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-           A2GDispatcher:SetDefaultOverhead( 0.2 )
-           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-           A2GDispatcher:SetDefaultPatrolLimit(2)
-
-           --A2GDispatcher:SetDefaultGrouping()
-           ]]
 
            --local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
@@ -13131,20 +12725,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-           --[[
-           detectionGroup:StartUncontrolled()
-           detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
-           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-           local WayPoints = {}
-           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route( WayPoints )
-           ]]
-
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -13190,58 +12770,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            end -- end function detectionGroup:OnEventLand( EventData )
 
-
-
-           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-           -- This command defines the reconnaissance network.
-           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           --[[
-           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
-
-           -- Setup the A2A dispatcher, and initialize it.
-           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-           A2GDispatcher:SetTacticalDisplay(true)
-
-           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-           A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-           -- Add defense coordinates.
-           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-           -- default Setting
-           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-           --A2GDispatcher:SetDefaultLandingAtRunway()
-           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-           A2GDispatcher:SetDefaultOverhead( 0.2 )
-           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-           A2GDispatcher:SetDefaultPatrolLimit(2)
-
-           --A2GDispatcher:SetDefaultGrouping()
-           ]]
 
            local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
@@ -13295,20 +12823,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-           --[[
-           detectionGroup:StartUncontrolled()
-           detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
-           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-           local WayPoints = {}
-           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route( WayPoints )
-           ]]
-
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -13353,59 +12867,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-           -- This command defines the reconnaissance network.
-           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           --[[
-           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
-
-           -- Setup the A2A dispatcher, and initialize it.
-           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-           A2GDispatcher:SetTacticalDisplay(true)
-
-           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-           A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-           -- Add defense coordinates.
-           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-           -- default Setting
-           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-           --A2GDispatcher:SetDefaultLandingAtRunway()
-           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-           A2GDispatcher:SetDefaultOverhead( 0.2 )
-           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-           A2GDispatcher:SetDefaultPatrolLimit(2)
-
-           --A2GDispatcher:SetDefaultGrouping()
-           ]]
 
            local casTemplateAirplane = { air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
@@ -13457,20 +12918,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-           --[[
-           detectionGroup:StartUncontrolled()
-           detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = afacZone.Didmukha_Tsveri[ 1 ]:GetRandomCoordinate():SetAltitude( 4000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 4000 )
-           local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-           local WayPoints = {}
-           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route( WayPoints )
-           ]]
-
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -13515,59 +12962,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-           -- This command defines the reconnaissance network.
-           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           --[[
-           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
-
-           -- Setup the A2A dispatcher, and initialize it.
-           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-           A2GDispatcher:SetTacticalDisplay(true)
-
-           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-           A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-           -- Add defense coordinates.
-           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-           -- default Setting
-           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-           --A2GDispatcher:SetDefaultLandingAtRunway()
-           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-           A2GDispatcher:SetDefaultOverhead( 0.2 )
-           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-           A2GDispatcher:SetDefaultPatrolLimit(2)
-
-           --A2GDispatcher:SetDefaultGrouping()
-           ]]
 
            local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
@@ -13619,20 +13013,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
 
-           --[[
-           detectionGroup:StartUncontrolled()
-           detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = redFrontZone.CZ_PEREVI[ 1 ]:GetRandomCoordinate():SetAltitude( 1000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
-           local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-           local WayPoints = {}
-           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route( WayPoints )
-           ]]
-
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
@@ -13678,59 +13058,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            end -- end function detectionGroup:OnEventLand( EventData )
 
-
-
-           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
-
-           -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
-
-
-           -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-           -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-           -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-           -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-           -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-           -- This command defines the reconnaissance network.
-           -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-           -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-           --[[
-           local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
-
-           -- Setup the A2A dispatcher, and initialize it.
-           local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-           A2GDispatcher:SetTacticalDisplay(true)
-
-           -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-           A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-           A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-           -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-           -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-           -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-           -- Add defense coordinates.
-           A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-           -- default Setting
-           -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-           --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-           --A2GDispatcher:SetDefaultLandingAtRunway()
-           A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-           A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-           A2GDispatcher:SetDefaultOverhead( 0.2 )
-           A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-           --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-           A2GDispatcher:SetDefaultPatrolLimit(2)
-
-           --A2GDispatcher:SetDefaultGrouping()
-           ]]
-
            local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
 
 
@@ -13766,22 +13093,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
            assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-
-
-           --[[
-           detectionGroup:StartUncontrolled()
-           detectionGroup:OptionROTPassiveDefense()
-           local ToCoord = :GetRandomCoordinate():SetAltitude( 1000 )
-           local HomeCoord = airbase:GetCoordinate():SetAltitude( 1000 )
-           local task = detectionGroup:TaskOrbitCircle( 700, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-           local WayPoints = {}
-           WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-           WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-           WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-           WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-           detectionGroup:Route( WayPoints )
-           ]]
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -13826,13 +13137,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
-
-
-
-           --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-           --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
-
-
 
            local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
            --local seadTemplateHeli = { air_template_blue.CAS_MI_24V }
