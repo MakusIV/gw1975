@@ -452,7 +452,12 @@ end
 
 
 -- Configure the detectionGroup with route and task
--- @param detectionGroup, targetZone, airbase, altitude, altitudeDetection, speedPerc
+-- @param detectionGroup = dedicated group for detection
+-- @param targetZone = destination zone for detection task
+-- @param airbase = home airbase
+-- @param altitude = route altitude
+-- @param altitudeDetection + detection task altitude
+-- @param speedPerc = speed route (perc of max speed)
 function assignDetectionGroupTask(detectionGroup, targetZone, airbase, altitude, altitudeDetection, speedPerc )
 
     logging( 'enter', 'assignDetectionGroupTask()' )
@@ -475,6 +480,16 @@ end
 
 
 --- Configure the AI-A2G Dispatcher
+-- @param A2GDispatcher
+-- @param defenceRadius
+-- @param defenceReactivity
+-- @param HQ
+-- @param takeoff
+-- @param landing
+-- @param overhead
+-- @param damageThrs
+-- @param patrolLimit
+-- @param tacticalDisplay
 function configureAI_A2GDispatcher( A2GDispatcher, defenceRadius, defenceReactivity, HQ, takeoff, landing, overhead, damageThrs, patrolLimit, tacticalDisplay )
 
     logging( 'enter', 'configureAI_A2GDispatcher()' )
@@ -501,24 +516,161 @@ function configureAI_A2GDispatcher( A2GDispatcher, defenceRadius, defenceReactiv
 end
 
 
---- Configura A2GDispatcher per l'esecuzione di missioni CAS
---  @param:
-function configureAI_A2G_CAS_Mission( A2GDispatcher, airbase, template, numMaxAircraft, takeoff, landing, takeoffInterval, overHead)
+--- A2GDispatcher Configuration to CAS mission execution
+--  @param: A2GDispatcher
+--  @param: squadronName =  name of the squadron
+--  @param: takeOff =  type of takeoff
+--  @param: landing  =  type of landing
+--  @param: takeoffInterval  =  time distance from sequenzial takeoff
+--  @param: overHead = ratio num_defenceAircraft/num_ground_threat
+--  @param: minSpeed = min speed of mission
+--  @param: maxSpeed = max speed of mission
+--  @param: minAlt = min altitude of mission
+--  @param: maxSpeed = max altitude of mission
+function configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeoff, landing, takeoffInterval, overHead, minSpeed, maxSpeed, minAlt, maxAlt)
 
     logging( 'enter', 'configureAI_A2G_CAS_Mission()' )
 
-    if airbase == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'airbase is nil!! EXIT' } ) return end
+    if squadronName == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'squadronName is nil!! EXIT' } ) return end
     if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
-    if template == nil then logging('warning', { 'configureAI_A2G_CAS_Mission()' , 'template is nil!! EXIT' } ) return end
 
-    numMaxAircraft = numMaxAircraft or 1
-    local name = airbase .. ' CAS'
-    A2GDispatcher:SetSquadron( name, airbase, template, numAircraft )
-    A2GDispatcher:SetSquadronCas( name, 500, 700, 2000, 4000 )
-    if takeoff then A2ADispatcher:SetSquadronTakeoff( name, takeoff ) end
-    if landing then A2ADispatcher:SetSquadronLanding( name, landing ) end
-    if takeoffInterval then A2GDispatcher:SetSquadronTakeOffInterval( name, takeoffInterval ) end -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-    if overHead then A2GDispatcher:SetSquadronOverhead(name, overhead) end
+    A2GDispatcher:SetSquadronCas( squadronName, minSpeed, maxSpeed, minAlt, maxAlt )
+
+    if takeoff then A2GDispatcher:SetSquadronTakeoff( squadronName, takeoff ) end
+    if landing then A2GDispatcher:SetSquadronLanding( squadronName, landing ) end
+    if takeoffInterval then A2GDispatcher:SetSquadronTakeoffInterval( squadronName, takeoffInterval ) end -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+    if overHead then A2GDispatcher:SetSquadronOverhead(squadronName, overhead) end
+
+
+    logging( 'exit', 'configureAI_A2G_CAS_Mission()' )
+
+end
+
+
+--- A2GDispatcher Configuration to PATROL CAS mission execution
+--  @param: A2GDispatcher
+--  @param: squadronName =  name of the squadron
+--  @param: targetZone = zone of target
+--  @param: patrolInterval = ratio num_defenceAircraft/num_ground_threat
+--  @param: minSpeed = min speed of mission
+--  @param: maxSpeed = max speed of mission
+--  @param: minAlt = min altitude of mission
+--  @param: maxSpeed = max altitude of mission
+function configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, targetZone, patrolInterval, minAlt, maxAlt, minSpeedRoute, maxSpeedRoute, minSpeedEngage, maxSpeedEngage, typeAltitude )
+
+    logging( 'enter', 'configureAI_A2G_PATROL_CAS_Mission()' )
+
+    if squadronName == nil then logging('warning', { 'configureAI_A2G_PATROL_CAS_Mission()' , 'squadronName is nil!! EXIT' } ) return end
+    if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_PATROL_CAS_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
+
+    patrolInterval = patrolInterval or 1
+    minAlt = minAlt or 1000
+    maxAlt = maxAlt or 2000
+    minSpeedRoute = minSpeedRoute or 400
+    maxSpeedRoute = maxSpeedRoute or 500
+    minSpeedEngage = minSpeedEngage or 400
+    maxSpeedEngage =  maxSpeedEngage or 500
+    typeAltitude = typeAltitude or 'RADIO'
+
+    A2GDispatcher:SetSquadronCasPatrol( squadronName, targetZone, minAlt, maxAlt, minSpeedRoute, maxSpeedRoute, minSpeedEngage, maxSpeedEngage, typeAltitude )
+    A2GDispatcher:SetSquadronCasPatrolInterval(squadronName, patrolInterval)
+
+    logging( 'exit', 'configureAI_A2G_PATROL_CAS_Mission()' )
+
+end
+
+
+
+--- A2GDispatcher Configuration to BAI mission execution
+--  @param: A2GDispatcher
+--  @param: squadronName =  name of the squadron
+--  @param: takeOff =  type of takeoff
+--  @param: landing  =  type of landing
+--  @param: takeoffInterval  =  time distance from sequenzial takeoff
+--  @param: overHead = ratio num_defenceAircraft/num_ground_threat
+--  @param: minSpeed = min speed of mission
+--  @param: maxSpeed = max speed of mission
+--  @param: minAlt = min altitude of mission
+--  @param: maxSpeed = max altitude of mission
+function configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeoff, landing, takeoffInterval, overHead, minSpeed, maxSpeed, minAlt, maxAlt)
+
+    logging( 'enter', 'configureAI_A2G_BAI_Mission()' )
+
+    if squadronName == nil then logging('warning', { 'configureAI_A2G_BAI_Mission()' , 'squadronName is nil!! EXIT' } ) return end
+    if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_BAI_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
+
+    A2GDispatcher:SetSquadronBai( squadronName, minSpeed, maxSpeed, minAlt, maxAlt )
+
+    if takeoff then A2GDispatcher:SetSquadronTakeoff( squadronName, takeoff ) end
+    if landing then A2GDispatcher:SetSquadronLanding( squadronName, landing ) end
+    if takeoffInterval then A2GDispatcher:SetSquadronTakeoffInterval( squadronName, takeoffInterval ) end -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+    if overHead then A2GDispatcher:SetSquadronOverhead(squadronName, overhead) end
+
+
+    logging( 'exit', 'configureAI_A2G_BAI_Mission()' )
+
+end
+
+
+--- A2GDispatcher Configuration to PATROL BAI mission execution
+--  @param: A2GDispatcher
+--  @param: squadronName =  name of the squadron
+--  @param: targetZone = zone of target
+--  @param: patrolInterval = ratio num_defenceAircraft/num_ground_threat
+--  @param: minSpeed = min speed of mission
+--  @param: maxSpeed = max speed of mission
+--  @param: minAlt = min altitude of mission
+--  @param: maxSpeed = max altitude of mission
+function configureAI_A2G_PATROL_BAI_Mission( A2GDispatcher, squadronName, targetZone, patrolInterval, minAlt, maxAlt, minSpeedRoute, maxSpeedRoute, minSpeedEngage, maxSpeedEngage, typeAltitude )
+
+    logging( 'enter', 'configureAI_A2G_PATROL_BAI_Mission()' )
+
+    if squadronName == nil then logging('warning', { 'configureAI_A2G_PATROL_BAI_Mission()' , 'squadronName is nil!! EXIT' } ) return end
+    if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_PATROL_BAI_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
+
+    patrolInterval = patrolInterval or 1
+    minAlt = minAlt or 1000
+    maxAlt = maxAlt or 2000
+    minSpeedRoute = minSpeedRoute or 400
+    maxSpeedRoute = maxSpeedRoute or 500
+    minSpeedEngage = minSpeedEngage or 400
+    maxSpeedEngage =  maxSpeedEngage or 500
+    typeAltitude = typeAltitude or 'RADIO'
+
+    A2GDispatcher:SetSquadronBaiPatrol( squadronName, targetZone, minAlt, maxAlt, minSpeedRoute, maxSpeedRoute, minSpeedEngage, maxSpeedEngage, typeAltitude )
+    A2GDispatcher:SetSquadronBaiPatrolInterval(squadronName, patrolInterval)
+
+    logging( 'exit', 'configureAI_A2G_PATROL_BAI_Mission()' )
+
+end
+
+
+
+--- A2GDispatcher Configuration to SEAD mission execution
+--  @param: A2GDispatcher
+--  @param: squadronName =  name of the squadron
+--  @param: takeOff =  type of takeoff
+--  @param: landing  =  type of landing
+--  @param: takeoffInterval  =  time distance from sequenzial takeoff
+--  @param: overHead = ratio num_defenceAircraft/num_ground_threat
+--  @param: minSpeed = min speed of mission
+--  @param: maxSpeed = max speed of mission
+--  @param: minAlt = min altitude of mission
+--  @param: maxSpeed = max altitude of mission
+function configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, takeoff, landing, takeoffInterval, overHead, minSpeed, maxSpeed, minAlt, maxAlt)
+
+    logging( 'enter', 'configureAI_A2G_SEAD_Mission()' )
+
+    if squadronName == nil then logging('warning', { 'configureAI_A2G_SEAD_Mission()' , 'squadronName is nil!! EXIT' } ) return end
+    if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_SEAD_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
+
+    A2GDispatcher:SetSquadronSead( squadronName, minSpeed, maxSpeed, minAlt, maxAlt )
+
+    if takeoff then A2GDispatcher:SetSquadronTakeoff( squadronName, takeoff ) end
+    if landing then A2GDispatcher:SetSquadronLanding( squadronName, landing ) end
+    if takeoffInterval then A2GDispatcher:SetSquadronTakeoffInterval( squadronName, takeoffInterval ) end -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+    if overHead then A2GDispatcher:SetSquadronOverhead(squadronName, overhead) end
+
 
     logging( 'exit', 'configureAI_A2G_CAS_Mission()' )
 
@@ -526,7 +678,42 @@ end
 
 
 
+--- A2GDispatcher Configuration to PATROL CAS mission execution
+--  @param: A2GDispatcher
+--  @param: squadronName =  name of the squadron
+--  @param: targetZone = zone of target
+--  @param: patrolInterval = ratio num_defenceAircraft/num_ground_threat
+--  @param: minSpeed = min speed of mission
+--  @param: maxSpeed = max speed of mission
+--  @param: minAlt = min altitude of mission
+--  @param: maxSpeed = max altitude of mission
+function configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, targetZone, patrolInterval, minAlt, maxAlt, minSpeedRoute, maxSpeedRoute, minSpeedEngage, maxSpeedEngage, typeAltitude )
 
+    logging( 'enter', 'configureAI_A2G_PATROL_SEAD_Mission()' )
+
+    if squadronName == nil then logging('warning', { 'configureAI_A2G_PATROL_SEAD_Mission()' , 'squadronName is nil!! EXIT' } ) return end
+    if A2GDispatcher == nil then logging('warning', { 'configureAI_A2G_PATROL_SEAD_Mission()' , 'A2GDispatcher is nil!! EXIT' } ) return end
+
+    patrolInterval = patrolInterval or 1
+    minAlt = minAlt or 1000
+    maxAlt = maxAlt or 2000
+    minSpeedRoute = minSpeedRoute or 400
+    maxSpeedRoute = maxSpeedRoute or 500
+    minSpeedEngage = minSpeedEngage or 400
+    maxSpeedEngage =  maxSpeedEngage or 500
+    typeAltitude = typeAltitude or 'RADIO'
+
+    A2GDispatcher:SetSquadronSeadPatrol( squadronName, targetZone, minAlt, maxAlt, minSpeedRoute, maxSpeedRoute, minSpeedEngage, maxSpeedEngage, typeAltitude )
+    A2GDispatcher:SetSquadronSeadPatrolInterval(squadronName, patrolInterval)
+
+    logging( 'exit', 'configureAI_A2G_PATROL_SEAD_Mission()' )
+
+end
+
+
+
+
+--[[
 
 function configureAI_A2GMission( A2GDispatcher, typeMission, airbase, template, numAircraft, takeoff, landing, takeoffInterval, patrol, patrolZone, patrolInterval, flightData)
 
@@ -606,7 +793,7 @@ function configureAI_A2GMission( A2GDispatcher, typeMission, airbase, template, 
     end
 
 end
-
+]]
 
 
 --- SUPPRESSION
@@ -11978,7 +12165,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 2, true )
+         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 3, true )
 
          --[[
          A2GDispatcher:SetTacticalDisplay(true)
@@ -12012,21 +12199,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
              assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-             --[[
-             detectionGroup:StartUncontrolled()
-             detectionGroup:OptionROTPassiveDefense()
-             local ToCoord = afacZone.Tskhunvali_Tkviavi[ 1 ]:GetRandomCoordinate():SetAltitude( 7000 )
-             local HomeCoord = airbase:GetCoordinate():SetAltitude( 7000 )
-             local task = detectionGroup:TaskOrbitCircle( 2000, detectionGroup:GetSpeedMax() * 0.5, ToCoord )
-             local WayPoints = {}
-             WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-             WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * 0.5, { task }, "Detection for ground threat" )
-             WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
-             WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
-             detectionGroup:Route( WayPoints )
-             ]]
-
 
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
@@ -12074,41 +12246,39 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              end -- end function detectionGroup:OnEventLand( EventData )
 
-             --detectionGroup:HandleEvent( EVENTS.Dead, detectionGroup:OnEventDead( EventData ) )
-             --detectionGroup:HandleEvent( EVENTS.Land, detectionGroup:OnEventLand( EventData ) )
+               -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+               -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+               -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
 
-
-              -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-              -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-              -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
 
              local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_SU_24M_HRocket }
              local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
 
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             -- Set Defence Squadron
+             local squadronName = "Beslan CAS"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
 
-             configureAI_A2G_CAS_Mission( A2GDispatcher, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20, A2GDispatcher.Takeoff.Cold, , takeoffInterval, overHead)
-             --[[
-             A2GDispatcher:SetSquadron( "Beslan CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
-             A2GDispatcher:SetSquadronCas( "Beslan CAS", 500, 700, 2000, 4000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
-             ]]
+
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
+
 
              -- PATROL CAS MISSION
-             A2GDispatcher:SetSquadronCasPatrol( "Beslan CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-             A2GDispatcher:SetSquadronCasPatrolInterval("Beslan CAS", 1)
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
               -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             A2GDispatcher:SetSquadron( "Beslan BAI", AIRBASE.Caucasus.Beslan, baiTemplate, 10 )
-             A2GDispatcher:SetSquadronBai( "Beslan BAI", 500, 700, 3000, 5000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan BAI" )
+             squadronName = "Beslan BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
 
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, seadTemplate, 10 )
-             A2GDispatcher:SetSquadronSeadPatrol( "Beslan SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-             A2GDispatcher:SetSquadronSeadPatrolInterval("Beslan SEAD", 1)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
+             squadronName = "Beslan SEAD"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, seadTemplate, 10 )
+             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+
 
          end -- if wh_activation.Warehouse_AB.red.Beslan
 
@@ -12180,28 +12350,26 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadron( "Nalchik CAS", AIRBASE.Caucasus.Beslan, casTemplateAirplane, 10 )
-             A2GDispatcher:SetSquadronCas( "Nalchik CAS", 500, 700, 2000, 4000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
-             A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik CAS" )
+             local squadronName = "Nalchik CAS"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadronCasPatrol( "Nalchik CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-             A2GDispatcher:SetSquadronCasPatrolInterval("Nalchik CAS", 1)
-             --A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
-             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik CAS" )
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             A2GDispatcher:SetSquadron( "Nalchik BAI", AIRBASE.Caucasus.Nalchik, baiTemplate, 10 )
-             A2GDispatcher:SetSquadronBai( "Nalchik BAI", 500, 700, 3000, 5000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik BAI" )
+             squadronName = "Nalchik BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
 
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             A2GDispatcher:SetSquadron( "Nalchik SEAD", AIRBASE.Caucasus.Nalchik, seadTemplate, 10 )
-             A2GDispatcher:SetSquadronSeadPatrol( "Nalchik SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-             A2GDispatcher:SetSquadronSeadPatrolInterval("Nalchik SEAD", 1)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik SEAD" )
+             squadronName = "Nalchik SEAD"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, seadTemplate, 20 )
+             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+
 
          end -- if wh_activation.Warehouse_AB.red.Nalchik
 
@@ -12273,28 +12441,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadron( "Mineralnye CAS", AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 10 )
-             A2GDispatcher:SetSquadronCas( "Mineralnye CAS", 500, 700, 2000, 4000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mineralnye CAS" )
-             A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Mineralnye CAS" )
+             local squadronName =  "Mineralnye CAS"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 20 )
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadronCasPatrol( "Mineralnye CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-             A2GDispatcher:SetSquadronCasPatrolInterval("Mineralnye CAS", 1)
-             --A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Nalchik CAS" )
-             --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Nalchik CAS" )
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             A2GDispatcher:SetSquadron( "Mineralnye BAI", AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 10 )
-             A2GDispatcher:SetSquadronBai( "Mineralnye BAI", 500, 700, 3000, 5000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mineralnye BAI" )
+             squadronName = "Mineralnye BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
 
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             A2GDispatcher:SetSquadron( "Mineralnye SEAD", AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 10 )
-             A2GDispatcher:SetSquadronSeadPatrol( "Mineralnyek SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-             A2GDispatcher:SetSquadronSeadPatrolInterval("Mineralnye SEAD", 1)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mineralnye SEAD" )
+             squadronName = "Mineralnye SEAD"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 20 )
+             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
          end -- if wh_activation.Warehouse_AB.red.Mineralnye
 
@@ -12367,9 +12530,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             A2GDispatcher:SetSquadron( "Mozdok BAI", AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
-             A2GDispatcher:SetSquadronBai( "Mozdok BAI", 500, 700, 3000, 5000 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Mozdok BAI" )
+             local squadronName = "Mozdok BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
 
 
          end -- if wh_activation.Warehouse_AB.red.Mozdok
@@ -12441,16 +12604,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadron( "Didi CAS", "FARP Didi", casTemplateHeli, 10 )
+             local squadronName = "Didi CAS"
+             A2GDispatcher:SetSquadron( squadronName, "FARP Didi", casTemplateHeli, 20)
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, nil, 60 * 4, 0.3, 200, 300, 700, 1500)
+             --[[
              A2GDispatcher:SetSquadronCas( "Didi CAS", 200, 300, 700, 1500 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Didi CAS" )
              A2GDispatcher:SetSquadronTakeoffInterval( "Didi CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+             ]]
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+             --[[
              A2GDispatcher:SetSquadronCasPatrol( "Didi CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'BARO' )
              A2GDispatcher:SetSquadronCasPatrolInterval("Didi CAS", 4)
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Didi CAS" )
-
+             ]]
 
          end -- if wh_activation.Warehouse_AB.red.Didi
 
@@ -12519,16 +12688,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
              --local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadron( "Biteta CAS", "FARP Biteta", casTemplateHeli, 10 )
+             local squadronName = "Biteta CAS"
+             A2GDispatcher:SetSquadron( squadronName, "FARP Biteta", casTemplateHeli, 20 )
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, 60 * 4, 0.3, 200, 300, 700, 1500)
+             --[[
              A2GDispatcher:SetSquadronCas( "Biteta CAS", 200, 300, 700, 1500 )
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Biteta CAS" )
              A2GDispatcher:SetSquadronTakeoffInterval( "Biteta CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
+             ]]
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             --[[
              A2GDispatcher:SetSquadronCasPatrol( "Didi CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'RADIO' )
              A2GDispatcher:SetSquadronCasPatrolInterval("Biteta CAS", 4)
              A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Biteta CAS" )
-
+             ]]
 
          end -- if wh_activation.Warehouse_AB.red.Biteta
 
