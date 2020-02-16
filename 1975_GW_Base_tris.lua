@@ -462,14 +462,14 @@ function assignDetectionGroupTask(detectionGroup, targetZone, airbase, altitude,
 
     logging( 'enter', 'assignDetectionGroupTask()' )
 
-    detectionGroup:StartUncontrolled()
+    -- detectionGroup:StartUncontrolled()
     detectionGroup:OptionROTPassiveDefense()
     local ToCoord = targetZone:GetRandomCoordinate():SetAltitude( altitude )
     local HomeCoord = airbase:GetCoordinate():SetAltitude( altitude )
     local task = detectionGroup:TaskOrbitCircle( altitudeDetection, detectionGroup:GetSpeedMax() * speedPerc, ToCoord )
     local WayPoints = {}
     WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-    WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * speedPerc, { task }, "Detection for ground threat" )
+    WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * speedPerc, { task }, "Orbiting to detection threats" )
     WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
     WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
     detectionGroup:Route( WayPoints )
@@ -713,89 +713,6 @@ end
 
 
 
---[[
-
-function configureAI_A2GMission( A2GDispatcher, typeMission, airbase, template, numAircraft, takeoff, landing, takeoffInterval, patrol, patrolZone, patrolInterval, flightData)
-
-
-    patrol = patrol or false
-
-    if typeMission = 'CAS' then
-
-        local name = airbase .. ' CAS'
-
-        A2GDispatcher:SetSquadron( name, airbase, template, numAircraft )
-
-        if patrol then
-
-            A2GDispatcher:SetSquadronCasPatrol( name, patrolZone, 2000, 3500, 400, 600, 500, 700, 'BARO' )
-            A2GDispatcher:SetSquadronCasPatrolInterval(name, patrolInterval)
-            A2GDispatcher:SetSquadronTakeoffFromParkingCold( name )
-            --A2GDispatcher:SetSquadronTakeOffInterval( name, 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-            --A2GDispatcher:SetSquadronLandingAtEngineShutdown( name )
-        else
-
-            A2GDispatcher:SetSquadronCas( name, 500, 700, 2000, 4000 )
-            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
-            --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-            --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
-
-        end
-
-
-    elseif typeMission = 'BAI' then
-
-        if patrol then
-
-            A2GDispatcher:SetSquadronCasPatrol( "Beslan CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-            A2GDispatcher:SetSquadronCasPatrolInterval("Beslan CAS", 1)
-            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan CAS" )
-            --A2GDispatcher:SetSquadronTakeOffInterval( "Beslan SEAD", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-            --A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Beslan SEAD" )
-
-        else
-
-            A2GDispatcher:SetSquadron( "Beslan BAI", AIRBASE.Caucasus.Beslan, baiTemplate, 10 )
-            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-            -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-            A2GDispatcher:SetSquadronBai( "Beslan BAI", 500, 700, 3000, 5000 )
-            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan BAI" )
-
-        end
-
-
-    elseif typeMission = 'SEAD' then
-
-        if patrol then
-
-            A2GDispatcher:SetSquadron( "Beslan SEAD", AIRBASE.Caucasus.Beslan, seadTemplate, 10 )
-            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-            -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-            A2GDispatcher:SetSquadronSeadPatrol( "Beslan SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-            A2GDispatcher:SetSquadronSeadPatrolInterval("Beslan SEAD", 1)
-            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan SEAD" )
-
-
-        else
-
-            A2GDispatcher:SetSquadron( "Beslan BAI", AIRBASE.Caucasus.Beslan, baiTemplate, 10 )
-            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-            -- (SquadronName, EngageMinSpeed, EngageMaxSpeed, EngageFloorAltitude, EngageCeilingAltitude)
-            A2GDispatcher:SetSquadronBai( "Beslan BAI", 500, 700, 3000, 5000 )
-            A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Beslan BAI" )
-
-
-        end
-
-
-    else
-        logging('warning', { 'detectionGroup:OnEventDead( EventData )' , 'typeMission not found!!' } )
-    end
-
-end
-]]
-
-
 --- SUPPRESSION
 
 --- applica la Functionality SUPPRESSION al group passato come parametro
@@ -899,7 +816,7 @@ end -- end function
 --
 --
 -- @param detectionSetGroup: set of detection GROUP
--- @param range:  range max of detection target
+-- @param range:  distanza massima di valutazione se due o piu' target appartengono ad uno stesso gruppo (30km x aerei modern, 10 km per ww2, 1 km per ground)
 -- @param filterCategories: set of filter for of unit: nil all category will be detected
 -- @param distanceProbability:  probability of detection @ 10000 m (0 - 1)
 -- @param alfaProbability:  probability of detection @ 0 degree of delta respect front visual detection (0 - 1)
@@ -1404,6 +1321,7 @@ end
 -- @param engage_radius:  Initialize the dispatcher, setting up a radius of 50km where any airborne friendly without an assignment within 50km radius from a detected target, will engage that target.
 -- @param view_tactical_display:  (true/false) Visualize tactical display
 -- @return AI_A2A_DISPATCHER
+-- DEPRECATED
 function dispatcher( detection, gci_radius, engage_radius, view_tactical_display )
 
   -- A2ADispatcher:
@@ -1425,6 +1343,45 @@ function dispatcher( detection, gci_radius, engage_radius, view_tactical_display
 end
 
 
+
+
+--- Configure the AI-A2A Dispatcher
+-- @param A2GDispatcher
+-- @param defenceRadius
+-- @param defenceReactivity
+-- @param HQ
+-- @param takeoff
+-- @param landing
+-- @param overhead
+-- @param damageThrs
+-- @param patrolLimit
+-- @param tacticalDisplay
+function configureAI_A2ADispatcher( A2ADispatcher, engage_radius, gci_radius, takeoff, landing, overhead, damageThrs, tacticalDisplay )
+
+    logging( 'enter', 'configureAI_A2ADispatcher()' )
+
+    tacticalDisplay = tacticalDisplay or false
+
+    -- Set the ground intercept radius as the radius to ground control intercept detected targets from the nearest airbase.
+    A2ADispatcher:SetGciRadius( gci_radius )
+    -- Initialize the dispatcher, setting up a radius of 50km where any airborne friendly without an assignment within 50km radius from a detected target, will engage that target.
+    A2ADispatcher:SetEngageRadius( engage_radius )
+    A2ADispatcher:SetTacticalDisplay( tacticalDisplay )
+
+    A2ADispatcher:SetDefaultTakeoff( takeoff )
+    A2ADispatcher:SetDefaultLanding( landing )
+    A2ADispatcher:SetDefaultOverhead( overhead )
+    A2ADispatcher:SetDefaultDamageThreshold( damageThrs )
+
+
+    logging( 'exit', 'configureAI_A2ADispatcher()' )
+
+end
+
+
+
+
+
 -- ASSIGN SQUADRON AT AIRBASE
 
 -- assign_squadron_at_airbase viene modificato in base alla situazione: gli squadroni assegnati alla specifica airbase e il numero di aerei disponibili
@@ -1438,6 +1395,7 @@ end
 --  @param squadron_name:  specific air template name created in ME
 --  @param no_aircraft:  number of aircraft assigned at airbase
 --  @param A2ADispatcher:  AI_A2A_DISPATCHER
+-- DEPRECATED
 function assign_squadron_at_airbase ( airbase_name, airbase, squadron_name, no_aircraft, A2ADispatcher )
 
   A2ADispatcher:SetSquadron( airbase_name, airbase, squadron_name, no_aircraft )
@@ -3702,9 +3660,9 @@ local air_template_red = {
           GA_Mig_27K_ROCKET_Light = 'SQ Red ROCKET_Sparse_Light Mig-27K',
           REC_Mig_25RTB = 'SQ red REC Mig_25RTB',  -- RECCE
           REC_SU_24MR = 'SQ red REC SU_24MR',
-          BOM_TU_22_Bomb = 'SQ red BOM TU_22 Bomb', -- INTERDICTION
+          BOM_TU_22_Bomb = 'SQ red BOM TU_22', -- INTERDICTION
           BOM_TU_22_Nuke = 'SQ red BOM TU_22 Nuke',
-          BOM_SU_24_Bomb = 'SQ red BOM SU_24 Bomb',
+          BOM_SU_24_Bomb = 'SQ red BOM SU_24',
           BOM_SU_24_Structure = 'SQ red BOM SU_24 Structure',
           BOM_SU_17_Structure = 'SQ red BOM SU_17 Structure',
           BOM_MIG_27K_Structure = 'SQ red BOM MIG_27K Structure',
@@ -3795,7 +3753,7 @@ local air_template_blue = {
           REC_L_39C = 'SQ blue REC L_39C',  -- RECCE
           REC_F_4 = 'SQ blue REC F_4',
           BOM_SU_24_Bomb = 'SQ blue BOM SU_24', -- INTERDICTION
-          BOM_B_1B = 'SQ blue BOM B_1B Bomb',
+          BOM_B_1B = 'SQ blue BOM B_1B',
           B_1B_HBomb = 'SQ blue BOM B_1B HBomb',
           BOM_B_52H = 'SQ blue BOM B_52H',
           BOM_F_4_E_Structure = 'SQ blue Structure BOM F4-E',
@@ -3818,7 +3776,7 @@ local air_template_blue = {
           AFAC_AV_88 = 'SQ blue FAC AV-88',
           AFAC_MI_24 = 'SQ blue FAC Mi-24',
           AFAC_SA342L = 'SQ blue FAC SA342L',
-          AFAC_UH_1H = 'SQ blue FAC UH_1H' -- INSERIRE
+          AFAC_UH_1H = 'SQ blue FAC UH_1H'
 
 }
 
@@ -3943,20 +3901,6 @@ local ground_group_template_blue = {
 
 
 
---- prefix_detector (AWACS AND RADAR)
---
--- red = {"DF CCCP AWACS", "DF CCCP EWR"
---
--- DF GEORGIA AWACS", "DF GEORGIA EWR"
---
---
-local prefix_detector = {
-
-  red = {"DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" },
-
-  blue = {"DF GEORGIA AWACS", "DF GEORGIA EWR", "DF USA EWR", "DF USA AWACS", "SQ blue AWACS" }
-
-}
 
 
 
@@ -4162,7 +4106,48 @@ local activeGroundWar = true
 local activeSeaWar = false
 
 
+
+-- Civilian Traffic activation
+
+local blue_civilian_traffic = false
+
+
+-- AI_A2A Activation
+local active_AI_A2A_red = false
+local active_AI_A2A_blue = false
+
+
+
+
+-- AI_A2G Activation
+local activeAI_A2G_Dispatching_Red = true
+local activeAI_A2G_Dispatching_Blue = true
+
+
+-- BALANCER activation
+local activeBalancer = false
+
+
+
 -- warehouse activation
+-- 1 WH (warehouse) activation,
+-- 2 AI_CAS activation,
+-- 3 AI_BAI activation,
+-- 4 AI_SEAD activation,
+-- 5 WH_CAP activation,
+-- 6 WH_GA activation,
+-- 7 WH_BOMBING,
+-- 8 WH_BAI activation,
+-- 9 WH_AWACS activation,
+-- 10 WH_RECON_Activation,
+-- 11 WH_TRANSPORT activation
+-- 12 WH_Ground_Attack Activation
+-- 13 WH_JTAC activation
+-- 14 WH_Ground_Transport
+-- 15 WH_AFAC activation
+-- 16 AI_CAP activation
+-- 17 AI_GCI activation
+
 local wh_activation = {
 
 
@@ -4170,19 +4155,19 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   false,
-       Gori          =   true,
-       Khashuri      =   false
+       Zestafoni     =   { false, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false, false },
+       Gori          =   { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
+       Khashuri      =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false }
 
 
     },
 
     red = {
 
-      Biteta        =   false,
-      Didi          =   true,
-      Kvemo_Sba     =   false,
-      Alagir        =   false
+      Biteta        =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
+      Didi          =   { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
+      Kvemo_Sba     =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
+      Alagir        =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false }
 
     }
 
@@ -4192,29 +4177,62 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   false,
-      Soganlug      =   false,
-      Tbilisi       =   true,
-      Kutaisi       =   true,
-      Kvitiri       =   false,
-      Kvitiri_Helo  =   false,
-      Batumi        =   true
+      Vaziani       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Soganlug      =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Tbilisi       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Kutaisi       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Kvitiri       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Kvitiri_Helo  =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Batumi        =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true }
 
     },
 
     red = {
 
-      Mozdok        =   false,
-      Mineralnye    =   false,
-      Beslan        =   true,
-      Nalchik       =   true
+      Mozdok        =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Mineralnye    =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Beslan        =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
+      Nalchik       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true }
 
     }
 
-  },
+  }
 
 
 }
+
+
+logging('info', { 'wh_activation' , 'list' } )
+
+for i1, k1 in pairs(wh_activation) do
+
+  logging('info', { i1, '' } )
+
+  for i2, k2 in pairs(k1) do
+
+    logging('info', { i2, '' } )
+
+    for i3, k3 in pairs(k2) do
+
+      logging('info', { i3, '' } )
+
+      for i4, k4 in pairs(k3) do
+
+        local tf
+
+        if k4 then tf ='true' else tf = 'false' end
+
+        logging('info', { i4, tf } )
+
+      end
+
+    end
+
+  end
+
+end
+
+
 
 ---------------------------- SKILL
 -- RED
@@ -4818,6 +4836,50 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+    -- CAP ZONE
+
+
+    ---
+    --  cap_zone_db _red table
+    --
+    --  Qui devi riportare i nomi delle cap per la red coalition create in ME
+    --
+    --  [1] = 'RED CAP ZONE BESLAN',
+    --  [2] = 'RED CAP ZONE NALCHIK',
+    --  [3] = 'RED CAP ZONE TEBERDA',
+    --  [4] = 'RED CAP ZONE SOCHI'
+    --
+    local cap_zone_db_red = {
+
+      [1] = 'RED CAP ZONE BESLAN',
+      [2] = 'RED CAP ZONE NALCHIK',
+      [3] = 'RED CAP ZONE TEBERDA',
+      [4] = 'RED CAP ZONE SOCHI'
+
+      }
+
+    ---
+    --  cap_zone_db _red table
+    --
+    --  Qui devi riportare i nomi delle cap per la red coalition create in ME
+    --
+    -- [1] = 'BLUE CAP ZONE TBILISI',
+    -- [2] = 'BLUE CAP ZONE KUTAISI',
+    -- [3] = 'BLUE CAP ZONE SUKUMI',
+    -- [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
+    --
+    local cap_zone_db_blue = {
+
+      [1] = 'BLUE CAP ZONE TBILISI',
+      [2] = 'BLUE CAP ZONE KUTAISI',
+      [3] = 'BLUE CAP ZONE SUKUMI',
+      [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
+
+      }
+
+
+
+
 
 
     ---- MOMEMENT ---------------------
@@ -5030,7 +5092,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  -- SET_Group dedicati alla Detection A2A
+  -- Red side
+  detectionGroupSetRedA2A = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+  detectionGroupSetRedA2A:FilterPrefixes( { "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
 
+
+
+  -- Blue side
+  detectionGroupSetBlueA2A = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+  detectionGroupSetBlueA2A:FilterPrefixes( { "DF GEORGIA AWACS", "DF GEORGIA EWR", "DF USA EWR", "DF USA AWACS", "SQ blue AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
 
 
 
@@ -5342,7 +5413,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   -------------------------------------- red DIDI warehouse operations -------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse.red.Didi then
+  if wh_activation.Warehouse.red.Didi[1] then
 
       -- escono i cami ma sono fermi
 
@@ -5391,9 +5462,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           --if true and (pos_heli-2) <= num_mission_helo  then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           --if true and (pos_heli-1) <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-          if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Didi[12] and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Didi[12] and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Didi[12] and pos <= num_mission  then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
 
           logging('finer', { 'Didi scheduler function' , 'addRequest Didi warehouse'} )
 
@@ -5582,7 +5653,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ---------------------------------------------- red BITETA warehouse operations ------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse.red.Biteta then
+  if wh_activation.Warehouse.red.Biteta[1] then
 
       -- Biteta warehouse e' una supply line warehouse: funziona da collegamento per il trasferimento degli asset tra i diversi nodi della supply line
 
@@ -5624,8 +5695,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local pos = 1
           --local pos_heli = 1
 
-          if true and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
-          if true and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
+          if wh_activation.Warehouse.red.Biteta[12] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
+          if wh_activation.Warehouse.red.Biteta[12] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
           --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' ) pos = pos + 1 end
 
           logging('finer', { 'Biteta scheduler function' , 'addRequest Biteta warehouse'} )
@@ -5735,7 +5806,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------- red Warehouse KVEMO_SBA operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse.red.Kvemo_Sba then
+  if wh_activation.Warehouse.red.Kvemo_Sba[1] then
 
 
       warehouse.Kvemo_Sba:Start()
@@ -5794,9 +5865,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- if true and (pos_heli-2) <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           -- if true and (pos_heli-1) <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-          if true and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[12] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
 
           logging('finer', { 'Kvemo_Sba scheduler function' , 'addRequest Kvemo_Sba warehouse'} )
 
@@ -5969,7 +6040,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  if wh_activation.Warehouse.red.Alagir then
+  if wh_activation.Warehouse.red.Alagir[1] then
 
 
       warehouse.Alagir:Start()
@@ -6020,14 +6091,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local pos_heli = 1
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if true and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'Transfer to Biteta') pos_heli = pos_heli + 1  end
-          if true and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'Transfer to Kvemo_Sba') pos_heli = pos_heli + 1  end
+          if wh_activation.Warehouse.red.Alagir[11] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'Transfer to Biteta') pos_heli = pos_heli + 1  end
+          if wh_activation.Warehouse.red.Alagir[11] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'Transfer to Kvemo_Sba') pos_heli = pos_heli + 1  end
           -- inserisci missioni cargoSet
 
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-          if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'Trasnfert to Batumi' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'Trasnfert to Batumi' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1, nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1, nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
 
           logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
 
@@ -6070,7 +6141,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ---------------------------------------------------------------- red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.red.Mineralnye then
+  if wh_activation.Warehouse_AB.red.Mineralnye[1] then
 
 
       logging('info', { 'main' , 'init Warehouse MINERALNYE operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
@@ -6117,14 +6188,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
 
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[8] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[5] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[11] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
           logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * ( 1 + rand_sched)} )
 
         end, {}, start_sched * mineralnye_efficiency_influence, interval_sched, rand_sched
@@ -6425,7 +6496,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------------------------ red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.red.Mozdok then
+  if wh_activation.Warehouse_AB.red.Mozdok[1] then
 
 
       -- Mozdok e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
@@ -6487,15 +6558,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local depart_time = defineRequestPosition(9)
           local pos = 1
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random(4, 6), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(2, 4), nil, nil, nil, "PATROL") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(4, 6), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(4, 6), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[8] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[8] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random(4, 6), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[5] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(2, 4), nil, nil, nil, "PATROL") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(4, 6), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(4, 6), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[11] and pos <= num_mission then warehouse.Mozdok:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(4, 6), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
 
           logging('info', { 'main' , 'Mozdok scheduler - start time:' .. start_sched *  mozdok_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -6836,7 +6907,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------------------------ red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.red.Beslan then
+  if wh_activation.Warehouse_AB.red.Beslan[1] then
 
       logging('info', { 'main' , 'addAsset Beslan warehouse'} )
 
@@ -6885,15 +6956,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
 
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 4), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random(3, 4), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, math.random(1, 2), nil, nil, nil, "AWACS") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BAI BOMBING STRUCTURE") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE GORI") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE TBILISI") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 4), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random(3, 4), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[9] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, math.random(1, 2), nil, nil, nil, "AWACS") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BAI BOMBING STRUCTURE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE GORI") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE TBILISI") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[11] and pos <= num_mission then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
           logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * ( 1 + rand_sched)} )
 
         end, {}, start_sched * beslan_efficiency_influence, interval_sched, rand_sched
@@ -7238,7 +7309,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------------------------- red Nalchik warehouse operations ------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.red.Nalchik then
+  if wh_activation.Warehouse_AB.red.Nalchik[1] then
 
 
 
@@ -7282,20 +7353,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
         function()
 
 
-          local num_mission = 8
+          local num_mission = 9
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(3, 5), nil, nil, nil, "PATROL") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(3, 5), nil, nil, nil, "PATROL") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random(3, 5), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random(3, 5), nil, nil, nil, "BOMBING STRUCTURE KHASHURI") pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[5] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(3, 5), nil, nil, nil, "PATROL") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[5] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(3, 5), nil, nil, nil, "PATROL") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random(3, 5), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random(3, 5), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 5), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random(3, 5), nil, nil, nil, "BOMBING STRUCTURE KHASHURI") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[11] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(3, 5), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
           logging('info', { 'main' , 'Nalchik scheduler - start time:' .. start_sched *  nalchik_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
         end, {}, start_sched * nalchik_efficiency_influence, interval_sched, rand_sched
@@ -7610,7 +7681,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
   ------------------------------------------------- blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
 
 
-  if wh_activation.Warehouse_AB.blue.Batumi then
+  if wh_activation.Warehouse_AB.blue.Batumi[1] then
 
 
       --  Batumi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
@@ -7673,15 +7744,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
-           if false and pos <= num_mission  then  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if false and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, 1, nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if false and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-           if false and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-           if false and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-           if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-           if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-           if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS") pos = pos + 1  end
-           if true and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[8] and pos <= num_mission  then  warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue.Batumi[8] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, 1, nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue.Batumi[7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( 1 , 2 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( 1 , 2 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[11] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[11] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 1 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[9] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Batumi[10] and pos <= num_mission  then warehouse.Batumi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( 1 , 2 ), nil, nil, nil, "RECON AIRBASE") pos = pos + 1  end
            logging('info', { 'main' , 'Batumi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
         end, {}, start_sched *  batumi_efficiency_influence, interval_sched, rand_sched
@@ -8071,7 +8142,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------- blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.blue.Kutaisi then
+  if wh_activation.Warehouse_AB.blue.Kutaisi[1] then
 
 
       warehouse.Kutaisi:Start()
@@ -8131,17 +8202,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local pos = 1
 
            -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-           if false and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if false and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if false and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
-           if false and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-           if false and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-           if false and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue.Kutaisi[8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue.Kutaisi[5] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 1 , 2 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( 2 , 4 ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[9] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Kutaisi[10] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39C, math.random( 1 , 2 ), nil, nil, nil, "RECON FARP") pos = pos + 1  end
            logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  kutaisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
         end, {}, start_sched *  kutaisi_efficiency_influence, interval_sched, rand_sched
@@ -8524,7 +8595,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------- blue Warehouse KVITIRI operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.blue.Kvitiri then
+  if wh_activation.Warehouse_AB.blue.Kvitiri[1] then
 
 
       warehouse.Kvitiri:Start()
@@ -8569,17 +8640,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_L_39ZA_HRocket, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_L_39ZA_HRocket, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+              if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+              if wh_activation.Warehouse_AB.blue.Kvitiri[5] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[11] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[11] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri[11] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
               logging('info', { 'main' , 'Kvitiri scheduler - start time:' .. start_sched *  kvitiri_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched * kvitiri_efficiency_influence, interval_sched, rand_sched
@@ -8960,7 +9031,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------- blue Warehouse KVITIRI_HELO operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.blue.Kvitiri_Helo then
+  if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[1] then
 
 
       warehouse.Kvitiri_Helo:Start()
@@ -9000,12 +9071,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local depart_time = defineRequestPosition( num_mission )
               local pos = 1
 
-              if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON FARP") pos = pos + 1  end
-              if true and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[10] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random(1, 2), nil, nil, nil, "RECON FARP") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[12] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
               logging('info', { 'main' , 'Kvitiri_Helo scheduler - start time:' .. start_sched *  kvitiri_helo_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched * kvitiri_helo_efficiency_influence, interval_sched, rand_sched
@@ -9221,7 +9292,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------- blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse.blue.Zestafoni then
+  if wh_activation.Warehouse.blue.Zestafoni[1] then
 
 
       warehouse.Zestafoni:SetSpawnZone(ZONE:New("Warehouse ZESTAFONI Spawn Zone"))
@@ -9261,9 +9332,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local depart_time = defineRequestPosition(num_mission)
           local pos = 1
 
-          if true and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'CZ_PEREVI_attack_1' ) pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'CZ_PEREVI_attack_2' ) pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CZ_ONI_attack_3' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Zestafoni[12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'CZ_PEREVI_attack_1' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Zestafoni[12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'CZ_PEREVI_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Zestafoni[12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'CZ_ONI_attack_3' ) pos = pos + 1  end
         end, {}, start_ground_sched * zestafoni_efficiency_influence, interval_ground_sched, rand_ground_sched
 
       ) -- END SCHEDULER
@@ -9373,7 +9444,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ----------------------------------------------- blue Warehouse KHASHURI operations ------------------------------------------------------------------------------------------------------------------------
 
-    if wh_activation.Warehouse.blue.Khashuri then
+    if wh_activation.Warehouse.blue.Khashuri[1] then
 
 
         -- Khashuri e' una warehouse del fronte
@@ -9433,8 +9504,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
 
-          if true and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
-          if true and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'DIDMUKHA_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Khashuri[12] and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Khashuri[12] and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1, nil, nil, nil, 'DIDMUKHA_attack_2' ) pos = pos + 1  end
 
         end, {}, start_ground_sched * khashuri_efficiency_influence, interval_ground_sched, rand_ground_sched
 
@@ -9549,7 +9620,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------ blue Warehouse GORI operations ----------------------------------------------------------------------------------------------------------------------------
 
-    if wh_activation.Warehouse.blue.Gori then
+    if wh_activation.Warehouse.blue.Gori[1] then
 
 
 
@@ -9619,22 +9690,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- mech request
           --riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
-          if true and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       2 , nil, nil, nil, 'TSKHINVALI_Attack_APC' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'TSKHINVALI_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1 , nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, 1 , nil, nil, nil, 'SATIHARI_attack_1' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, 1, nil, nil, nil, 'SATIHARI_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[13] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Gori[13] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
 
           -- NON APPAIONO GLI AFAC HELO: sono apparsi cambiando AFAC in NOTHING nel template e cambiando in averege lo skill !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          if true and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
-          if true and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-          if true and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+          if wh_activation.Warehouse.blue.Gori[6] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_SA_342,   1, nil, nil, nil, 'ATTACK_ZONE_HELO_Didmukha_Tsveri') pos_heli = pos_heli + 1  end
+          if wh_activation.Warehouse.blue.Gori[6] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+          if wh_activation.Warehouse.blue.Gori[13] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, 'JTAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if true and (pos_heli-2) then warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') end
-          if true and (pos_heli-1) then warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') end
+          if wh_activation.Warehouse.blue.Gori[15] and (pos_heli-2) then warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') end
+          if wh_activation.Warehouse.blue.Gori[15] and (pos_heli-1) then warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') end
 
           logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
@@ -9937,7 +10008,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------------------ blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
 
-    if wh_activation.Warehouse_AB.blue.Tbilisi then -- true activate tbilisi wh operations
+    if wh_activation.Warehouse_AB.blue.Tbilisi[1] then -- true activate tbilisi wh operations
 
       -- Nota: Tipo Operazioni Bomber, Transport, AWACS
 
@@ -10107,18 +10178,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local depart_time = defineRequestPosition( num_mission )
            local pos = 1
 
-           if false and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if false and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if false and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
-           if false and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-           if false and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-           if false and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
-           if true and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[8] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue.Tbilisi[8] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue.Tbilisi[5] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[7] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[7] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[7] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( 2 , 4 ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[9] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, math.random( 1 , 2 ), nil, nil, nil, "AWACS") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( 2 , 3 ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT") pos = pos + 1  end
 
            logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched * tblisi_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
@@ -10628,7 +10699,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     ------------------------------------------------------------ blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
 
-    if wh_activation.Warehouse_AB.blue.Vaziani then
+    if wh_activation.Warehouse_AB.blue.Vaziani[1] then
 
         logging('info', { 'main' , 'init Warehouse VAZIANI operations' } )
 
@@ -10677,17 +10748,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 local depart_time = defineRequestPosition( num_mission )
                 local pos = 1
 
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-                if true and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+                if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+                if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random(2, 3), nil, nil, nil, "PATROL") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random(2, 3), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random(2, 3), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random(3, 4), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(3, 4), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(2, 3), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[11] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random(1, 2), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[11] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[14] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random(3, 4), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                 logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
             end, {}, start_sched * vaziani_efficiency_influence, interval_sched, rand_sched
@@ -11092,7 +11163,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     -------------------------------------------------------------- blue Warehouse Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
-    if wh_activation.Warehouse_AB.blue.Soganlug then
+    if wh_activation.Warehouse_AB.blue.Soganlug[1] then
 
 
 
@@ -11160,19 +11231,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local depart_time = defineRequestPosition( num_mission )
             local pos = 1
 
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI") pos = pos + 1  end
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE DIDI") pos = pos + 1  end
-            if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA") pos = pos + 1  end
-            --if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4") pos = pos + 1  end
-          --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21") pos = pos + 1  end
-          --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT") pos = pos + 1  end
-          --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2") pos = pos + 1  end
-          --  if true and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+            if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+            if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE DIDI") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA") pos = pos + 1  end
+            --if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4") pos = pos + 1  end
+          --  if wh_activation.Warehouse_AB.blue.Soganlug[11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21") pos = pos + 1  end
+          --  if wh_activation.Warehouse_AB.blue.Soganlug[11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT") pos = pos + 1  end
+          --  if wh_activation.Warehouse_AB.blue.Soganlug[11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2") pos = pos + 1  end
+          --  if wh_activation.Warehouse_AB.blue.Soganlug[14] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
             logging('info', { 'main' , 'Soganlug scheduler - start time:' .. start_sched *  soganlug_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * (1+rand_sched)} )
 
           end, {}, start_sched *  soganlug_efficiency_influence, interval_sched, rand_sched
@@ -11564,48 +11635,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -- CAP ZONE
-
-
-    ---
-    --  cap_zone_db _red table
-    --
-    --  Qui devi riportare i nomi delle cap per la red coalition create in ME
-    --
-    --  [1] = 'RED CAP ZONE BESLAN',
-    --  [2] = 'RED CAP ZONE NALCHIK',
-    --  [3] = 'RED CAP ZONE TEBERDA',
-    --  [4] = 'RED CAP ZONE SOCHI'
-    --
-    local cap_zone_db_red = {
-
-      [1] = 'RED CAP ZONE BESLAN',
-      [2] = 'RED CAP ZONE NALCHIK',
-      [3] = 'RED CAP ZONE TEBERDA',
-      [4] = 'RED CAP ZONE SOCHI'
-
-      }
-
-    ---
-    --  cap_zone_db _red table
-    --
-    --  Qui devi riportare i nomi delle cap per la red coalition create in ME
-    --
-    -- [1] = 'BLUE CAP ZONE TBILISI',
-    -- [2] = 'BLUE CAP ZONE KUTAISI',
-    -- [3] = 'BLUE CAP ZONE SUKUMI',
-    -- [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
-    --
-    local cap_zone_db_blue = {
-
-      [1] = 'BLUE CAP ZONE TBILISI',
-      [2] = 'BLUE CAP ZONE KUTAISI',
-      [3] = 'BLUE CAP ZONE SUKUMI',
-      [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
-
-      }
-
-
 
   -- END CAP ZONE
 
@@ -11616,7 +11645,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
   -- Attualmente i solt gestiti dalla AI effettuano CAP, considerando che le CAP e le CGI sono gestiti tramite l'apposita sezione,
   -- cambia il task delle AI facendogli effettuare missioni BAI, CAS o RECO
 
-  local activeBalancer = false
 
   if activeBalancer then
 
@@ -11853,6 +11881,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+if active_AI_A2A_red then
+
+
   -- RED FORCE CAP-GCI
 
   -- NOTA: UTILIZZATO SOLO PER LE CAP E GCI AI-
@@ -11866,29 +11897,33 @@ if conflictZone == 'Zone 1: South Ossetia' then
   -- Credo che per poter utilizzare esclusivamente le gci suad devi dedicare a loro l'uso di un aeroporto: quindi scegli per le cap gli aeroporti vicino al fronte, mentre quelli lontani per i gci
 
 
-
+  logging('info', { 'active_AI_A2A_red' , 'Starting'} )
 
 
 
   -- Setup generale
 
-  local activeRedCAP = true
-  local activeRedGCI = true
-  local activeBlueCAP = true
-  local activeBlueGCI = true
 
-  local categories = {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}
+  detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
+
+  local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+
   --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
   -- i distanza impostata a 30 km
   -- local Detection_Red = detection(prefix_detector.red, 30000)
 
-  local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, categories, nil, nil, nil, nil )
+  --local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, nil )
 
   --- A2ADispatcher red:
   -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
   -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
   -- true/false: view tactital display
-  local A2ADispatcher_Red = dispatcher(Detection_Red, 70000, 20000, false)
+  --local A2ADispatcher_Red = dispatcher(detection, 70000, 20000, true)
+
+  -- A2ADispatcher:
+  A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
+  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
+
 
 
 
@@ -11898,87 +11933,101 @@ if conflictZone == 'Zone 1: South Ossetia' then
   local min_time_cap = 10
   local max_time_cap = 30
   local min_alt = 4000
-  local max_alt = 8000
+  local max_alt = 9000
   local min_speed_patrol = 500
   local max_speed_patrol = 800
   local min_speed_engage = 800
   local max_speed_engage = 1200
 
+  -- AWACS
+  local spawnDetectionGroup = SPAWN:New( air_template_red.AWACS_TU_22 )
+  spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+  spawnDetectionGroup:InitCleanUp(180)
+  local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
+  --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold) --NOTA: Funzionava prima dell'aggiornamento di DCS
 
+  local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
-  -- assign squadron at airbase Mozdok
-  local Mozdok_Num_Air = 12
+  logging('info', { 'activeAI_A2A_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-
-  if activeRedCAP then
-    -- 12 Fighter Mig 21 CAP Only
-    -- funziona
-    assign_squadron_at_airbase ('Mozdok', AIRBASE.Caucasus.Mozdok, air_template_red.CAP_Mig_21Bis, Mozdok_Num_Air, A2ADispatcher_Red)
-
-    -- assign mission cap for Mozdok Squadron
-    assign_cap ( cap_zone_db_red[1], 'Mozdok', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Red )
-
-  end
+  assignDetectionGroupTask(detectionGroup, redAwacsZone.alagir, airbase, 7000, 9000, 0.5 )
 
 
 
 
-  if activeRedGCI then
-    -- assign squadron at airbase Beslan
-    -- 5 interceptor Mig 21 , no cap
-    local Beslan_Num_Air = 5
 
-    -- funziona
-    assign_squadron_at_airbase ('Beslan', AIRBASE.Caucasus.Beslan, air_template_red.GCI_Mig_21Bis, Beslan_Num_Air, A2ADispatcher_Red)
+  if wh_activation.Warehouse_AB.red.Mozdok[1] then
 
-    -- assign CGI mission for Beslan Squadron:
-    assign_gci('Beslan', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Red)
+    logging('info', { 'wh_activation.Warehouse_AB.red.Mozdok' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Mozdok[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Mozdok[17] } )
 
-  end
+    A2ADispatcher:SetSquadron('Mozdok CAP', AIRBASE.Caucasus.Mozdok, {air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_23MLD}, 15)
+    A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
 
-
-
-  if activeRedGCI then
-    -- assign squadron at airbase Nalchik
-    -- 3 interceptor Mig 25 , no cap
-    local Nalchik_Num_Air = 3
-
-    -- funziona
-    assign_squadron_at_airbase ('Nalchik', AIRBASE.Caucasus.Nalchik, air_template_red.GCI_Mig_25PD, Nalchik_Num_Air, A2ADispatcher_Red)
-
-    -- assign CGI mission for Nalchik Squadron:
-    assign_gci('Nalchik', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Red)
-
-  end
-
-
-  if activeRedCAP then
-    -- assign squadron at airbase Mineralnye
-    -- 12 Fighter Mig 23 CAP Only
-    local Mineralnye_Num_Air = 12
-
-
-    -- funziona
-    assign_squadron_at_airbase ('Mineralnye', AIRBASE.Caucasus.Mineralnye_Vody, air_template_red.CAP_Mig_23MLD, Mineralnye_Num_Air, A2ADispatcher_Red)
-
-    -- assign mission cap for Mineralnye Squadron
-    assign_cap ( cap_zone_db_red[2], 'Mineralnye', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Red )
+    if wh_activation.Warehouse_AB.red.Mozdok[16] then assign_cap ( cap_zone_db_red[1], 'Mozdok CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red.Mozdok[17] then assign_gci('Mozdok GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher) end
 
   end
 
 
 
 
+  if wh_activation.Warehouse_AB.red.Beslan[1] then
+
+    logging('info', { 'wh_activation.Warehouse_AB.red.Beslan' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Beslan[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Beslan[17] } )
+
+    A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, air_template_red.GCI_Mig_21Bis, 15)
+    A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
+
+    if wh_activation.Warehouse_AB.red.Beslan[16] then assign_cap ( cap_zone_db_red[2], 'Beslan CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red.Beslan[17] then assign_gci('Beslan GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher) end
+
+  end
+
+
+
+  if wh_activation.Warehouse_AB.red.Nalchik[1] then
+
+    logging('info', { 'wh_activation.Warehouse_AB.red.Nalchik' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Nalchik[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Nalchik[17] } )
+
+    A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
+
+    if wh_activation.Warehouse_AB.red.Nalchik[16] then assign_cap ( cap_zone_db_red[3], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red.Nalchik[17] then assign_gci('Nalchik GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher) end
+
+  end
+
+
+  if wh_activation.Warehouse_AB.red.Mineralnye[1] then
+
+    logging('info', { 'wh_activation.Warehouse_AB.red.Mineralnye' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Mineralnye[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Mineralnye[17] } )
+
+    A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
+
+
+    if wh_activation.Warehouse_AB.red.Mineralnye[16] then assign_cap ( cap_zone_db_red[4], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red.Mineralnye[17] then assign_gci('Mineralnye GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher) end
+
+  end
+
+
+end -- if active_AI_A2A_red
 
 
 
 
-  -- END RED FORCE CAP-GCI
 
 
+
+
+if active_AI_A2A_blue then
 
 
   -- BLUE FORCE CAP-GCI (OK)
+
+
+    logging('info', { 'active_AI_A2A_blue' , 'Starting'} )
 
   -- Kutaisi
 
@@ -11988,13 +12037,48 @@ if conflictZone == 'Zone 1: South Ossetia' then
   --- detection blue: e' la distanza massima di rilevamento dei radar
   -- i distanza impostata a 100 km
   -- local Detection_Blue = detection(prefix_detector.blue, 30000)
-  local Detection_Blue = detectionAI_A2A( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
+  --local Detection_Blue = detectionAI_A2A( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
 
   --- A2ADispatcher blue:
   -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
   -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
   -- true/false: view tactital display
-  local A2ADispatcher_Blue = dispatcher(Detection_Blue, 70000, 40000, false)
+  --local A2ADispatcher_Blue = dispatcher(Detection_Blue, 70000, 20000, true)
+
+  detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
+
+  local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+
+  -- A2ADispatcher:
+  A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
+  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
+
+
+  -- Setup Red CAP e GCI
+
+  local num_group = 2 --math.random(2, 3)
+  local min_time_cap = 10
+  local max_time_cap = 30
+  local min_alt = 4000
+  local max_alt = 9000
+  local min_speed_patrol = 500
+  local max_speed_patrol = 800
+  local min_speed_engage = 800
+  local max_speed_engage = 1200
+
+
+  -- AWACS
+  local spawnDetectionGroup = SPAWN:New( air_template_blue.AWACS_B_1B )
+  spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+  spawnDetectionGroup:InitCleanUp(180)
+  local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
+  --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold) --NOTA: Funzionava prima dell'aggiornamento di DCS
+
+  local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+
+  logging('info', { 'activeAI_A2A_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+  assignDetectionGroupTask(detectionGroup, blueAwacsZone.kutaisi, airbase, 7000, 9000, 0.5 )
 
 
 
@@ -12002,80 +12086,76 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   -- CAP and GCI
 
-  if activeBlueGCI then
-    -- assign squadron at airbase
-    -- 6 Mig 21 GCI  @ Kutaisi
-    local Kutaisi_Num_Air = 6
+  if wh_activation.Warehouse_AB.blue.Kutaisi[1] then
 
-    -- funziona
-    assign_squadron_at_airbase ('Kutaisi', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_Mig_21Bis, Kutaisi_Num_Air, A2ADispatcher_Blue)
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Kutaisi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Kutaisi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Kutaisi[17] } )
 
-    -- assign CGI mission for Squadron:
-    assign_gci('Kutaisi', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Blue)
+    A2ADispatcher:SetSquadron('Kutaisi CAP', AIRBASE.Caucasus.Kutaisi, air_template_blue.CAP_F_5, 15 )
+    A2ADispatcher:SetSquadron('Kutaisi GCI', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_F_5, 15 )
 
-  end
-
-
-
-  if activeBlueCAP then
-    -- assign squadron at airbase
-    -- 12 F-4 CAP @ Kutaisi zone
-    local Senaki_Num_Air = 12
-
-    -- funziona
-    assign_squadron_at_airbase ('Senaki', AIRBASE.Caucasus.Senaki_Kolkhi, air_template_blue.CAP_F_4, Senaki_Num_Air, A2ADispatcher_Blue)
-
-    -- assign mission cap for Squadron
-    assign_cap ( cap_zone_db_blue[2], 'Senaki', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Blue )
+    if wh_activation.Warehouse_AB.blue.Kutaisi[16] then assign_cap ( cap_zone_db_blue[1], 'Kutaisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue.Kutaisi[17] then assign_gci('Kutaisi GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
 
   end
 
 
 
-  if activeBlueCAP then
-    -- assign squadron at airbase
-    -- 12 Mig-21 CAP @ sukumi
-    local Sukhumi_Num_Air = 12
+  if wh_activation.Warehouse_AB.blue.Vaziani[1] then
 
-    -- funziona
-    assign_squadron_at_airbase ('Sukhumi', AIRBASE.Caucasus.Sukhumi_Babushara, air_template_blue.CAP_Mig_21Bis, Sukhumi_Num_Air, A2ADispatcher_Blue)
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Vaziani' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Vaziani[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Vaziani[17] } )
 
-    -- assign mission cap for Squadron
-    assign_cap ( cap_zone_db_blue[3], 'Sukhumi', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Blue )
+    A2ADispatcher:SetSquadron('Vaziani CAP', AIRBASE.Caucasus.Vaziani, {air_template_blue.CAP_F_4, air_template_blue.CAP_F_5}, 15)
+    A2ADispatcher:SetSquadron('Vaziani GCI', AIRBASE.Caucasus.Vaziani, {air_template_blue.GCI_F_4, air_template_blue.GCI_F_5}, 15)
 
-  end
-
-
-
-  if activeBlueCAP then
-    -- assign squadron at airbase
-    -- 12 La-39 CAP sukumi @ sochi-gudauta
-    local Gudauta_Num_Air = 12
-
-    -- funziona
-    assign_squadron_at_airbase ('Gudauta', AIRBASE.Caucasus.Gudauta, air_template_blue.CAP_L_39ZA, Gudauta_Num_Air, A2ADispatcher_Blue)
-
-    -- assign mission cap for Squadron
-    assign_cap ( cap_zone_db_blue[4], 'Gudauta', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Blue )
+    if wh_activation.Warehouse_AB.blue.Vaziani[16] then assign_cap ( cap_zone_db_blue[2], 'Vaziani CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue.Vaziani[17] then assign_gci('Vaziani GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
 
   end
 
 
 
+  if wh_activation.Warehouse_AB.blue.Soganlug[1] then
 
-  if activeBlueGCI then
-    -- assign squadron at airbase
-    -- 3 F-14A  GCI sukumi @ sochi-gudauta
-    local Sochi_Num_Air = 3
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Soganlug' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Soganlug[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Soganlug[17] } )
 
-    assign_squadron_at_airbase ('Sochi', AIRBASE.Caucasus.Sochi_Adler, air_template_blue.GCI_F_14A, Sochi_Num_Air, A2ADispatcher_Blue)
+    A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, air_template_blue.CAP_Mig_21Bis, 15)
+    A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, air_template_blue.GCI_Mig_21Bis, 15)
 
-    -- assign CGI mission for Squadron:
-    assign_gci('Sochi', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher_Blue)
+    if wh_activation.Warehouse_AB.blue.Soganlug[16] then assign_cap ( cap_zone_db_blue[3], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue.Soganlug[17] then assign_gci('Soganlug GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
 
   end
 
 
+
+  if wh_activation.Warehouse_AB.blue.Tbilisi[1] then
+
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Tbilisi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Tbilisi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Tbilisi[17] } )
+
+    A2ADispatcher:SetSquadron('Tbilisi CAP', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.CAP_L_39ZA, air_template_blue.CAP_Mig_19P}, 15)
+    A2ADispatcher:SetSquadron('Tbilisi GCI', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.GCI_Mig_19P, air_template_blue.GCI_Mig_21Bis}, 15)
+
+    if wh_activation.Warehouse_AB.blue.Tbilisi[16] then assign_cap ( cap_zone_db_blue[2], 'Tbilisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue.Tbilisi[17] then assign_gci('Tbilisi GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+
+  end
+
+
+
+
+  if wh_activation.Warehouse_AB.blue.Batumi[1] then
+
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Batumi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Batumi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Batumi[17] } )
+
+    A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4}, 15)
+    A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_Mig_21Bis, air_template_blue.CAP_F_4}, 15)
+
+    if wh_activation.Warehouse_AB.blue.Batumi[16] then assign_cap ( cap_zone_db_blue[4], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue.Batumi[17] then assign_gci('Batumi GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Landing.AtRunway, A2ADispatcher ) end
+
+  end
+
+end -- if active_AI_A2A_blue
 
 
 
@@ -12124,8 +12204,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   -- info @ https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/AI.AI_A2G_Dispatcher.html
 
-  local activeAI_A2G_Dispatching_Red = true
-  local activeAI_A2G_Dispatching_Blue = true
+
 
   if activeAI_A2G_Dispatching_Red then
 
@@ -12157,44 +12236,28 @@ if conflictZone == 'Zone 1: South Ossetia' then
       if activeAI_A2G_Dispatching_HQ1 then
 
 
-         local HQ1 = HQ_RED --GROUP:FindByName( "RED_HQ1" ) -- la posizione di riferimento della defence zone
-
 
          local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.2, 0.6, 3, true )
+         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
 
-         --[[
-         A2GDispatcher:SetTacticalDisplay(true)
-         -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-         A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-         A2GDispatcher:SetDefenseReactivityHigh()
-         -- Add defense coordinates.
-         A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-         -- default Setting
-         -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-         A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-         A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-         A2GDispatcher:SetDefaultOverhead( 0.2 )
-         A2GDispatcher:SetDefaultDamageThreshold( 0.60 )
-         -- A2GDispatcher:SetDefaultPatrolTimeInterval(600) --defautl 180-600
-         A2GDispatcher:SetDefaultPatrolLimit(2)
-         ]]
 
 
          -- A2G BESLAN (Squadron Su-17, Su-24)
 
-         if wh_activation.Warehouse_AB.red.Beslan then
+         if wh_activation.Warehouse_AB.red.Beslan[1] then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             spawnDetectionGroup:InitCleanUp(600)
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold) NOTA: Funzionava prima dell'aggiornamento di DCS
+             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12244,7 +12307,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                      end
 
-             end -- end function detectionGroup:OnEventLand( EventData )
+            end -- end function detectionGroup:OnEventLand( EventData )
+
+
 
                -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
                -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
@@ -12255,28 +12320,39 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
 
-             -- Set Defence Squadron
-             local squadronName = "Beslan CAS"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+             if wh_activation.Warehouse_AB.red.Beslan[2] then
+
+               -- Set Defence Squadron
+               local squadronName = "Beslan CAS"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+
+               -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
+
+               -- PATROL CAS MISSION
+               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+             end
+
+             if wh_activation.Warehouse_AB.red.Beslan[3] then
 
 
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
+                -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+               squadronName = "Beslan BAI"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, baiTemplate, 20 )
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+             end
 
 
-             -- PATROL CAS MISSION
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             if wh_activation.Warehouse_AB.red.Beslan[4] then
 
-              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             squadronName = "Beslan BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+               -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+               squadronName = "Beslan SEAD"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, seadTemplate, 20 )
+               configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
-
-             -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             squadronName = "Beslan SEAD"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, seadTemplate, 10 )
-             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             end
 
 
 
@@ -12285,13 +12361,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
          -- A2G Nalchik (Squadron Su-17, Mig-27, Reco Mig 25)
 
-         if wh_activation.Warehouse_AB.red.Nalchik then
+         if wh_activation.Warehouse_AB.red.Nalchik[1] then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             -- local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             spawnDetectionGroup:InitCleanUp(600)
+             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12350,24 +12429,36 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             local squadronName = "Nalchik CAS"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
+             if wh_activation.Warehouse_AB.red.Nalchik[2] then
 
+               local squadronName = "Nalchik CAS"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
 
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+               -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+             end
+
 
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             squadronName = "Nalchik BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+             if wh_activation.Warehouse_AB.red.Nalchik[3] then
+
+               squadronName = "Nalchik BAI"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, baiTemplate, 20 )
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+             end
 
 
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             squadronName = "Nalchik SEAD"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, seadTemplate, 20 )
-             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             if wh_activation.Warehouse_AB.red.Nalchik[4] then
+
+               squadronName = "Nalchik SEAD"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, seadTemplate, 20 )
+               configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+             end
 
 
 
@@ -12376,13 +12467,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
          -- A2G Mineralnye (squadron Mig-27 CAS e BAI, Su_24 Sead)
 
-         if wh_activation.Warehouse_AB.red.Mineralnye then
+         if wh_activation.Warehouse_AB.red.Mineralnye[1] then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             spawnDetectionGroup:InitCleanUp(180)
+             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12441,23 +12535,34 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             local squadronName =  "Mineralnye CAS"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 20 )
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
+             if wh_activation.Warehouse_AB.red.Mineralnye[2] then
 
+               local squadronName =  "Mineralnye CAS"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 20 )
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
 
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+               -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+             end
 
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             squadronName = "Mineralnye BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+             if wh_activation.Warehouse_AB.red.Mineralnye[3] then
+
+               squadronName = "Mineralnye BAI"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 20 )
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+             end
 
              -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             squadronName = "Mineralnye SEAD"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 20 )
-             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             if wh_activation.Warehouse_AB.red.Mineralnye[4] then
+
+               squadronName = "Mineralnye SEAD"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 20 )
+               configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+             end
 
          end -- if wh_activation.Warehouse_AB.red.Mineralnye
 
@@ -12465,13 +12570,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
          -- A2G Mozdok (Squadron Tu-22, Su-24 solo Bai)
 
-         if wh_activation.Warehouse_AB.red.Mozdok then
+         if wh_activation.Warehouse_AB.red.Mozdok[1] then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             spawnDetectionGroup:InitCleanUp(600)
+             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12530,9 +12638,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             local squadronName = "Mozdok BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+             if wh_activation.Warehouse_AB.red.Mozdok[3] then
+
+               local squadronName = "Mozdok BAI"
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+             end
 
 
          end -- if wh_activation.Warehouse_AB.red.Mozdok
@@ -12541,13 +12653,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
          -- A2G DIDI_CUPTA
 
-         if wh_activation.Warehouse.red.Didi then
+         if wh_activation.Warehouse.red.Didi[1] then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             spawnDetectionGroup:InitCleanUp(180)
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Didi[1] )
              local airbase = warehouse.Didi
+
+
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12580,7 +12696,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-            function detectionGroup:OnEventLand( EventData )
+             function detectionGroup:OnEventLand( EventData )
 
                      --self:E( { "Size ", Size = detectionGroup:GetSize() } )
                      logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
@@ -12603,23 +12719,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
              local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             local squadronName = "Didi CAS"
-             A2GDispatcher:SetSquadron( squadronName, "FARP Didi", casTemplateHeli, 20)
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, nil, 60 * 4, 0.3, 200, 300, 700, 1500)
-             --[[
-             A2GDispatcher:SetSquadronCas( "Didi CAS", 200, 300, 700, 1500 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Didi CAS" )
-             A2GDispatcher:SetSquadronTakeoffInterval( "Didi CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-             ]]
 
-             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
-             --[[
-             A2GDispatcher:SetSquadronCasPatrol( "Didi CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'BARO' )
-             A2GDispatcher:SetSquadronCasPatrolInterval("Didi CAS", 4)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Didi CAS" )
-             ]]
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             if wh_activation.Warehouse.red.Didi[2] then
+
+               local squadronName = "Didi CAS"
+               A2GDispatcher:SetSquadron( squadronName, "FARP Didi", casTemplateHeli, 20)
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, 60 * 4, 0.3, 200, 300, 700, 1500)
+
+               -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+
+             end
+
 
          end -- if wh_activation.Warehouse_AB.red.Didi
 
@@ -12627,17 +12739,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
          -- A2G Biteta
 
-         if wh_activation.Warehouse.red.Biteta then
+         if wh_activation.Warehouse.red.Biteta[1] then
 
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-             local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.Biteta[1] )
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             spawnDetectionGroup:InitCleanUp(600)
+             local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
              local airbase = warehouse.Biteta
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-             assignDetectionGroupTask(detectionGroup, afacZone.afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
+             assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -12672,7 +12786,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                      -- When the last detectionGroup of the group is declared dead, respawn the group.
                      if detectionGroup:GetSize() == 1 then
 
-                       detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.Biteta[1] )
+                       detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
 
                        logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12682,32 +12796,24 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                      end
 
-             end -- end function detectionGroup:OnEventLand( EventData )
+            end -- end function detectionGroup:OnEventLand( EventData )
 
              local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
              --local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             local squadronName = "Biteta CAS"
-             A2GDispatcher:SetSquadron( squadronName, "FARP Biteta", casTemplateHeli, 20 )
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, 60 * 4, 0.3, 200, 300, 700, 1500)
-             --[[
-             A2GDispatcher:SetSquadronCas( "Biteta CAS", 200, 300, 700, 1500 )
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Biteta CAS" )
-             A2GDispatcher:SetSquadronTakeoffInterval( "Biteta CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-             ]]
+             if wh_activation.Warehouse.red.Biteta[2] then
 
-             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-             --[[
-             A2GDispatcher:SetSquadronCasPatrol( "Didi CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'RADIO' )
-             A2GDispatcher:SetSquadronCasPatrolInterval("Biteta CAS", 4)
-             A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Biteta CAS" )
-             ]]
+               local squadronName = "Biteta CAS"
+               A2GDispatcher:SetSquadron( squadronName, "FARP Biteta", casTemplateHeli, 20 )
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, 60 * 4, 0.3, 200, 300, 700, 1500)
+
+               -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+             end
 
          end -- if wh_activation.Warehouse_AB.red.Biteta
-
-
 
 
       end -- if activeAI_A2G_Dispatching_HQ1
@@ -12743,8 +12849,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
     if activeAI_A2G_Dispatching_HQ1 then
 
 
-       local HQ1 = HQ_BLUE
-
        -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
 
 
@@ -12761,45 +12865,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-       A2GDispatcher:SetTacticalDisplay(true)
 
-       -- The defense radius defines the maximum radius that a defense will be initiated around each defense coordinate
-       A2GDispatcher:SetDefenseRadius( 50000 ) -- 50Km la cas vanno bene a 30 km, le sead  devono avere piu' aerei di attacco overhead=0.5 distanza boh, le bai la distanza deve essere alta: la ricognizione deve vedere i target lontani
-       A2GDispatcher:SetDefenseReactivityHigh()
-
-
-
-       -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-       -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-       -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-       -- Add defense coordinates.
-       A2GDispatcher:AddDefenseCoordinate( HQ1:GetName(), HQ1:GetCoordinate() )
-
-       -- default Setting
-       -- nota: puoi modificare i seguenti setting per squadron o airbase(?) utilizzando le apposite funzioni
-       --A2GDispatcher:SetDefaultTakeOffFromRunway() non funziona
-       --A2GDispatcher:SetDefaultLandingAtRunway()
-       A2GDispatcher:SetDefaultTakeoff( A2GDispatcher.Takeoff.Runway )
-       A2GDispatcher:SetDefaultLanding( A2GDispatcher.Landing.AtRunway )
-       A2GDispatcher:SetDefaultOverhead( 0.4 )
-       A2GDispatcher:SetDefaultDamageThreshold( 0.6 )
-       --A2GDispatcher:SetDefaultPatrolTimeInterval(600)
-       A2GDispatcher:SetDefaultPatrolLimit( 3 )
-
-       --A2GDispatcher:SetDefaultGrouping()
+       configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
 
 
 
        -- A2G Vaziani (Squadron B1-B, B-52, F4 Rec)
 
-       if wh_activation.Warehouse_AB.blue.Batumi then
+       if wh_activation.Warehouse_AB.blue.Batumi[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
-           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:InitCleanUp(600)
+           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12848,7 +12930,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                    end
 
-           end -- end function detectionGroup:OnEventLand( EventData )
+          end -- end function detectionGroup:OnEventLand( EventData )
 
            --local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
@@ -12856,30 +12938,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
            --local seadTemplate = { air_template_blue.CAS_Su_17M4_Cluster }
 
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           -- A2GDispatcher:SetSquadron( "Batumi CAS", AIRBASE.Caucasus.Batumi, casTemplateAirplane, 10 )
-           -- A2GDispatcher:SetSquadronCas( "Batumi CAS", 500, 700, 2000, 4000 )
-           -- A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi CAS" )
-           -- A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Batumi SEAD" )
-
-
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           -- A2GDispatcher:SetSquadronCasPatrol( "Batumi CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           -- A2GDispatcher:SetSquadronCasPatrolInterval("Batumi CAS", 2)
-           -- A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi CAS" )
 
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           A2GDispatcher:SetSquadron( "Batumi BAI", AIRBASE.Caucasus.Batumi, baiTemplate, 10 )
-           A2GDispatcher:SetSquadronBai( "Batumi BAI", 500, 700, 3000, 5000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi BAI" )
+           if wh_activation.Warehouse_AB.blue.Batumi[3] then
 
+             local squadronName = "Batumi BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Batumi, baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
 
-           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           -- A2GDispatcher:SetSquadron( "Batumi SEAD", AIRBASE.Caucasus.Batumi, seadTemplate, 10 )
-           -- A2GDispatcher:SetSquadronSeadPatrol( "Batumi SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           -- A2GDispatcher:SetSquadronSeadPatrolInterval("Batumi SEAD", 1)
-           -- A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Batumi SEAD" )
+           end
+
 
        end -- if wh_activation.Warehouse_AB.red.Batumi
 
@@ -12888,13 +12957,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        -- A2G Vaziani (Squadron Su-17, F4 Rec)
 
-       if wh_activation.Warehouse_AB.blue.Vaziani then
+       if wh_activation.Warehouse_AB.blue.Vaziani[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
-           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:InitCleanUp(600)
+           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12943,7 +13015,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                    end
 
-           end -- end function detectionGroup:OnEventLand( EventData )
+          end -- end function detectionGroup:OnEventLand( EventData )
 
 
            local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
@@ -12951,33 +13023,39 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb}
            local seadTemplate = { air_template_blue.CAS_Su_17M4_Cluster }
 
+           if wh_activation.Warehouse_AB.blue.Vaziani[2] then
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadron( "Vaziani CAS", AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 10 )
-           A2GDispatcher:SetSquadronCas( "Vaziani CAS", 500, 700, 2000, 4000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Vaziani CAS" )
-           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Vaziani SEAD" )
+             local squadronName = "Vaziani CAS"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 30 )
 
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadronCasPatrol( "Vaziani CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronCasPatrolInterval("Vaziani CAS", 2)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Vaziani CAS" )
+             -- PATROL CAS MISSION
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
+           end
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           A2GDispatcher:SetSquadron( "Vaziani BAI", AIRBASE.Caucasus.Vaziani, baiTemplate, 10 )
-           A2GDispatcher:SetSquadronBai( "Vaziani BAI", 500, 700, 3000, 5000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Vaziani BAI" )
+           if wh_activation.Warehouse_AB.blue.Vaziani[3] then
+
+             squadronName = "Vaziani BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+           end
 
 
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           A2GDispatcher:SetSquadron( "Kutaisi SEAD", AIRBASE.Caucasus.Vaziani, seadTemplate, 10 )
-           A2GDispatcher:SetSquadronSeadPatrol( "Kutaisi SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronSeadPatrolInterval("Kutaisi SEAD", 1)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi SEAD" )
+           if wh_activation.Warehouse_AB.blue.Vaziani[4] then
 
-       end -- if wh_activation.Warehouse_AB.red.Kutaisi
+             squadronName = "Vaziani SEAD"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, seadTemplate, 20 )
+             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+           end
+
+       end -- if wh_activation.Warehouse_AB.red.Vaziani
 
 
 
@@ -12986,13 +13064,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        -- A2G Kutaisi (Squadron F4, F5)
 
-       if wh_activation.Warehouse_AB.blue.Kutaisi then
+       if wh_activation.Warehouse_AB.blue.Kutaisi[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
-           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:InitCleanUp(600)
+           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -13023,7 +13104,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-          function detectionGroup:OnEventLand( EventData )
+           function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
                    logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
@@ -13049,30 +13130,40 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local seadTemplate = { air_template_blue.CAS_F_5E_3_Cluster }
 
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadron( "Kutaisi CAS", AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 10 )
-           A2GDispatcher:SetSquadronCas( "Kutaisi CAS", 500, 700, 2000, 4000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
-           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kutaisi CAS" )
+           if wh_activation.Warehouse_AB.blue.Kutaisi[2] then
 
+             -- Set Defence Squadron
+             local squadronName = "Kutaisi CAS"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 20 )
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadronCasPatrol( "Kutaisi CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronCasPatrolInterval("Kutaisi CAS", 2)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi CAS" )
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
+
+             -- PATROL CAS MISSION
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+           end
 
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           A2GDispatcher:SetSquadron( "Kutaisi BAI", AIRBASE.Caucasus.Kutaisi, baiTemplate, 10 )
-           A2GDispatcher:SetSquadronBai( "Kutaisi BAI", 500, 700, 3000, 5000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi BAI" )
+           if wh_activation.Warehouse_AB.blue.Kutaisi[3] then
+
+             squadronName = "Kutaisi BAI"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+           end
 
 
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           A2GDispatcher:SetSquadron( "Kutaisi SEAD", AIRBASE.Caucasus.Kutaisi, seadTemplate, 10 )
-           A2GDispatcher:SetSquadronSeadPatrol( "Kutaisi SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronSeadPatrolInterval("Kutaisi SEAD", 1)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kutaisi SEAD" )
+           if wh_activation.Warehouse_AB.blue.Kutaisi[4] then
+
+             squadronName = "Kutaisi SEAD"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, seadTemplate, 20 )
+             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+           end
+
 
        end -- if wh_activation.Warehouse_AB.red.Kutaisi
 
@@ -13081,15 +13172,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        -- A2G Kvitiri (Squadron F5, L-39)
 
-       if wh_activation.Warehouse_AB.blue.Kvitiri then
+       if wh_activation.Warehouse_AB.blue.Kvitiri[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
-           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kvitiri ) -- ATT PROBABILMENTE NON ESISTE AIRBASE: Sostotuisci con Farp
-           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           local airbase = warehouse.Kvitiri
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:InitCleanUp(600)
+           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+           --local detectionGroup = spawnDetectionGroup:SpawnFromStatic(staticObject.Warehouse_AB.blue.Kvitiri[1])
 
-           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
            assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
@@ -13118,7 +13212,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-          function detectionGroup:OnEventLand( EventData )
+           function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
                    logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
@@ -13143,31 +13237,40 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
            local seadTemplate = { air_template_blue.CAS_F_5E_3_Cluster }
 
+           if wh_activation.Warehouse_AB.blue.Kvitiri[2] then
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadron( "Kvitiri CAS", AIRBASE.Caucasus.Kvitiri, casTemplateAirplane, 10 )
-           A2GDispatcher:SetSquadronCas( "Kvitiri CAS", 500, 700, 2000, 4000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri CAS" )
-           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kvitiri CAS" )
+             local squadronName = "Kvitiri CAS"
+             A2GDispatcher:SetSquadron( squadronName, 'FARP Kvitiri', casTemplateAirplane, 20 )
 
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtEngineShutdown, nil, 0.3, 500, 700, 2000, 4000)
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadronCasPatrol( "Kvitiri CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronCasPatrolInterval("Kvitiri CAS", 2)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri CAS" )
+              -- PATROL CAS MISSION
+              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+            end
+
 
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           A2GDispatcher:SetSquadron( "Kvitiri BAI", AIRBASE.Caucasus.Kvitiri, baiTemplate, 10 )
-           A2GDispatcher:SetSquadronBai( "Kvitiri BAI", 500, 700, 3000, 5000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri BAI" )
+           if wh_activation.Warehouse_AB.blue.Kvitiri[3] then
+
+             squadronName = "Kvitiri BAI"
+             A2GDispatcher:SetSquadron( squadronName, 'FARP Kvitiri', baiTemplate, 20 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, A2GDispatcher.Landing.AtRunway, nil, 0.5, 500, 700, 3000, 5000)
+
+           end
 
 
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           A2GDispatcher:SetSquadron( "Kvitiri SEAD", AIRBASE.Caucasus.Kvitiri, seadTemplate, 10 )
-           A2GDispatcher:SetSquadronSeadPatrol( "Kvitiri SEAD", afacZone.Tskhunvali_Tkviavi[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronSeadPatrolInterval("Kvitiri SEAD", 1)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri SEAD" )
+           if wh_activation.Warehouse_AB.blue.Kvitiri[4] then
+
+             squadronName = "Kvitiri SEAD"
+             A2GDispatcher:SetSquadron( squadronName, 'FARP Kvitiri', seadTemplate, 20 )
+             configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+           end
+
 
        end -- if wh_activation.Warehouse_AB.red.Kvitiri
 
@@ -13176,13 +13279,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        -- A2G Kvitiri_Helo
 
-       if wh_activation.Warehouse_AB.blue.Kvitiri_Helo then
+       if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
            local airbase = warehouse.Kvitiri_Helo
-           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Kvitiri_Helo[1] )
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:InitCleanUp(600)
+           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse_AB.blue.Kvitiri_Helo[1] )
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -13213,7 +13319,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-          function detectionGroup:OnEventLand( EventData )
+           function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
                    logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
@@ -13236,17 +13342,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
 
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadron( "Farp Kvitiri", "Kvitiri_Helo CAS", AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 50 ) -- ATT NON ESISTE FARP
-           A2GDispatcher:SetSquadronCas( "Kvitiri_Helo CAS", 500, 700, 2000, 4000 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri_Helo CAS" )
-           A2GDispatcher:SetSquadronLandingAtEngineShutdown( "Kvitiri_Helo CAS" )
+           if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[2] then
+
+             local squadronName = "Kvitiri_Helo CAS"
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             A2GDispatcher:SetSquadron( squadronName, "FARP Kvitiri Helo", casTemplateHeli, 50 ) -- ATT NON ESISTE FARP
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, 60 * 4, 0.3, 200, 300, 700, 1500)
 
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadronCasPatrol( "Kvitiri_Helo CAS", redFrontZone.SATIHARI[1], 2000, 3500, 400, 600, 500, 700, 'BARO' )
-           A2GDispatcher:SetSquadronCasPatrolInterval("Kvitiri_Helo CAS", 2)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Kvitiri_Helo CAS" )
+             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+
+           end
 
        end -- if wh_activation.Warehouse_AB.red.Kvitiri_Helo
 
@@ -13257,12 +13364,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
        -- A2G GORI
 
-       if wh_activation.Warehouse.blue.Gori then
+       if wh_activation.Warehouse.blue.Gori[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
-           local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
+           local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
            local airbase = warehouse.Gori
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:InitCleanUp(600)
+           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Gori[1] )
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
@@ -13293,7 +13403,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            end -- end function detectionGroup:OnEventDead( EventData )
 
 
-          function detectionGroup:OnEventLand( EventData )
+           function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
                    logging('info', { 'detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
@@ -13316,17 +13426,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
            --local seadTemplateHeli = { air_template_blue.CAS_MI_24V }
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadron( "Gori CAS", "FARP GORI", casTemplateHeli, 10 )
-           A2GDispatcher:SetSquadronCas( "Gori CAS", 200, 300, 700, 1500 )
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Gori CAS" )
-           A2GDispatcher:SetSquadronTakeoffInterval( "Gori CAS", 60 * 4 ) -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
 
+           if wh_activation.Warehouse.blue.Gori[2] then
 
-           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-           A2GDispatcher:SetSquadronCasPatrol( "Gori CAS", afacZone.Sathiari_Tkviavi[1], 300, 700, 200, 300, 200, 300, 'RADIO' )
-           A2GDispatcher:SetSquadronCasPatrolInterval("Gori CAS", 4)
-           A2GDispatcher:SetSquadronTakeoffFromParkingCold( "Gori CAS" )
+             local squadronName = "Gori CAS"
+
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             A2GDispatcher:SetSquadron( squadronName, "FARP GORI", casTemplateHeli, 50 )
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, A2GDispatcher.Takeoff.Cold, 60 * 4, 0.3, 200, 300, 700, 1500)
+
+             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+
+           end
 
        end -- if wh_activation.Warehouse_AB.red.Gori
 
@@ -13494,7 +13606,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------- BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
 
-  local blue_civilian_traffic = false
+
 
   if blue_civilian_traffic then
 
@@ -13509,7 +13621,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     }
 
     -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-    local red_civilian_traffic_sched = SCHEDULER:New( nil,
+    local blue_civilian_traffic_sched = SCHEDULER:New( nil,
 
         function()
 
@@ -13533,7 +13645,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             -- Spawn from 1 to 4 aircraft.
             civ_transport:Spawn(math.random(1, 4))
 
-           logging('info', { 'main' , 'red_civilian_traffic_sched SCHEDULER - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * ( 1 - rand_civ_sched ) } )
+           logging('info', { 'main' , 'blue_civilian_traffic_sched SCHEDULER - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * ( 1 - rand_civ_sched ) } )
 
         end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
 
