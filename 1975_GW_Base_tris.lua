@@ -4113,8 +4113,8 @@ local blue_civilian_traffic = false
 
 
 -- AI_A2A Activation
-local active_AI_A2A_red = false
-local active_AI_A2A_blue = false
+local active_AI_A2A_red = true
+local active_AI_A2A_blue = true
 
 
 
@@ -4378,9 +4378,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  local typeTakeoff = { AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_Dispatcher.Takeoff.Runway, AI_A2A_Dispatcher.Takeoff.Air }
+  local typeTakeoff = { AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Takeoff.Runway, AI_A2A_DISPATCHER.Takeoff.Air }
 
-  local typeLanding = { AI_A2A_Dispatcher.Landing.NearAirbase, AI_A2A_DISPATCHER.Landing.AtRunway, AI_A2A_Dispatcher.Landing.AtEngineShutdown }
+  local typeLanding = { AI_A2A_DISPATCHER.Landing.NearAirbase, AI_A2A_DISPATCHER.Landing.AtRunway, AI_A2A_DISPATCHER.Landing.AtEngineShutdown }
 
   local targetPoints = {
 
@@ -9537,8 +9537,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse.blue.Gori[13] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Gori[13] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, 1, nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-          if wh_activation.Warehouse.blue.Gori[15] and pos_heli  <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.blue.Gori[15] and pos_heli  <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + ( depart_time_helo[ pos_heli-2 ] + 1 ) * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,   1, nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
 
           logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
@@ -11744,7 +11744,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Mozdok[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Mozdok' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Mozdok[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Mozdok[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.red.Mozdok' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Mozdok[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Mozdok[17] } )
 
     A2ADispatcher:SetSquadron('Mozdok CAP', AIRBASE.Caucasus.Mozdok, {air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_23MLD}, 15)
     A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
@@ -11759,7 +11759,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Beslan[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Beslan' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Beslan[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Beslan[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.red.Beslan' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Beslan[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Beslan[17] } )
 
     A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, air_template_red.GCI_Mig_21Bis, 15)
     A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
@@ -11773,7 +11773,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Nalchik[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Nalchik' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Nalchik[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Nalchik[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.red.Nalchik' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Nalchik[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Nalchik[17] } )
 
     A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
     A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
@@ -11786,7 +11786,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Mineralnye[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Mineralnye' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Mineralnye[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Mineralnye[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.red.Mineralnye' , 'CAP activation: ' .. wh_activation.Warehouse_AB.red.Mineralnye[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.red.Mineralnye[17] } )
 
     A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
     A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
@@ -11874,7 +11874,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Kutaisi[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Kutaisi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Kutaisi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Kutaisi[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.blue.Kutaisi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Kutaisi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Kutaisi[17] } )
 
     A2ADispatcher:SetSquadron('Kutaisi CAP', AIRBASE.Caucasus.Kutaisi, air_template_blue.CAP_F_5, 15 )
     A2ADispatcher:SetSquadron('Kutaisi GCI', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_F_5, 15 )
@@ -11888,7 +11888,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Vaziani[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Vaziani' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Vaziani[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Vaziani[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.blue.Vaziani' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Vaziani[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Vaziani[17] } )
 
     A2ADispatcher:SetSquadron('Vaziani CAP', AIRBASE.Caucasus.Vaziani, {air_template_blue.CAP_F_4, air_template_blue.CAP_F_5}, 15)
     A2ADispatcher:SetSquadron('Vaziani GCI', AIRBASE.Caucasus.Vaziani, {air_template_blue.GCI_F_4, air_template_blue.GCI_F_5}, 15)
@@ -11902,7 +11902,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Soganlug[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Soganlug' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Soganlug[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Soganlug[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.blue.Soganlug' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Soganlug[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Soganlug[17] } )
 
     A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, air_template_blue.CAP_Mig_21Bis, 15)
     A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, air_template_blue.GCI_Mig_21Bis, 15)
@@ -11916,7 +11916,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Tbilisi[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Tbilisi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Tbilisi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Tbilisi[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.blue.Tbilisi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Tbilisi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Tbilisi[17] } )
 
     A2ADispatcher:SetSquadron('Tbilisi CAP', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.CAP_L_39ZA, air_template_blue.CAP_Mig_19P}, 15)
     A2ADispatcher:SetSquadron('Tbilisi GCI', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.GCI_Mig_19P, air_template_blue.GCI_Mig_21Bis}, 15)
@@ -11931,7 +11931,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Batumi[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Batumi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Batumi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Batumi[17] } )
+    --logging('info', { 'wh_activation.Warehouse_AB.blue.Batumi' , 'CAP activation: ' .. wh_activation.Warehouse_AB.blue.Batumi[16] .. 'GCI activation: ' .. wh_activation.Warehouse_AB.blue.Batumi[17] } )
 
     A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4}, 15)
     A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_Mig_21Bis, air_template_blue.CAP_F_4}, 15)
@@ -12039,11 +12039,11 @@ end -- if active_AI_A2A_blue
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 300, 0.5 )
              spawnDetectionGroup:InitCleanUp(600)
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
-             --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold) NOTA: Funzionava prima dell'aggiornamento di DCS
-             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12155,11 +12155,11 @@ end -- if active_AI_A2A_blue
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
              spawnDetectionGroup:InitCleanUp(600)
 
-             -- local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12262,10 +12262,10 @@ end -- if active_AI_A2A_blue
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
-             --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
              spawnDetectionGroup:InitCleanUp(180)
-             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+             --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12366,10 +12366,10 @@ end -- if active_AI_A2A_blue
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
-             --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
              spawnDetectionGroup:InitCleanUp(600)
-             local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+             --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12448,7 +12448,7 @@ end -- if active_AI_A2A_blue
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
              spawnDetectionGroup:InitCleanUp(180)
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Didi[1] )
              local airbase = warehouse.Didi
@@ -12534,7 +12534,7 @@ end -- if active_AI_A2A_blue
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
              spawnDetectionGroup:InitCleanUp(600)
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
              local airbase = warehouse.Biteta
@@ -12668,10 +12668,10 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
-           --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
            spawnDetectionGroup:InitCleanUp(600)
-           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12750,11 +12750,11 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
-           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
            spawnDetectionGroup:InitCleanUp(600)
 
-           --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12859,10 +12859,10 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
-           --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
            spawnDetectionGroup:InitCleanUp(600)
-           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
            logging('info', { 'activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12967,11 +12967,11 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
            local airbase = warehouse.Kvitiri
-           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
            spawnDetectionGroup:InitCleanUp(600)
 
-           local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
-           --local detectionGroup = spawnDetectionGroup:SpawnFromStatic(staticObject.Warehouse_AB.blue.Kvitiri[1])
+           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+           local detectionGroup = spawnDetectionGroup:SpawnFromStatic(staticObject.Warehouse_AB.blue.Kvitiri[1])
 
            logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -13076,7 +13076,7 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
            local airbase = warehouse.Kvitiri_Helo
-           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
            spawnDetectionGroup:InitCleanUp(600)
 
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
@@ -13162,7 +13162,7 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
            local airbase = warehouse.Gori
-           spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           spawnDetectionGroup:SpawnScheduled( 300, 0.5 )
            spawnDetectionGroup:InitCleanUp(600)
 
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
