@@ -11759,7 +11759,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Beslan[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Beslan' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.red.Beslan[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.red.Beslan[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.red.Beslan' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Beslan[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Beslan[17]) } )
 
     A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, air_template_red.GCI_Mig_21Bis, 15)
     A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
@@ -11773,7 +11773,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Nalchik[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Nalchik' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.red.Nalchik[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.red.Nalchik[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.red.Nalchik' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Nalchik[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Nalchik[17]) } )
 
     A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
     A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
@@ -11786,7 +11786,7 @@ if active_AI_A2A_red then
 
   if wh_activation.Warehouse_AB.red.Mineralnye[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.red.Mineralnye' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.red.Mineralnye[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.red.Mineralnye[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.red.Mineralnye' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Mineralnye[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Mineralnye[17]) } )
 
     A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
     A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
@@ -11874,7 +11874,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Kutaisi[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Kutaisi' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Kutaisi[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Kutaisi[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Kutaisi' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Kutaisi[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Kutaisi[17]) } )
 
     A2ADispatcher:SetSquadron('Kutaisi CAP', AIRBASE.Caucasus.Kutaisi, air_template_blue.CAP_F_5, 15 )
     A2ADispatcher:SetSquadron('Kutaisi GCI', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_F_5, 15 )
@@ -11888,7 +11888,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Vaziani[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Vaziani' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Vaziani[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Vaziani[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Vaziani' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Vaziani[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Vaziani[17]) } )
 
     A2ADispatcher:SetSquadron('Vaziani CAP', AIRBASE.Caucasus.Vaziani, {air_template_blue.CAP_F_4, air_template_blue.CAP_F_5}, 15)
     A2ADispatcher:SetSquadron('Vaziani GCI', AIRBASE.Caucasus.Vaziani, {air_template_blue.GCI_F_4, air_template_blue.GCI_F_5}, 15)
@@ -11902,7 +11902,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Soganlug[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Soganlug' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Soganlug[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Soganlug[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Soganlug' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Soganlug[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Soganlug[17]) } )
 
     A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, air_template_blue.CAP_Mig_21Bis, 15)
     A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, air_template_blue.GCI_Mig_21Bis, 15)
@@ -11916,7 +11916,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Tbilisi[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Tbilisi' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Tbilisi[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Tbilisi[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Tbilisi' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Tbilisi[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Tbilisi[17]) } )
 
     A2ADispatcher:SetSquadron('Tbilisi CAP', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.CAP_L_39ZA, air_template_blue.CAP_Mig_19P}, 15)
     A2ADispatcher:SetSquadron('Tbilisi GCI', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.GCI_Mig_19P, air_template_blue.GCI_Mig_21Bis}, 15)
@@ -11931,7 +11931,7 @@ if active_AI_A2A_blue then
 
   if wh_activation.Warehouse_AB.blue.Batumi[1] then
 
-    logging('info', { 'wh_activation.Warehouse_AB.blue.Batumi' , 'CAP activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Batumi[16]) .. 'GCI activation: ' .. tostring(wh_activation.wh_activation.Warehouse_AB.blue.Batumi[17]) } )
+    logging('info', { 'wh_activation.Warehouse_AB.blue.Batumi' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Batumi[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Batumi[17]) } )
 
     A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4}, 15)
     A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_Mig_21Bis, air_template_blue.CAP_F_4}, 15)
@@ -12155,7 +12155,7 @@ end -- if active_AI_A2A_blue
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
-             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+             --spawnDetectionGroup:SpawnScheduled( 600, 0.5 )
              spawnDetectionGroup:InitCleanUp(600)
 
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
