@@ -5907,8 +5907,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
           if wh_activation.Warehouse.red.Kvemo_Sba[12] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1, nil, nil, nil, 'tkviavi_attack' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random(1, 2), nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.math.random(1, 2), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red.Kvemo_Sba[11] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TRAN_MI_26, math.math.random(1, 4), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random(1, 2), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[11] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TRAN_MI_26, math.random(1, 4), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
 
           logging('finer', { 'Kvemo_Sba scheduler function' , 'addRequest Kvemo_Sba warehouse'} )
 
@@ -6168,7 +6168,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( 2 , 3 ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Mineralnye[11] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end          
+          if wh_activation.Warehouse_AB.red.Mineralnye[11] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
           logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * ( 1 + rand_sched)} )
 
         end, {}, start_sched * mineralnye_efficiency_influence, interval_sched, rand_sched
@@ -12094,8 +12094,8 @@ end -- if active_AI_A2A_blue
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
-             --spawnDetectionGroup:SpawnScheduled( 300, 0.5 )
-             spawnDetectionGroup:InitCleanUp(600)
+             spawnDetectionGroup:SpawnScheduled( 3600, 0.5 )
+             spawnDetectionGroup:InitCleanUp(180)
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
              --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
