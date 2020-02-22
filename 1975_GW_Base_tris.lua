@@ -9,23 +9,44 @@ oggetto:    lua script file dedicato alla realizzazione di un server DCS in cui 
 
 
 
-autor: MarkusIV
+author: MarkusIV
 
 stato:   sviluppo
 
 branch: cargo
 
 
+note configurazione:
+
+AI_A2A CAP & GCI
+Tbilisi, Kvitiri, Kvitiri_Helo non abilitati
+Vaziani, Batumi abilitati per GCI
+Soganlug, Kutaisi abilitati per CAP e GCI
+
+Mozdok, Nalchik abilitati per CAP
+Mineralnye abilitato per CAP e GCI
+Beslan abilitato per GCI
+
+AI_A2G CAS, BAI, SEAD
+
+Beslan, Nalchik, Mineralnye implementati per CAS, BAI, SEAD
+Mozdok implementati per BAI
+Didi, Biteta,  implementati per CAS
+Kvemo_Sba, Alagir  non implementati
+
+Batumi abilitato BAI
+Vaziani, Kutaisi, Kvitiri implementati CAS, BAI, SEAD
+Kvitiri_Helo, Gori implementati CAS
+Zestafoni, Khashuri non implementati
+
+
+WH
+Airbase abilitate per GA, BAI, BOMBING, RECON, TRANSPORT disabilitate CAP, Ground Transport, JTAC, AFAC, Ground Attack
 
 
 
 
 note sviluppo:
-
-sono disabilitate diverse warehouse
-sono disabilitate diverse request x didi, batumi, kutaisi, tbilisi e GORI
-sono disabilitati i voli civili
-disabilitato l'airbalancer
 
 
 
@@ -44,6 +65,33 @@ name, pilot: = SQ <coalition> <role> <aircraft>
 verifica se in runtime riesci ad interrogare il database di DCS sugli aerei:
 
 mediante il nome dell'unita' template es: nome = 'SQ red CAP Mig_23MLD', unit.findByName(name), name_missile = unit.getDescr.getMissile.name, out_info(name_missile)
+
+
+
+
+-- FUNZIONA!!!!!!!! LEGGE IL FILE IN RUNTIME!
+filename = 'F:\\Programmi\\luaDevTool\\workspace\\Test_Moose_Missions\\My Mission\\nothing.lua'
+dofile(filename)
+trigger.action.outText(nothing ,5 , false)
+
+
+
+Utilizza questa per avere un db dinamico delle basi di una coalizione
+
+AIRBASE:Register(AirbaseName)
+
+    Create a new AIRBASE from DCSAirbase.
+    Parameter
+
+        #string AirbaseName : The name of the airbase.
+
+    Return value
+
+    Wrapper.Airbase#AIRBASE:
+
+
+
+
 
 
 
@@ -141,6 +189,32 @@ WAREHOUSE.Report = false -- If true, send status messages to coalition.
 
 
 ------------------------------------------------------------------------------------ DEFINE FUNCTIONS -----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -978,9 +1052,14 @@ end
 
 
 
---  Detection dedicata alla AI_A2A
---  molto probabilmente i gruppi di detection devono essere già attivi in ME
---
+---  Detection dedicata alla AI_A2A
+-- @param prefix_detector: il prefisso degli EWR o AWACS utilizzati per la detection
+-- @param range: il raggio di valutazione se un insieme di aerei appartiene ad un singolo gruppo
+-- @param filterCategories:
+-- @param distanceProbability:
+-- @param alphaProbability:
+-- @param zoneProbability:
+-- @param typeDetection:
 function detectionAI_A2A(prefix_detector, range, filterCategories, distanceProbability, alphaProbability, zoneProbability, typeDetection )
 
     local debug = true
@@ -1411,7 +1490,7 @@ end
 --
 --
 --  @param cap_zone:  specific cap zone name created in ME
---  @param airbase_name:  airbase name
+--  @param cap_name:  cap name
 --  @param alt_min: minimum CAP altitude
 --  @param alt_max: maximum CAP altitude
 --  @param speed_min_patrol: minimum patrol CAP speed
@@ -1425,15 +1504,15 @@ end
 --  @param take_off: AI_A2A_DISPATCHER.<*>  (  AI_A2A_DISPATCHER.Takeoff.Air/Runway/Hot/Cold  )
 --  @param landing:  AI_A2A_DISPATCHER.<*> ( AI_A2A_DISPATCHER.Landing.AtRunway/NearAirbase/AtEngineShutdown )
 --  @param A2ADispatcher:  AI_A2A_DISPATCHER
-function assign_cap ( cap_zone, airbase_name, alt_min, alt_max, speed_min_patrol, speed_max_patrol,
+function assign_cap ( cap_zone, cap_name, alt_min, alt_max, speed_min_patrol, speed_max_patrol,
                       speed_min_engage, speed_max_engage, num_cap_squad, min_time_new_cap, max_time_new_cap,
                       probability, take_off, landing, A2ADispatcher )
 
   local zone = ZONE_POLYGON:New( cap_zone, GROUP:FindByName( cap_zone ) )
-  A2ADispatcher:SetSquadronCap( airbase_name, zone, alt_min, alt_max, speed_min_patrol, speed_max_patrol, speed_min_engage, speed_max_engage )
-  A2ADispatcher:SetSquadronCapInterval( airbase_name, num_cap_squad, min_time_new_cap, max_time_new_cap, probability )
-  A2ADispatcher:SetSquadronTakeoff( airbase_name, take_off )
-  A2ADispatcher:SetSquadronLanding( airbase_name, landing )
+  A2ADispatcher:SetSquadronCap( cap_name, zone, alt_min, alt_max, speed_min_patrol, speed_max_patrol, speed_min_engage, speed_max_engage )
+  A2ADispatcher:SetSquadronCapInterval( cap_name, num_cap_squad, min_time_new_cap, max_time_new_cap, probability )
+  A2ADispatcher:SetSquadronTakeoff( cap_name, take_off )
+  A2ADispatcher:SetSquadronLanding( cap_name, landing )
 
 
 end
@@ -4177,19 +4256,19 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { false, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false, false },
-       Gori          =   { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
-       Khashuri      =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false }
+       Zestafoni     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Gori          =   { true, true, true, true, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Khashuri      =   { true, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
 
     },
 
     red = {
 
-      Biteta        =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
-      Didi          =   { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
-      Kvemo_Sba     =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false },
-      Alagir        =   { false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false }
+      Biteta        =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Kvemo_Sba     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Alagir        =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
 
@@ -4199,22 +4278,22 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Soganlug      =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Tbilisi       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Kutaisi       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Kvitiri       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Kvitiri_Helo  =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Batumi        =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true }
+      Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, false, true },
+      Soganlug      =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, true, true },
+      Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, false, false },
+      Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, true, true },
+      Kvitiri       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, false, false },
+      Kvitiri_Helo  =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, false, false },
+      Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, false, true }
 
     },
 
     red = {
 
-      Mozdok        =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Mineralnye    =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Beslan        =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true },
-      Nalchik       =   { true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, true, true }
+      Mozdok        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, true, false },
+      Mineralnye    =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, true, true },
+      Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, false, true },
+      Nalchik       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, true, false }
 
     }
 
@@ -5232,17 +5311,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         -- AIR --
   local startReqTimeAir = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-  local waitReqTimeAir = 600 --600 -- tempo di attesa tra due request successive per asset aerei (10')
+  local waitReqTimeAir = math.random(600, 1200) --600 -- tempo di attesa tra due request successive per asset aerei (10'-20')
   local start_sched = 120 -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
   local interval_sched = 3600  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
-  local rand_sched = 0.3  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
+  local rand_sched = 0.2  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
 
   -- GROUND --
   local start_ground_sched = 10 -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
   local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
   local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
   local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-  local waitReqTimeGround = 600 -- 600 tempo di attesa tra due request successive per asset terrestri (10')
+  local waitReqTimeGround = math.random(600, 1200) -- 600 tempo di attesa tra due request successive per asset terrestri (10'-20')
 
 
 
@@ -5429,11 +5508,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       -- Didi: link and front farp-wharehouse.  Send resupply to Biteta. Receive resupply from Kvemo_sba, Beslan
 
-      warehouse.Didi:AddAsset(                 "Infantry Platoon Alpha",                   6)
+      warehouse.Didi:AddAsset(                 "Infantry Platoon Alpha",                   30)
       warehouse.Didi:AddAsset(                ground_group_template_red.antitankA,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_red_tank_skill, max_red_tank_skill)] )
       warehouse.Didi:AddAsset(                ground_group_template_red.antitankB,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_red_tank_skill, max_red_tank_skill)] )
       warehouse.Didi:AddAsset(                ground_group_template_red.antitankC,         6,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(min_red_tank_skill, max_red_tank_skill)] )
-      warehouse.Didi:AddAsset(                air_template_red.CAS_Mi_8MTV2,               12,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)] ) -- attack
       warehouse.Didi:AddAsset(                air_template_red.TRAN_MI_26,                 4,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(min_red_transport_skill, max_red_transport_skill)] ) -- attack
       warehouse.Didi:AddAsset(                air_template_red.AFAC_MI_24,                 4,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_red_afac_skill, max_red_afac_skill)] ) -- AFAC
       warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              4,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_red_afac_skill, max_red_afac_skill)] ) -- AFAC
@@ -11619,34 +11697,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  -- SITUATION A
 
 
 
-  --[[
-  -- FUNZIONA!!!!!!!! LEGGE IL FILE IN RUNTIME!
-  filename = 'F:\\Programmi\\luaDevTool\\workspace\\Test_Moose_Missions\\My Mission\\nothing.lua'
-  dofile(filename)
-  trigger.action.outText(nothing ,5 , false)
-
-
-
-  Utilizza questa per avere un db dinamico delle basi di una coalizione
-
-  AIRBASE:Register(AirbaseName)
-
-      Create a new AIRBASE from DCSAirbase.
-      Parameter
-
-          #string AirbaseName : The name of the airbase.
-
-      Return value
-
-      Wrapper.Airbase#AIRBASE:
-
-
-
-  ]]--
 
 
 
@@ -11695,18 +11748,21 @@ if active_AI_A2A_red then
   local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
   --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
-  -- i distanza impostata a 30 km
+  -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
   -- local Detection_Red = detection(prefix_detector.red, 30000)
 
   --local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, nil )
 
   --- A2ADispatcher red:
   -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
-  -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
+  -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze (le CAP): 20000
   -- true/false: view tactital display
   --local A2ADispatcher_Red = dispatcher(detection, 70000, 20000, true)
 
   -- A2ADispatcher:
+  -- definisci la distanza GCI in modo da attivare gli intercettori solo per nemici prossimi alle airbase e/o zone strategiche: vedi su ME 50km
+  -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
+  -- valuta su ME queste due didtanze
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
   configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
 
@@ -11715,9 +11771,9 @@ if active_AI_A2A_red then
 
   -- Setup Red CAP e GCI
 
-  local num_group = 2 --math.random(2, 3)
-  local min_time_cap = 10
-  local max_time_cap = 30
+  local num_group = 1 --math.random(2, 3)
+  local min_time_cap = 300
+  local max_time_cap = 900
   local min_alt = 4000
   local max_alt = 9000
   local min_speed_patrol = 500
@@ -11731,8 +11787,8 @@ if active_AI_A2A_red then
   spawnDetectionGroup:InitCleanUp(180)
   local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
 
-  --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold) --NOTA: Funzionava prima dell'aggiornamento di DCS
-  local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+  local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+  --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
   logging('info', { 'activeAI_A2A_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -11842,9 +11898,9 @@ if active_AI_A2A_blue then
 
   -- Setup Red CAP e GCI
 
-  local num_group = 2 --math.random(2, 3)
-  local min_time_cap = 10
-  local max_time_cap = 30
+  local num_group = 1 --math.random(2, 3)
+  local min_time_cap = 300
+  local max_time_cap = 900
   local min_alt = 4000
   local max_alt = 9000
   local min_speed_patrol = 500
@@ -11858,9 +11914,8 @@ if active_AI_A2A_blue then
   spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
   spawnDetectionGroup:InitCleanUp(180)
   local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
-  --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold) --NOTA: Funzionava prima dell'aggiornamento di DCS
-
-  local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+  local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+  --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
   logging('info', { 'activeAI_A2A_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
@@ -12614,7 +12669,7 @@ end -- if active_AI_A2A_blue
 
   if activeAI_A2G_Dispatching_Blue then
 
-    logging('enter', 'activeAI_A2G_Dispatching_Red' )
+    logging('enter', 'activeAI_A2G_Dispatching_Blue' )
 
 
     -- il detectionSetGroup va istanziato globalmente e suddiviso nelle diverse zone:
@@ -12627,13 +12682,7 @@ end -- if active_AI_A2A_blue
     detectionGroupSetBlue:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
 
 
-
-    --printGroupSet( detectionGroupSetRed )
-
-
     local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1
-    local activeAI_A2G_Dispatching_HQ2 = false -- per il teatro 2
-    local activeAI_A2G_Dispatching_HQ3 = false -- per il teatro 3
 
     -- A2G Dispatching for Red HQ1
     if activeAI_A2G_Dispatching_HQ1 then
