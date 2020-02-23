@@ -3716,12 +3716,18 @@ end
 local air_template_red = {
 
           GCI_Mig_21Bis = 'SQ red GCI Mig_21Bis', -- GCI
+          GCI_H_Mig_21Bis = 'SQ red H GCI Mig_21Bis',
+          GCI_L_Mig_21Bis = 'SQ red L GCI Mig_21Bis',
+          GCI_B_Mig_21Bis = 'SQ red B GCI Mig_21Bis',
           GCI_Mig_23MLD = 'SQ red GCI Mig_23MLD',
           GCI_Mig_25PD = 'SQ red GCI Mig_25PD',
           GCI_Mig_19P = 'SQ red GCI Mig_19P',
           CAP_Mig_21Bis = 'SQ red CAP Mig_21Bis', -- CAP
+          CAP_H_Mig_21Bis = 'SQ red CAP H Mig_21Bis',
+          CAP_L_Mig_21Bis = 'SQ red CAP L Mig_21Bis',
           CAP_Mig_23MLD = 'SQ red CAP Mig_23MLD',
           CAP_Mig_25PD = 'SQ red CAP Mig_25PD',
+          CAP_H_Mig_25PD = 'SQ red CAP H Mig_25PD',
           CAP_Mig_19P = 'SQ red CAP Mig_19P',
           CAS_Mig_27K_Bomb = 'SQ red CAS Mig_27K Bomb', -- CAS
           CAS_Mig_27K_Rocket = 'SQ red CAS Mig_27K Rocket',
@@ -3735,8 +3741,11 @@ local air_template_red = {
           GA_SU_24M_Bomb = 'SQ red GA SU_24M Bomb',
           GA_SU_24M_HBomb = 'SQ red GA SU_24M HBomb',
           GA_Mig_27K_Bomb_Light = 'SQ Red BOM_Sparse_Light Mig-27K',
+          GA_Mig_27K_Sparse_Light = 'SQ Red Cluster Mig-27K',
           GA_Mig_27K_ROCKET_Heavy = 'SQ Red ROCKET_Sparse_Heavy Mig-27K',
           GA_Mig_27K_ROCKET_Light = 'SQ Red ROCKET_Sparse_Light Mig-27K',
+          GA_Mig_27K_Missile_R = 'SQ red GA Mig_27K Missile R',
+          GA_Mig_27K_Missile_L = 'SQ red GA Mig_27K Missile L',
           REC_Mig_25RTB = 'SQ red REC Mig_25RTB',  -- RECCE
           REC_SU_24MR = 'SQ red REC SU_24MR',
           BOM_TU_22_Bomb = 'SQ red BOM TU_22', -- INTERDICTION
@@ -3806,12 +3815,17 @@ local air_template_red = {
 local air_template_blue = {
 
           GCI_Mig_21Bis = 'SQ blue GCI Mig_21Bis', -- GCI
+          GCI_L_Mig_21Bis = 'SQ blue L GCI Mig_21Bis',
+          GCI_H_Mig_21Bis = 'SQ blue H GCI Mig_21Bis',
           GCI_F_4 = 'SQ blue GCI F_4',
           GCI_F_5 = 'SQ blue GCI F_5',
           GCI_F_14A = 'SQ blue GCI F_14A',
           CAP_F_4 = 'SQ blue CAP F_4', -- CAP
           CAP_F_5 = 'SQ blue CAP F_5',
           CAP_Mig_21Bis = 'SQ blue CAP Mig_21Bis',
+          CAP_L_Mig_21Bis = 'SQ blue CAP L Mig_21Bis',
+          CAP_H_Mig_21Bis = 'SQ blue CAP H Mig_21Bis',
+          CAP_B_Mig_21Bis = 'SQ blue B GCI Mig_21Bis',
           CAP_L_39ZA = 'SQ blue CAP L_39ZA',  -- CAS
           CAS_Su_17M4_Rocket = 'SQ blue CAS Su_17M4 Rocket',
           CAS_Su_17M4_Bomb = 'SQ blue CAS Su_17M4 Bomb',
@@ -3823,6 +3837,9 @@ local air_template_blue = {
           CAS_L_39C_Rocket = 'SQ blue CAS L_39C Rocket',
           CAS_L_39ZA_HRocket = 'SQ blue CAS L_39ZA HRocket',
           CAS_F_4E_Rocket = 'SQ blue CAS F_4E Rocket',
+          CAS_F_4E_Cluster = 'SQ blue CAS F_4E Cluster',
+          CAS_F_4E_Heavy_Bomb = 'SQ blue CAS F_4E Heavy Bomb',
+          CAS_F_4E_Light_Bomb = 'SQ blue CAS F_4E Light Bomb',
           CAS_AV_88_Rocket = 'SQ blue CAS AV_88 Rocket',
           CAS_AV_88_Cluster = 'SQ blue CAS AV_88 Cluster',
           CAS_AV_88_Bomb = 'SQ blue CAS AV_88 Bomb',
@@ -3855,7 +3872,10 @@ local air_template_blue = {
           AFAC_AV_88 = 'SQ blue FAC AV-88',
           AFAC_MI_24 = 'SQ blue FAC Mi-24',
           AFAC_SA342L = 'SQ blue FAC SA342L',
-          AFAC_UH_1H = 'SQ blue FAC UH_1H'
+          AFAC_UH_1H = 'SQ blue FAC UH_1H',
+          SEAD_F_4E_L = 'SQ blue SEAD L F_4E',
+          SEAD_F_4E_M = 'SQ blue SEAD M F_4E',
+          SEAD_F_4E_H = 'SQ blue SEAD H F_4E'
 
 }
 
@@ -11803,7 +11823,7 @@ if active_AI_A2A_red then
     logging('info', { 'wh_activation.Warehouse_AB.red.Mozdok' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Mozdok[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Mozdok[17]) } )
 
     A2ADispatcher:SetSquadron('Mozdok CAP', AIRBASE.Caucasus.Mozdok, {air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_23MLD}, 15)
-    A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
+    A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_L_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
 
     if wh_activation.Warehouse_AB.red.Mozdok[16] then assign_cap ( cap_zone_db_red[1], 'Mozdok CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, typeTakeoff[ math.random( 1, #typeTakeoff ) ], typeLanding[ math.random( 2, #typeLanding ) ], A2ADispatcher ) end
     if wh_activation.Warehouse_AB.red.Mozdok[17] then assign_gci('Mozdok GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, typeLanding[ math.random( 1, #typeLanding ) ], A2ADispatcher) end
@@ -11817,7 +11837,7 @@ if active_AI_A2A_red then
 
     logging('info', { 'wh_activation.Warehouse_AB.red.Beslan' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Beslan[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Beslan[17]) } )
 
-    A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, air_template_red.GCI_Mig_21Bis, 15)
+    A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, {air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_Mig_21Bis}, 15)
     A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
 
     if wh_activation.Warehouse_AB.red.Beslan[16] then assign_cap ( cap_zone_db_red[2], 'Beslan CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, typeTakeoff[ math.random( 1, #typeTakeoff ) ], typeLanding[ math.random( 2, #typeLanding ) ], A2ADispatcher ) end
@@ -11831,8 +11851,8 @@ if active_AI_A2A_red then
 
     logging('info', { 'wh_activation.Warehouse_AB.red.Nalchik' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Nalchik[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Nalchik[17]) } )
 
-    A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
-    A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
+    A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_H_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
 
     if wh_activation.Warehouse_AB.red.Nalchik[16] then assign_cap ( cap_zone_db_red[3], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, typeTakeoff[ math.random( 1, #typeTakeoff ) ], typeLanding[ math.random( 2, #typeLanding ) ], A2ADispatcher ) end
     if wh_activation.Warehouse_AB.red.Nalchik[17] then assign_gci('Nalchik GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, typeLanding[ math.random( 1, #typeLanding ) ], A2ADispatcher) end
@@ -11844,7 +11864,7 @@ if active_AI_A2A_red then
 
     logging('info', { 'wh_activation.Warehouse_AB.red.Mineralnye' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red.Mineralnye[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red.Mineralnye[17]) } )
 
-    A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis}, 15)
     A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
 
 
@@ -11959,8 +11979,8 @@ if active_AI_A2A_blue then
 
     logging('info', { 'wh_activation.Warehouse_AB.blue.Soganlug' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Soganlug[16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue.Soganlug[17]) } )
 
-    A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, air_template_blue.CAP_Mig_21Bis, 15)
-    A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, air_template_blue.GCI_Mig_21Bis, 15)
+    A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, { air_template_blue.CAP_Mig_21Bis, air_template_blue.CAP_L_Mig_21Bis, air_template_blue.CAP_B_Mig_21Bis }, 15)
+    A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, { air_template_blue.GCI_Mig_21Bis, air_template_blue.GCI_H_Mig_21Bis, air_template_blue.GCI_L_Mig_21Bis}, 15)
 
     if wh_activation.Warehouse_AB.blue.Soganlug[16] then assign_cap ( cap_zone_db_blue[3], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, typeTakeoff[ math.random( 1, #typeTakeoff ) ], typeLanding[ math.random( 2, #typeLanding ) ], A2ADispatcher ) end
     if wh_activation.Warehouse_AB.blue.Soganlug[17] then assign_gci('Soganlug GCI', 800, 1200, AI_A2A_DISPATCHER.Takeoff.Hot, typeLanding[ math.random( 1, #typeLanding ) ], A2ADispatcher ) end
@@ -12267,8 +12287,8 @@ end -- if active_AI_A2A_blue
 
              --A2GDispatcher:SetDefaultGrouping()
 
-             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_Mig_27K_Bomb_Light }
-             local baiTemplate = { air_template_red.BOM_MIG_27K_Airbase, air_template_red.BOM_MIG_27K_Structure, air_template_red.BOM_SU_17_Structure, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
+             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_Missile_R, air_template_red.GA_Mig_27K_Missile_L }
+             local baiTemplate = { air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17 }
 
 
@@ -12374,7 +12394,7 @@ end -- if active_AI_A2A_blue
              --A2GDispatcher:SetDefaultGrouping()
 
              local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
-             local baiTemplate = { air_template_red.BOM_MIG_27K_Airbase, air_template_red.BOM_MIG_27K_Structure }
+             local baiTemplate = { air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
              local seadTemplate = { air_template_red.SEAD_SU_24 }
 
 
@@ -12858,7 +12878,7 @@ end -- if active_AI_A2A_blue
            local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
            local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb}
-           local seadTemplate = { air_template_blue.CAS_Su_17M4_Cluster }
+           local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
 
            if wh_activation.Warehouse_AB.blue.Vaziani[2] then
 
@@ -12965,7 +12985,7 @@ end -- if active_AI_A2A_blue
            local casTemplateAirplane = { air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
            local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.BOM_F_4_E_Sparse_Heavy}
-           local seadTemplate = { air_template_blue.CAS_F_5E_3_Cluster }
+           local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
 
 
            if wh_activation.Warehouse_AB.blue.Kutaisi[2] then
