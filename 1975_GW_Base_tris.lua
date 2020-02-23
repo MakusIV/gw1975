@@ -11784,7 +11784,7 @@ if active_AI_A2A_red then
   -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
   -- valuta su ME queste due didtanze
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
+  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, false )
 
 
 
@@ -11913,7 +11913,7 @@ if active_AI_A2A_blue then
 
   -- A2ADispatcher:
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
+  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, false )
 
 
   -- Setup Red CAP e GCI
@@ -12103,7 +12103,7 @@ end -- if active_AI_A2A_blue
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
+         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
@@ -12725,7 +12725,7 @@ end -- if active_AI_A2A_blue
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
+       configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
