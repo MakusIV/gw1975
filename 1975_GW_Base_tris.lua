@@ -4495,7 +4495,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
     station = { math.random( 700, 900 ) },
     railway = { math.random( 100, 200 ) },
     bridge = { math.random( 100, 300 ) },
-    front_zone = { math.random( 100, 300 ) }
+    front_zone = { math.random( 100, 300 ) },
+    armored = { math.random( 40, 60 ) },
+    mechanized = { math.random( 10, 30 ) },
+    antitank = { math.random( 20, 40 ) },
+    sam = { math.random( 50, 70 ) },
+    hq = { math.random( 100, 200 ) }
 
   }
 
@@ -4927,30 +4932,30 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   local redGroundGroup = {
 
-    GROUP:FindByName('GW_1975 Russian Armor Defence@Nabakevi'),
-    GROUP:FindByName('Russian Antitank Defence@Didmukha'),
-    GROUP:FindByName('Russian Mechanized Defence@Didmukha'),
-    GROUP:FindByName('Russian Antitank Defence@Tskhinvali'),
-    GROUP:FindByName('RU HQ AirDefence'),
-    GROUP:FindByName('Russian Antitank Defence@Sathiari'),
-    GROUP:FindByName('RED GROUND MECHA ATTACK A #026'),
-    GROUP:FindByName('RED_HQ'),
-    GROUP:FindByName('GW_1975 Russian Mechanized Defence@Oni')
+    { GROUP:FindByName('GW_1975 Russian Armor Defence@Nabakevi'), targetPoints.armored },
+    { GROUP:FindByName('Russian Antitank Defence@Didmukha'), targetPoints.antitank },
+    { GROUP:FindByName('Russian Mechanized Defence@Didmukha'), targetPoints.mechanized },
+    { GROUP:FindByName('Russian Antitank Defence@Tskhinvali'), targetPoints.antitank },
+    { GROUP:FindByName('RU HQ AirDefence'), targetPoints.sam },
+    { GROUP:FindByName('Russian Antitank Defence@Sathiari'), targetPoints.antitank },
+    { GROUP:FindByName('RED GROUND MECHA ATTACK A #026'), targetPoints.mechanized },
+    { GROUP:FindByName('RED_HQ'), targetPoints.hq },
+    { GROUP:FindByName('GW_1975 Russian Mechanized Defence@Oni'), targetPoints.mechanized }
 
   }
 
   local blueGroundGroup = {
 
-    GROUP:FindByName('Georgian Armored Defence@Khashuri'),
-    GROUP:FindByName('Georgian Antitank Defence@Tsveri B'),
-    GROUP:FindByName('Georgian Mechanized Defence@Tsveri'),
-    GROUP:FindByName('Mecha Nato Group 1'),
-    GROUP:FindByName('GW_1975 Russian Armor Defence@Nabakevi #003'),
-    GROUP:FindByName('Georgian AAA HQ'),
-    GROUP:FindByName('BLUE_HQ'),
-    GROUP:FindByName('Georgian Mechanized Defence@Tkviavi B'),
-    GROUP:FindByName('NATO GROUND MECHA ATTACK A #017'),
-    GROUP:FindByName('Georgian Mechanized Defence Squad@Tkviavi B')
+    { GROUP:FindByName('Georgian Armored Defence@Khashuri'), targetPoints.armored },
+    { GROUP:FindByName('Georgian Mechanized Defence@Tsveri'), targetPoints.mechanized },
+    { GROUP:FindByName('Georgian Antitank Defence@Tsveri B'), targetPoints.antitank },
+    { GROUP:FindByName('Mecha Nato Group 1'), targetPoints.mechanized },
+    { GROUP:FindByName('GW_1975 Russian Armor Defence@Nabakevi #003'), targetPoints.armored },
+    { GROUP:FindByName('Georgian AAA HQ'), targetPoints.sam },
+    { GROUP:FindByName('BLUE_HQ'), targetPoints.hq },
+    { GROUP:FindByName('Georgian Mechanized Defence@Tkviavi B'), targetPoints.mechanized },
+    { GROUP:FindByName('NATO GROUND MECHA ATTACK A #017'), targetPoints.mechanized },
+    { GROUP:FindByName('Georgian Mechanized Defence Squad@Tkviavi B'), targetPoints.mechanized }
 
   }
 
@@ -5331,17 +5336,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         -- AIR --
   local startReqTimeAir = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-  local waitReqTimeAir = math.random(600, 1200) --600 -- tempo di attesa tra due request successive per asset aerei (10'-20')
-  local start_sched = 120 -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
-  local interval_sched = 3600  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
+  local waitReqTimeAir = math.random(900, 1800) --600 -- tempo di attesa tra due request successive per asset aerei (15'-20')
+  local start_sched = math.random(60, 300) -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
+  local interval_sched = 4200  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
   local rand_sched = 0.2  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
 
   -- GROUND --
-  local start_ground_sched = 10 -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
+  local start_ground_sched = math.random(60, 300) -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
   local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
   local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
   local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-  local waitReqTimeGround = math.random(600, 1200) -- 600 tempo di attesa tra due request successive per asset terrestri (10'-20')
+  local waitReqTimeGround = math.random(900, 1800) -- 600 tempo di attesa tra due request successive per asset terrestri (15'-30')
 
 
 
@@ -6584,7 +6589,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ]
+          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
           local patrolZone = redPatrolZone.beslan[1]
           local engageZone = blueFrontZone.TSVERI[1]
 
@@ -6946,7 +6951,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ]
+          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
           local patrolZone = redPatrolZone.nalchik[1]
           local engageZone = blueFrontZone.TKVIAVI[1]
 
@@ -7008,7 +7013,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ]
+          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
           local patrolZone = redPatrolZone.beslan[1]
           local engageZone = blueFrontZone.TKVIAVI[1]
 
@@ -7346,7 +7351,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ]
+          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
           local patrolZone = redPatrolZone.nalchik[1]
           local engageZone = blueFrontZone.GORI[1]
 
@@ -7729,7 +7734,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
           local patrolZone = bluePatrolZone.kutaisi[1]
           local engageZone = redFrontZone.TSKHINVALI[1]
 
@@ -8184,7 +8189,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
         local percRequestKill = math.random( 0 , 100 ) * 0.01
-        local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+        local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
         local patrolZone = bluePatrolZone.kutaisi[1]
         local engageZone = redFrontZone.TSKHINVALI[1]
 
@@ -8623,7 +8628,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local  percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
           local patrolZone = bluePatrolZone.tbilisi[1]
           local engageZone = redFrontZone.TSKHINVALI[1]
 
@@ -10101,7 +10106,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
           local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
           local patrolZone = bluePatrolZone.tbilisi[1]
           local engageZone = redFrontZone.TSKHINVALI[1]
 
@@ -10670,7 +10675,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
             local  percRequestKill = math.random( 0 , 100 ) * 0.01
-            local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+            local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
             local patrolZone = bluePatrolZone.tbilisi[1]
             local engageZone = redFrontZone.TSKHINVALI[1]
 
@@ -11152,7 +11157,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
             local percRequestKill = math.random( 0 , 100 ) * 0.01
-            local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+            local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
             local patrolZone = bluePatrolZone.soganlug[1]
             local engageZone = redFrontZone.DIDI_CUPTA[1]
 
@@ -11183,7 +11188,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
               local percRequestKill = math.random( 0 , 100 ) * 0.01
-              local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ]
+              local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
               local patrolZone = bluePatrolZone.soganlug[1]
               local engageZone = redFrontZone.SATIHARI[1]
 
@@ -11765,13 +11770,13 @@ if active_AI_A2A_red then
 
   detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-  local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+  local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 30000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
   --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
   -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
   -- local Detection_Red = detection(prefix_detector.red, 30000)
 
-  --local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, nil )
+  -- local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, nil )
 
   --- A2ADispatcher red:
   -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
@@ -11784,7 +11789,7 @@ if active_AI_A2A_red then
   -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
   -- valuta su ME queste due didtanze
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
+  configureAI_A2ADispatcher( A2ADispatcher, 30000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, true )
 
 
 
@@ -11913,7 +11918,7 @@ if active_AI_A2A_blue then
 
   -- A2ADispatcher:
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 50000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.4, 0.4, true )
+  configureAI_A2ADispatcher( A2ADispatcher, 30000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, true )
 
 
   -- Setup Red CAP e GCI
@@ -12103,7 +12108,7 @@ end -- if active_AI_A2A_blue
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-         configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
+         configureAI_A2GDispatcher( A2GDispatcher, 30000, 'high', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
 
 
 
@@ -12725,7 +12730,7 @@ end -- if active_AI_A2A_blue
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       configureAI_A2GDispatcher( A2GDispatcher, 50000, 'high', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
+       configureAI_A2GDispatcher( A2GDispatcher, 30000, 'high', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, true )
 
 
 
