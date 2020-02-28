@@ -5339,16 +5339,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
   local waitReqTimeAir = math.random(900, 1800) -- 15'- 30' tempo di attesa tra due request successive per asset aerei (15'-20')
   local start_sched = math.random(60, 300) -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
   local interval_sched = 4200  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
-  local rand_sched = 0.2  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
+  local rand_sched = 0.1  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
 
   -- GROUND --
   local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
   local waitReqTimeGround = math.random(900, 1800) -- 15'- 30' tempo di attesa tra due request successive per asset terrestri (15'-30')
   local start_ground_sched = math.random(60, 300) -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare una missione dipendente dall'efficienza della warehouse
   local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
-  local rand_ground_sched = 0.2 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
+  local rand_ground_sched = 0.1 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
 
-  local estimatedTimeMission = 1800 -- 30' durata complessiva della missione (a/r)
+  local estimatedTimeMission = 0 -- 30' durata complessiva della missione (a/r)
 
 
 
@@ -6281,7 +6281,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local num_mission = 8
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
-          local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+          local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
           if wh_activation.Warehouse_AB.red.Mineralnye[8] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( 2 , 3 ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[5] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( 2 , 3 ), nil, nil, nil, "PATROL") pos = pos + 1  end
@@ -6291,7 +6291,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( 2 , 3 ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( 1 , 2 ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[11] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( 3 , 5 ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-          logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. interval_sched * (1-rand_sched) .. ' - ' .. interval_sched * ( 1 + rand_sched)} )
+          logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
 
       end, {}, start_sched * mineralnye_efficiency_influence, sched_interval, rand_sched
 
@@ -7020,7 +7020,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local num_mission = 9
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
-          local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+          local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
           if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random(3, 4), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random(3, 4), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
@@ -7420,7 +7420,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local num_mission = 9
           local depart_time = defineRequestPosition( num_mission )
           local pos = 1
-          local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+          local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Rocket, math.random(3, 5), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
@@ -8581,7 +8581,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local num_mission = 9
              local depart_time = defineRequestPosition( num_mission )
              local pos = 1
-             local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+             local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
@@ -9062,7 +9062,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local num_mission = 11
              local depart_time = defineRequestPosition( num_mission )
              local pos = 1
-             local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+             local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
              if wh_activation.Warehouse_AB.blue.Kutaisi[8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
@@ -9542,7 +9542,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 local num_mission = 11
                 local depart_time = defineRequestPosition( num_mission )
                 local pos = 1
-                local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+                local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
               -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
@@ -10000,7 +10000,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 local num_mission = 6
                 local depart_time = defineRequestPosition( num_mission )
                 local pos = 1
-                local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+                local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
                 if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random(1, 2), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
@@ -10345,7 +10345,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            local num_mission = 12
            local depart_time = defineRequestPosition( num_mission )
            local pos = 1
-           local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+           local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
            if wh_activation.Warehouse_AB.blue.Tbilisi[8] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
            if wh_activation.Warehouse_AB.blue.Tbilisi[8] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2 , 3 ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
@@ -10946,7 +10946,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 local num_mission = 11
                 local depart_time = defineRequestPosition( num_mission )
                 local pos = 1
-                local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+                local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
                 if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random(2, 3), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
                 if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random(2, 3), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
@@ -11430,7 +11430,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local num_mission = 8
             local depart_time = defineRequestPosition( num_mission )
             local pos = 1
-            local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeGround
+            local sched_interval =  estimatedTimeMission + num_mission * waitReqTimeAir
 
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( 2 , 3 ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
@@ -12101,7 +12101,7 @@ if active_AI_A2A_red then
   -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
   -- valuta su ME queste due didtanze
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 30000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, true )
+  configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, true )
 
 
 
@@ -12230,7 +12230,7 @@ if active_AI_A2A_blue then
 
   -- A2ADispatcher:
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 30000, 100000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, true )
+  configureAI_A2ADispatcher( A2ADispatcher, 33000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, true )
 
 
   -- Setup Red CAP e GCI
@@ -12723,7 +12723,7 @@ end -- if active_AI_A2A_blue
                configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, typeTakeoff[ math.random( 1, #typeTakeoff ) ], typeLanding[ math.random( 1, #typeLanding ) ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+              --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
              end
 
@@ -13422,7 +13422,7 @@ end -- if active_AI_A2A_blue
               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, typeTakeoff[ math.random( 1, #typeTakeoff ) ], typeLanding[ math.random( 1, #typeLanding ) ], nil, 0.3, 500, 700, 2000, 4000)
 
               -- PATROL CAS MISSION
-              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+              --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
             end
 
@@ -13529,7 +13529,7 @@ end -- if active_AI_A2A_blue
 
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+             --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
 
            end
 
