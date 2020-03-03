@@ -12280,8 +12280,8 @@ end -- if active_AI_A2A_blue
              -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.5 )
-             spawnDetectionGroup:InitCleanUp(180)
+             --spawnDetectionGroup:SpawnScheduled( 3600, 0.5 )
+             --spawnDetectionGroup:InitCleanUp(180)
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
              --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
@@ -12397,7 +12397,7 @@ end -- if active_AI_A2A_blue
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
              --spawnDetectionGroup:SpawnScheduled( 600, 0.5 )
-             spawnDetectionGroup:InitCleanUp(600)
+             --spawnDetectionGroup:InitCleanUp(600)
 
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
              --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
@@ -12504,7 +12504,7 @@ end -- if active_AI_A2A_blue
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
              --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-             spawnDetectionGroup:InitCleanUp(180)
+             --spawnDetectionGroup:InitCleanUp(180)
              --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
@@ -12608,7 +12608,7 @@ end -- if active_AI_A2A_blue
              local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
              --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-             spawnDetectionGroup:InitCleanUp(600)
+             --spawnDetectionGroup:InitCleanUp(600)
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
              --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
@@ -12690,7 +12690,7 @@ end -- if active_AI_A2A_blue
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
              --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-             spawnDetectionGroup:InitCleanUp(180)
+             --spawnDetectionGroup:InitCleanUp(180)
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Didi[1] )
              local airbase = warehouse.Didi
 
@@ -12776,7 +12776,7 @@ end -- if active_AI_A2A_blue
 
              local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
              --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-             spawnDetectionGroup:InitCleanUp(600)
+             --spawnDetectionGroup:InitCleanUp(600)
              local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
              local airbase = warehouse.Biteta
 
@@ -12904,7 +12904,7 @@ end -- if active_AI_A2A_blue
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
            --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           spawnDetectionGroup:InitCleanUp(600)
+           --spawnDetectionGroup:InitCleanUp(600)
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
@@ -12986,7 +12986,7 @@ end -- if active_AI_A2A_blue
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
            --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           spawnDetectionGroup:InitCleanUp(600)
+           --spawnDetectionGroup:InitCleanUp(600)
 
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
@@ -13095,7 +13095,7 @@ end -- if active_AI_A2A_blue
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
            --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           spawnDetectionGroup:InitCleanUp(600)
+           --spawnDetectionGroup:InitCleanUp(600)
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
@@ -13203,7 +13203,7 @@ end -- if active_AI_A2A_blue
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
            local airbase = warehouse.Kvitiri
            --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           spawnDetectionGroup:InitCleanUp(600)
+           --spawnDetectionGroup:InitCleanUp(600)
 
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic(staticObject.Warehouse_AB.blue.Kvitiri[1])
@@ -13312,7 +13312,7 @@ end -- if active_AI_A2A_blue
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39C )
            local airbase = warehouse.Kvitiri_Helo
            --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           spawnDetectionGroup:InitCleanUp(600)
+           --spawnDetectionGroup:InitCleanUp(600)
 
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse_AB.blue.Kvitiri_Helo[1] )
@@ -13397,8 +13397,8 @@ end -- if active_AI_A2A_blue
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
            local airbase = warehouse.Gori
-           spawnDetectionGroup:SpawnScheduled( 300, 0.5 )
-           spawnDetectionGroup:InitCleanUp(600)
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.5 )
+           --spawnDetectionGroup:InitCleanUp(600)
 
            --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.blue.Gori[1] )
