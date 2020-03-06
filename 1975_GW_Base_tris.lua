@@ -12256,8 +12256,7 @@ end -- if active_AI_A2A_blue
       --printGroupSet( detectionGroupSetRed )
 
       local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1: Ossetia Scenario
-      local activeAI_A2G_Dispatching_HQ2 = false -- per il teatro 2
-      local activeAI_A2G_Dispatching_HQ3 = false -- per il teatro 3
+
 
       -- A2G Dispatching for Red HQ1 OSSETIA SCENARIO
       if activeAI_A2G_Dispatching_HQ1 then
@@ -12284,7 +12283,9 @@ end -- if active_AI_A2A_blue
              --spawnDetectionGroup:InitCleanUp(180)
              local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
              local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-             --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+             -- --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+
+
 
              logging('info', { 'activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
