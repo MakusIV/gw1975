@@ -1,9 +1,21 @@
 # gw1975
+
 A Server Dynamic Enviroments for DCS.
+
 Hi folks, this is a DCS dynamic enviroments based on MOOSE Framework ( https://flightcontrol-master.github.io/MOOSE_DOCS/ ). 
-The principal Moose Module (Class) used in this Enviroments are: Warehouse, AI_A2A.Dispatching, AI_A2G.Dispatching, Detection, Arty, Zone. Cargo was implementated but failed
+
+The principal Moose Module (Class) used in this Enviroments are: 
+ - Warehouse, 
+ - AI_A2A.Dispatching, 
+ - AI_A2G.Dispatching, 
+ - Detection, 
+ - Arty, 
+ - Zone, 
+ - Cargo was implementated but failed.
+
 
 state: development
+
 
 ISSUE:
 - the server Crash after 1h 20' approximately. At the end of this document there is a part of the crash log.
