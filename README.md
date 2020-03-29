@@ -10,15 +10,20 @@ ISSUE:
 - bomber and attack aircraft are little or not at all aggressive.
 
 
-Geopolitical situation
 
-1964-1985 (REAL FACT)
+
+
+
+ ---------------------------    GEOPOLITICAL SITUATION
+
+ --- 1964-1985 (REAL FACT)
 
 Between 1964 and 1972 Eduard Shevardnadze, the country's interior minister, became famous for his fight against corruption, and went on to have the corrupt Vasily Mzhavanadze, first secretary of the Georgian Communist Party, removed . Shevardnadze himself took over the office with the approval of Moscow. His policy was effective and led Georgia, between 1972 and 1985, to a general improvement in the official economy, also facilitated by the removal of hundreds of corrupt officials. In 1985, Shevardnadze was appointed foreign minister of the USSR and was replaced as a Georgian guide by Jumber Patiashvili, a conservative communist, generally considered inefficient in the face of the challenges of perestroika.
 
 
 
-1975 NOW 
+ --- 1975 NOW 
+
 (... in the dynamic enviroment)
 
 After the effective political action of the Minister of the Interior, a group of Georgian nationalists led by the Army Corps General Baaka Kobakhidze, carried out a coup by supporting Georgian military forces and with the political and military support of some western countries coordinated by the USA. The goal of the western coalition is to exploit the weakness of the Soviet Union to establish control in this important area through important and explicit military action. The decision made by Western countries to participate directly in the military action is based on the security that the conflict will remain localized in the Caucasian area due to the extreme weakness and instability facing the entire Soviet Union.
@@ -36,14 +41,18 @@ After being relegated to Sakire, the Russian forces present in North Ossetia lau
 
 ITALIAN
 
-Situazione geopolitica
+---------------------------  SITUAZIONE GEOPOLITICA
 
-1964-1985 (REAL FACT): 
+ --- 1964-1985 (EVENTI REALMENTE ACCADUTI)
+ 
 Fra il 1964 ed il 1972 Eduard Shevardnadze, ministro dell'interno del paese, divenne celebre per la sua lotta alla corruzione, e giunse ad ottenere la rimozione del corrotto Vasily Mzhavanadze, primo segretario del partito comunista georgiano: proprio Shevardnadze gli subentrò nella carica con il benestare di Mosca. La sua politica fu efficace e portò la Georgia, tra il 1972 ed il 1985, ad un miglioramento generale dell'economia ufficiale, facilitato anche dall'allontanamento di centinaia di funzionari corrotti. Nel 1985, Shevardnadze fu nominato ministro degli affari esteri del URSS e venne sostituito come guida georgiana da Jumber Patiashvili, un comunista conservatore, ritenuto generalmente inefficiente di fronte alle sfide della perestrojka
 
 
 
-1975 NOW ( ... IN THE DYNAMIC ENVIROMENT): 
+ -- 1975 ORA: 
+ 
+ (nell'ambiente dinamico)
+ 
 Dopo l'efficacie azione politica del ministro della interno, ul gruppo di nazionalisti georgiani con a capo Baaka Kobakhidze realizza un colpo di stato mediante l'appoggio delle forze militari georgiane e con il supporto politico e militare di alcuni paesi occidentali coordinati dagli USA. L'obiettivo della coalizione occidentale è sfruttare la debolezza dell'Unione Sovietica per stabilire un controllo in questa importante area, mediante una importante ed esplicita azione militare. La decisione presa dai paesi occidentali di partecipare direttamente nell'azione militare, si basa sulla sicurezza che il conflitto rimmarrà localizzato nell'area caucasica a causa della estrema debolezza e instabilità cui versa l'intera Unione Sovietica.
 
 L'Unione Sovietica da tempo aveva adottato un atteggiamento favorevole allo sviluppo del paese nell'ambito dell'Unione e, pertanto, aveva  ridotto sensibilmente la presenza delle  forze militari nella area, soprattutto nella zona di sochi-adler con lo scopo di dimostrare fiducia nella classe dirigente.
@@ -57,7 +66,9 @@ Dopo essere retrocesse fino a Sakire, le forze russe presenti nel Nord Ossetia s
 
 
 
-PART OF CRASH LOG
+
+
+PART OF CRASH LOG:
 
 2020-03-29 15:36:07.087 INFO    EDCORE: # -------------- 20200329-153607 --------------
 2020-03-29 15:36:07.093 INFO    EDCORE: DCS/2.5.6.45317 (x86_64; Windows NT 10.0.18362)
