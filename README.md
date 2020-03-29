@@ -26,7 +26,10 @@ ISSUE:
 
 
 
+
  ---------------------------    GEOPOLITICAL SITUATION
+
+
 
  --- 1964-1985 (REAL FACT)
 
@@ -36,15 +39,15 @@ Between 1964 and 1972 Eduard Shevardnadze, the country's interior minister, beca
 
  --- 1975 NOW 
 
-(... in the dynamic enviroment)
-
 After the effective political action of the Minister of the Interior, a group of Georgian nationalists led by the Army Corps General Baaka Kobakhidze, carried out a coup by supporting Georgian military forces and with the political and military support of some western countries coordinated by the USA. The goal of the western coalition is to exploit the weakness of the Soviet Union to establish control in this important area through important and explicit military action. The decision made by Western countries to participate directly in the military action is based on the security that the conflict will remain localized in the Caucasian area due to the extreme weakness and instability facing the entire Soviet Union.
 
 The Soviet Union had long adopted an attitude favorable to the development of the country within the Union and, therefore, had significantly reduced the presence of military forces in the area with the aim of showing confidence in the ruling class.
 
 On 9 September 1975 coup d'etat takes place, Tbilisi government buildings were occupied by Georgian military forces, at the same time the airports of Tbilisi, Soganlug, Vaziani, Kutaisi, Batumi, Kobuleti, Senaki, Sukhumi and Gudauta were occupied. The Georgian ground military forces supported by the allied military forces occupy the whole area of North Ossetia up to Kurta. During this expansion phase, Georgian forces manage to appropriate an important quantity of Russian military equipment, including: Mig-19, Mig-21, SU-17, L-39, Mi-8MTV2, AN-26 and MI- 24V as well as SAM systems of the SA-2, SA-3, SA-6, SA-8, SA-9 with AAA ZSU-23, ZSU-57. Western military forces integrate Georgian military assets with aircraft and related personnel with the entry of: F-4E, F-5, AJS-37, B-1B, B-52, C-130, UH-1H, UH- 60A and SA-342 and SAM system: Hawk with AAA Flk panzer Gepard, M163 Vads, Zpu 1, 2, 4.
 
-After being relegated to Sakire, the Russian forces present in North Ossetia launch an immediate counterattack that allows them to consolidate their position in the areas of Didmukha, Tskhinvali and Sathiari by rejecting Georgian forces in the areas of Tsveri, Tkviavi and Kaspi. At this stage of the conflict, the airports used as military air bases are Mineralnye, Nalchik, Beslan and Mozdok where squadrons of Mig-19, Mig-21, Mig-23, Mig-27, Mig-25, Su-17, Su- operate. 24, Tu-22, L-39, Mi-8MTV2, AN-26, MI-24 and Mi-26.
+After being relegated to Sakire, the Russian forces present in North Ossetia launch an immediate counterattack that allows them to consolidate their position in the areas of Didmukha, Tskhinvali and Sathiari by rejecting Georgian forces in the areas of Tsveri, Tkviavi and Kaspi. At this stage of the conflict, the airports used as military air bases are Mineralnye, Nalchik, Beslan and Mozdok where squadrons of Mig-19, Mig-21, Mig-23, Mig-27, Mig-25, Su-17, Su-24, Tu-22, L-39, Mi-8MTV2, AN-26, MI-24 and Mi-26.
+
+
 
 
 
@@ -53,7 +56,10 @@ After being relegated to Sakire, the Russian forces present in North Ossetia lau
 
 ITALIAN
 
+
+
 ---------------------------  SITUAZIONE GEOPOLITICA
+
 
  --- 1964-1985 (EVENTI REALMENTE ACCADUTI)
  
@@ -62,8 +68,6 @@ Fra il 1964 ed il 1972 Eduard Shevardnadze, ministro dell'interno del paese, div
 
 
  -- 1975 ORA: 
- 
- (nell'ambiente dinamico)
  
 Dopo l'efficacie azione politica del ministro della interno, ul gruppo di nazionalisti georgiani con a capo Baaka Kobakhidze realizza un colpo di stato mediante l'appoggio delle forze militari georgiane e con il supporto politico e militare di alcuni paesi occidentali coordinati dagli USA. L'obiettivo della coalizione occidentale è sfruttare la debolezza dell'Unione Sovietica per stabilire un controllo in questa importante area, mediante una importante ed esplicita azione militare. La decisione presa dai paesi occidentali di partecipare direttamente nell'azione militare, si basa sulla sicurezza che il conflitto rimmarrà localizzato nell'area caucasica a causa della estrema debolezza e instabilità cui versa l'intera Unione Sovietica.
 
