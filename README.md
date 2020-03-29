@@ -18,7 +18,7 @@ state: development
 
 
 ISSUE:
-- the server Crash after 1h 20' approximately. At the end of this document there is a part of the crash log.
+- the server Crash after 1h 20' approximately. At the end of this document there is a part of the crash log ad dumping.
 - bomber and attack aircraft are little or not at all aggressive.
 
 
@@ -84,35 +84,63 @@ Dopo essere retrocesse fino a Sakire, le forze russe presenti nel Nord Ossetia s
 
 
 
-PART OF CRASH LOG:
+PART OF CRASH LOG AND DUMPING
 
 2020-03-29 15:36:07.087 INFO    EDCORE: # -------------- 20200329-153607 --------------
+
 2020-03-29 15:36:07.093 INFO    EDCORE: DCS/2.5.6.45317 (x86_64; Windows NT 10.0.18362)
+
 2020-03-29 15:36:07.096 INFO    EDCORE: G:\Programmi\Eagle Dynamics\DCS World OpenBeta Server\bin\Weapons.dll
+
 2020-03-29 15:36:07.100 INFO    EDCORE: # C0000005 ACCESS_VIOLATION at 07DB4213 00:00000000
+
 2020-03-29 15:36:07.104 INFO    EDCORE: SymInit: Symbol-SearchPath: '.;G:\Programmi\Eagle Dynamics\DCS World OpenBeta Server;G:\Programmi\Eagle Dynamics\DCS World OpenBeta Server\bin;C:\WINDOWS;C:\WINDOWS\system32;SRV*C:\websymbols*http://msdl.microsoft.com/download/symbols;', symOptions: 530, UserName: 'marco'
+
 2020-03-29 15:36:07.107 INFO    EDCORE: OS-Version: 10.0.18362 () 0x100-0x1
+
 2020-03-29 15:36:07.517 INFO    EDCORE: 0x00000000000A4213 (Weapons): Ammo::add_and_get_ref + 0x9C3
+
 2020-03-29 15:36:07.517 INFO    EDCORE: 0x000000000000B790 (edObjects): Evoker<LandObjectDestroyNotifierBase,Link<LandObjectDestroyNotifierBase> >::onStartEvoke + 0xD0
+ 
 2020-03-29 15:36:07.517 INFO    EDCORE: 0x000000000000E712 (edObjects): viSearch::TestAndInsert + 0x52
+
 2020-03-29 15:36:07.517 INFO    EDCORE: 0x000000000001C778 (edObjects): LinearStorage::getAllObjects + 0xB48
+
 2020-03-29 15:36:07.517 INFO    EDCORE: 0x000000000001C851 (edObjects): LinearStorage::getAllObjects + 0xC21
+
 2020-03-29 15:36:07.519 WARNING LOG: 8 duplicate message(s) skipped.
+
 2020-03-29 15:36:07.519 INFO    EDCORE: 0x00000000000092C9 (edObjects): viObjectManager::GetObjects + 0x99
+
 2020-03-29 15:36:07.519 INFO    EDCORE: 0x0000000000009ACE (edObjects): viObjectManager::GetSegmentList + 0x73E
+
 2020-03-29 15:36:07.519 INFO    EDCORE: 0x00000000000A479B (Weapons): Ammo::add_and_get_ref + 0xF4B
+
 2020-03-29 15:36:07.519 INFO    EDCORE: 0x00000000000A5568 (Weapons): Ammo::add_and_get_ref + 0x1D18
+
 2020-03-29 15:36:07.519 INFO    EDCORE: 0x00000000000CC4F1 (Weapons): woMissile::Control + 0xB51
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x00000000000D030A (Weapons): woMissile::InitExhaust + 0x34A
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x0000000000003A64 (World): wSimTrace::CommandsTraceDiscreteIsOn + 0x4C4
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x0000000000003EED (World): wSimCalendar::DoActionsUntil + 0x1FD
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x00000000006DB61F (DCS): woLA::loadNewInputLayout + 0x30351F
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x00000000006EC9B3 (DCS): dDispatcher::InitDatabase + 0xE103
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x00000000006C2D44 (DCS): woLA::loadNewInputLayout + 0x2EAC44
+
 2020-03-29 15:36:07.520 INFO    EDCORE: 0x00000000006C3109 (DCS): woLA::loadNewInputLayout + 0x2EB009
+
 2020-03-29 15:36:07.521 INFO    EDCORE: 0x000000000168FA28 (DCS): AmdPowerXpressRequestHighPerformance + 0xB14A24
+
 2020-03-29 15:36:07.521 INFO    EDCORE: 0x000000000089ECFE (DCS): uiAsyncNet::onGameStop + 0x6756E
+
 2020-03-29 15:36:07.521 INFO    EDCORE: 0x0000000000017BD4 (KERNEL32): BaseThreadInitThunk + 0x14
+
 2020-03-29 15:36:07.521 INFO    EDCORE: 0x000000000006CED1 (ntdll): RtlUserThreadStart + 0x21
+
 
 
