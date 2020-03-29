@@ -2,12 +2,13 @@
 
 
 -- 1975 Georgian War (gw1975.lua)
--- subject:  Lua file to running a Dynamic Enviroments in DCS Server.
+-- subject:  Dynamic Enviroments to run in a DCS Server.
 --           gw1975.lua is based on Moose framework (https://flightcontrol-master.github.io/MOOSE_DOCS/)
 
 
 -- author: MarkusIV
 -- state:   development
+
 
 
 
