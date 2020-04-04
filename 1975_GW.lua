@@ -4692,7 +4692,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
           Zestafoni  =    { STATIC:FindByName( "Farp ZESTAFONI" ), "Farp ZESTAFONI",  targetPoints.farp }, --Functional.Warehouse#WAREHOUSE
           Khashuri   =    { STATIC:FindByName( "FARP KHASHURI" ), "FARP KHASHURI",  targetPoints.farp },  --Functional.Warehouse#WAREHOUSE
           Gori       =    { STATIC:FindByName( "FARP GORI" ), "FARP GORI",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
-          Vaziani      =    { STATIC:FindByName( "FARP Vaziani" ), "FARP Vaziani",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
           Kvitiri      =    { STATIC:FindByName( "FARP Kvitiri" ), "FARP Kvitiri",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
           Kvitiri_Helo =    { STATIC:FindByName( "FARP Kvitiri Helo" ), "FARP Kvitiri Helo",  targetPoints.farp }   --Functional.Warehouse#WAREHOUSE
 
@@ -5290,6 +5289,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
   end
 
 
+  for i = 1, #redFrontZone do
+
+    Scoring:AddZoneScore( redFrontZone[i][1], redFrontZone[i][3] )
+
+  end
+
+  for i = 1, #blueFrontZone do
+
+    Scoring:AddZoneScore( blueFrontZone[i][1], blueFrontZone[i][3] )
+
+  end
+
   for j = 1, #staticObject do
 
     local targetObject = staticObject[j]
@@ -5307,6 +5318,23 @@ if conflictZone == 'Zone 1: South Ossetia' then
     end
 
   end
+
+
+
+  for i = 1, #redGroundGroup do
+
+    Scoring:AddScoreGroup( redGroundGroup[i][1], redGroundGroup[i][2] )
+
+  end
+
+  for i = 1, #blueGroundGroup do
+
+    Scoring:AddScoreGroup( blueGroundGroup[i][1], blueGroundGroup[i][2] )
+
+  end
+
+
+
 
 
 
@@ -5719,32 +5747,28 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local didi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 4
+      local num_mission_helo = 3
+      local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+      local depart_time = defineRequestPosition( num_mission ) -- ground mission
+      local pos = 1
+      local pos_heli = 1
+      local startReqTimeArtillery = 1 -- Arty groups have first activation
+      local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local didi_sched = SCHEDULER:New( warehouse.Didi,
 
         function()
 
-          local num_mission = 4
-          local num_mission_helo = 3
-          local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
-          local depart_time = defineRequestPosition( num_mission ) -- ground mission
-          local pos = 1
-          local pos_heli = 1
-
-          local startReqTimeArtillery = 1 -- Arty groups have first activation
-          local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
-
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
-
           -- artillery request
           warehouse.Didi:__AddRequest( startReqTimeArtillery, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'DIDI_Artillery_Resupply' )
           warehouse.Didi:__AddRequest( startReqTimeArtillery + 120 , warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'DIDI_Artillery_Ops')
 
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
@@ -6015,21 +6039,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
       --local depart_time = defineRequestPosition(3)
       local biteta_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
 
+      local num_mission = 3
+      local num_mission_helo = 1
+      local depart_time = defineRequestPosition( num_mission )
+      local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+      local pos = 1
+      local pos_heli = 1
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
+
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local biteta_sched = SCHEDULER:New( warehouse.Biteta,
 
         function()
 
-          local num_mission = 2
-          local num_mission_helo = 1
-          local depart_time = defineRequestPosition( num_mission )
-          local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
-          local pos = 1
-          local pos_heli = 1
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
           if wh_activation.Warehouse.red.Biteta[ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
           if wh_activation.Warehouse.red.Biteta[ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
+          if wh_activation.Warehouse.red.Biteta[ 14 ] and pos <= num_mission  then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Biteta[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( red_heli_min_recon, red_heli_max_recon ), nil, nil, nil, 'AFAC_CZ_ONI') pos_heli = pos_heli + 1 end
           --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' ) pos = pos + 1 end
 
@@ -6205,19 +6230,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local kvemo_sba_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 3
+      local num_mission_helo = 0
+      --local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+      local depart_time = defineRequestPosition( num_mission ) -- ground mission
+      local pos = 1
+      --local pos_heli = 1
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local kvemo_sba_sched = SCHEDULER:New( warehouse.Kvemo_Sba,
 
         function()
-
-          local num_mission = 3
-          local num_mission_helo = 0
-          --local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
-          local depart_time = defineRequestPosition( num_mission ) -- ground mission
-          local pos = 1
-          --local pos_heli = 1
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
           -- if true and pos_heli <= num_mission_helo  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( min_cas_skill , max_cas_skill ), nil, nil, nil, 'ATTACK_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
@@ -6227,8 +6251,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- if true and (pos_heli-1) <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli-1 ] + 1 ) * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'ATTACK_ZONE_HELO') end
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
           if wh_activation.Warehouse.red.Kvemo_Sba[12] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'tkviavi_attack' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random(red_ground_min_transport, red_ground_max_transport), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( red_ground_min_attack, red_ground_max_attack ), nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Kvemo_Sba[14] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportB, math.random(red_ground_min_transport, red_ground_max_transport), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Kvemo_Sba[11] and pos <= num_mission  then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TRAN_MI_26, math.random( red_heli_min_transport, red_heli_max_transport ), nil, nil, nil, 'Transfert to Biteta' ) pos = pos + 1  end
 
           logging('finer', { 'Kvemo_Sba scheduler function' , 'addRequest Kvemo_Sba warehouse'} )
@@ -6409,19 +6433,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
       logging('info', { 'main' , 'addrequest Alagir warehouse'} )
 
       local alagir_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 3
+      local num_mission_helo = 2
+      local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+      local depart_time = defineRequestPosition( num_mission ) -- ground mission
+      local pos = 1
+      local pos_heli = 1
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local alagir_sched = SCHEDULER:New( warehouse.Alagir,
 
         function()
-
-          local num_mission = 3
-          local num_mission_helo = 2
-          local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
-          local depart_time = defineRequestPosition( num_mission ) -- ground mission
-          local pos = 1
-          local pos_heli = 1
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
           if wh_activation.Warehouse.red.Alagir[11] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( red_heli_min_transport, red_heli_max_transport ), nil, nil, nil, 'Transfer to Biteta') pos_heli = pos_heli + 1  end
@@ -6429,9 +6452,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- inserisci missioni cargoSet
 
           -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiKatiusha, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Batumi' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red.Alagir[11] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiGwozdika, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red.Alagir[11] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Batumi' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
+          if wh_activation.Warehouse.red.Alagir[14] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( red_ground_min_transport, red_ground_max_transport ), nil, nil, nil, 'Transfert to Didi' ) pos = pos + 1  end
 
           logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
 
@@ -6556,18 +6579,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local mineralnye_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+      local num_mission = 9
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local mineralnye_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Mineralnye[ 1 ],
 
         function()
-
-          local num_mission = 9
-          local depart_time = defineRequestPosition( num_mission )
-          local pos = 1
-          local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-          local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-          local requestStartTime = startReqTimeAir + offSetStartSchedule
 
           -- Priority Mission Request
           if wh_activation.Warehouse_AB.red.Mineralnye[9]  then warehouse.Mineralnye:__AddRequest( startReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_TU_22, 1, nil, nil, nil, "AWACS")  end
@@ -6953,18 +6975,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
       logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
 
       local mozdok_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+      local num_mission = 10
+      local depart_time = defineRequestPosition(9)
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local mozdok_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Mozdok[ 1 ],
 
         function()
-
-          local num_mission = 10
-          local depart_time = defineRequestPosition(9)
-          local pos = 1
-          local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-          local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-          local requestStartTime = startReqTimeAir + offSetStartSchedule
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
           if wh_activation.Warehouse_AB.red.Mozdok[8] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
@@ -7362,18 +7383,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local beslan_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+      local num_mission = 9
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local beslan_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Beslan[ 1 ],
 
         function()
-
-          local num_mission = 9
-          local depart_time = defineRequestPosition( num_mission )
-          local pos = 1
-          local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-          local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-          local requestStartTime = startReqTimeAir + offSetStartSchedule
 
           -- Priority Mission Request
           if wh_activation.Warehouse_AB.red.Beslan[9] then warehouse.Beslan:__AddRequest( startReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, 1, nil, nil, nil, "AWACS")  end -- sostituire con un AWACS su 24 da realizzare
@@ -7766,19 +7787,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local nalchik_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+      local num_mission = 9
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local nalchik_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Nalchik[ 1 ],
 
         function()
-
-
-          local num_mission = 9
-          local depart_time = defineRequestPosition( num_mission )
-          local pos = 1
-          local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-          local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-          local requestStartTime = startReqTimeAir + offSetStartSchedule
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Rocket, math.random(red_air_min_cas, red_air_max_cas), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
@@ -8207,21 +8227,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local zestafoni_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 5 -- the number of mission request ( _addRequest() )
+      local num_mission_helo = 0
+      local depart_time = defineRequestPosition(num_mission)
+      local pos = 1
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local zestafoni_sched = SCHEDULER:New( warehouse.Zestafoni,
 
         function()
 
-          local num_mission = 3 -- the number of mission request ( _addRequest() )
-          local num_mission_helo = 0
-          local depart_time = defineRequestPosition(num_mission)
-          local pos = 1
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
           if wh_activation.Warehouse.blue.Zestafoni[12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( blue_ground_min_attack, blue_ground_max_attack ) , nil, nil, nil, 'CZ_PEREVI_attack_1' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Zestafoni[12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'CZ_PEREVI_attack_2' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Zestafoni[12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'CZ_ONI_attack_3' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Zestafoni[14] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.TroopTransport, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'Troop_transport' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Zestafoni[14] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.TransportA, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'Ground_transport' ) pos = pos + 1  end
       end, {}, start_ground_sched * zestafoni_efficiency_influence, sched_interval, rand_ground_sched
 
       ) -- END SCHEDULER
@@ -8361,6 +8382,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Khashuri:AddAsset(           air_template_blue.AFAC_MI_24,                  10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)] ) -- AFAC
         warehouse.Khashuri:AddAsset(           air_template_blue.AFAC_SA342L,                 10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)] ) -- AFAC
         warehouse.Khashuri:AddAsset(           ground_group_template_blue.ArtilleryResupply,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
+        warehouse.Khashuri:AddAsset(           ground_group_template_blue.TransportA,         10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
+        warehouse.Khashuri:AddAsset(           ground_group_template_blue.TransportB,         10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
+        warehouse.Khashuri:AddAsset(           ground_group_template_blue.TroopTransport,     10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)] ) -- Transport
         logging('info', { 'main' , 'addAsset Khashuri warehouse'} )
         -- Khashuri warehouse e' una frontline e link warehouse
 
@@ -8392,20 +8416,21 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
       local khashuri_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 4 -- the number of mission request ( _addRequest() )
+      local num_mission_helo = 0
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local khashuri_sched = SCHEDULER:New( warehouse.Khashuri,
 
         function()
 
-          local num_mission = 2 -- the number of mission request ( _addRequest() )
-          local num_mission_helo = 0
-          local depart_time = defineRequestPosition( num_mission )
-          local pos = 1
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
           if wh_activation.Warehouse.blue.Khashuri[12] and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Khashuri[12] and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'DIDMUKHA_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Khashuri[14] and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,      WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.TransportA, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'DIDMUKHA_attack_2' ) pos = pos + 1  end
+          if wh_activation.Warehouse.blue.Khashuri[14] and pos <= num_mission then warehouse.Khashuri:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,      WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.TroopTransport, math.random( blue_ground_min_attack, blue_ground_max_attack ), nil, nil, nil, 'DIDMUKHA_attack_2' ) pos = pos + 1  end
 
       end, {}, start_ground_sched * khashuri_efficiency_influence, sched_interval, rand_ground_sched
 
@@ -8575,6 +8600,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
       logging('info', { 'main' , 'addrequest Gori warehouse'} )
 
       local gori_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 7 -- the number of mission request ( _addRequest() )
+      local depart_time = defineRequestPosition( num_mission )
+
+      local num_mission_helo = 3 -- the number of mission request ( _addRequest() )
+      local depart_time_helo = defineRequestPosition( num_mission_helo )
+
+      local pos = 1
+      local pos_heli = 1
+
+      local startReqTimeArtillery = 1 -- Arty groups have first activation
+      local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
+
+      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
       -- NOTA: lo scheduler di didi gestisce anche le missioni tipo ARTY
 
@@ -8582,20 +8620,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
       local gori_sched = SCHEDULER:New( warehouse.Gori,
 
         function()
-
-          local num_mission = 7 -- the number of mission request ( _addRequest() )
-          local depart_time = defineRequestPosition( num_mission )
-
-          local num_mission_helo = 3 -- the number of mission request ( _addRequest() )
-          local depart_time_helo = defineRequestPosition( num_mission_helo )
-
-          local pos = 1
-          local pos_heli = 1
-
-          local startReqTimeArtillery = 1 -- Arty groups have first activation
-          local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
-
-          local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
 
           -- artillery request
@@ -8951,18 +8975,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
         logging('info', { 'main' , 'addAsset Batumi warehouse'} )
 
         local batumi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+        local num_mission = 9
+        local depart_time = defineRequestPosition( num_mission )
+        local pos = 1
+        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
         local batumi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Batumi[ 1 ],
 
           function()
 
-             local num_mission = 9
-             local depart_time = defineRequestPosition( num_mission )
-             local pos = 1
-             local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-             local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-             local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
@@ -9452,18 +9477,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         local kutaisi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+        local num_mission = 11
+        local depart_time = defineRequestPosition( num_mission )
+        local pos = 1
+        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
         local kutaisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Kutaisi[ 1 ],
 
           function()
 
-             local num_mission = 11
-             local depart_time = defineRequestPosition( num_mission )
-             local pos = 1
-             local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-             local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-             local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
              -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
              -- Priority Mission
@@ -9933,18 +9959,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         local kvitiri_efficiency_influence = math.random(10, 20) * 0.1
+        local num_mission = 12
+        local depart_time = defineRequestPosition( num_mission )
+        local pos = 1
+        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
         local kvitiri_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Kvitiri[ 1 ],
 
             function()
 
 
-                local num_mission = 12
-                local depart_time = defineRequestPosition( num_mission )
-                local pos = 1
-                local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-                local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-                local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
               -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
@@ -10394,6 +10421,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Kvitiri_Helo:AddAsset(               air_template_blue.CAS_SA_342,               10,            WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]    ) -- Heli CAS
         warehouse.Kvitiri_Helo:AddAsset(               air_template_blue.AFAC_UH_1H,               10,            WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]    ) -- Heli AFAC
         warehouse.Kvitiri_Helo:AddAsset(               air_template_blue.AFAC_SA342L,              10,            WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]    ) -- Heli AFAC
+        warehouse.Kvitiri_Helo:AddAsset(               ground_group_template_blue.TransportA,      10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground Transport
+        warehouse.Kvitiri_Helo:AddAsset(               ground_group_template_blue.TransportB,      10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground Transport
+        warehouse.Kvitiri_Helo:AddAsset(               ground_group_template_blue.TroopTransport,  10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(min_blue_ground_skill, max_blue_ground_skill)]    ) -- Ground Transport
 
 
         logging('info', { 'main' , 'addAsset Kvitiri_Helo warehouse'} )
@@ -10406,22 +10436,26 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         local kvitiri_helo_efficiency_influence = math.random(10, 20) * 0.1
+        local num_mission = 3
+        local num_mission_helo = 5
+        local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+        local depart_time = defineRequestPosition( num_mission )
+        local pos = 1
+        local pos_heli = 1
+        local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
         local kvitiri_helo_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Kvitiri_Helo[ 1 ],
 
             function()
 
-                local num_mission = 6
-                local depart_time = defineRequestPosition( num_mission )
-                local pos = 1
-                local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-
-                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[10] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, "RECON FARP") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[12] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( blue_ground_min_transport, blue_ground_max_transport ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos_heli <= num_mission_helo then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time_heli[ pos_heli ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_1H, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY FARP GORI") pos_heli = pos_heli + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos_heli <= num_mission_helo then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time_heli[ pos_heli ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY FARP KHASHURI") pos_heli = pos_heli + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos_heli <= num_mission_helo then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time_heli[ pos_heli ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT VEHICLE FARP ZESTAFONI") pos_heli = pos_heli + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[11] and pos_heli <= num_mission_helo then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time_heli[ pos_heli ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( blue_heli_min_transport, blue_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos_heli = pos_heli + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[10] and pos_heli <= num_mission_helo then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeAir + depart_time_heli[ pos_heli ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, 1, nil, nil, nil, "RECON FARP") pos_heli = pos_heli + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[14] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.TransportA, math.random( blue_ground_min_transport, blue_ground_max_transport ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[14] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.TransportB, math.random( blue_ground_min_transport, blue_ground_max_transport ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[14] and pos <= num_mission then warehouse.Kvitiri_Helo:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeAir, warehouse.Khashuri, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.TroopTransport, math.random( blue_ground_min_transport, blue_ground_max_transport ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
                 logging('info', { 'main' , 'Kvitiri_Helo scheduler - start time:' .. start_sched *  kvitiri_helo_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
 
             end, {}, start_sched * kvitiri_helo_efficiency_influence, sched_interval, rand_sched
@@ -10761,18 +10795,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
       logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
 
       local tblisi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 6
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local tblisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Tbilisi[ 1 ],
 
         function()
 
-           local num_mission = 6
-           local depart_time = defineRequestPosition( num_mission )
-           local pos = 1
-           local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-           local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-           local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
            -- Priority Mission Request
            if wh_activation.Warehouse_AB.blue.Tbilisi[9] then warehouse.Tbilisi:__AddRequest( startReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, 1, nil, nil, nil, "AWACS")  end
@@ -11355,17 +11390,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         local vaziani_efficiency_influence = math.random(10, 20) * 0.1
+        local num_mission = 8
+        local depart_time = defineRequestPosition( num_mission )
+        local pos = 1
+        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
         local vaziani_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ],
 
             function()
 
-                local num_mission = 8
-                local depart_time = defineRequestPosition( num_mission )
-                local pos = 1
-                local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-                local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-                local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
                 if wh_activation.Warehouse_AB.blue.Vaziani[15] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")  end -- AFAC, ...
                 if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
@@ -11702,24 +11738,29 @@ if conflictZone == 'Zone 1: South Ossetia' then
               local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
               logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-              -- manca il groupset
-              -- So we start another request.
-              --[[
-              if request.assignment=="PATROL" then
 
-                  logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled PATROL mission'})
-                  activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Vaziani[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+              if request.assignment=="AFAC_afacZone.Didmukha_Tsveri" then
+
+                  logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled AFAC_afacZone.Didmukha_Tsveri'})
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")
 
               end
 
-              if request.assignment=="BAI TARGET" then
+        end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-                logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled BAI TARGET mission'})
-                activeBAIWarehouseT('Interdiction from Vaziani', groupset, 'target', redFrontZone.BAI_Zone_Vaziani[2], redFrontZone.BAI_Zone_Vaziani[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+        function warehouse.Vaziani:OnAfterDead(From,Event,To,request)
 
-              end -- end if
+              -- le diverse opzioni disponibili per la scelta casuale della missione
+              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-              ]]
+              logging('info', { 'warehouse.Vaziani:OnAfterDead(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+
+              if request.assignment=="AFAC_afacZone.Didmukha_Tsveri" then
+
+                  logging('info', { 'warehouse.Vaziani:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled AFAC_afacZone.Didmukha_Tsveri'})
+                  warehouse.Vaziani:__AddRequest( startReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")
+
+              end
 
         end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
@@ -11851,18 +11892,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
         local depart_time = defineRequestPosition(9) -- list of position
 
         local soganlug_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+        local num_mission = 8
+        local depart_time = defineRequestPosition( num_mission )
+        local pos = 1
+        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+        local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
         -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
         local soganlug_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Soganlug[ 1 ],
 
           function()
 
-            local num_mission = 8
-            local depart_time = defineRequestPosition( num_mission )
-            local pos = 1
-            local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-            local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-            local requestStartTime = startReqTimeAir + offSetStartSchedule
+
 
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( blue_heli_min_cas, blue_heli_max_cas ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
