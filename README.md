@@ -4,7 +4,7 @@ A Server Dynamic Enviroments for DCS.
 
 Hi folks, this is a DCS dynamic enviroments based on MOOSE Framework ( https://flightcontrol-master.github.io/MOOSE_DOCS/ ).
 
-The principal Moose Module (Class) used in this Enviroments are:
+This is the principal Moose Module (Class) used:
 
     Warehouse,
     AI_A2A.Dispatching,
@@ -12,7 +12,7 @@ The principal Moose Module (Class) used in this Enviroments are:
     Detection,
     Arty,
     Zone,
-    Cargo was implementated but failed.
+    Cargo (not active)
 
 state: development
 
@@ -43,17 +43,19 @@ ITALIAN
 
 --- 1964-1985 (EVENTI REALMENTE ACCADUTI)
 
-Fra il 1964 ed il 1972 Eduard Shevardnadze, ministro dell'interno del paese, divenne celebre per la sua lotta alla corruzione, e giunse ad ottenere la rimozione del corrotto Vasily Mzhavanadze, primo segretario del partito comunista georgiano: proprio Shevardnadze gli subentrÚ nella carica con il benestare di Mosca. La sua politica fu efficace e portÚ la Georgia, tra il 1972 ed il 1985, ad un miglioramento generale dell'economia ufficiale, facilitato anche dall'allontanamento di centinaia di funzionari corrotti. Nel 1985, Shevardnadze fu nominato ministro degli affari esteri del URSS e venne sostituito come guida georgiana da Jumber Patiashvili, un comunista conservatore, ritenuto generalmente inefficiente di fronte alle sfide della perestrojka
+Fra il 1964 ed il 1972 Eduard Shevardnadze, ministro dell'interno del paese, divenne celebre per la sua lotta alla corruzione, e giunse ad ottenere la rimozione del corrotto Vasily Mzhavanadze, primo segretario del partito comunista georgiano: proprio Shevardnadze gli subentr√≤ nella carica con il benestare di Mosca. La sua politica fu efficace e port√≤ la Georgia, tra il 1972 ed il 1985, ad un miglioramento generale dell'economia ufficiale, facilitato anche dall'allontanamento di centinaia di funzionari corrotti. Nel 1985, Shevardnadze fu nominato ministro degli affari esteri del URSS e venne sostituito come guida georgiana da Jumber Patiashvili, un comunista conservatore, ritenuto generalmente inefficiente di fronte alle sfide della perestrojka
 
 -- 1975 ORA:
 
-Dopo l'efficacie azione politica del ministro della interno, ul gruppo di nazionalisti georgiani con a capo Baaka Kobakhidze realizza un colpo di stato mediante l'appoggio delle forze militari georgiane e con il supporto politico e militare di alcuni paesi occidentali coordinati dagli USA. L'obiettivo della coalizione occidentale Ë sfruttare la debolezza dell'Unione Sovietica per stabilire un controllo in questa importante area, mediante una importante ed esplicita azione militare. La decisione presa dai paesi occidentali di partecipare direttamente nell'azione militare, si basa sulla sicurezza che il conflitto rimmarr‡ localizzato nell'area caucasica a causa della estrema debolezza e instabilit‡ cui versa l'intera Unione Sovietica.
+Dopo l'efficacie azione politica del ministro della interno, ul gruppo di nazionalisti georgiani con a capo Baaka Kobakhidze realizza un colpo di stato mediante l'appoggio delle forze militari georgiane e con il supporto politico e militare di alcuni paesi occidentali coordinati dagli USA. L'obiettivo della coalizione occidentale √® sfruttare la debolezza dell'Unione Sovietica per stabilire un controllo in questa importante area, attraverso un potente intervento militare. La decisione presa dai paesi occidentali di partecipare direttamente nell'azione militare, si basa sulla convinzione che il conflitto rimmarr√† localizzato nell'area caucasica a causa della estrema debolezza e instabilit√† cui versa l'intera Unione Sovietica.
 
-L'Unione Sovietica da tempo aveva adottato un atteggiamento favorevole allo sviluppo del paese nell'ambito dell'Unione e, pertanto, aveva ridotto sensibilmente la presenza delle forze militari nella area, soprattutto nella zona di sochi-adler con lo scopo di dimostrare fiducia nella classe dirigente.
+L'Unione Sovietica da tempo aveva adottato un atteggiamento favorevole allo sviluppo del paese nell'ambito dell'Unione e, pertanto, aveva ridotto sensibilmente la presenza delle forze militari nella area con l'obbiettivo di dimostrare fiducia nella classe dirigente.
 
-Il 9 settembre 1975 avviene il colpo di stato, il parlamento a Tibilisi viene occupato dalle forze militari Georgiane, contemporanemente vengono occupati gli aeroporti di Tbilisi, Soganlug, Vaziani, Kutaisi, Batumi, Kobuleti, Senaki, Sukhumi e Gudauta. Le forze militari terrestri gerogiane supportate dalle forze militari alleate occupano tutta l'area del Nord Ossetia fino a Kurta. Durante questa fase di espansione le forze Georgiane riescono ad appropriarsi di una importante quantita' di materiale militare russo tra i quali: Mig-19, Mig-21, SU-17, L-39, Mi-8MTV2, AN-26 e MI-24V oltre a sistemi SAM SA-2, SA-3, SA-6, SA-8, SA-9 con AAA ZSU-23, ZSU-57. Le forze militari occidentali integrano gli asset militari georgiani con aerei e relativo personale con l'immissione di: F-4E, F-5, AJS-37, B-1B, B-52, C-130, UH_1H, UH_60A e SA_342 oltre a sistemi SAM Hawk con AAA Flk panzer Gepard, M163 Vads, Zpu 1, 2, 4.
+Il 9 settembre 1975 avviene il colpo di stato, i palazzi di governo di Tibilisi vengono occupati dalle forze militari Georgiane, contemporanemente vengono presi gli aeroporti di Tbilisi, Soganlug, Vaziani, Kutaisi, Batumi, Kobuleti, Senaki, Sukhumi e Gudauta. Le forze militari terrestri gerogiane supportate dalle forze militari alleate occupano tutta l'area del Nord Ossetia fino a Kurta. Durante questa fase di espansione le forze Georgiane riescono ad appropriarsi di una importante quantita' di materiale militare russo tra i quali: Mig-19, Mig-21, SU-17, L-39, Mi-8MTV2, AN-26 e MI-24V oltre a sistemi antiaerei SA-2, SA-3, SA-6, SA-8, SA-9 con AAA ZSU-23, ZSU-57. Le forze militari occidentali integrano gli asset militari georgiani con aerei e relativo personale con l'immissione di: F-4E, F-5, AJS-37, B-1B, B-52, C-130, UH_1H, UH_60A e SA_342 oltre a sistemi SAM Hawk con AAA Flk panzer Gepard, M163 Vads, Zpu 1, 2, 4.
 
-Dopo essere retrocesse fino a Sakire, le forze russe presenti nel Nord Ossetia scagliano un immediato contrattacco che permette loro di consolidare la loro posaizione nelle zone di Didmukha, Tskhinvali e Sathiari respingendo le forze georgiane nelle zone di Tsveri, Tkviavi e Kaspi. In questa fase del conflitto gli aeroporti utilizzati come base aeree militari sono Mineralnye, Nalchik, Beslan e Mozdok dove operano squadriglie di Mig-19, Mig-21, Mig-23, Mig-27, Mig-25, Su-17, Su-24, Tu-22, L-39, Mi-8MTV2, AN-26, MI-24 e Mi-26.
+Dopo essere retrocesse fino a Sakire, le forze russe presenti nel Nord Ossetia scagliano un immediato contrattacco che permette loro di posizionarsi nelle zone di Didmukha, Tskhinvali e Sathiari respingendo le forze georgiane nelle zone di Tsveri, Tkviavi e Kaspi. In questa fase del conflitto gli aeroporti utilizzati come base aeree militari dall'Unione Sovietica sono Mineralnye, Nalchik, Beslan e Mozdok dove operano squadriglie di Mig-19, Mig-21, Mig-23, Mig-27, Mig-25, Su-17, Su-24, Tu-22, L-39, Mi-8MTV2, AN-26, MI-24 e Mi-26.
+
+
 
 PART OF CRASH LOG AND DUMPING
 
