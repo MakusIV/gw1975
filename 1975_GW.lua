@@ -4566,6 +4566,24 @@ local blue_ground_max_transport = 1
 --}
 
 
+
+-- TakeOff and Landing setting for AI_A2A and AI_A2G Dispatching
+--
+local parAirbOp = {
+
+  -- take off = { percAir, percRnwy, percHot}  box is calculated ,
+  -- landing = {percAir, percRnwy}  box is calculated
+
+  cap = { takeOff( 0.2, 0.1, 0.5 ), landing( 0.5, 0.2 ) },
+  gci = { takeOff( 0.1, 0.2, 0.7 ), landing( 0.5, 0.2 ) },
+  cas = { takeOff( 0.2, 0.1, 0.5 ), landing( 0.5, 0.2 ) },
+  bai = { takeOff( 0.2, 0.1, 0.5 ), landing( 0.5, 0.2 ) },
+  sead = { takeOff( 0.2, 0.1, 0.5 ), landing( 0.5, 0.2 ) }
+
+}
+
+
+
 --- WAREHOUSE SCHEDULE TIMING CONFIGURATION
 
     -- AIR --
@@ -10683,9 +10701,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_skill, max_blue_fighter_skill)]    ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Rocket,         2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS  EXPERIMENTAL PROTOTYPE
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Cluster,        2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS EXPERIMENTAL PROTOTYPE
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AV_88_Bomb,           2,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,        10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Bomber CAS
@@ -10704,7 +10719,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
        warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]    ) -- Heli CAS
        warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_B_1B,               10,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_blue_awacs_skill, max_blue_awacs_skill)]   ) -- AWACS
        warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,              10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC
-       warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_AV_88,                2,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
        warehouse.Tbilisi:AddAsset(               air_template_blue.REC_L_39ZA,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
        warehouse.Tbilisi:AddAsset(               air_template_blue.REC_F_4,                  10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AFAC EXPERIMENTAL PROTOTYPE
        warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_F_4,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(min_blue_afac_skill, max_blue_afac_skill)]   ) -- AWACS
@@ -12616,8 +12630,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Mozdok CAP', AIRBASE.Caucasus.Mozdok, {air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_23MLD}, 15)
       A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_L_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
 
-      if wh_activation.Warehouse_AB.red.Mozdok[16] then assign_cap ( cap_zone_db_red[1], 'Mozdok CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red.Mozdok[17] then assign_gci('Mozdok GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher) end
+      if wh_activation.Warehouse_AB.red.Mozdok[16] then assign_cap ( cap_zone_db_red[1], 'Mozdok CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.red.Mozdok[17] then assign_gci('Mozdok GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
     end
 
@@ -12631,8 +12645,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, {air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_Mig_21Bis}, 15)
       A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
 
-      if wh_activation.Warehouse_AB.red.Beslan[16] then assign_cap ( cap_zone_db_red[2], 'Beslan CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red.Beslan[17] then assign_gci('Beslan GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher) end
+      if wh_activation.Warehouse_AB.red.Beslan[16] then assign_cap ( cap_zone_db_red[2], 'Beslan CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.red.Beslan[17] then assign_gci('Beslan GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
     end
 
@@ -12645,8 +12659,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis}, 15)
       A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_H_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
 
-      if wh_activation.Warehouse_AB.red.Nalchik[16] then assign_cap ( cap_zone_db_red[3], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red.Nalchik[17] then assign_gci('Nalchik GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher) end
+      if wh_activation.Warehouse_AB.red.Nalchik[16] then assign_cap ( cap_zone_db_red[3], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.red.Nalchik[17] then assign_gci('Nalchik GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
     end
 
@@ -12659,8 +12673,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
 
 
-      if wh_activation.Warehouse_AB.red.Mineralnye[16] then assign_cap ( cap_zone_db_red[4], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red.Mineralnye[17] then assign_gci('Mineralnye GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher) end
+      if wh_activation.Warehouse_AB.red.Mineralnye[16] then assign_cap ( cap_zone_db_red[4], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.red.Mineralnye[17] then assign_gci('Mineralnye GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
     end
 
@@ -12745,8 +12759,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Kutaisi CAP', AIRBASE.Caucasus.Kutaisi, air_template_blue.CAP_F_5, 15 )
       A2ADispatcher:SetSquadron('Kutaisi GCI', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_F_5, 15 )
 
-      if wh_activation.Warehouse_AB.blue.Kutaisi[16] then assign_cap ( cap_zone_db_blue[1], 'Kutaisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue.Kutaisi[17] then assign_gci('Kutaisi GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Kutaisi[16] then assign_cap ( cap_zone_db_blue[1], 'Kutaisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Kutaisi[17] then assign_gci('Kutaisi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
 
@@ -12759,8 +12773,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Vaziani CAP', AIRBASE.Caucasus.Vaziani, {air_template_blue.CAP_F_4, air_template_blue.CAP_F_5}, 15)
       A2ADispatcher:SetSquadron('Vaziani GCI', AIRBASE.Caucasus.Vaziani, {air_template_blue.GCI_F_4, air_template_blue.GCI_F_5}, 15)
 
-      if wh_activation.Warehouse_AB.blue.Vaziani[16] then assign_cap ( cap_zone_db_blue[2], 'Vaziani CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue.Vaziani[17] then assign_gci('Vaziani GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Vaziani[16] then assign_cap ( cap_zone_db_blue[2], 'Vaziani CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Vaziani[17] then assign_gci('Vaziani GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
 
@@ -12773,8 +12787,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, { air_template_blue.CAP_L_Mig_21Bis, air_template_blue.CAP_AJS_37 }, 15)
       A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, { air_template_blue.GCI_Mig_21Bis, air_template_blue.GCI_AJS_37}, 15)
 
-      if wh_activation.Warehouse_AB.blue.Soganlug[16] then assign_cap ( cap_zone_db_blue[3], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue.Soganlug[17] then assign_gci('Soganlug GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Soganlug[16] then assign_cap ( cap_zone_db_blue[3], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Soganlug[17] then assign_gci('Soganlug GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
 
@@ -12787,8 +12801,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Tbilisi CAP', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_Mig_19P}, 15)
       A2ADispatcher:SetSquadron('Tbilisi GCI', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.GCI_Mig_19P, air_template_blue.GCI_AJS_37}, 15)
 
-      if wh_activation.Warehouse_AB.blue.Tbilisi[16] then assign_cap ( cap_zone_db_blue[2], 'Tbilisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue.Tbilisi[17] then assign_gci('Tbilisi GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Tbilisi[16] then assign_cap ( cap_zone_db_blue[2], 'Tbilisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Tbilisi[17] then assign_gci('Tbilisi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
 
@@ -12802,12 +12816,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4, air_template_blue.CAP_AJS_37}, 15)
       A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_F_4}, 15)
 
-      if wh_activation.Warehouse_AB.blue.Batumi[16] then assign_cap ( cap_zone_db_blue[4], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, takeOff(0.2, 0.3, 0.5), landing(0.3, 0.5), A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue.Batumi[17] then assign_gci('Batumi GCI', 800, 1200, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Batumi[16] then assign_cap ( cap_zone_db_blue[4], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Batumi[17] then assign_gci('Batumi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
 
   end -- if active_AI_A2A_blue
+
+
+
+
+
 
 
 
@@ -12976,7 +12995,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- PATROL CAS MISSION
                configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -12990,7 +13009,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
                squadronName = "Beslan BAI"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, baiTemplate, 20 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
              end
 
@@ -13000,7 +13019,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
                squadronName = "Beslan SEAD"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, seadTemplate, 20 )
-               configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 700, 500, 2000, 3500)
+               configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
                --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
              end
@@ -13079,7 +13098,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                local squadronName = "Nalchik CAS"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
                configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13092,7 +13111,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                squadronName = "Nalchik BAI"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, baiTemplate, 20 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
              end
 
@@ -13179,7 +13198,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                local squadronName =  "Mineralnye CAS"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 20 )
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
               --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13191,7 +13210,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                squadronName = "Mineralnye BAI"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 20 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
              end
 
@@ -13201,7 +13220,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                squadronName = "Mineralnye SEAD"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 20 )
                --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-               configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.3, 0.4), nil, 0.5, 700, 500, 2000, 3500)
+               configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
 
              end
 
@@ -13276,7 +13295,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                local squadronName = "Mozdok BAI"
                A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
              end
 
@@ -13351,7 +13370,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                local squadronName = "Didi CAS"
                A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.red.Didi_1[1]:GetName(), casTemplateHeli, 20) -- FARP Didi
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), 60 * 4, 0.3, 200, 300, 700, 1500)
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
 
                -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
                configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
@@ -13429,7 +13448,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                local squadronName = "Biteta CAS"
                A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.red.Biteta[1]:GetName(), casTemplateHeli, 20 ) --FARP Biteta
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), 60 * 4, 0.3, 200, 300, 700, 1500)
+               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
 
                -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
                configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13556,7 +13575,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              local squadronName = "Batumi BAI"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Batumi, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
@@ -13637,7 +13656,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 30 )
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
              -- PATROL CAS MISSION
              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13649,7 +13668,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              squadronName = "Vaziani BAI"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
@@ -13660,7 +13679,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              squadronName = "Vaziani SEAD"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, seadTemplate, 20 )
              --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 700, 500, 2000, 3500)
+             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
 
            end
 
@@ -13744,7 +13763,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, casTemplateAirplane, 30 )
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
              -- PATROL CAS MISSION
              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13756,7 +13775,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              squadronName = "Soganlug BAI"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
@@ -13767,7 +13786,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              squadronName = "Soganlug SEAD"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, seadTemplate, 20 )
              --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 700, 500, 2000, 3500)
+             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
 
            end
 
@@ -13847,7 +13866,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 20 )
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
              -- PATROL CAS MISSION
              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13860,7 +13879,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              squadronName = "Kutaisi BAI"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.3, 0.4), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
@@ -13955,7 +13974,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri[1]:GetName(), casTemplate, 20 ) --FARP Kvitiri
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), nil, 0.3, 500, 700, 2000, 4000)
+              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
               -- PATROL CAS MISSION
               --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
@@ -13969,7 +13988,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              squadronName = "Kvitiri BAI"
              A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri[1]:GetName(), baiTemplate, 20 ) --FARP Kvitiri
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), nil, 0.5, 500, 700, 3000, 5000)
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
@@ -13980,7 +13999,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              squadronName = "Kvitiri SEAD"
              A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri[1]:GetName(), seadTemplate, 20 ) --FARP Kvitiri
              --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), nil, 0.5, 700, 500, 2000, 3500)
+             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
 
            end
 
@@ -14052,7 +14071,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              local squadronName = "Kvitiri_Helo CAS"
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
              A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri_Helo[1]:GetName(), casTemplate, 50 ) -- FARP Kvitiri Helo
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), 60 * 4, 0.3, 200, 300, 700, 1500)
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
 
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
@@ -14131,7 +14150,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
              A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Gori[1]:GetName(), casTemplateHeli, 50 ) -- FARP GORI
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeOff(0.2, 0.5, 0.3), landing(0.4, 0.4), 60 * 4, 0.3, 200, 300, 700, 1500)
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
