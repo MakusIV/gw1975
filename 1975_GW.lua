@@ -3754,7 +3754,10 @@ local air_template_red = {
           CAS_Su_17M4_Cluster = 'SQ red CAS Su_17M4 Cluster',
           CAS_MI_24V = 'SQ red CAS MI_24V',
           CAS_L_39C_Rocket = 'SQ red CAS L_39C Rocket',
-          CAS_Mi_8MTV2 = 'SQ red CAS Mi-8MTV2', -- INSERIRE
+          CAS_Mi_8MTV2 = 'SQ red CAS Mi-8MTV2',
+          CAS_Su_25_Rocket = 'SQ red CAS Su-25 Rocket',
+          CAS_Su_25_Missile = 'SQ red CAS Su-25 Missile',
+          CAS_Su_25_Bomb = 'SQ red CAS Su-25 Bomb',
           GA_SU_24M_HRocket = 'SQ red GA SU_24M HRocket', -- GA
           GA_SU_24M_Bomb = 'SQ red GA SU_24M Bomb',
           GA_SU_24M_HBomb = 'SQ red GA SU_24M HBomb',
@@ -3764,6 +3767,8 @@ local air_template_red = {
           GA_Mig_27K_ROCKET_Light = 'SQ Red ROCKET_Sparse_Light Mig-27K',
           GA_Mig_27K_Missile_R = 'SQ red GA Mig_27K Missile R',
           GA_Mig_27K_Missile_L = 'SQ red GA Mig_27K Missile L',
+          GA_Su_25_Missile = 'SQ red GA Su-25 Missile',
+          GA_Su_25_Bomb = 'SQ red GA Su-25 Bomb',
           REC_Mig_25RTB = 'SQ red REC Mig_25RTB',  -- RECCE
           REC_SU_24MR = 'SQ red REC SU_24MR',
           BOM_TU_22_Bomb = 'SQ red BOM TU_22', -- INTERDICTION
@@ -3869,6 +3874,11 @@ local air_template_blue = {
           CAS_F_5E_3_Bomb = 'SQ blue CAS F_5E_3 Bomb',
           CAS_F_5E_3_Cluster = 'SQ blue CAS F_5E_3 Cluster',
           CAS_AJS_37 = 'SQ blue CAS AJS-37',
+          CAS_A_10A_Rocket = 'SQ blue CAS A-10A Rocket',
+          CAS_A_10A_Bomb = 'SQ blue CAS A-10A Bomb',
+          CAS_A_10A_Missile = 'SQ blue CAS A-10A Missile',
+          GA_A_10A_Missile = 'SQ blue GA A-10A Missile',
+          GA_A_10A_Bomb = 'SQ blue GA A-10A Bomb',
           REC_L_39ZA = 'SQ blue REC L_39ZA',  -- RECCE
           REC_F_4 = 'SQ blue REC F_4',
           BOM_SU_24_Bomb = 'SQ blue BOM SU_24', -- INTERDICTION
@@ -4327,19 +4337,19 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Gori          =   { true, true, true, true, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Khashuri      =   { true, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
+       Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
 
     },
 
     red = {
 
-      Biteta        =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Kvemo_Sba     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Alagir        =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
+      Kvemo_Sba     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
 
@@ -4350,21 +4360,21 @@ local wh_activation = {
     blue = {
 
       Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Soganlug      =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Soganlug      =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Tbilisi       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      Kvitiri       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kvitiri       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kvitiri_Helo  =   { true, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
-      Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
+      Batumi        =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
 
     },
 
     red = {
 
-      Mozdok        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
+      Mozdok        =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
       Mineralnye    =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Nalchik       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
+      Nalchik       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
 
     }
 
@@ -6581,6 +6591,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            15,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
       warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
       warehouse.Mineralnye:AddAsset(            air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
+      warehouse.Mineralnye:AddAsset(            air_template_red.GA_Su_25_Missile,          10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
       warehouse.Mineralnye:AddAsset(            air_template_red.AWACS_TU_22,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_red_awacs_skill, max_red_awacs_skill)]  )
       warehouse.Mineralnye:AddAsset(            air_template_red.REC_SU_24MR,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_red_awacs_skill, max_red_awacs_skill)]  )
       warehouse.Mineralnye:AddAsset(            air_template_red.CAS_MI_24V,                10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]       ) -- attack
@@ -6616,7 +6627,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Mineralnye[8] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[5] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( red_air_min_patrol, red_air_max_patrol ), nil, nil, nil, "PATROL") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( red_air_min_heavy_bomb, red_air_max_heavy_bomb ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Su_25_Missile, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( red_air_min_heavy_bomb, red_air_max_heavy_bomb ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
@@ -6981,14 +6992,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
       warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
       warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
       warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_bomber_skill, max_red_bomber_skill)]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,               10,       WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_red_awacs_skill, max_red_awacs_skill)]  )
+      warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(min_red_awacs_skill, max_red_awacs_skill)]  )
       warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_skill)]  )
       warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_skill)]     ) -- attack
       warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_skill)]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,         10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_skill)]  )
+      warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,         10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_skill)]  )
+      warehouse.Mozdok:AddAsset(                air_template_red.GA_Su_25_Bomb,             10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_skill)]  )
       warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(min_red_transport_skill, max_red_transport_skill)]  ) -- transport
       warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(min_red_transport_skill, max_red_transport_skill)] ) -- transport
-      warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(min_red_transport_skill, max_red_transport_skill)] ) -- transport
+      warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(min_red_transport_skill, max_red_transport_skill)] ) -- transport
 
       logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
 
@@ -7012,7 +7024,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Mozdok[5] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( red_air_min_patrol, red_air_max_patrol ), nil, nil, nil, "PATROL") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Su_25_Bomb, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[11] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( red_heli_min_transport, red_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[15] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
@@ -7383,6 +7395,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Cluster,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
+      warehouse.Beslan:AddAsset(               air_template_red.GA_Su_25_Missile,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_24_Bomb,            10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_24_Structure,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_17_Structure,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)] )
@@ -7421,7 +7434,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random( red_air_min_cas, red_air_max_cas ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Beslan[8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BAI BOMBING STRUCTURE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_17_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_17_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE GORI") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Su_25_Missile, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE GORI") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Beslan[7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE TBILISI") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Beslan[11] and pos <= num_mission then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( red_heli_min_transport, red_heli_max_transport ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
@@ -7787,6 +7800,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_ROCKET_Heavy,   10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_ROCKET_Light,   10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_Bomb_Light,     10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
+      warehouse.Nalchik:AddAsset(               air_template_red.GA_Su_25_Bomb,             10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Nalchik:AddAsset(               air_template_red.BOM_MIG_27K_Structure,     10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Nalchik:AddAsset(               air_template_red.BOM_MIG_27K_Airbase,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_red_fighter_bomber_skill, max_red_fighter_bomber_skill)]  )
       warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, AI.Skill[ math.random(min_red_transport_skill, max_red_transport_skill)]   ) -- transport
@@ -7824,7 +7838,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random( red_air_min_ga, red_air_max_ga ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random( red_air_min_cas, red_air_max_cas ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Su_25_Bomb, math.random( red_air_min_cas, red_air_max_cas ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( red_air_min_bomb, red_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE KHASHURI") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[11] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(red_heli_min_transport, red_heli_max_transport), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[15] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_Mig_25RTB, 1, nil, nil, nil, "AFAC_ZONE_Tskhunvali_Tkviavi") pos = pos + 1  end
@@ -11381,6 +11395,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
         warehouse.Vaziani:AddAsset(              air_template_blue.CAS_Su_17M4_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
         warehouse.Vaziani:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
+        warehouse.Vaziani:AddAsset(              air_template_blue.GA_A_10A_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]  ) -- Bomber BAI
         warehouse.Vaziani:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)]   ) -- Heli CAS
         warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_1H,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]  ) -- Transport
         warehouse.Vaziani:AddAsset(              air_template_blue.TRAN_UH_60A,              10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(min_blue_transport_skill, max_blue_transport_skill)]    ) -- Transport
@@ -11423,7 +11438,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( blue_air_min_patrol, blue_air_max_patrol ), nil, nil, nil, "PATROL") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( blue_air_min_patrol, blue_air_max_patrol ), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.GA_A_10A_Bomb, math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( blue_air_min_bomb, blue_air_max_bomb ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( blue_air_min_bomb, blue_air_max_bomb ), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
                 --if wh_activation.Warehouse_AB.blue.Vaziani[11] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( blue_air_min_transport, blue_air_max_transport ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
@@ -11868,6 +11883,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
         warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
         warehouse.Soganlug:AddAsset(               air_template_blue.CAS_AJS_37,              10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
+        warehouse.Soganlug:AddAsset(               air_template_blue.CAS_A_10A_Rocket,        10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber CAS
         warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber
         warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber
         warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(min_blue_fighter_bomber_skill, max_blue_fighter_bomber_skill)] ) -- Bomber
@@ -11921,7 +11937,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-            if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_UH_1H,  math.random( blue_heli_min_cas, blue_heli_max_cas ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+            if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_A_10A_Rocket,  math.random( blue_air_min_cas, blue_air_max_cas ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
             if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( blue_air_min_patrol, blue_air_max_patrol ), nil, nil, nil, "PATROL") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( blue_air_min_bomb, blue_air_max_bomb ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( blue_air_min_bomb, blue_air_max_bomb ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
@@ -13088,8 +13104,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
              --A2GDispatcher:SetDefaultGrouping()
 
-             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_Missile_R, air_template_red.GA_Mig_27K_Missile_L }
-             local baiTemplate = { air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light }
+             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_Missile_R, air_template_red.GA_Mig_27K_Missile_L, air_template_red.CAS_Su_25_Missile, air_template_red.CAS_Su_25_Bomb, air_template_red.CAS_Su_25_Rocket }
+             local baiTemplate = { air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light, air_template_red.GA_Su_25_Bomb, air_template_red.GA_Su_25_Missile }
              local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17 }
 
 
@@ -13286,7 +13302,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                  --A2GDispatcher:SetDefaultGrouping()
 
              --local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
-             local baiTemplate = { air_template_red.BOM_TU_22_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.GA_SU_24M_HRocket }
+             local baiTemplate = { air_template_red.BOM_TU_22_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.GA_SU_24M_HRocket, air_template_red.CAS_Su_25_Missile, air_template_red.CAS_Su_25_Bomb, air_template_red.CAS_Su_25_Rocket }
              --local seadTemplate = { air_template_red.SEAD_SU_24 }
 
 
@@ -13645,9 +13661,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           end -- end function detectionGroup:OnEventLand( EventData )
           ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
+           local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster, air_template_blue.CAS_A_10A_Bomb, air_template_blue.CAS_A_10A_Rocket, air_template_blue.CAS_A_10A_Missile }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
-           local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb}
+           local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.GA_A_10A_Bomb, air_template_blue.GA_A_10A_Missile}
            local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
 
            if wh_activation.Warehouse_AB.blue.Vaziani[2] then
@@ -13752,9 +13768,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           end -- end function detectionGroup:OnEventLand( EventData )
           ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_AJS_37, air_template_blue.CAS_F_4E_Rocket }
+           local casTemplateAirplane = { air_template_blue.CAS_AJS_37, air_template_blue.CAS_F_4E_Rocket, air_template_blue.CAS_A_10A_Bomb, air_template_blue.CAS_A_10A_Rocket, air_template_blue.CAS_A_10A_Missile }
            --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
-           local baiTemplate = { air_template_blue.BOM_AJS_37}
+           local baiTemplate = { air_template_blue.BOM_AJS_37, air_template_blue.GA_A_10A_Bomb, air_template_blue.GA_A_10A_Missile}
            local seadTemplate = { air_template_blue.SEAD_AJS37, air_template_blue.SEAD_F_4E_H }
 
            if wh_activation.Warehouse_AB.blue.Soganlug[2] then
@@ -13854,8 +13870,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
            end -- end function detectionGroup:OnEventLand( EventData )
            ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
-           local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.BOM_F_4_E_Sparse_Heavy, air_template_blue.CAS_F_5E_3_Cluster}
+           local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.CAS_A_10A_Bomb, air_template_blue.CAS_A_10A_Rocket, air_template_blue.CAS_A_10A_Missile }
+           local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.BOM_F_4_E_Sparse_Heavy, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.GA_A_10A_Bomb, air_template_blue.GA_A_10A_Missile}
            local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
 
 
