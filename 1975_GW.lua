@@ -3700,36 +3700,6 @@ end
 
 
 -- RED AIR FORCE TEMPLATE
-
---- Template disponibili in ME
---  GCI_Mig_21Bis = 'SQ red GCI Mig_21Bis', -- GCI
--- GCI_Mig_23MLD = 'SQ red GCI Mig_23MLD',
--- GCI_Mig_25PD = 'SQ red GCI Mig_25PD',
--- CAP_Mig_21Bis = 'SQ red CAP Mig_21Bis', -- CAP
--- CAP_Mig_23MLD = 'SQ red CAP Mig_23MLD',
--- CAP_Mig_25PD = 'SQ red CAP Mig_25PD',
--- CAS_Mig_27K_Bomb = 'SQ red CAS Mig_27K Bomb', -- CAS
--- CAS_Su_17M4_Rocket = 'SQ red CAS Su_17M4 Rocket',
--- CAS_MI_24V = 'SQ red CAS MI_24V',
--- CAS_L_39C_Rocket = 'SQ red CAS L_39C Rocket',
--- GA_SU_24M_HRocket = 'SQ red GA SU_24M HRocket', -- GA
--- GA_SU_24M_Bomb = 'SQ red GA SU_24M Bomb',
--- GA_SU_24M_HBomb = 'SQ red GA SU_24M HBomb',
--- REC_Mig_25RTB = 'SQ red REC Mig_25RTB',  -- RECCE
--- REC_SU_24MR = 'SQ red REC SU_24MR',
--- BOM_TU_22_Bomb = 'SQ red BOM TU_22 Bomb', -- INTERDICTION
--- BOM_TU_22_Nuke = 'SQ red BOM TU_22 Nuke',
--- BOM_SU_24_Bomb = 'SQ red BOM SU_24 Bomb',
--- TRAN_AN_26 = 'SQ red TRA AN_26', -- TRANSPORT
--- TRAN_YAK_40 = 'SQ red TRA YAK_40',
--- TRAN_MI_24 = 'SQ red TRAN MI_24V',
--- TRAN_MI_26 = 'SQ red TRAN MI_26',
--- AWACS_TU_22 = 'SQ red AWACS TU_22',   -- AWACS
--- AWACS_Mig_25RTB = 'SQ red AWACS Mig_25RTB'
--- AFAC_Yak_52 = 'SQ red FAC YAK-52',  -- AFAC
--- AFAC_L_39C = 'SQ red FAC L-39C',
--- AFAC_Mi_8MTV2 = 'SQ red FAC Mi-8MTV2',
--- AFAC_MI_24 = 'SQ red FAC Mi-24'
 --
 local air_template_red = {
 
@@ -3794,47 +3764,14 @@ local air_template_red = {
 
 }
 
--- END RED AIR FORCE TEMPLATE
+
 
 
 
 
 
 -- BLUE AIR FORCE TEMPLATE
-
 --- template definiti in ME
--- GCI_Mig_21Bis = 'SQ blue GCI Mig_21Bis', -- GCI
--- GCI_F_4 = 'SQ blue GCI F_4',
--- GCI_F_5 = 'SQ blue GCI F_5',
--- GCI_F_14A = 'SQ blue GCI F_14A',
--- CAP_F_4 = 'SQ blue CAP F_4', -- CAP
--- CAP_F_5 = 'SQ blue CAP F_5',
--- CAP_Mig_21Bis = 'SQ blue CAP Mig_21Bis',
--- CAP_L_39ZA = 'SQ blue CAP L_39ZA',  -- CAS
--- CAS_Su_17M4_Rocket = 'SQ blue CAS Su_17M4 Rocket',
--- CAS_MI_24V = 'SQ blue CAS MI_24V',
--- CAS_L_39C_Rocket = 'SQ blue CAS L_39C Rocket',
--- CAS_L_39ZA_HRocket = 'SQ blue CAS L_39ZA HRocket',
--- REC_L_39ZA = 'SQ blue REC L_39C',  -- RECCE
--- REC_F_4 = 'SQ blue REC F_4',
--- BOM_SU_24_Bomb = 'SQ blue BOM SU_24', -- INTERDICTION
--- B_1B_Bomb = 'SQ blue BOM B_1B Bomb',
--- B_1B_HBomb = 'SQ blue BOM B_1B HBomb',
--- BOM_B_52H = 'SQ blue BOM B_52H',
--- TRAN_AN_26 = 'SQ blue TRAN AN_26', -- TRANSPORT
--- TRAN_YAK_40 = 'SQ blue TRANSPORT YAK_40',
--- TRAN_UH_1H = 'SQ blue TRAN UH_1H',
--- TRAN_UH_60A = 'SQ blue TRAN UH_60A',
--- TRAN_CH_47 = 'SQ blue TRAN CH_47',
--- AWACS_F_4 = 'SQ blue AWACS F_4', -- AWACS
--- AWACS_B_1B = 'SQ blue AWACS B_1B'
--- AFAC_Yak_52 = 'SQ blue FAC Yak-52', -- AFAC
--- AFAC_L_39ZA = 'SQ blue FAC L-39ZA',
--- AFAC_AV_88 = 'SQ blue FAC AV-88',
--- AFAC_MI_24 = 'SQ blue FAC Mi-24',
--- AFAC_SA342L = 'SQ blue FAC SA342L',
--- AFAC_UH_1H = 'SQ blue FAC UH_1H'
---
 local air_template_blue = {
 
           GCI_Mig_21Bis = 'SQ blue GCI Mig_21Bis', -- GCI
@@ -3915,28 +3852,9 @@ local air_template_blue = {
 }
 
 
--- END BLUE AIR FORCE TEMPLATE
-
 
 
 -- RED GROUND FORCE TEMPLATE
-
---- ground_group_template_red table_bis:
--- antitankA = 'RUSSIAN ANTITANK SQUAD', -- ANTITANK
--- antitankB = 'RUSSIAN ANTITANK SQUAD BIS',
--- antitankC = 'RUSSIAN ANTITANK SQUAD TRIS',
--- mechanizedA = 'RUSSIAN MECHANIZED SQUAD', -- MECHANIZED
--- mechanizedB = 'RUSSIAN MECHANIZED SQUAD BIS',
--- mechanizedC = 'RUSSIAN MECHANIZED SQUAD TRIS',
--- ArtiKatiusha = 'RUSSIAN ARTILLERY KATIUSHA SQUAD', -- ARTILLERY
--- ArtiGwozdika = 'RUSSIAN ARTILLERY GWOZDIKA SQUAD',
--- ArtiHeavyMortar = 'RUSSIAN HEAVY MORTAR SQUAD',
--- ArtiAkatsia = 'RUSSIAN ARTILLERY AKATSIA SQUAD',
--- ArmorA = 'RUSSIAN ARMOR SQUAD', -- ARMOR
--- ArmorB = 'RUSSIAN ARMOR SQUAD BIS',
--- ResupplyTrucksColumn = 'GW_1975 Russian  Resupply Trucks Column',-- RESUPPLY
--- Truck = 'Red_Truck'
---
   local ground_group_template_red = {
 
     antitankA = 'RUSSIAN ANTITANK SQUAD', -- ANTITANK
@@ -3969,35 +3887,13 @@ local air_template_blue = {
 
 
 
--- END RED GROUND FORCE TEMPLATE
-
-
-
 
 
 
 
 
 -- BLUE GROUND FORCE TEMPLATE
-
-
 --- Template defininti in ME
---
--- antitankA = 'GEORGIAN ANTITANK SQUAD', -- ANTITANK: WAREHOUSE.Attribute.GROUND_TANK
--- antitankB = 'GEORGIAN ANTITANK SQUAD BIS',
--- antitankC = 'GEORGIAN ANTITANK SQUAD TRIS',
--- mechanizedA = 'GEORGIAN MECHANIZED SQUAD', -- MECHANIZED: WAREHOUSE.Attribute.GROUND_APC
--- mechanizedB = 'GEORGIAN MECHANIZED SQUAD BIS',
--- mechanizedC = 'GEORGIAN MECHANIZED SQUAD TRIS',
--- ArtiKatiusha = 'GEORGIAN ARTILLERY KATIUSHA SQUAD', -- ARTILLERY: WAREHOUSE.Attribute.GROUND_ARTILLERY
--- ArtiGwozdika = 'GEORGIAN ARTILLERY GWOZDIKA SQUAD',
--- ArtiHeavyMortar = 'GEORGIAN HEAVY MORTAR SQUAD',
--- ArtiAkatsia = 'GEORGIAN ARTILLERY AKATSIA SQUAD',
--- ArmorA = 'GEORGIAN ARMOR SQUAD', -- ARMOR: WAREHOUSE.Attribute.GROUND_TANK
--- ArmorB = 'GEORGIAN ARMOR SQUAD BIS',
--- ResupplyTrucksColumn = 'GW_1975 Georgian Resupply Trucks Column', -- RESUPPLY: WAREHOUSE.Attribute.GROUND_TRUCK
--- Truck = 'Blue_Truck'
---
 local ground_group_template_blue = {
 
   antitankA = 'GEORGIAN ANTITANK SQUAD', -- ANTITANK: WAREHOUSE.Attribute.GROUND_TANK
@@ -4026,7 +3922,6 @@ local ground_group_template_blue = {
 
 }
 
--- END BLUE GROUND FORCE TEMPLATE
 
 
 
@@ -4338,7 +4233,7 @@ local wh_activation = {
     blue = {
 
        Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Gori          =   { false, true, true, true, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Gori          =   { true, true, true, true, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
 
@@ -4347,7 +4242,7 @@ local wh_activation = {
     red = {
 
       Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Didi          =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Kvemo_Sba     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
@@ -4381,9 +4276,9 @@ local wh_activation = {
   }
 
 
-}-- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock
+}-- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo
 
--- attivati Kvitiri, Kvitiri_Helo e abbassati i timeRequest sia ground che air
+-- attivati didi e gori
 
 
 
@@ -4533,7 +4428,7 @@ local AssetQty = {
 
 
 -- TakeOff and Landing setting for AI_A2A and AI_A2G Dispatching
---
+-- perc<xxx> is probability for specific takeoff or landing type
 local parAirbOp = {
 
   -- take off = { percAir, percRnwy, percHot}  box is calculated ,
@@ -4552,8 +4447,8 @@ local parAirbOp = {
 --- WAREHOUSE SCHEDULE TIMING CONFIGURATION
 
     -- AIR --
-local startReqTimeAir = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-local waitReqTimeAir = math.random(600, 1200) -- 20'- 60' tempo di attesa tra due request successive per asset aerei (15'-20')
+local startReqTimeAir = 10 -- wh start request delay after schedulation - ritardo di avvio delle wh request dopo la schedulazione delle stesse
+local waitReqTimeAir = math.random(600, 1200) -- 20'- 60' delay for next request - tempo di attesa tra due request successive per asset aerei (15'-20')
 local start_sched = math.random(10, 180) -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare le missioni dipendente dall'efficienza della warehouse
 local interval_sched = 4200  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
 local rand_sched = 0.01  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
@@ -5026,7 +4921,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
       soganlug = { ZONE:New("Patrol_Zone_Soganlug") , "Patrol_Zone_Soganlug", targetPoints.front_zone },
       kutaisi = { ZONE:New("Patrol_Zone_Kutaisi") , "Patrol_Zone_Kutaisi", targetPoints.front_zone }
 
-
   }
 
   -- i target per l'arty dei blue
@@ -5043,10 +4937,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     TSKHINVALI_1 = { ZONE:New("RED_TARZ_TSKHINVALI_1") , "RED_TARZ_TSKHINVALI_1", targetPoints.front_zone },
     TSKHINVALI_2 = { ZONE:New("RED_TARZ_TSKHINVALI_2") , "RED_TARZ_TSKHINVALI_2", targetPoints.front_zone },
+
   }
 
   -- i target  per l'arty dei red
-  -- imposterei target dei red e toglierei il prefisso BLUE verifica la posizione delle zone
   local targetZoneForRedArty = {
 
     TKVIAVI_1 =   { ZONE:New("BLUE_TARZ_TKVIAVI_1") , "BLUE_TARZ_TKVIAVI_1", targetPoints.front_zone },
@@ -5264,7 +5158,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     for i = 1, #targetZone do
 
-      Scoring:AddZoneScore( targetZone[i][1], targetZone[i][3] )
+      Scoring:AddStaticScore( targetZone[i][1], targetZone[i][3] )
 
     end
 
@@ -5282,6 +5176,20 @@ if conflictZone == 'Zone 1: South Ossetia' then
     Scoring:AddZoneScore( blueFrontZone[i][1], blueFrontZone[i][3] )
 
   end
+
+
+  for i = 1, #targetZoneForBlueArty do
+
+    Scoring:AddZoneScore( targetZoneForBlueArty[i][1], targetZoneForBlueArty[i][3] )
+
+  end
+
+  for i = 1, #targetZoneForRedArty do
+
+    Scoring:AddZoneScore( targetZoneForRedArty[i][1], targetZoneForRedArty[i][3] )
+
+  end
+
 
   for j = 1, #staticObject do
 
