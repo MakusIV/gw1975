@@ -4805,7 +4805,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
+ -- da
   local cargoZone = {
 
       Warehouse = {
@@ -5158,7 +5158,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     for i = 1, #targetZone do
 
-      Scoring:AddStaticScore( targetZone[i][1], targetZone[i][3] )
+      Scoring:AddZoneScore( targetZone[i][1], targetZone[i][3] )
 
     end
 
@@ -5174,6 +5174,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
   for i = 1, #blueFrontZone do
 
     Scoring:AddZoneScore( blueFrontZone[i][1], blueFrontZone[i][3] )
+
+  end
+
+  for i = 1, #afacZone do
+
+    Scoring:AddZoneScore( afacZone[i][1], afacZone[i][3] )
 
   end
 
@@ -5211,6 +5217,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+
   for i = 1, #redGroundGroup do
 
     logging('finest', { 'main' , 'Scoring - add group[ ' .. i .. ' ]'} )
@@ -5228,10 +5235,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   end
 
+  
 
 
-
-
+-- SCORING:AddGoalScore(PlayerUnit, GoalTag, Text, Score)
+--SCORING:AddGoalScorePlayer(PlayerName, GoalTag, Text, Score)
 
   -- This one is to test scoring on scenery.
   -- Note that you can only destroy scenery with heavy weapons.
