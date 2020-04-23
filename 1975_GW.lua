@@ -4014,13 +4014,13 @@ local typeLanding = { AI_A2A_DISPATCHER.Landing.NearAirbase, AI_A2A_DISPATCHER.L
 
 local targetPoints = {
 
-  airbase = { math.random( 1500, 2000 ) },
+  airbase = { math.random( 2000, 3000 ) },
   ewr_site = { math.random( 1000, 1200 ) },
   port = { math.random( 2000, 3000 ) },
   farp = { math.random( 200, 500 ) },
   warehouse = { math.random( 700, 900 ) },
   warehouse_big = { math.random( 1500, 2000 ) },
-  storage_area = { math.random( 1500, 2000 ) },
+  storage_area = { math.random( 1000, 1500 ) },
   power_plant_area = { math.random( 2000, 3000 ) },
   production_plant_area = { math.random( 1700, 2200 ) },
   station = { math.random( 700, 900 ) },
@@ -4028,9 +4028,9 @@ local targetPoints = {
   bridge = { math.random( 100, 300 ) },
   front_zone = { math.random( 100, 300 ) },
   armored = { math.random( 40, 60 ) },
-  mechanized = { math.random( 10, 30 ) },
-  antitank = { math.random( 20, 40 ) },
-  sam = { math.random( 50, 70 ) },
+  mechanized = { math.random( 40, 60 ) },
+  antitank = { math.random( 40, 60 ) },
+  sam = { math.random( 50, 100 ) },
   hq = { math.random( 100, 200 ) }
 
 }
@@ -4620,12 +4620,38 @@ if conflictZone == 'Zone 1: South Ossetia' then
         blue = {
 
           Zestafoni_Railway_Station       =   { STATIC:FindByName( "Zestafoni Railway Station" ), "Zestafoni Railway Station",  targetPoints.station },
-          Agara_Railway_Station      =   { STATIC:FindByName( "Agara Railway Station" ), "Agara Railway Station",  targetPoints.station }
+          Agara_Railway_Station           =   { STATIC:FindByName( "Agara Railway Station" ), "Agara Railway Station",  targetPoints.station },
+          Gori_Storage_Asset_1              =   { STATIC:FindByName( "Gori Storage Area #001" ), "Gori Storage Area #001",  targetPoints.storage_area },
+          Gori_Storage_Asset_2              =   { STATIC:FindByName( "Gori Storage Area #002" ), "Gori Storage Area #002",  targetPoints.storage_area },
+          Gori_Storage_Asset_3              =   { STATIC:FindByName( "Gori Storage Area #003" ), "Gori Storage Area #003",  targetPoints.storage_area },
+          Gori_Storage_Asset_4              =   { STATIC:FindByName( "Gori Storage Area #004" ), "Gori Storage Area #004",  targetPoints.storage_area },
+          Gori_Storage_Asset_5              =   { STATIC:FindByName( "Gori Storage Area #005" ), "Gori Storage Area #005",  targetPoints.storage_area },
+          Gori_Storage_Asset_6              =   { STATIC:FindByName( "Gori Storage Area #006" ), "Gori Storage Area #006",  targetPoints.storage_area },
+          Gori_Storage_Asset_7              =   { STATIC:FindByName( "Gori Storage Area #007" ), "Gori Storage Area #007",  targetPoints.storage_area },
+          Gori_Storage_Asset_8              =   { STATIC:FindByName( "Gori Storage Area #008" ), "Gori Storage Area #008",  targetPoints.storage_area },
+          Gori_Storage_Asset_9              =   { STATIC:FindByName( "Gori Storage Area #009" ), "Gori Storage Area #009",  targetPoints.storage_area }
 
 
         },
 
-        red = {}
+        red = {
+
+          Biteta_Storage_Asset_1            =   { STATIC:FindByName( "Biteta Storage Area #001" ), "Biteta Storage Area #001",  targetPoints.storage_area },
+          Biteta_Storage_Asset_2            =   { STATIC:FindByName( "Biteta Storage Area #002" ), "Biteta Storage Area #002",  targetPoints.storage_area },
+          Biteta_Storage_Asset_3            =   { STATIC:FindByName( "Biteta Storage Area #003" ), "Biteta Storage Area #003",  targetPoints.storage_area },
+          Biteta_Storage_Asset_4            =   { STATIC:FindByName( "Biteta Storage Area #004" ), "Biteta Storage Area #004",  targetPoints.storage_area },
+          Biteta_Storage_Asset_5            =   { STATIC:FindByName( "Biteta Storage Area #005" ), "Biteta Storage Area #005",  targetPoints.storage_area },
+          Biteta_Storage_Asset_6            =   { STATIC:FindByName( "Biteta Storage Area #006" ), "Biteta Storage Area #006",  targetPoints.storage_area },
+          Biteta_Storage_Asset_7            =   { STATIC:FindByName( "Biteta Storage Area #007" ), "Biteta Storage Area #007",  targetPoints.storage_area },
+          Biteta_Storage_Asset_8            =   { STATIC:FindByName( "Biteta Storage Area #008" ), "Biteta Storage Area #008",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_1         =   { STATIC:FindByName( "Kvemo Sba Storage Area #001" ), "Kvemo Sba Storage Area #001",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_2         =   { STATIC:FindByName( "Kvemo Sba Storage Area #002" ), "Kvemo Sba Storage Area #002",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_3         =   { STATIC:FindByName( "Kvemo Sba Storage Area #003" ), "Kvemo Sba Storage Area #003",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_5         =   { STATIC:FindByName( "Kvemo Sba Storage Area #005" ), "Kvemo Sba Storage Area #005",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Kvemo Sba Storage Area #006" ), "Kvemo Sba Storage Area #006",  targetPoints.storage_area }
+
+
+        }
 
 
       } -- end structure
@@ -4999,7 +5025,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
     { GROUP:FindByName('RU HQ AirDefence'), targetPoints.sam },
     { GROUP:FindByName('Russian Antitank Defence@Sathiari'), targetPoints.antitank },
     { GROUP:FindByName('RED_HQ'), targetPoints.hq },
-    { GROUP:FindByName('GW_1975 Russian Mechanized Defence@Oni'), targetPoints.mechanized }
+    { GROUP:FindByName('GW_1975 Russian Mechanized Defence@Oni'), targetPoints.mechanized },
+    { GROUP:FindByName('SAM SA-2 Biteta'), targetPoints.sam },
+    { GROUP:FindByName('SAM SA-6 Didi Farp'), targetPoints.sam },
+    { GROUP:FindByName('SAM SA-6 Kvemo Sba Farp'), targetPoints.sam },
+    { GROUP:FindByName('SAM SA-2 Beslan EWR'), targetPoints.sam },
+    { GROUP:FindByName('DF CCCP EWR  Mineralnye'), targetPoints.ewr_site },
+    { GROUP:FindByName('DF CCCP EWR  Beslan'), targetPoints.ewr_site }
+
+
 
   }
 
@@ -5014,7 +5048,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
     { GROUP:FindByName('BLUE_HQ'), targetPoints.hq },
     { GROUP:FindByName('Georgian Mechanized Defence@Tkviavi B'), targetPoints.mechanized },
     { GROUP:FindByName('NATO GROUND MECHA ATTACK A #017'), targetPoints.mechanized },
-    { GROUP:FindByName('Georgian Mechanized Defence Squad@Tkviavi B'), targetPoints.mechanized }
+    { GROUP:FindByName('Georgian Mechanized Defence Squad@Tkviavi B'), targetPoints.mechanized },
+    { GROUP:FindByName('DF GEORGIA EWR Kutaisi'), targetPoints.ewr_site },
+    { GROUP:FindByName('SAM SA-2 EWR Kutaisi'), targetPoints.sam },
+    { GROUP:FindByName('Georgian SA-3 Kutaisi'), targetPoints.sam },
+    { GROUP:FindByName('DF GEORGIA EWR Tbilisi'), targetPoints.ewr_site },
+    { GROUP:FindByName('SAM SA-2 Tbilisi'), targetPoints.sam },
+    { GROUP:FindByName('Georgian SA-3 Vaziani'), targetPoints.sam },
+    { GROUP:FindByName('Georgian SA-3 Tbilisi'), targetPoints.sam }
+
 
   }
 
@@ -5235,7 +5277,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   end
 
-  
+
 
 
 -- SCORING:AddGoalScore(PlayerUnit, GoalTag, Text, Score)
@@ -12549,7 +12591,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis}, 15)
       A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_H_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
 
-      if wh_activation.Warehouse_AB.red.Nalchik[16] then assign_cap ( cap_zone_db_red[3], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.red.Nalchik[16] then assign_cap ( cap_zone_db_red[1], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
       if wh_activation.Warehouse_AB.red.Nalchik[17] then assign_gci('Nalchik GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
     end
@@ -12563,7 +12605,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
 
 
-      if wh_activation.Warehouse_AB.red.Mineralnye[16] then assign_cap ( cap_zone_db_red[4], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.red.Mineralnye[16] then assign_cap ( cap_zone_db_red[2], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
       if wh_activation.Warehouse_AB.red.Mineralnye[17] then assign_gci('Mineralnye GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
     end
@@ -12677,7 +12719,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, { air_template_blue.CAP_L_Mig_21Bis, air_template_blue.CAP_AJS_37 }, 15)
       A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, { air_template_blue.GCI_Mig_21Bis, air_template_blue.GCI_AJS_37}, 15)
 
-      if wh_activation.Warehouse_AB.blue.Soganlug[16] then assign_cap ( cap_zone_db_blue[3], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Soganlug[16] then assign_cap ( cap_zone_db_blue[1], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
       if wh_activation.Warehouse_AB.blue.Soganlug[17] then assign_gci('Soganlug GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
@@ -12706,7 +12748,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4, air_template_blue.CAP_AJS_37}, 15)
       A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_F_4}, 15)
 
-      if wh_activation.Warehouse_AB.blue.Batumi[16] then assign_cap ( cap_zone_db_blue[4], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+      if wh_activation.Warehouse_AB.blue.Batumi[16] then assign_cap ( cap_zone_db_blue[1], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
       if wh_activation.Warehouse_AB.blue.Batumi[17] then assign_gci('Batumi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
     end
