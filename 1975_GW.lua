@@ -4242,7 +4242,7 @@ local wh_activation = {
     red = {
 
       Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Didi          =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Kvemo_Sba     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
@@ -4278,7 +4278,7 @@ local wh_activation = {
 
 }-- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo
 
--- attivati didi e gori
+-- attivati gori
 
 
 
