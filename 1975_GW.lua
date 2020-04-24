@@ -610,7 +610,7 @@ function configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, takeoff, land
     if takeoff then A2GDispatcher:SetSquadronTakeoff( squadronName, takeoff ) end
     if landing then A2GDispatcher:SetSquadronLanding( squadronName, landing ) end
     if takeoffInterval then A2GDispatcher:SetSquadronTakeoffInterval( squadronName, takeoffInterval ) end -- dipende dal numero di slot disponibili: farp = 4, airbase = molti. Il tempo è calcola valutando 60 s necessari ad un aereo per liberare lo slot
-    if overHead then A2GDispatcher:SetSquadronOverhead(squadronName, overhead) end
+    if overHead then A2GDispatcher:SetSquadronOverhead(squadronName, overHead) end
 
 
     logging( 'exit', 'configureAI_A2G_CAS_Mission()' )
@@ -4545,7 +4545,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-           Zestafoni     =   { STATIC:FindByName( "Warehouse ZESTAFONI" ), "Warehouse ZESTAFONI",  targetPoints.warehouse }, --Functional.Warehouse#WAREHOUSE
+           Zestafoni    =   { STATIC:FindByName( "Warehouse ZESTAFONI" ), "Warehouse ZESTAFONI",  targetPoints.warehouse }, --Functional.Warehouse#WAREHOUSE
            Gori          =   { STATIC:FindByName( "Warehouse GORI" ), "Warehouse GORI",  targetPoints.warehouse_big },  --Functional.Warehouse#WAREHOUSE
            Khashuri      =   { STATIC:FindByName( "Warehouse KHASHURI" ), "Warehouse KHASHURI",  targetPoints.warehouse }   --Functional.Warehouse#WAREHOUSE
 
@@ -4629,7 +4629,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
           Gori_Storage_Asset_6              =   { STATIC:FindByName( "Gori Storage Area #006" ), "Gori Storage Area #006",  targetPoints.storage_area },
           Gori_Storage_Asset_7              =   { STATIC:FindByName( "Gori Storage Area #007" ), "Gori Storage Area #007",  targetPoints.storage_area },
           Gori_Storage_Asset_8              =   { STATIC:FindByName( "Gori Storage Area #008" ), "Gori Storage Area #008",  targetPoints.storage_area },
-          Gori_Storage_Asset_9              =   { STATIC:FindByName( "Gori Storage Area #009" ), "Gori Storage Area #009",  targetPoints.storage_area }
+          Gori_Storage_Asset_9              =   { STATIC:FindByName( "Gori Storage Area #009" ), "Gori Storage Area #009",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_1             =   { STATIC:FindByName( "Storage Area Kaspi" ), "Storage Area Kaspi",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_2             =   { STATIC:FindByName( "Storage Area Kaspi #001" ), "Storage Area Kaspi #001",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_3             =   { STATIC:FindByName( "Storage Area Kaspi #002" ), "Storage Area Kaspi #002",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_4             =   { STATIC:FindByName( "Storage Area Kaspi #003" ), "Storage Area Kaspi #003",  targetPoints.storage_area },
+          Zestafoni_Storage_Asset_1         =   { STATIC:FindByName( "Storage Area Zestafoni" ), "Storage Area Zestafoni",  targetPoints.storage_area },
+          Zestafoni_Storage_Asset_2         =   { STATIC:FindByName( "Storage Area Zestafoni #001" ), "Storage Area Zestafoni #001",  targetPoints.storage_area },
+          Zestafoni_Storage_Asset_3         =   { STATIC:FindByName( "Storage Area Zestafoni #002" ), "Storage Area Zestafoni #002",  targetPoints.storage_area }
 
 
         },
@@ -4665,20 +4672,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  logging('info', { 'staticObject' , 'list' } )
+  logging('info', { '- LIST STATIC OBJECT TABLE - ' , 'object: ' .. #staticObject } )
 
   for i1, k1 in pairs( staticObject) do
 
-    logging('info', { i1, '' } )
+    logging('info', { ' - staticObject - ', i1 .. ' - object: ' .. #k1} )
 
     for i2, k2 in pairs(k1) do
 
-      logging('info', { i2, '' } )
+      logging('info', { ' - staticObject - ', i2 .. ' - object: ' .. #k2 } )
 
       for i3, k3 in pairs(k2) do
 
-        logging('info', {i3, ''} )
-        logging('info', { i3, k3[1]:GetName() .. '  -  ' .. k3[2] } )
+        logging('info', { ' - staticObject - ', ' - ' .. i3 .. ' - ' .. k3[1]:GetName() .. '  -  ' .. k3[3][1] } )
 
         --for i4, k4 in pairs(k3) do
 
@@ -4706,14 +4712,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       { ZONE:New('Target_Zone_Didi_Bridge_1'), 'Target_Zone_Didi_Bridge_1', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_2'), 'Target_Zone_Didi_Bridge_2', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Didi_Bridge_2'), 'Target_Zone_Didi_Bridge_2', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_3'), 'Target_Zone_Didi_Bridge_3', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_4'), 'Target_Zone_Didi_Bridge_4', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_5'), 'Target_Zone_Didi_Bridge_5', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_6'), 'Target_Zone_Didi_Bridge_6', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_7'), 'Target_Zone_Didi_Bridge_7', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_8'), 'Target_Zone_Didi_Bridge_8', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Didi_Bridge_9'), 'Target_Zone_Didi_Bridge_5', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_9'), 'Target_Zone_Didi_Bridge_9', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_10'), 'Target_Zone_Didi_Bridge_10', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_11'), 'Target_Zone_Didi_Bridge_11', targetPoints.bridge },
       { ZONE:New('Target_Zone_Didi_Bridge_12'), 'Target_Zone_Didi_Bridge_12', targetPoints.bridge },
@@ -4741,7 +4746,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    Red_Kutaisi_Bridges = {
+    Blue_Kutaisi_Bridges = {
 
       { ZONE:New('Target_Zone_Kutaisi_Bridge_1'), 'Target_Zone_Kutaisi_Bridge_1', targetPoints.bridge },
       { ZONE:New('Target_Zone_Kutaisi_Bridge_2'), 'Target_Zone_Kutaisi_Bridge_2', targetPoints.bridge },
@@ -4754,7 +4759,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       { ZONE:New('Target Zone Biteta Storage Area'), 'Target Zone Biteta Storage Area', targetPoints.storage_area },
       { ZONE:New('Target Zone Kvemo Sba Storage Area'), 'Target Zone Kvemo Sba Storage Area', targetPoints.storage_area }
-
 
     },
 
@@ -4774,7 +4778,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
       { ZONE:New('Target_Zone_Zestafoni_Bridge_6'), 'Target_Zone_Zestafoni_Bridge_6', targetPoints.bridge },
       { ZONE:New('Target_Zone_Zestafoni_Bridge_7'), 'Target_Zone_Zestafoni_Bridge_7', targetPoints.bridge },
       { ZONE:New('Target_Zone_Zestafoni_Bridge_8'), 'Target_Zone_Zestafoni_Bridge_8', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_9'), 'Target_Zone_Zestafoni_Bridge_5', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Zestafoni_Bridge_9'), 'Target_Zone_Zestafoni_Bridge_9', targetPoints.bridge },
       { ZONE:New('Target_Zone_Zestafoni_Bridge_10'), 'Target_Zone_Zestafoni_Bridge_10', targetPoints.bridge },
       { ZONE:New('Target_Zone_Zestafoni_Bridge_11'), 'Target_Zone_Zestafoni_Bridge_11', targetPoints.bridge },
       { ZONE:New('Target_Zone_Zestafoni_Bridge_12'), 'Target_Zone_Zestafoni_Bridge_12', targetPoints.bridge },
@@ -4816,7 +4820,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     Blue_Farm = {
 
-      { ZONE:New('Target Zone Gori Storage Area'), 'Target Zone Gori Storage Area', targetPoints.storage_area }
+      { ZONE:New('Target Zone Gori Storage Area'), 'Target Zone Gori Storage Area', targetPoints.storage_area },
+      { ZONE:New('Target_Zone_Zestafoni_Structure'), 'Target_Zone_Zestafoni_Structure', targetPoints.storage_area },
+      { ZONE:New('Kaspi Target Zone'), 'Kaspi Target Zone', targetPoints.storage_area }
 
     },
 
@@ -5031,7 +5037,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
     { GROUP:FindByName('SAM SA-6 Kvemo Sba Farp'), targetPoints.sam },
     { GROUP:FindByName('SAM SA-2 Beslan EWR'), targetPoints.sam },
     { GROUP:FindByName('DF CCCP EWR  Mineralnye'), targetPoints.ewr_site },
-    { GROUP:FindByName('DF CCCP EWR  Beslan'), targetPoints.ewr_site }
+    { GROUP:FindByName('DF CCCP EWR  Beslan'), targetPoints.ewr_site },
+    { GROUP:FindByName('Alagir SAM-2 Defence'), targetPoints.sam }
 
 
 
@@ -5180,7 +5187,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  ------------------------------------------------------------------------------  SCORING -------------------------------------------------------------------------------
+
+
+
+
+
+
+  ------------------------------------------------------------------------------  SCORING & TARGET ASSIGN -------------------------------------------------------------------------------
+
+
+  local global_target = {
+
+    red = { group_targ = {}, zone_targ = {}, static_targ = {} },
+    blue = { group_targ = {}, zone_targ = {}, static_targ = {} }
+
+  }
+
 
 
   Scoring = SCORING:New( "1975_GW_Scoring" )
@@ -5189,35 +5211,61 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   Scoring:SetScaleDestroyPenalty( 400 )
 
+  local gtrg, gtrz, gtrs,gtbg, gtbz, gtbs = 1, 1, 1, 1, 1, 1
+
   --Scoring:AddUnitScore( UNIT:FindByName( "Unit #001" ), 200 )
 
   -- Test for zone scores.
 
+  for k, targetZone in pairs(zoneTargetStructure) do
 
-  for j = 1, #zoneTargetStructure do
-
-    local targetZone = zoneTargetStructure[j]
+    logging( 'info', { 'main' , 'assign score an target for: ' .. k } )
 
     for i = 1, #targetZone do
 
       Scoring:AddZoneScore( targetZone[i][1], targetZone[i][3] )
+      logging('info', { 'main' , 'assign score@: ' .. targetZone[i][1]:GetName()  .. ' - score value = ' .. targetZone[i][3][1] } )
+
+      if string.find( k,'Blue')  then
+
+        global_target.blue.zone_targ[gtbz] = targetZone[i][1]
+        logging('info', { 'main' , 'assign global_target.blue.zone_targ[ ' .. gtbz .. '] = '  .. targetZone[i][1]:GetName() } )
+        gtbz = gtbz + 1
+
+      elseif string.find( k,'Red')  then
+
+        global_target.red.zone_targ[gtrz] = targetZone[i][1]
+        logging('info', { 'main' , 'assign global_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZone[i][1]:GetName() } )
+        gtrz = gtrz + 1
+
+      end
 
     end
 
   end
 
 
+
+
   for i = 1, #redFrontZone do
 
     Scoring:AddZoneScore( redFrontZone[i][1], redFrontZone[i][3] )
+    global_target.red.zone_targ[gtrz] = redFrontZone[i][1]
+    logging('info', { 'main' , 'assign score and global_target.red.zone_targ[ ' .. gtrz .. '] = ' .. redFrontZone[i][1]:GetName() .. ' - score value = ' .. redFrontZone[i][3][1] } )
+    gtrz = gtrz + 1
 
   end
 
   for i = 1, #blueFrontZone do
 
     Scoring:AddZoneScore( blueFrontZone[i][1], blueFrontZone[i][3] )
+    global_target.blue.zone_targ[gtbz] = blueFrontZone[i][1]
+    logging('info', { 'main' , 'assign score and global_target.blue.zone_targ[ ' .. gtbz .. '] = ' .. blueFrontZone[i][1]:GetName() .. ' - score value = ' .. blueFrontZone[i][3][1] } )
+    gtbz = gtbz + 1
 
   end
+
+
 
   for i = 1, #afacZone do
 
@@ -5229,51 +5277,78 @@ if conflictZone == 'Zone 1: South Ossetia' then
   for i = 1, #targetZoneForBlueArty do
 
     Scoring:AddZoneScore( targetZoneForBlueArty[i][1], targetZoneForBlueArty[i][3] )
+    global_target.red.zone_targ[gtrz] = targetZoneForBlueArty[i][1]
+    logging('finest', { 'main' , 'assign score and global_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZoneForBlueArty[i][1]:GetName() .. ' - score value = ' .. targetZoneForBlueArty[i][3][1] } )
+    gtrz = gtrz + 1
 
   end
 
   for i = 1, #targetZoneForRedArty do
 
     Scoring:AddZoneScore( targetZoneForRedArty[i][1], targetZoneForRedArty[i][3] )
+    global_target.blue.zone_targ[gtbz] = targetZoneForRedArty[i][1]
+    logging('finest', { 'main' , 'assign score and global_target.red.zone_targ[ ' .. gtbz .. '] = ' .. targetZoneForRedArty[i][1]:GetName() .. ' - score value = ' .. targetZoneForRedArty[i][3][1] } )
+    gtbz = gtbz + 1
 
   end
 
 
-  for j = 1, #staticObject do
 
-    local targetObject = staticObject[j]
 
-    for i = 1, #targetObject.blue do
+  logging('finest', { 'main' , 'num static_object = ' .. #staticObject } )
 
-      Scoring:AddStaticScore( targetObject.blue[i][1], targetObject.blue[i][3] )
+  for k, type in pairs( staticObject ) do
 
-    end
+    logging('finest', { 'main' , 'static_object - type: ' .. k } )
 
-    for i = 1, #targetObject.red do
+    for h, faction in pairs(type) do
 
-      Scoring:AddStaticScore( targetObject.red[i][1], targetObject.red[i][3] )
+      logging('finest', { 'main' , 'static_object - faction: ' .. h } )
+
+        for j, targetObject in pairs(faction) do
+
+          Scoring:AddStaticScore( targetObject[1], targetObject[3] )
+
+          if string.find( h,'blue')  then
+
+            global_target.blue.static_targ[gtbs] = targetObject[1]
+            logging('finest', { 'main' , ' - assign score and global_target.blue.static_targ[ ' .. gtbs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
+            gtbs = gtbs + 1
+
+          elseif string.find( h,'red')  then
+
+            global_target.red.static_targ[gtbs] = targetObject[1]
+            logging('finest', { 'main' , ' - assign score and global_target.red.static_targ[ ' .. gtrs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
+            gtrs = gtrs + 1
+
+          end
+
+        end
 
     end
 
   end
+
+
 
 
 
 
   for i = 1, #redGroundGroup do
 
-    logging('finest', { 'main' , 'Scoring - add group[ ' .. i .. ' ]'} )
-
     Scoring:AddScoreGroup( redGroundGroup[i][1], redGroundGroup[i][2] )
-
-    logging('finest', { 'main' , 'Scoring - name group = ' .. redGroundGroup[i][1]:GetName() .. ' - score value = ' .. redGroundGroup[i][2][1]} )
-
+    global_target.red.group_targ[gtrg] = redGroundGroup[i][1]
+    logging('finest', { 'main' , 'assign score and global_target.red.group_targ[ ' .. gtrg .. '] = ' .. redGroundGroup[i][1]:GetName() .. ' - score value = ' .. redGroundGroup[i][2][1] } )
+    gtrg = gtrg + 1
 
   end
 
   for i = 1, #blueGroundGroup do
 
     Scoring:AddScoreGroup( blueGroundGroup[i][1], blueGroundGroup[i][2] )
+    global_target.blue.group_targ[gtbg] = blueGroundGroup[i][1]
+    logging('finest', { 'main' , 'assign score and global_target.blue.group_targ[ ' .. gtbg .. '] = ' .. blueGroundGroup[i][1]:GetName() .. ' - score value = ' .. blueGroundGroup[i][2][1] } )
+    gtbg = gtbg + 1
 
   end
 
@@ -5295,9 +5370,25 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  --- Printing logging info for global_target table
 
+  for k, v in pairs(global_target) do
 
+    logging( 'info', { 'main' , 'global target - faction = ' .. k } )
 
+    for h, w in pairs(v) do
+
+      logging( 'info', { 'main' , 'global target - target type = ' .. h } )
+
+      for _, j in pairs(w)  do
+
+        logging( 'info', { 'main' , 'global target - target name = ' .. j:GetName() } )
+
+      end
+
+    end
+
+  end
 
 
 
@@ -6590,7 +6681,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local avalaible_target_zones = {
 
-              zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges) ][1],
+              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
               zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
               zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
               zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
@@ -6974,7 +7065,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local avalaible_target_zones = {
 
-              zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges) ][1],
+              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
               zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
               zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
               zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
@@ -7464,7 +7555,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local avalaible_target_zones = {
 
-              zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges) ][1],
+              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
               zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
               zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
               zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
@@ -7847,7 +7938,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local avalaible_target_zones = {
 
-              zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges) ][1],
+              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
               zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
               zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
               zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
@@ -7873,7 +7964,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           local avalaible_target_zones = {
 
-              zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges) ][1],
+              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
               zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
               zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
               zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
@@ -12032,7 +12123,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
               -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
             local home = warehouse.Soganlug
-            local target = zoneTargetStructure.Red_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kutaisi_Bridges ) ][1]
+            local target = zoneTargetStructure.Red_Farm[ math.random( 1, #zoneTargetStructure.Red_Farm ) ][1]
             local toTargetAltitude = math.random(5000, 7000)
             local toHomeAltitude = math.random(3000, 5000)
             local bombingDirection = math.random(270, 359)
