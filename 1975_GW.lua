@@ -1145,7 +1145,7 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
 
 
 
-    --activeGO_TO_ZONE_AIR( awacsSetGroup, battleZone, 1 )
+    --activeAWACS( awacsSetGroup, battleZone, 1 )
     logging('finest', { 'activeAWACS( awacsSetGroup, commandCenter, rejectedZone )' , 'Execute go to zone' } )
 
     -- The enemy is approaching.
@@ -1189,7 +1189,15 @@ function activeAWACS( awacsSetGroup, home, commandCenter, rejectedZone, battleZo
 
           local DetectionReport = AwacsDetection:DetectedReportDetailed()
 
-          commandCenter:MessageToCoalition( DetectionReport, 15, "AWACS: Detect!" )
+          if DetectionReport then
+
+            commandCenter:MessageToCoalition( DetectionReport, 15, "AWACS: Detect!" )
+
+          else
+
+            commandCenter:MessageToCoalition( "AWACS: Detect! But report not avalaible" )
+
+          end
 
         end-- end function AwacsDetection:OnAfterDetect(From,Event,To)
 
@@ -1267,7 +1275,7 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
       end -- end for
 
 
-    elseif type =='air' then --activeGO_TO_ZONE_AIR( jtacSetGroup, battleZone, 1 )
+    elseif type =='air' then
 
       local altitude = math.random(300, 1000)
       ToCoord:SetAltitude(altitude)
@@ -1910,7 +1918,7 @@ function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, eng
                         local nInitial = targets:GetInitialSize()
                         local nDead = nInitial-nTargets
                         local requestNumberKill = nInitial * percRequestKill
-
+                        --[[
                         if targets:IsAlive() and nDead < requestNumberKill then
 
                           MESSAGE:New(string.format("BAI Mission: " .. nameMission .. ": %d of %d red targets still alive. At least %d targets need to be eliminated.", nTargets, nInitial, requestNumberKill), 5):ToAll()
@@ -1921,6 +1929,16 @@ function activeBAI(nameMission, groupset, typeOfBAI, patrolZone, engageZone, eng
                           BAI:__Accomplish(1) -- Now they should fly back to the patrolzone and patrol (nota che l'accomplish nella funzione evento ordina l'RTB vedi sotto).
 
                         end -- end if
+                        ]]
+
+                        if not ( targets:IsAlive() ) or nDead >= requestNumberKill then
+
+                          MESSAGE:New("BAI Mission: " .. nameMission .. ": The required red targets are destroyed. Mission accomplish!", 10):ToAll()
+                          BAI:__Accomplish(1) -- Now they should fly back to the patrolzone and patrol (nota che l'accomplish nella funzione evento ordina l'RTB vedi sotto).
+
+                        end -- end if
+
+
 
                   end  -- end local function
 
@@ -2042,7 +2060,7 @@ function activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, r
 
     --i task sono descritti in controllable:
     -- https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Controllable.html
-    local debug = true
+    local debug = false
 
     if debug then logging('enter', 'activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )') end
 
@@ -2291,6 +2309,7 @@ end -- end function
 --  @param nameGroupCargo:  the name of group in mission editor
 --  @param loadRadius: the radius for cargo loading
 --  @param nearRadius: the radius for immediate loading
+--[[
 function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
 
     local debug = true
@@ -2327,12 +2346,13 @@ function generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
 
 end
 
-
+]]
 
 --- Generate a set of cargo (CARGO_SET)
 --  @param typeCargo:    'Veichles', 'Infantry', 'Crate'
 --  less sense: ONE FUNCTION FO A SINGLE INSTRUCTION
 --  Delete
+--[[
 function generateCargoSetTag(typeCargo)
 
     local debug = true
@@ -2356,7 +2376,7 @@ function generateCargoSetTag(typeCargo)
 
 end
 
-
+]]
 
 
 
@@ -2373,7 +2393,7 @@ end
 -- @deployAirbaseName =  il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
 -- @groupCargoSet = il carico da trasportare
 -- @speed = velocita' del trasporto
---
+--[[
 function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseName, speed, groupCargoSet )
 
   local debug = true
@@ -2434,7 +2454,7 @@ function activeCargoAirPlane( groupPlaneSet, pickupAirbaseName, deployAirbaseNam
 end -- end function
 
 
-
+]]
 
 
 
@@ -2456,6 +2476,7 @@ end -- end function
 -- @deployAirbaseName =         il nome della airbase di arrivo (es: deployAirbaseName = AIRBASE.Caucasus.Batumi)
 -- @groupCargoSet =             il carico da trasportare
 -- @speed =                     velocita' del trasporto
+--[[
 function activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )
 
   local debug = true
@@ -2523,7 +2544,7 @@ function activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, gro
 end -- end function
 
 
-
+]]
 
 
 
@@ -2543,6 +2564,7 @@ end -- end function
 -- @groupCargoSet = il carico da trasportare
 -- @speed = velocita' del trasporto
 --
+--[[
 function activeDispatcherCargo( type, groupHeliSet, pickupZoneSet, deployZoneSet, speed, groupCargoSet )
 
   local debug = true
@@ -2551,7 +2573,7 @@ function activeDispatcherCargo( type, groupHeliSet, pickupZoneSet, deployZoneSet
 
   if debug then logging('finest', { 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )' , 'pickupZoneSet = ' .. pickupZoneSet:GetObjectName() .. 'deployZoneSet = ' .. deployZoneSet:GetObjectName() .. '  -  HeliGroup = ' .. groupHeliSet:GetObjectNames() .. '  -  groupCargoSet = ' .. groupCargoSet:GetObjectNames() .. '  -  speed = ' .. tostring(speed) } ) end
 
-  --[[
+
   -- An AI dispatcher object for a helicopter squadron, moving infantry from pickup zones to deploy zones
 
       local SetCargoInfantry = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
@@ -2746,7 +2768,7 @@ Several parameters can be set to deploy cargo:
 
 
     local CargoHelicopter = AI_CARGO_DISPATCHER_HELICOPTER:New( groupHeliSet, groupCargoSet, SetPickupZones, SetDeployZones )
-]]
+]
 
     if debug then logging('exit', 'activeCargoHelicopter( groupHeliSet, pickupZone, deployZone, speed, groupCargoSet )') end
 
@@ -2754,7 +2776,7 @@ Several parameters can be set to deploy cargo:
 
  end -- end function
 
-
+]]
 
 
 
@@ -2769,9 +2791,10 @@ Several parameters can be set to deploy cargo:
 -- @param offRoad (optional - default = false): se true
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
 --
+--[[
 function activeGO_TO_ZONE_AIR( groupset, battleZone, speedPerc )
 
-  local debug = true
+  local debug = false
 
   if debug then logging('enter', 'activeGO_TO_ZONE_AIR( group, battlezone, speedPerc )') end
 
@@ -2830,7 +2853,7 @@ function activeGO_TO_ZONE_AIR( groupset, battleZone, speedPerc )
 
 end -- end function
 
-
+]]
 
 
 --- Attiva l'invio di ground asset nella zone.
@@ -2840,7 +2863,7 @@ end -- end function
 -- @param speedPerc (optional - 1 <= speedPerc  >= 0.1  default = 0.7): velocita
 function activeGO_TO_ZONE_GROUND( groupset, battleZone, offRoad, speedPerc )
 
-    local debug = true
+    local debug = false
 
     if debug then logging('enter', 'activeGO_TO_ZONE_GROUND( group, battlezone, offRoad, speedPerc )') end
 
@@ -2914,7 +2937,7 @@ end -- end function
 -- DA IMPLEMENTARE I DIVERSI TASK DI ESECUZIONI
 function activeGO_TO_BATTLE( groupset, battleZone, task, offRoad, speedPerc, suppression, suppr_param )
 
-        local debug = true
+        local debug = false
 
         if debug then logging('enter', 'activeGO_TO_BATTLE( groupset, battlezone, task, offRoad, speedPerc, suppression, suppr_param )') end
 
@@ -3146,13 +3169,25 @@ function RecceGroundDetection(RecceSetGroup, command_Center, activateDetectionRe
         -- @param #string From The From State string.
         -- @param #string Event The Event string.
         -- @param #string To The To State string.
+        -- e' possibile che sia necessario inserire questa funzione nel main per non perdere l'informazione dell'evento (la detection da trasmettere)
+
         function RecceGroundDetection:OnAfterDetect(From,Event,To)
 
           if debug then logging('enter', 'RecceGroundDetection:OnAfterDetect(From,Event,To)') end
 
           local DetectionReport = RecceGroundDetection:DetectedReportDetailed()
 
-          command_center:GetPositionable():MessageToAll( DetectionReport, persistTimeOfMessage, "" )
+          if not DetectionReport then
+
+            if debug then logging('exit', 'RecceGroundDetection:OnAfterDetect(From,Event,To) - DetectionReport not avalaible') end
+            return nil
+
+          end
+
+          local coalition = command_Center:GetCoalition()
+
+          --command_center:GetPositionable():MessageToAll( DetectionReport, persistTimeOfMessage, "" )
+          command_center:GetPositionable():MessageToCoalition(DetectionReport, Duration, persistTimeOfMessage, "")
 
           if debug then logging('exit', 'RecceGroundDetection:OnAfterDetect(From,Event,To)') end
 
@@ -3178,7 +3213,7 @@ end
 --
 function ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)
 
-  local debug = true
+  local debug = false
 
   -- determina il recceGroup selezionandolo da tutte le unita' definite Recce (Recce #001, ..)
   --RecceSetGroup = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( nameRecceUnits ):FilterStart()
@@ -3192,7 +3227,7 @@ function ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)
   -- quindi OK LA WAREHOUSE CON OnAfterSelfRequest  genera un groupSet!!!!!!
 
   if debug then logging('enter', 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)') end
-  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)' , 'ArtillerySetGroup: ' .. ArtillerySetGroup  }) end
+  if debug then logging('finest', { 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)' , 'ArtillerySetGroup: ' .. ArtillerySetGroup  }) end
 
   local RecceDetection = RecceGroundDetection
 
@@ -3215,7 +3250,7 @@ function ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)
   --- Tempo di attesa di attivazione del tiro (s)
   local activated_time = 0.5
 
-  if debug then logging('info', { 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)' , 'ArtilleryAim: ' .. ArtilleryAim .. ' - radiusTarget: ' .. radiusTarget .. ' - num_ammo: ' .. num_ammo .. ' - activated_time: ' .. activated_time }) end
+  if debug then logging('finest', { 'ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)' , 'ArtilleryAim: ' .. ArtilleryAim .. ' - radiusTarget: ' .. radiusTarget .. ' - num_ammo: ' .. num_ammo .. ' - activated_time: ' .. activated_time }) end
   --- OnAfter Transition Handler for Event Detect.
   -- @param Functional.Detection#DETECTION_UNITS self
   -- @param #string From The From State string.
@@ -3225,7 +3260,14 @@ function ArtyFiringFromRecceDetection(RecceGroundDetection, ArtillerySetGroup)
   function RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )
 
     if debug then logging('enter', 'RecceDetection:OnAfterDetected())') end
-    if debug then logging('info', { 'RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )' , 'RecceSetGroup name: ' .. DetectedUnits:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage }) end
+    if debug then logging('finest', { 'RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )' , 'RecceSetGroup name: ' .. DetectedUnits:GetObjectNames() .. ' - activateDetectionReport: ' .. activateDetectionReport == TRUE .. ' - delayDetection: ' .. delayDetection .. ' - persistTimeOfMessage: ' .. persistTimeOfMessage }) end
+
+    if not(DetectedUnits) then
+
+      if debug then logging('finest', { 'RecceDetection:OnAfterDetected( From, Event, To, DetectedUnits )' , 'DetectedUnit not avalaible: exit' }) end
+      return nil
+
+    end
 
 
 
@@ -3572,7 +3614,7 @@ function generateDetectioA2G_Group(name, detectionGroup, aircraftTemplate, route
   --logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'airbase = ' .. airbase:GetName() } )
 
   --detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-  logging('info', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+  logging('finest', { 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
   detectionGroup:StartUncontrolled()
   detectionGroup:OptionROTPassiveDefense()
@@ -4278,7 +4320,7 @@ local wh_activation = {
 
 }-- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo
 
--- gori crash
+-- GORI CRASH
 
 -- attivati didi
 
@@ -5775,37 +5817,33 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   if wh_activation.Warehouse.red.Didi[ 1 ] then
 
-      -- escono i cami ma sono fermi
-
-      -- Didi warehouse e' una frontline warehouse: invia gli asset sul campo con task assegnato. Didi e' rifornita da Biteta Warehouse
-
       logging('info', { 'main' , 'addAsset Didi warehouse'} )
 
       warehouse.Didi:SetSpawnZone( ZONE:New("Didi Warehouse Spawn Zone") )
       warehouse.Didi:Start()
 
 
-      -- Didi: link and front farp-wharehouse.  Send resupply to Biteta. Receive resupply from Kvemo_sba, Beslan
-
       warehouse.Didi:AddAsset(                 "Infantry Platoon Alpha",                   30)
       warehouse.Didi:AddAsset(                ground_group_template_red.antitankA,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
       warehouse.Didi:AddAsset(                ground_group_template_red.antitankB,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
       warehouse.Didi:AddAsset(                ground_group_template_red.antitankC,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
-      warehouse.Didi:AddAsset(                ground_group_template_red.ArtiAkatsia,       10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
-      warehouse.Didi:AddAsset(                ground_group_template_red.ArtilleryResupply, 10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+      warehouse.Didi:AddAsset(                ground_group_template_red.ArtiAkatsia,       10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+      warehouse.Didi:AddAsset(                ground_group_template_red.ArtiGwozdika,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+      warehouse.Didi:AddAsset(                ground_group_template_red.ArtiKatiusha,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+      warehouse.Didi:AddAsset(                ground_group_template_red.ArtilleryResupply, 10,           WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
+      warehouse.Didi:AddAsset(                ground_group_template_red.jtac,              10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
       warehouse.Didi:AddAsset(                air_template_red.TRAN_MI_26,                 20,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- attack
       warehouse.Didi:AddAsset(                air_template_red.AFAC_MI_24,                 20,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
       warehouse.Didi:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              20,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
 
 
-      logging('info', { 'main' , 'Define blueFrontZone = ' .. 'blueFrontZone' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
       logging('info', { 'main' , 'addrequest Didi warehouse'} )
 
 
       local didi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
       local num_mission = 4
       local num_mission_helo = 3
-      local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+      local depart_time_helo = defineRequestPosition( num_mission_helo ) -- heli mission
       local depart_time = defineRequestPosition( num_mission ) -- ground mission
       local pos = 1
       local pos_heli = 1
@@ -5822,9 +5860,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           warehouse.Didi:__AddRequest( startReqTimeArtillery, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'DIDI_Artillery_Resupply' )
           warehouse.Didi:__AddRequest( startReqTimeArtillery + 120 , warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'DIDI_Artillery_Ops')
 
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
@@ -5839,12 +5877,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
       local groupResupplySet
 
-
       -- Take care of the spawned units.
       function warehouse.Didi:OnAfterSelfRequest( From,Event,To,groupset,request )
 
         logging('enter', 'warehouse.Didi:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-        logging('info', { 'main' , 'warehouse.Didi:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
 
         local groupset = groupset --Core.Set#SET_GROUP
         local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
@@ -8630,75 +8666,59 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     if wh_activation.Warehouse.blue.Gori[1] then
 
-
+      logging('info', { 'main' , 'addAsset Gori warehouse'} )
 
       warehouse.Gori:SetSpawnZone(ZONE:New("Gori WH Spawn Zone"))
-
       warehouse.Gori:Start()
 
 
-      -- Gori e' una Farp warehouse quindi invia direttamente le risorse al fronte
-
-      warehouse.Gori:AddAsset(               ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  )
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedA,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedB,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-      warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-      warehouse.Gori:AddAsset(               air_template_blue.CAS_MI_24V,               12,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]       ) -- Attack
-      warehouse.Gori:AddAsset(               air_template_blue.TRAN_UH_1H,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] )  -- Transport
-      warehouse.Gori:AddAsset(               air_template_blue.TRAN_UH_60A,              10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-      warehouse.Gori:AddAsset(               ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtilleryResupply,10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Gori:AddAsset(               air_template_blue.AFAC_MI_24,               10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
-      warehouse.Gori:AddAsset(               air_template_blue.AFAC_UH_1H,               10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
-      warehouse.Gori:AddAsset(               air_template_blue.AFAC_SA342L,              10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
-
-
-      logging('info', { 'main' , 'addAsset Gori warehouse'} )
-
-
-      -- GORI warehouse e' una frontline warehouse: invia gli asset sul campo con task assegnato. Didi e' rifornita da Biteta Warehouse
+      warehouse.Gori:AddAsset(               ground_group_template_blue.antitankA,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.antitankB,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.antitankC,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArmorA,             10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArmorB,             10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiAkatsia,        10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  )
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiGwozdika,       10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiKatiusha,       10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtiHeavyMortar,    10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedA,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedB,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+      warehouse.Gori:AddAsset(               ground_group_template_blue.mechanizedC,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+      warehouse.Gori:AddAsset(               air_template_blue.CAS_MI_24V,                  12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]       ) -- Attack
+      warehouse.Gori:AddAsset(               air_template_blue.TRAN_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] )  -- Transport
+      warehouse.Gori:AddAsset(               air_template_blue.TRAN_UH_60A,                 10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Gori:AddAsset(               ground_group_template_blue.TroopTransport,     10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Gori:AddAsset(               ground_group_template_blue.ArtilleryResupply,  10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Gori:AddAsset(               ground_group_template_blue.jtac,               10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Gori:AddAsset(               air_template_blue.AFAC_MI_24,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
+      warehouse.Gori:AddAsset(               air_template_blue.AFAC_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
+      warehouse.Gori:AddAsset(               air_template_blue.AFAC_SA342L,                 10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
 
 
       logging('info', { 'main' , 'addrequest Gori warehouse'} )
 
+
       local gori_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
       local num_mission = 7 -- the number of mission request ( _addRequest() )
       local depart_time = defineRequestPosition( num_mission )
-
       local num_mission_helo = 3 -- the number of mission request ( _addRequest() )
       local depart_time_helo = defineRequestPosition( num_mission_helo )
-
       local pos = 1
       local pos_heli = 1
-
       local startReqTimeArtillery = 1 -- Arty groups have first activation
       local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
-
       local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
-      -- NOTA: lo scheduler di didi gestisce anche le missioni tipo ARTY
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
       local gori_sched = SCHEDULER:New( warehouse.Gori,
 
         function()
 
-
           -- artillery request
           warehouse.Gori:__AddRequest( startReqTimeArtillery, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtilleryResupply, 1, nil, nil, nil, 'GORI_Artillery_Resupply' )
           warehouse.Gori:__AddRequest( startReqTimeArtillery + 120 , warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtiAkatsia, 1, nil, nil, nil, 'GORI_Artillery_Ops')
 
 
-          -- mech request
-          --riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
           if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'TSKHINVALI_Attack_APC' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'TSKHINVALI_attack_2' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
@@ -8717,13 +8737,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
       ) -- end gori_sched
 
 
-
-
-
-      -- l'eventuale variazione causale dei parametri di missione la devi fare sulla AddRequest: io la farei solo sulle quantit�
-
-      logging('info', { 'main' , 'addRequest Gori warehouse'} )
-
       local groupResupplySet
 
       -- Take care of the spawned units.
@@ -8738,7 +8751,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- Get assignment of this request.
         local assignment = warehouse.Gori:GetAssignment(request)
 
-        logging('info', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames()} )
+        logging('finer', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames()} )
 
         -- launch mission functions: mech
         if assignment == 'TSKHINVALI_Attack_APC' then
