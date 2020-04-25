@@ -5195,14 +5195,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   ------------------------------------------------------------------------------  SCORING & TARGET ASSIGN -------------------------------------------------------------------------------
 
-
-  local global_target = {
+  -- Static, Group an Zone that are specific target (for pinpoint mission)
+  local specific_target = {
 
     red = { group_targ = {}, zone_targ = {}, static_targ = {} },
     blue = { group_targ = {}, zone_targ = {}, static_targ = {} }
 
   }
 
+  -- Zone that are searching area target
+  local global_target_zone = { red = {}, blue = {} }
 
 
   Scoring = SCORING:New( "1975_GW_Scoring" )
@@ -5211,31 +5213,31 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   Scoring:SetScaleDestroyPenalty( 400 )
 
-  local gtrg, gtrz, gtrs,gtbg, gtbz, gtbs = 1, 1, 1, 1, 1, 1
+  local gtrg, gtrz, gtrs, gtbg, gtbz, gtbs, gtr, gtb = 1, 1, 1, 1, 1, 1, 1, 1
 
   --Scoring:AddUnitScore( UNIT:FindByName( "Unit #001" ), 200 )
 
-  -- Test for zone scores.
 
+  -- Assignment for targetZone
   for k, targetZone in pairs(zoneTargetStructure) do
 
-    logging( 'info', { 'main' , 'assign score an target for: ' .. k } )
+    logging( 'finest', { 'main' , 'assign score an target for: ' .. k } )
 
     for i = 1, #targetZone do
 
       Scoring:AddZoneScore( targetZone[i][1], targetZone[i][3] )
-      logging('info', { 'main' , 'assign score@: ' .. targetZone[i][1]:GetName()  .. ' - score value = ' .. targetZone[i][3][1] } )
+      logging('finest', { 'main' , 'assign score@: ' .. targetZone[i][1]:GetName()  .. ' - score value = ' .. targetZone[i][3][1] } )
 
       if string.find( k,'Blue')  then
 
-        global_target.blue.zone_targ[gtbz] = targetZone[i][1]
-        logging('info', { 'main' , 'assign global_target.blue.zone_targ[ ' .. gtbz .. '] = '  .. targetZone[i][1]:GetName() } )
+        specific_target.blue.zone_targ[gtbz] = targetZone[i][1]
+        logging('finest', { 'main' , 'assign specific_target.blue.zone_targ[ ' .. gtbz .. '] = '  .. targetZone[i][1]:GetName() } )
         gtbz = gtbz + 1
 
       elseif string.find( k,'Red')  then
 
-        global_target.red.zone_targ[gtrz] = targetZone[i][1]
-        logging('info', { 'main' , 'assign global_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZone[i][1]:GetName() } )
+        specific_target.red.zone_targ[gtrz] = targetZone[i][1]
+        logging('finest', { 'main' , 'assign specific_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZone[i][1]:GetName() } )
         gtrz = gtrz + 1
 
       end
@@ -5246,55 +5248,58 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  -- Assignment for redFrontZone
+  for _, v in pairs(redFrontZone) do
 
-  for i = 1, #redFrontZone do
-
-    Scoring:AddZoneScore( redFrontZone[i][1], redFrontZone[i][3] )
-    global_target.red.zone_targ[gtrz] = redFrontZone[i][1]
-    logging('info', { 'main' , 'assign score and global_target.red.zone_targ[ ' .. gtrz .. '] = ' .. redFrontZone[i][1]:GetName() .. ' - score value = ' .. redFrontZone[i][3][1] } )
-    gtrz = gtrz + 1
-
-  end
-
-  for i = 1, #blueFrontZone do
-
-    Scoring:AddZoneScore( blueFrontZone[i][1], blueFrontZone[i][3] )
-    global_target.blue.zone_targ[gtbz] = blueFrontZone[i][1]
-    logging('info', { 'main' , 'assign score and global_target.blue.zone_targ[ ' .. gtbz .. '] = ' .. blueFrontZone[i][1]:GetName() .. ' - score value = ' .. blueFrontZone[i][3][1] } )
-    gtbz = gtbz + 1
+    Scoring:AddZoneScore( v[1], v[3] )
+    global_target_zone.red[gtr] = v[1]
+    logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtr .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
+    gtr = gtr + 1
 
   end
 
 
+  -- Assignment for blueFrontZone
+  for _, v in pairs(blueFrontZone) do
 
+    Scoring:AddZoneScore( v[1], v[3] )
+    global_target_zone.blue[gtb] = v[1]
+    logging('finest', { 'main' , 'assign score and global_target.blue[ ' .. gtb .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
+    gtb = gtb + 1
+
+  end
+
+
+  -- Assignment for afacZone
   for i = 1, #afacZone do
 
     Scoring:AddZoneScore( afacZone[i][1], afacZone[i][3] )
 
   end
 
+  -- Assignment for targetZoneForBlueArty
+  for _, v in pairs(targetZoneForBlueArty) do
 
-  for i = 1, #targetZoneForBlueArty do
-
-    Scoring:AddZoneScore( targetZoneForBlueArty[i][1], targetZoneForBlueArty[i][3] )
-    global_target.red.zone_targ[gtrz] = targetZoneForBlueArty[i][1]
-    logging('finest', { 'main' , 'assign score and global_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZoneForBlueArty[i][1]:GetName() .. ' - score value = ' .. targetZoneForBlueArty[i][3][1] } )
-    gtrz = gtrz + 1
-
-  end
-
-  for i = 1, #targetZoneForRedArty do
-
-    Scoring:AddZoneScore( targetZoneForRedArty[i][1], targetZoneForRedArty[i][3] )
-    global_target.blue.zone_targ[gtbz] = targetZoneForRedArty[i][1]
-    logging('finest', { 'main' , 'assign score and global_target.red.zone_targ[ ' .. gtbz .. '] = ' .. targetZoneForRedArty[i][1]:GetName() .. ' - score value = ' .. targetZoneForRedArty[i][3][1] } )
-    gtbz = gtbz + 1
+    Scoring:AddZoneScore( v[1], v[3] )
+    global_target_zone.red[gtr] = v[1]
+    logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtr .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
+    gtr = gtr + 1
 
   end
 
+  -- Assignment for targetZoneForRedArty
+  for _, v in pairs(targetZoneForRedArty) do
+
+    Scoring:AddZoneScore( v[1], v[3] )
+    global_target_zone.blue[gtb] = v[1]
+    logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtb .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
+    gtb = gtb + 1
+
+  end
 
 
 
+  -- Assignment for staticObject
   logging('finest', { 'main' , 'num static_object = ' .. #staticObject } )
 
   for k, type in pairs( staticObject ) do
@@ -5311,14 +5316,14 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           if string.find( h,'blue')  then
 
-            global_target.blue.static_targ[gtbs] = targetObject[1]
-            logging('finest', { 'main' , ' - assign score and global_target.blue.static_targ[ ' .. gtbs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
+            specific_target.blue.static_targ[gtbs] = targetObject[1]
+            logging('finest', { 'main' , ' - assign score and specific_target.blue.static_targ[ ' .. gtbs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
             gtbs = gtbs + 1
 
           elseif string.find( h,'red')  then
 
-            global_target.red.static_targ[gtbs] = targetObject[1]
-            logging('finest', { 'main' , ' - assign score and global_target.red.static_targ[ ' .. gtrs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
+            specific_target.red.static_targ[gtbs] = targetObject[1]
+            logging('finest', { 'main' , ' - assign score and specific_target.red.static_targ[ ' .. gtrs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
             gtrs = gtrs + 1
 
           end
@@ -5333,21 +5338,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
+  -- Assignment for redGroundGroup
   for i = 1, #redGroundGroup do
 
     Scoring:AddScoreGroup( redGroundGroup[i][1], redGroundGroup[i][2] )
-    global_target.red.group_targ[gtrg] = redGroundGroup[i][1]
-    logging('finest', { 'main' , 'assign score and global_target.red.group_targ[ ' .. gtrg .. '] = ' .. redGroundGroup[i][1]:GetName() .. ' - score value = ' .. redGroundGroup[i][2][1] } )
+    specific_target.red.group_targ[gtrg] = redGroundGroup[i][1]
+    logging('finest', { 'main' , 'assign score and specific_target.red.group_targ[ ' .. gtrg .. '] = ' .. redGroundGroup[i][1]:GetName() .. ' - score value = ' .. redGroundGroup[i][2][1] } )
     gtrg = gtrg + 1
 
   end
 
+  -- Assignment for blueGroundGroup
   for i = 1, #blueGroundGroup do
 
     Scoring:AddScoreGroup( blueGroundGroup[i][1], blueGroundGroup[i][2] )
-    global_target.blue.group_targ[gtbg] = blueGroundGroup[i][1]
-    logging('finest', { 'main' , 'assign score and global_target.blue.group_targ[ ' .. gtbg .. '] = ' .. blueGroundGroup[i][1]:GetName() .. ' - score value = ' .. blueGroundGroup[i][2][1] } )
+    specific_target.blue.group_targ[gtbg] = blueGroundGroup[i][1]
+    logging('finest', { 'main' , 'assign score and specific_target.blue.group_targ[ ' .. gtbg .. '] = ' .. blueGroundGroup[i][1]:GetName() .. ' - score value = ' .. blueGroundGroup[i][2][1] } )
     gtbg = gtbg + 1
 
   end
@@ -5355,8 +5361,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
--- SCORING:AddGoalScore(PlayerUnit, GoalTag, Text, Score)
---SCORING:AddGoalScorePlayer(PlayerName, GoalTag, Text, Score)
+-- SCORING:AddGoalScore(PlayerUnit, GoalTag, Text, Score) -- assegna un punteggio al player
+--SCORING:AddGoalScorePlayer(PlayerName, GoalTag, Text, Score) -- assegna un punteggio al player
 
   -- This one is to test scoring on scenery.
   -- Note that you can only destroy scenery with heavy weapons.
@@ -5370,25 +5376,39 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  --- Printing logging info for global_target table
+  --- Printing logging info for specific_target table
+  for k, v in pairs(specific_target) do
 
-  for k, v in pairs(global_target) do
-
-    logging( 'info', { 'main' , 'global target - faction = ' .. k } )
+    logging( 'info', { 'main' , 'specific_target - faction = ' .. k } )
 
     for h, w in pairs(v) do
 
-      logging( 'info', { 'main' , 'global target - target type = ' .. h } )
+      logging( 'info', { 'main' , 'specific_target - target type = ' .. h } )
 
       for _, j in pairs(w)  do
 
-        logging( 'info', { 'main' , 'global target - target name = ' .. j:GetName() } )
+        logging( 'info', { 'main' , 'specific_target - target name = ' .. j:GetName() } )
 
       end
 
     end
 
   end
+
+
+  --- Printing logging info for global_target_zone table
+  for k, v in pairs(global_target_zone) do
+
+    logging( 'info', { 'main' , 'global_target_zone - faction = ' .. k } )
+
+    for h, w in pairs(v) do
+
+      logging( 'info', { 'main' , 'global_target_zone - target name = ' .. w:GetName() } )
+
+    end
+
+  end
+
 
 
 
@@ -6678,18 +6698,21 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         elseif request.assignment == "BAI POINT" then
 
-
+          --[[
           local avalaible_target_zones = {
 
               zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
               zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
               zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
               zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
+              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1],
+              zoneTargetStructure.Blue_Farm[math.random( 1, #zoneTargetStructure.Blue_Farm) ][1]
 
           }
+          ]]
 
-          local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+
+          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]--avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
           local patrolZone = redPatrolZone.mineralnye[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -6834,7 +6857,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
           local home = warehouse.Mineralnye
-          local target = zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges ) ][1]
+          local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
           local toTargetAltitude = math.random(5000, 7000)
           local toHomeAltitude = math.random(3000, 5000)
           local bombingDirection = math.random(270, 359)
@@ -7063,6 +7086,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         elseif request.assignment == "BAI POINT" then
 
+          --[[
           local avalaible_target_zones = {
 
               zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
@@ -7072,8 +7096,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
 
           }
+          ]]
 
-          local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
           local patrolZone = redPatrolZone.beslan[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -7221,7 +7246,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
           local home = warehouse.Mozdok
-          local target = zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges ) ][1]
+          local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges ) ][1]
           local toTargetAltitude = math.random(5000, 7000)
           local toHomeAltitude = math.random(3000, 5000)
           local bombingDirection = math.random(270, 359)
@@ -7553,6 +7578,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
           elseif request.assignment == "BAI BOMBING STRUCTURE" then
 
+          --[[
           local avalaible_target_zones = {
 
               zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
@@ -7562,8 +7588,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
 
           }
+          ]]
 
-          local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
           local patrolZone = redPatrolZone.beslan[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -7935,7 +7962,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         ------------------------------------------------------------------------------------------------------ assignment for BAI
         elseif request.assignment == "BAI TARGET 2" then
 
-
+          --[[
           local avalaible_target_zones = {
 
               zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
@@ -7945,8 +7972,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
 
           }
+          ]]
 
-          local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
           local patrolZone = redPatrolZone.nalchik[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -7962,6 +7990,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         ------------------------------------------------------------------------------------------------------ assignment for BAI
         elseif request.assignment == "BAI POINT" then
 
+          --[[
           local avalaible_target_zones = {
 
               zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
@@ -7971,8 +8000,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
 
           }
+          ]]
 
-          local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
           local patrolZone = redPatrolZone.nalchik[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -9103,7 +9133,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ----------------------------------------------------------------------------------------------------- assignment for BAI asset
           elseif request.assignment == "BAI STRUCTURE" then
 
-
+              --[[
               local avalaible_target_zones = {
 
                   zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
@@ -9111,8 +9141,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                   --zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
 
               }
+              ]]
 
-              local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+              local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
               local patrolZone = bluePatrolZone.kutaisi[1]
 
               speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -9605,7 +9636,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         ------------------------------------------------------------------------------------------------------ assignment for BAI asset
         elseif request.assignment == "BAI STRUCTURE" then
 
-
+            --[[
             local avalaible_target_zones = {
 
                 zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
@@ -9613,8 +9644,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 --zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
 
             }
+            ]]
 
-            local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+            local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
             local patrolZone = bluePatrolZone.kutaisi[1]
 
             speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -10090,6 +10122,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           elseif request.assignment == "BAI STRUCTURE" then
 
+            --[[
             local avalaible_target_zones = {
 
                 zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
@@ -10097,8 +10130,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
 
             }
+            ]]
 
-            local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+            local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
             local patrolZone = bluePatrolZone.vaziani[1]
 
 
@@ -10761,67 +10795,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
        warehouse.Tbilisi:AddAsset(               ground_group_template_blue.Truck,           10,           WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
 
 
-       -- DA ELIMINARE random targets PRENDI SOLO LE TARGET ZONE E INSERISCILE SOTTO NEGLI ASSIGN
-      local rndTrgTbilisi = {
 
-
-        -- [1] = number of mission
-        -- [pos mission][1] = name of mission
-        -- [pos mission][2] = name of mission
-        -- [pos mission][3] = asset group name
-        -- [pos mission][4] = quantity
-        -- [pos mission][5] = target zone
-        -- [pos mission][6] = type of mission
-
-        cap = { -- mechanized mission parameters
-
-          {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, 1 , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
-          {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, 1 , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        },
-
-        cas = { -- cas mission parameters
-
-          {'tskhivali_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.TSKHINVALI, "enemy_attack" }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'sathiari_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.SATIHARI, 'enemy_attack' }, -- 3
-          {'didmukha_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.DIDMUKHA, 'enemy_attack' }, -- 3
-          {'didi_cupta_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.DIDI_CUPTA, 'enemy_attack' }, -- 4
-          {'oni_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_ONI, 'enemy_attack' }, -- 4
-          {'perevi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_PEREVI, 'enemy_attack' }, -- 4
-          {'tskhivali_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.TSKHINVALI, "enemy_attack" }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'sathiari_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.SATIHARI, 'enemy_attack' }, -- 3
-          {'didmukha_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.DIDMUKHA, 'enemy_attack' }, -- 3
-          {'didi_cupta_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.DIDI_CUPTA, 'enemy_attack' }, -- 4
-          {'oni_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_ONI, 'enemy_attack' }, -- 4
-          {'perevi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket, math.random( 2, 5 ) , redFrontZone.CZ_PEREVI, 'enemy_attack' }
-
-        },
-
-        bai = { -- bai mission parameters
-
-          {'didi_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , zoneTargetStructure.Red_Didi_Bridges[math.random( 1, #zoneTargetStructure.Red_Didi_Bridges)], "pinpoint_strike" },
-          {'biteta_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , zoneTargetStructure.Red_Biteta_Bridges[math.random( 1, #zoneTargetStructure.Red_Biteta_Bridges)], "pinpoint_strike" },
-          {'kvem0_sba_pinpoint_1', WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( 2, 5 ) , zoneTargetStructure.Red_Kvemo_Sba_Bridges[math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges)], "pinpoint_strike" }
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        },
-
-        sead = { -- helo mission parameters
-
-
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        },
-
-        reco = { -- mechanized mission parameters
-
-          {'tkviavi_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( 1, 2 ) , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 2    -- { <mission name>, { <parameter> }, { <parameter> } }
-          {'tkviavi_attack_2', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( 1, 2 ) , blueFrontZone.TKVIAVI, 'enemy_attack' }, -- 3
-          {'tseveri_attack_1', WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( 1, 2 ) , blueFrontZone.TSVERI, 'enemy_attack' } -- 4
-          -- inserirne diverse (almeno 3-4 volte il numero delle richieste) per avere una diversificazione delle missioni nelle successive schedulazioni
-        }
-
-
-      }
 
 
 
@@ -10910,7 +10884,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
         ------------------------------------------------------------------------------------------------------ assignment for BAI asset
         elseif request.assignment == "BAI STRUCTURE" then
 
-
+          --[[
           local avalaible_target_zones = {
 
               zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
@@ -10918,8 +10892,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
               zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
 
           }
+          ]]
 
-          local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+          local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
           local patrolZone = bluePatrolZone.tbilisi[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
@@ -11512,6 +11487,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ------------------------------------------------------------------------------------------------------ assignment for BAI asset
           elseif request.assignment == "BAI STRUCTURE" then
 
+            --[[
             local avalaible_target_zones = {
 
                 zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
@@ -11519,8 +11495,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
 
             }
+            ]]
 
-            local engageZone = avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+            local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
             local patrolZone = bluePatrolZone.vaziani[1]
 
 
