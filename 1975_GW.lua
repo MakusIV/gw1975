@@ -508,7 +508,7 @@ function assignDetectionGroupTask(detectionGroup, targetZone, airbase, altitude,
     local task = detectionGroup:TaskOrbitCircle( altitudeDetection, detectionGroup:GetSpeedMax() * speedPerc, ToCoord )
     local WayPoints = {}
     WayPoints[ 1 ] = airbase:GetCoordinate():WaypointAirTakeOffParking()
-    WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * speedPerc, { task }, "Orbiting to detection threats" )
+    WayPoints[ 2 ] = ToCoord:WaypointAirTurningPoint( nil, detectionGroup:GetSpeedMax() * speedPerc, { task }, "Orbiting for detection threats" )
     WayPoints[ 3 ] = HomeCoord:WaypointAirTurningPoint()
     WayPoints[ 4 ] = airbase:GetCoordinate():WaypointAirLanding()
     detectionGroup:Route( WayPoints )
@@ -4275,16 +4275,15 @@ local wh_activation = {
     blue = {
 
        Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Gori          =   { false, true, true, true, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Gori          =   { true, true, true, true, false, false, false, false, false, false, false, true, true, true, false, false, false },
        Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
-
 
     },
 
     red = {
 
       Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Didi          =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Kvemo_Sba     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
@@ -4318,11 +4317,27 @@ local wh_activation = {
   }
 
 
-}-- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo
+}
+-- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo, didi
+-- OK attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = false    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = false  [ 6 ] = 'WH_GA activation' = false
+ -- [ 2 ] = 'AI_CAS activation' = false             [ 3 ] = 'AI_BAI activation' = false               [  4 ] = 'AI_SEAD activation' = false
+
+
+
 
 -- GORI CRASH
 
--- attivati didi
+
+
+
+-- attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = false    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = false  [ 6 ] = 'WH_GA activation' = false
+ -- [ 2 ] = 'AI_CAS activation' = true             [ 3 ] = 'AI_BAI activation' = true               [  4 ] = 'AI_SEAD activation' = true
+
+
+
+
+
+
 
 
 -- Ottimizzazione:
@@ -13524,7 +13539,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
        if wh_activation.Warehouse_AB.blue.Batumi[1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-           -- NON SPAWN DOPO UPGRADE DCS
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
@@ -13555,11 +13569,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
               end
 
-           end -- end function detectionGroup:OnEventDead( EventData )
+            end -- end function detectionGroup:OnEventDead( EventData )
 
 
 
-          function detectionGroup:OnEventLand( EventData )
+            function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
                    logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
@@ -13575,23 +13589,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                    end
 
-          end -- end function detectionGroup:OnEventLand( EventData )
+            end -- end function detectionGroup:OnEventLand( EventData )
 
 
-           local baiTemplate = { air_template_blue.BOM_B_1B, air_template_blue.BOM_B_52H}
+            local baiTemplate = { air_template_blue.BOM_B_1B, air_template_blue.BOM_B_52H}
 
 
 
 
-           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           if wh_activation.Warehouse_AB.blue.Batumi[3] then
+            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+            if wh_activation.Warehouse_AB.blue.Batumi[3] then
 
-             local squadronName = "Batumi BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Batumi, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
+              local squadronName = "Batumi BAI"
+              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Batumi, baiTemplate, 20 )
+              configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
-           end
-
+            end
 
        end -- if wh_activation.Warehouse_AB.red.Batumi
 
@@ -13656,17 +13669,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
                    end
 
           end -- end function detectionGroup:OnEventLand( EventData )
+
           ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster, air_template_blue.CAS_A_10A_Bomb, air_template_blue.CAS_A_10A_Rocket, air_template_blue.CAS_A_10A_Missile }
-           --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
-           local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.GA_A_10A_Bomb, air_template_blue.GA_A_10A_Missile}
-           local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
+          local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
+          local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Cluster}
+          local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
 
-           if wh_activation.Warehouse_AB.blue.Vaziani[2] then
+          if wh_activation.Warehouse_AB.blue.Vaziani[2] then
 
-             local squadronName = "Vaziani CAS"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 30 )
+            local squadronName = "Vaziani CAS"
+            A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 30 )
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
@@ -13674,27 +13687,27 @@ if conflictZone == 'Zone 1: South Ossetia' then
              -- PATROL CAS MISSION
              configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
-           end
+          end
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           if wh_activation.Warehouse_AB.blue.Vaziani[3] then
+          if wh_activation.Warehouse_AB.blue.Vaziani[3] then
 
              squadronName = "Vaziani BAI"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, baiTemplate, 20 )
              configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
-           end
+          end
 
 
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           if wh_activation.Warehouse_AB.blue.Vaziani[4] then
+          if wh_activation.Warehouse_AB.blue.Vaziani[4] then
 
              squadronName = "Vaziani SEAD"
              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, seadTemplate, 20 )
              --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
              configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
 
-           end
+          end
 
        end -- if wh_activation.Warehouse_AB.red.Vaziani
 
@@ -13766,7 +13779,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
           ]]
 
            local casTemplateAirplane = { air_template_blue.CAS_AJS_37, air_template_blue.CAS_F_4E_Rocket, air_template_blue.CAS_A_10A_Bomb, air_template_blue.CAS_A_10A_Rocket, air_template_blue.CAS_A_10A_Missile }
-           --local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342 }
            local baiTemplate = { air_template_blue.BOM_AJS_37, air_template_blue.GA_A_10A_Bomb, air_template_blue.GA_A_10A_Missile}
            local seadTemplate = { air_template_blue.SEAD_AJS37, air_template_blue.SEAD_F_4E_H }
 
@@ -14106,12 +14118,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
            local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
-           local airbase = warehouse.Gori
            local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Gori[1] )
+           local airbase = warehouse.Gori
 
            logging('info', { 'Warehouse.blue.Gori - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
            logging('info', { 'Warehouse.blue.Gori - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
@@ -14128,7 +14140,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 logging('info', { 'Warehouse.blue.Gori - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+                assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
               end
 
@@ -14147,22 +14159,19 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                      logging('info', { 'Warehouse.blue.Gori - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                     assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+                     assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
 
-           local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_UH_60A }
-           --local seadTemplateHeli = { air_template_blue.CAS_MI_24V }
+           local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_Antitank_SA_342, CAS_Mistral_SA_342, air_template_blue.BOM_Mi_8MTV2 }
 
 
            if wh_activation.Warehouse.blue.Gori[2] then
 
              local squadronName = "Gori CAS"
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Gori[1]:GetName(), casTemplateHeli, 50 ) -- FARP GORI
+             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Gori[1]:GetName(), casTemplateHeli, 20 ) -- FARP GORI
              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
