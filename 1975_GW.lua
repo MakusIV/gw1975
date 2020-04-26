@@ -4712,7 +4712,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
           Kvemo_Sba_Storage_Asset_2         =   { STATIC:FindByName( "Kvemo Sba Storage Area #002" ), "Kvemo Sba Storage Area #002",  targetPoints.storage_area },
           Kvemo_Sba_Storage_Asset_3         =   { STATIC:FindByName( "Kvemo Sba Storage Area #003" ), "Kvemo Sba Storage Area #003",  targetPoints.storage_area },
           Kvemo_Sba_Storage_Asset_5         =   { STATIC:FindByName( "Kvemo Sba Storage Area #005" ), "Kvemo Sba Storage Area #005",  targetPoints.storage_area },
-          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Kvemo Sba Storage Area #006" ), "Kvemo Sba Storage Area #006",  targetPoints.storage_area }
+          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Kvemo Sba Storage Area #006" ), "Kvemo Sba Storage Area #006",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #002" ), "Red Structure Kvemo Kosha #002",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #001" ), "Red Structure Kvemo Kosha #001",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Red Structure Kvemo Kosha" ), "Red Structure Kvemo Kosha",  targetPoints.storage_area }
+
 
 
         }
