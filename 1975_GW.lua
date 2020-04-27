@@ -4275,7 +4275,7 @@ local wh_activation = {
     blue = {
 
        Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Gori          =   { true, true, true, true, false, false, false, false, false, false, false, true, true, true, false, false, false },
+       Gori          =   { true, true, true, true, false, false, false, false, false, true, true, true, true, true, false, false, false },
        Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
@@ -4320,7 +4320,7 @@ local wh_activation = {
 }
 -- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo, didi
 -- OK attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = false    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = false  [ 6 ] = 'WH_GA activation' = false
- -- [ 2 ] = 'AI_CAS activation' = false             [ 3 ] = 'AI_BAI activation' = false               [  4 ] = 'AI_SEAD activation' = false
+ -- [ 2 ] = 'AI_CAS activation' = true             [ 3 ] = 'AI_BAI activation' = true               [  4 ] = 'AI_SEAD activation' = true
 
 
 
@@ -4330,8 +4330,8 @@ local wh_activation = {
 
 
 
--- attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = false    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = false  [ 6 ] = 'WH_GA activation' = false
- -- [ 2 ] = 'AI_CAS activation' = true             [ 3 ] = 'AI_BAI activation' = true               [  4 ] = 'AI_SEAD activation' = true
+-- attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = true    [ 10 ] = 'WH_RECON_Activation = true  [ 6 ] = 'WH_GA activation' = false [ 15 ] = 'WH_AFAC activation' = false
+
 
 
 
@@ -4693,7 +4693,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
           Kaspi_Storage_Asset_4             =   { STATIC:FindByName( "Storage Area Kaspi #003" ), "Storage Area Kaspi #003",  targetPoints.storage_area },
           Zestafoni_Storage_Asset_1         =   { STATIC:FindByName( "Storage Area Zestafoni" ), "Storage Area Zestafoni",  targetPoints.storage_area },
           Zestafoni_Storage_Asset_2         =   { STATIC:FindByName( "Storage Area Zestafoni #001" ), "Storage Area Zestafoni #001",  targetPoints.storage_area },
-          Zestafoni_Storage_Asset_3         =   { STATIC:FindByName( "Storage Area Zestafoni #002" ), "Storage Area Zestafoni #002",  targetPoints.storage_area }
+          Zestafoni_Storage_Asset_3         =   { STATIC:FindByName( "Storage Area Zestafoni #002" ), "Storage Area Zestafoni #002",  targetPoints.storage_area },
+          Khashuri_Storage_Asset_1         =   { STATIC:FindByName( "Blue Khashuri Magazine" ), "Blue Khashuri Magazine",  targetPoints.storage_area },
+          Khashuri_Storage_Asset_2         =   { STATIC:FindByName( "Blue Khashuri Magazine #001" ), "Blue Khashuri Magazine #001",  targetPoints.storage_area },
+          Khashuri_Storage_Asset_3         =   { STATIC:FindByName( "Blue Khashuri Magazine #002" ), "Blue Khashuri Magazine #002",  targetPoints.storage_area }
 
 
         },
@@ -4713,9 +4716,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           Kvemo_Sba_Storage_Asset_3         =   { STATIC:FindByName( "Kvemo Sba Storage Area #003" ), "Kvemo Sba Storage Area #003",  targetPoints.storage_area },
           Kvemo_Sba_Storage_Asset_5         =   { STATIC:FindByName( "Kvemo Sba Storage Area #005" ), "Kvemo Sba Storage Area #005",  targetPoints.storage_area },
           Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Kvemo Sba Storage Area #006" ), "Kvemo Sba Storage Area #006",  targetPoints.storage_area },
-          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #002" ), "Red Structure Kvemo Kosha #002",  targetPoints.storage_area },
-          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #001" ), "Red Structure Kvemo Kosha #001",  targetPoints.storage_area },
-          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Red Structure Kvemo Kosha" ), "Red Structure Kvemo Kosha",  targetPoints.storage_area }
+          Kvemo_Kosha_Storage_Asset_1         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #002" ), "Red Structure Kvemo Kosha #002",  targetPoints.storage_area },
+          Kvemo_Kosha_Storage_Asset_2         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #001" ), "Red Structure Kvemo Kosha #001",  targetPoints.storage_area },
+          Kvemo_Kosha_Storage_Asset_3         =   { STATIC:FindByName( "Red Structure Kvemo Kosha" ), "Red Structure Kvemo Kosha",  targetPoints.storage_area }
 
 
 
