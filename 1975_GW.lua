@@ -4275,7 +4275,7 @@ local wh_activation = {
     blue = {
 
        Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Gori          =   { true, true, true, true, false, false, false, false, false, true, true, true, true, true, false, false, false },
+       Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
@@ -4319,18 +4319,17 @@ local wh_activation = {
 
 }
 -- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo, didi
--- OK attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = false    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = false  [ 6 ] = 'WH_GA activation' = false
+-- OK attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = true    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = true  [ 6 ] = 'WH_GA activation' = false
  -- [ 2 ] = 'AI_CAS activation' = true             [ 3 ] = 'AI_BAI activation' = true               [  4 ] = 'AI_SEAD activation' = true
 
 
 
 
--- GORI CRASH
+-- GORI CRASH: DOVREBBERO ESSERE LE AFAC MISSION (JTAC AIR)
 
 
 
-
--- attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = true    [ 10 ] = 'WH_RECON_Activation = true  [ 6 ] = 'WH_GA activation' = false [ 15 ] = 'WH_AFAC activation' = false
+-- attivati GORI con   [ 6 ] = 'WH_GA activation' = true [ 15 ] = 'WH_AFAC activation' = true
 
 
 
@@ -5882,9 +5881,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           warehouse.Didi:__AddRequest( startReqTimeArtillery, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'DIDI_Artillery_Resupply' )
           warehouse.Didi:__AddRequest( startReqTimeArtillery + 120 , warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'DIDI_Artillery_Ops')
 
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, 1, nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, 1, nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.red.Didi[ 15 ] and pos_heli <= num_mission_helo then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
           if wh_activation.Warehouse.red.Didi[ 12 ] and pos <= num_mission then warehouse.Didi:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Didi,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
@@ -8806,11 +8805,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
         -- launch mission functions: helo
         elseif assignment == 'AFAC_ZONE_Tskhunvali_Tkviavi' then
 
+            logging('finer', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   GORI AFAC MISSION               <---------------                       '} )
+
             activeJTAC( 'air', warehouse.Gori, groupset, blue_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
 
 
 
         elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+            logging('finer', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   GORI AFAC MISSION               <---------------                       '} )
 
             activeJTAC( 'air', warehouse.Gori, groupset, blue_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
 
@@ -8819,6 +8822,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
         elseif assignment == 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi' then
 
             -- addGroupSet(detectionGroupSetBlue, groupset)
+
+            logging('finer', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   GORI AFAC MISSION               <---------------                       '} )
 
             activeJTAC( 'air', warehouse.Gori, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[ 1 ] )
 
