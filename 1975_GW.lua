@@ -4274,7 +4274,7 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Zestafoni     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
@@ -4282,8 +4282,8 @@ local wh_activation = {
 
     red = {
 
-      Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Didi          =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Biteta        =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Kvemo_Sba     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
@@ -4295,12 +4295,12 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Soganlug      =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Vaziani       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Soganlug      =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      Kvitiri       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
-      Kvitiri_Helo  =   { true, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
+      Kvitiri       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kvitiri_Helo  =   { false, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
       Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
 
     },
@@ -4308,7 +4308,7 @@ local wh_activation = {
     red = {
 
       Mozdok        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
-      Mineralnye    =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Mineralnye    =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
       Nalchik       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
 
@@ -4504,7 +4504,7 @@ local parAirbOp = {
 
     -- AIR --
 local startReqTimeAir = 10 -- wh start request delay after schedulation - ritardo di avvio delle wh request dopo la schedulazione delle stesse
-local waitReqTimeAir = math.random(600, 1200) -- 20'- 60' delay for next request - tempo di attesa tra due request successive per asset aerei (15'-20')
+local waitReqTimeAir = math.random(1200, 2400) -- 20'- 40' delay for next request - tempo di attesa tra due request successive per asset aerei (15'-20')
 local start_sched = math.random(10, 180) -- 120 start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare le missioni dipendente dall'efficienza della warehouse
 local interval_sched = 4200  -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
 local rand_sched = 0.01  -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
@@ -4512,7 +4512,7 @@ local activeAirRequestRatio = 3 -- 3 e' il numero di request coesistenti ed appa
 
 -- GROUND --
 local startReqTimeGround = 10 -- ritardo di avvio delle wh request dopo la schedulazione delle stesse
-local waitReqTimeGround = math.random(600, 1200) -- 20'- 60' tempo di attesa tra due request successive per asset terrestri (15'-30')
+local waitReqTimeGround = math.random(1800, 3000) -- 30'- 50' tempo di attesa tra due request successive per asset terrestri (15'-30')
 local start_ground_sched = math.random(10, 180) -- start_sched = ritardo in secondi nella attivazione dello scheduler. NOTA: può essere inteso come il tempo necessario per attivare le missioni dipendente dall'efficienza della warehouse
 local interval_ground_sched = 5400 -- interval_sched = intervallo in secondi della schedulazione (ciclo) della funzione. Nota: è necessario valutare l'effetto della OnAfterDelivered o OnAfterDead
 local rand_ground_sched = 0.01 -- rand_sched = percentuale di variazione casuale per l'intervallo di schedulazione
