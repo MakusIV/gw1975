@@ -2,7 +2,7 @@
 
 
 -- 1975 Georgian War (gw1975.lua)
--- subject:  Dynamic Enviroments to run in a DCS Server.
+-- subject:  Campaign with Dynamic Enviroments.
 --           gw1975.lua is based on Moose framework (https://flightcontrol-master.github.io/MOOSE_DOCS/)
 
 
@@ -4274,17 +4274,17 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Khashuri      =   { false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
+       Khashuri      =   { true, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
 
     red = {
 
-      Biteta        =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Kvemo_Sba     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Kvemo_Sba     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
@@ -4295,7 +4295,7 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
       Soganlug      =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
@@ -4383,13 +4383,13 @@ local AssetSkill = {
 
   blue = {
 
-    ground = { 3, 6 },
-    tank =   { 4, 6 },
-    artillery = { 4, 6 },
-    sam = { 4, 6 },
-    fighter_bomber = { 4, 6 },
-    fighter = { 4, 6 },
-    bomber = { 4, 6 },
+    ground = { 3, 5 },
+    tank =   { 4, 5 },
+    artillery = { 4, 5 },
+    sam = { 4, 5 },
+    fighter_bomber = { 4, 5 },
+    fighter = { 4, 5 },
+    bomber = { 4, 5 },
     transport = { 5, 6 },
     afac = { 5, 6 },
     awacs = { 5, 6 },
@@ -12369,187 +12369,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  -- BALANCER
-
-  -- Attualmente i solt gestiti dalla AI effettuano CAP, considerando che le CAP e le CGI sono gestiti tramite l'apposita sezione,
-  -- cambia il task delle AI facendogli effettuare missioni BAI, CAS o RECO
-
-
-  if activeBalancer then
-
-
-    -- # Situation:
-    --
-    -- AI_BALANCERS created per airbase for both coalitions. Mutiple patrol zones are created
-    -- for each side. Each flight that is created by AI_BALANCER will pick a random patrol zone
-    -- to patrol.
-
-    -- # Test Cases
-    --
-    -- 1. Observe at least 1 flight spawning and taking off from each airbase.
-    -- 2. Each flight patrols randomly in one of its sides zones.
-    -- 3. AI will respawn after killed.
-    -- 4. Additional client slots are available at Sochi. If players don't take a slot there
-    --    will be more than one AI taking off from Sochi.
-    -- 5. Batumi contains a flight of 3 units rather than just 1 like most of the rest of the airbases.
-    -- 6. Watch the coalition AI clash and kill each other.
-
-    -- Create the Red Patrol Zone Array
-
-    -- This zone array will be used in the AI_BALANCER to randomize the patrol
-    -- zone that each spawned group will patrol
-
-    local RedPatrolZone = {}
-
-
-    RedPatrolZone[1] = ZONE_POLYGON:New( cap_zone_db_red[1], GROUP:FindByName( cap_zone_db_red[1] ) ) -- beslan
-    RedPatrolZone[2] = ZONE_POLYGON:New( cap_zone_db_red[2], GROUP:FindByName( cap_zone_db_red[2] ) ) -- nalchik
-    RedPatrolZone[3] = ZONE_POLYGON:New( cap_zone_db_red[3], GROUP:FindByName( cap_zone_db_red[3] ) ) -- teberda
-    RedPatrolZone[4] = ZONE_POLYGON:New( cap_zone_db_red[4], GROUP:FindByName( cap_zone_db_red[4] ) ) -- sochi
-
-
-    -- Russian CAP Aircraft
-
-    -- These are the aircraft created in the mission editor that the AI will spawn
-    -- with replacing any CLIENT created aircraft in the mission that a human
-    -- player does not take.
-
-    local RU_PlanesSpawn = {}
-
-
-    RU_PlanesSpawn[1] = SPAWN:New( "RU CAP Beslan AB" ):InitCleanUp( 45 )
-    RU_PlanesSpawn[2] = SPAWN:New( "RU CAP Mozdok AB" ):InitCleanUp( 45 )
-    RU_PlanesSpawn[3] = SPAWN:New( "RU CAP Mineralnye Vody AB" ):InitCleanUp( 45 )
-    RU_PlanesSpawn[4] = SPAWN:New( "RU CAP Nalchik AB" ):InitCleanUp( 45 )
-
-
-    -- Russian Client Aircraft (via AI_BALANCER, AI will replace these if no human players are in the slot)
-
-    -- If you want more client slots per airbase that you want AI to be able to take control of then
-    -- name them with the prefixes below and they will be picked up automatically by FilterPrevixes.
-    --
-    -- For example, if you want another Client slot available at Anapa name it "RU CLIENT Anapa AB 2".
-    -- The code here does not need to be changed. Only an addition in the mission editor. An example
-    -- of this can be found on the USA side at Sochi AB.
-
-    local RU_PlanesClientSet = {}
-
-    RU_PlanesClientSet[1] = SET_CLIENT:New():FilterPrefixes("RU Client Beslan AB")
-    RU_PlanesClientSet[2] = SET_CLIENT:New():FilterPrefixes("RU Client Mozdok AB")
-    RU_PlanesClientSet[3] = SET_CLIENT:New():FilterPrefixes("RU Client Mineralnye Vody AB")
-    RU_PlanesClientSet[4] = SET_CLIENT:New():FilterPrefixes("RU Client Nalchik AB")
-
-    local num_bal = #RU_PlanesClientSet
-
-    if num_bal > #RU_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set red client higher('.. num_bal ..') of set plane spawn(' .. #RU_PlanesSpawn .. ')' } )  end
-
-    -- We setup an array to store all the AI_BALANCERS that are going to be created. Basically one
-    -- per airbase. We loop through and create an AI_BALANCER as well as a separate OnAfterSpawned
-    -- function for each. The Patrol Zone is randomized in the first parameter to AI_PATROL_ZONE:New()
-    -- call. This is done for each of the AI_BALANCERS. To add more patrol zones, just define them in
-    -- the mission editor and add into the array above. Code here does not need to be changed. The
-    -- table.getn(RedPatrolZone) gets the number of elements in the RedPatrolZone array so that all
-    -- of them are included to pick randomly.
-
-
-    RU_AI_Balancer = {}
-
-    for i = 1, #RU_PlanesClientSet do
-
-      RU_AI_Balancer[i] = AI_BALANCER:New(RU_PlanesClientSet[i], RU_PlanesSpawn[i])
-
-      -- We set a local variable within the for loop to the AI_BALANCER that was just created.
-      -- I couldn't get RU_AI_BALANCER[i]:OnAfterSpawn to be recognized so this is just pointing
-      -- curAIBalancer to the relevant RU_AI_BALANCER array item for each loop.
-
-      -- So in this case there are essentially 11 OnAfterSpawned functions defined and handled.
-
-      local curAIBalancer = RU_AI_Balancer[i]
-
-      function curAIBalancer:OnAfterSpawned( SetGroup, From, Event, To, AIGroup )
-
-        local Patrol = AI_PATROL_ZONE:New( RedPatrolZone[math.random( 1, table.getn(RedPatrolZone))], 3500, 7500, 700, 1400 )
-        Patrol:ManageFuel( 0.2, 60 )
-        Patrol:SetControllable( AIGroup )
-        Patrol:Start()
-
-      end --end function
-
-    end -- end for
-
-    -- US / Blue side is setup pretty much identically to the RU side above. Same detailed comments
-    -- above apply here. The main difference here is 10 airbases instead of 11.
-
-    -- Another difference is additional client slots at Sochi and a group defined at Batumi with
-    -- more than 1 unit per group (flight of 3 units). This is just to show that you can have more
-    -- client slots per airbase and more units in a single group that the AI will control. I think
-    -- this will also allow you to fly lead with AI on your wing or you can fly wing with an AI
-    -- leader.
-
-    -- Create the Blue Patrol Zone Array
-    local BluePatrolZone = {}
-
-    BluePatrolZone[1] = ZONE_POLYGON:New( cap_zone_db_blue[1], GROUP:FindByName( cap_zone_db_blue[1] ) ) -- tbilisi
-    BluePatrolZone[2] = ZONE_POLYGON:New( cap_zone_db_blue[2], GROUP:FindByName( cap_zone_db_blue[2] ) ) -- kutaisi
-    BluePatrolZone[3] = ZONE_POLYGON:New( cap_zone_db_blue[3], GROUP:FindByName( cap_zone_db_blue[3] ) ) -- sukumi
-    BluePatrolZone[4] = ZONE_POLYGON:New( cap_zone_db_blue[4], GROUP:FindByName( cap_zone_db_blue[4] ) ) -- sochi - gudauta
-
-
-    --United States CAP Aircraft (these are used as templates for AI)
-
-    local BLUE_PlanesSpawn = {}
-
-    --BLUE_PlanesSpawn[1] = SPAWN:New( "US CAP Batumi AB" ):InitCleanUp( 45 )
-    -- BLUE_PlanesSpawn[2] = SPAWN:New( "US CAP Gudauta AB" ):InitCleanUp( 45 )
-    -- BLUE_PlanesSpawn[3] = SPAWN:New( "US CAP Kobuleti AB" ):InitCleanUp( 45 )
-    BLUE_PlanesSpawn[1] = SPAWN:New( "GEORGIA CAP Kutaisi AB" ):InitCleanUp( 45 )
-    -- BLUE_PlanesSpawn[5] = SPAWN:New( "US CAP Senaki AB" ):InitCleanUp( 45 )
-    -- BLUE_PlanesSpawn[6] = SPAWN:New( "US CAP Sochi AB" ):InitCleanUp( 45 )
-    BLUE_PlanesSpawn[2] = SPAWN:New( "GEORGIA CAP Soganlug AB" ):InitCleanUp( 45 )
-    --BLUE_PlanesSpawn[8] = SPAWN:New( "US CAP Sukhumi AB" ):InitCleanUp( 45 )
-    BLUE_PlanesSpawn[3] = SPAWN:New( "GEORGIA CAP Vaziani AB" ):InitCleanUp( 45 )
-    BLUE_PlanesSpawn[4] = SPAWN:New( "GEORGIA CAP Tbilisi AB" ):InitCleanUp( 45 )
-
-    --United States Client Aircraft (via AI_BALANCER, AI will replace these if no human players are in the slot)
-
-    local BLUE_PlanesClientSet = {}
-
-    -- BLUE_PlanesClientSet[1] = SET_CLIENT:New():FilterPrefixes("US CLIENT Batumi AB")
-    -- BLUE_PlanesClientSet[2] = SET_CLIENT:New():FilterPrefixes("US CLIENT Gudauta AB")
-    -- BLUE_PlanesClientSet[3] = SET_CLIENT:New():FilterPrefixes("US CLIENT Kobuleti AB")
-    BLUE_PlanesClientSet[1] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Kutaisi AB")
-    -- BLUE_PlanesClientSet[5] = SET_CLIENT:New():FilterPrefixes("US CLIENT Senaki AB")
-    -- BLUE_PlanesClientSet[6] = SET_CLIENT:New():FilterPrefixes("US CLIENT Sochi AB")
-    BLUE_PlanesClientSet[2] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Soganlug AB")
-    -- BLUE_PlanesClientSet[8] = SET_CLIENT:New():FilterPrefixes("US CLIENT Sukhumi AB")
-    BLUE_PlanesClientSet[3] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Vaziani AB")
-    BLUE_PlanesClientSet[4] = SET_CLIENT:New():FilterPrefixes("GEORGIA CLIENT Tbilisi AB")
-
-    num_bal = #BLUE_PlanesClientSet
-
-    if num_bal > #BLUE_PlanesSpawn then logging('warning', { 'BALANCER' , 'num set blue client higher('.. num_bal ..') of set plane spawn(' .. #BLUE_PlanesSpawn .. ')' } )  end
-
-    BLUE_AI_Balancer = {}
-
-    for i = 1, #BLUE_PlanesClientSet do
-
-      BLUE_AI_Balancer[i] = AI_BALANCER:New( BLUE_PlanesClientSet[i], BLUE_PlanesSpawn[i] )
-
-      local curAIBalancer = BLUE_AI_Balancer[i]
-
-      function curAIBalancer:OnAfterSpawned( SetGroup, From, Event, To, AIGroup )
-
-        local Patrol = AI_PATROL_ZONE:New( BluePatrolZone[math.random( 1, table.getn(BluePatrolZone))], 3500, 7500, 700, 1400 )
-        Patrol:ManageFuel( 0.2, 60 )
-        Patrol:SetControllable( AIGroup )
-        Patrol:Start()
-
-      end
-
-    end
-
-  end -- end activeBalancer
-
 
 
 
@@ -12610,7 +12429,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 30000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -12636,7 +12455,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     -- Setup Red CAP e GCI
 
-    local num_group = 1 --math.random(2, 3)
+    local num_group = math.random(1, 3)
     local min_time_cap = 300
     local max_time_cap = 900
     local min_alt = 4000
@@ -12754,16 +12573,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 50000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     -- A2ADispatcher:
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 33000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
     -- Setup Red CAP e GCI
 
-    local num_group = 1 --math.random(2, 3)
+    local num_group = math.random(1, 3)
     local min_time_cap = 300
     local max_time_cap = 900
     local min_alt = 4000

@@ -1,6 +1,6 @@
 gw1975
 
-A Server Dynamic Enviroments for DCS.
+A Campaign with Dynamic Enviroments for DCS.
 
 Hi folks, this is a DCS dynamic enviroments based on MOOSE Framework ( https://flightcontrol-master.github.io/MOOSE_DOCS/ ).
 
