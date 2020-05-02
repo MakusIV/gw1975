@@ -19,7 +19,7 @@
 -- variable
 --- loggingLevel
 -- 0 = nessun messaggio di log, 1 = error, 2 = severe, 3 = warning, 4 = info, 5 = fine, 6 = finer/enter/exit, 7 = finest
-local loggingLevel = 7
+local loggingLevel = 0
 
 
 -- Debug messages for ARTY
@@ -293,6 +293,10 @@ end
 
 
 
+
+
+
+
 --- Restituisce un vettore contenente numenti da 1 a num_pos disposti casualmente
 -- @param: num_pos il numero di posizioni da sorteggiare (max 30)
 function defineRequestPosition(num_pos)
@@ -323,6 +327,68 @@ function defineRequestPosition(num_pos)
   return pos_f
 
 end
+
+
+
+
+
+
+
+
+
+
+
+-- Restituisce un vettore di num_wh elementi nel quale solo max_wh elementi sono true
+--
+function randomTrueFalseList(n, max_true)
+
+  local gh = defineRequestPosition(n)
+
+  local active_wh = {}
+
+  for j = 1, n do
+
+    local found = false
+
+    for i = 1, max_true do
+
+      if j == gh[i] then
+
+        active_wh[j] = true
+        found = true
+
+      end
+
+      if not found then active_wh[j] = false end
+
+    end
+
+  end
+
+  if loggingLevel > 6 then
+
+    for i = 1, n do
+
+      logging('finest', { 'randomTrueFalseList(n, max_true)' , 'active_wh [ ' .. i .. ' ] = ' .. tostring( active_wh[ i ] ) } )
+
+    end
+
+
+  end
+
+  return active_wh
+
+end
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2248,7 +2314,7 @@ end -- end function
 --
 function activeGO_TO_ARTY( groupset, battleZone, param, onRoad, speed )
 
-  local debug = true
+  local debug = false
 
   if debug then logging('enter', 'activeGO_TO_ARTY( groupset, battlezone )') end
 
@@ -2320,7 +2386,7 @@ end -- end function
 --
 function RecceGroundDetection(RecceSetGroup, command_Center, activateDetectionReport, delayDetection, persistTimeOfMessage)
 
-    local debug = true
+    local debug = false
 
     -- determina il recceGroup selezionandolo da tutte le unita' definite Recce (Recce #001, ..)
     --RecceSetGroup = SET_GROUP:New():FilterCoalitions( "blue" ):FilterPrefixes( nameRecceUnits ):FilterStart()
@@ -2506,7 +2572,7 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
   -- ARTY.WeaponType.IlluminationShells: Use illumination shells. This works only with units that have shells and is described below.
   -- ARTY.WeaponType.SmokeShells: Use smoke shells. This works only with units that have shells and is described below.
 
-  local debug = true
+  local debug = false
 
   if debug then logging('enter', 'ArtyPositionAndFireAtTarget(ArtilleryGroup, resupplyGroupTemplate, moveCoordinate, listTargetInfo, command_Center, activateDetectionReport)') end
 
@@ -2611,7 +2677,7 @@ function ArtyPositionAndFireAtTarget(ArtilleryGroup, groupResupplySet, moveCoord
 
   function ARTY:OnAfterOpenFire(artyGroup, From, Event, To, target)
 
-    local debug = true
+    local debug = false
 
     if debug then logging('finest', { 'ArtyPositionAndFireAtTarget()' , ' TEST OnAfterOpenFire(Controllable, From, Event, To, target)'} ) end
 
@@ -2637,7 +2703,7 @@ end -- end function
 --
 function activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)
 
-  local debug = true
+  local debug = false
   -- VEDI LE MISSIONI DES (DESIGNATE) IN PARTICOLARE LA DES 101
 
   if debug then logging('enter', 'activeAFAC( facgroupset, attackgroupset, afaczone, commandCenter, nameMission)') end
@@ -2694,7 +2760,7 @@ end -- end function
 --
 function activeCAS_AFAC( attackgroupset, patrolzone, nameMission )
 
-  local debug = true
+  local debug = false
   -- VEDI LE MISSIONI DES (DESIGNATE) IN PARTICOLARE LA DES 101
 
   if debug then logging('enter', 'activeCAS_AFAC( groupset, ' .. patrolzone[2] .. ', ' .. nameMission .. ' ) ') end
@@ -2738,7 +2804,7 @@ end -- end function
 -- @param detectionZone = la zona relativa la task detection
 function generateDetectioA2G_Group(name, detectionGroup, aircraftTemplate, routeAltitude, detectionAltitude, airbase, detectionZone)
 
-  local debug = true
+  local debug = false
 
   if debug then logging('enter', 'generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude, homeAirbase, detectionZone)') end
 
@@ -3117,69 +3183,11 @@ local ground_group_template_blue = {
 
 
 
-
-
-
-
-
-
-
-
----   airbase   table
---
---    AIRBASE.Caucasus.Gelendzhik
---    AIRBASE.Caucasus.Krasnodar_Pashkovsky
---    AIRBASE.Caucasus.Sukhumi_Babushara
---    AIRBASE.Caucasus.Gudauta
---    AIRBASE.Caucasus.Batumi
---    AIRBASE.Caucasus.Senaki_Kolkhi
---    AIRBASE.Caucasus.Kobuleti
---    AIRBASE.Caucasus.Kutaisi
---    AIRBASE.Caucasus.Tbilisi_Lochini
---    AIRBASE.Caucasus.Soganlug
---    AIRBASE.Caucasus.Vaziani
---    AIRBASE.Caucasus.Anapa_Vityazevo
---    AIRBASE.Caucasus.Krasnodar_Center
---    AIRBASE.Caucasus.Novorossiysk
---    AIRBASE.Caucasus.Krymsk
---    AIRBASE.Caucasus.Maykop_Khanskaya
---    AIRBASE.Caucasus.Sochi_Adler
---    AIRBASE.Caucasus.Mineralnye_Vody
---    AIRBASE.Caucasus.Nalchik
---    AIRBASE.Caucasus.Mozdok
---    AIRBASE.Caucasus.Beslan
-
 local airbase_red = { AIRBASE.Caucasus.Mozdok, AIRBASE.Caucasus.Maykop_Khanskaya, AIRBASE.Caucasus.Novorossiysk, AIRBASE.Caucasus.Mineralnye_Vody, AIRBASE.Caucasus.Nalchik,
                         AIRBASE.Caucasus.Beslan, AIRBASE.Caucasus.Gelendzhik, AIRBASE.Caucasus.Krasnodar_Pashkovsky, AIRBASE.Caucasus.Anapa_Vityazevo, AIRBASE.Caucasus.Krasnodar_Center, AIRBASE.Caucasus.Krymsk } -- aeroporti attivi in ME
 
 local airbase_blue = { AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Sochi_Adler, AIRBASE.Caucasus.Senaki_Kolkhi, AIRBASE.Caucasus.Gudauta, AIRBASE.Caucasus.Sukhumi_Babushara, AIRBASE.Caucasus.Kobuleti, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Soganlug,
                         AIRBASE.Caucasus.Vaziani } -- aeroporti attivi in ME
-
-
--- WAREHOUSE.Attribute.AIR_TRANSPORTHELO
--- WAREHOUSE.Attribute.AIR_TRANSPORTPLANE
--- WAREHOUSE.Attribute.AIR_ATTACKHELO
--- WAREHOUSE.Attribute.AIR_TANKER
-
--- WAREHOUSE.Attribute.AIR_UAV
--- WAREHOUSE.Attribute.GROUND_AAA
--- WAREHOUSE.Attribute.GROUND_APC
--- WAREHOUSE.Attribute.GROUND_ARTILLERY
--- WAREHOUSE.Attribute.GROUND_EWR
--- WAREHOUSE.Attribute.GROUND_INFANTRY
--- WAREHOUSE.Attribute.GROUND_OTHER
--- WAREHOUSE.Attribute.GROUND_SAM
--- WAREHOUSE.Attribute.GROUND_TANK
--- WAREHOUSE.Attribute.GROUND_TRAIN
--- WAREHOUSE.Attribute.GROUND_TRUCK
--- WAREHOUSE.Attribute.NAVAL_AIRCRAFTCARRIER
--- WAREHOUSE.Attribute.NAVAL_ARMEDSHIP
--- WAREHOUSE.Attribute.NAVAL_OTHER
--- WAREHOUSE.Attribute.NAVAL_UNARMEDSHIP
--- WAREHOUSE.Attribute.NAVAL_WARSHIP
--- WAREHOUSE.Attribute.OTHER_UNKNOWN
-
-
 
 
 local typeTakeoff = { AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Takeoff.Runway, AI_A2A_DISPATCHER.Takeoff.Air }
@@ -3208,21 +3216,6 @@ local targetPoints = {
   hq = { math.random( 10, 20 ) }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3358,24 +3351,6 @@ local activeBalancer = false
 
 
 
--- warehouse activation
--- 1 WH (warehouse) activation,
--- 2 AI_CAS activation,
--- 3 AI_BAI activation,
--- 4 AI_SEAD activation,
--- 5 WH_CAP activation,
--- 6 WH_GA activation,
--- 7 WH_BOMBING,
--- 8 WH_BAI activation,
--- 9 WH_AWACS activation,
--- 10 WH_RECON_Activation,
--- 11 WH_TRANSPORT activation
--- 12 WH_Ground_Attack Activation
--- 13 WH_JTAC activation
--- 14 WH_Ground_Transport
--- 15 WH_AFAC activation
--- 16 AI_CAP activation
--- 17 AI_GCI activation
 
 local activation_code = {
 
@@ -3399,6 +3374,20 @@ local activation_code = {
 
 }
 
+
+
+local wh_selected = { Warehouse = { blue = {}, red = {} }, Warehouse_AB = { blue = {}, red = {} }}
+
+wh_selected.Warehouse.blue = randomTrueFalseList(2,1)
+wh_selected.Warehouse.red = randomTrueFalseList(3,1)
+wh_selected.Warehouse_AB.blue = randomTrueFalseList(4,2)
+wh_selected.Warehouse_AB.red = randomTrueFalseList(3,2)
+
+
+
+
+
+
 local wh_activation = {
 
 
@@ -3406,18 +3395,18 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Zestafoni     =   { wh_selected.Warehouse.blue[1], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Khashuri      =   { true, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
+       Khashuri      =   { wh_selected.Warehouse.blue[2], false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
 
     red = {
 
-      Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Biteta        =   { wh_selected.Warehouse.red[1], true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Kvemo_Sba     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
+      Kvemo_Sba     =   { wh_selected.Warehouse.red[2], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Alagir        =   { wh_selected.Warehouse.red[3], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
 
@@ -3427,10 +3416,10 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Soganlug      =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
-      Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Vaziani       =   { wh_selected.Warehouse_AB.blue[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Soganlug      =   { wh_selected.Warehouse_AB.blue[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Tbilisi       =   { wh_selected.Warehouse_AB.blue[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kutaisi       =   { wh_selected.Warehouse_AB.blue[4], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Kvitiri       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kvitiri_Helo  =   { false, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
       Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
@@ -3439,10 +3428,10 @@ local wh_activation = {
 
     red = {
 
-      Mozdok        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
-      Mineralnye    =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Mozdok        =   { wh_selected.Warehouse_AB.red[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
+      Mineralnye    =   { wh_selected.Warehouse_AB.red[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Nalchik       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
+      Nalchik       =   { wh_selected.Warehouse_AB.red[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
 
     }
 
@@ -3499,7 +3488,7 @@ local AssetSkill = {
 
   red = {
 
-    ground = { 3, 6 },
+    ground = { 4, 6 },
     tank =   { 4, 6 },
     artillery = { 4, 6 },
     sam = { 4, 6 },
@@ -3515,13 +3504,13 @@ local AssetSkill = {
 
   blue = {
 
-    ground = { 3, 5 },
-    tank =   { 4, 5 },
-    artillery = { 4, 5 },
-    sam = { 4, 5 },
-    fighter_bomber = { 4, 5 },
-    fighter = { 4, 5 },
-    bomber = { 4, 5 },
+    ground = { 4, 6 },
+    tank =   { 4, 6 },
+    artillery = { 4, 6 },
+    sam = { 4, 6 },
+    fighter_bomber = { 4, 6 },
+    fighter = { 4, 6 },
+    bomber = { 4, 6 },
     transport = { 5, 6 },
     afac = { 5, 6 },
     awacs = { 5, 6 },
@@ -4270,92 +4259,30 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -- CAP ZONE
-
-
-    ---
-    --  cap_zone_db _red table
-    --
-    --  Qui devi riportare i nomi delle cap per la red coalition create in ME
-    --
-    --  [1] = 'RED CAP ZONE BESLAN',
-    --  [2] = 'RED CAP ZONE NALCHIK',
-    --  [3] = 'RED CAP ZONE TEBERDA',
-    --  [4] = 'RED CAP ZONE SOCHI'
-    --
-    local cap_zone_db_red = {
-
-      [1] = 'RED CAP ZONE BESLAN',
-      [2] = 'RED CAP ZONE NALCHIK',
-      [3] = 'RED CAP ZONE TEBERDA',
-      [4] = 'RED CAP ZONE SOCHI'
-
-      }
-
-    ---
-    --  cap_zone_db _red table
-    --
-    --  Qui devi riportare i nomi delle cap per la red coalition create in ME
-    --
-    -- [1] = 'BLUE CAP ZONE TBILISI',
-    -- [2] = 'BLUE CAP ZONE KUTAISI',
-    -- [3] = 'BLUE CAP ZONE SUKUMI',
-    -- [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
-    --
-    local cap_zone_db_blue = {
-
-      [1] = 'BLUE CAP ZONE TBILISI',
-      [2] = 'BLUE CAP ZONE KUTAISI',
-      [3] = 'BLUE CAP ZONE SUKUMI',
-      [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
-
-      }
+  -- CAP ZONE
 
 
 
+  local cap_zone_db_red = {
+
+    [1] = 'RED CAP ZONE BESLAN',
+    [2] = 'RED CAP ZONE NALCHIK',
+    [3] = 'RED CAP ZONE TEBERDA',
+    [4] = 'RED CAP ZONE SOCHI'
+
+    }
 
 
+  local cap_zone_db_blue = {
 
-    ---- MOMEMENT ---------------------
-  --[[
-  local MovePrefixesBlue = {
+    [1] = 'BLUE CAP ZONE TBILISI',
+    [2] = 'BLUE CAP ZONE KUTAISI',
+    [3] = 'BLUE CAP ZONE SUKUMI',
+    [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
 
-      'GEORGIAN ANTITANK',
-      'GEORGIAN ANTITANK',
-      'GEORGIAN MECHANIZED',
-      'GEORGIAN ARTILLERY',
-      'GEORGIAN HEAVY MORTAR',
-      'GEORGIAN ARMOR',
-      'GEORGIAN TRANSPORT',
-      'GEORGIAN JTAC',
-      'GEORGIAN AAA'
+    }
 
-      }
 
-  local MovePrefixesRed = {
-
-      'RUSSIAN ANTITANK',
-      'RUSSIAN ANTITANK',
-      'RUSSIAN MECHANIZED',
-      'RUSSIAN ARTILLERY',
-      'RUSSIAN HEAVY MORTAR',
-      'RUSSIAN ARMOR',
-      'RUSSIAN TRANSPORT',
-      'RUSSIAN JTAC',
-      'RUSSIAN AAA'
-  }
-
-  ]]
-
-  -- Necessario verificare :
-  -- 1 - i group generati dalle wh mantengono come prefix il prefisso utilizzato per i template in ME
-  -- 2 - la classe MOVEMENT gestisce i gruppi generati (spawn) dalle WH.
-  --local blueMovement = MOVEMENT:New(MovePrefixesBlue, 16)
-  --local redMovement = MOVEMENT:New(MovePrefixesRed, 16)
-
-  --   NON FUNZIONA
-
-  --------------------------------
 
 
 
@@ -4559,17 +4486,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
   end
 
 
-
-
--- SCORING:AddGoalScore(PlayerUnit, GoalTag, Text, Score) -- assegna un punteggio al player
---SCORING:AddGoalScorePlayer(PlayerName, GoalTag, Text, Score) -- assegna un punteggio al player
-
-  -- This one is to test scoring on scenery.
-  -- Note that you can only destroy scenery with heavy weapons.
-  --SceneryZone = ZONE:New( "ScoringZone2" )
-  --Scoring:AddZoneScore( SceneryZone, 200 )
-
-  --Scoring:AddStaticScore(STATIC:FindByName( "Shooting Range #010" ), 100 )
 
 
   ------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -11372,7 +11288,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 40000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -11391,7 +11307,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
     -- valuta su ME queste due didtanze
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 
@@ -11516,11 +11432,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 50000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 40000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     -- A2ADispatcher:
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
     -- Setup Red CAP e GCI
