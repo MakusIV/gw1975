@@ -293,6 +293,10 @@ end
 
 
 
+
+
+
+
 --- Restituisce un vettore contenente numenti da 1 a num_pos disposti casualmente
 -- @param: num_pos il numero di posizioni da sorteggiare (max 30)
 function defineRequestPosition(num_pos)
@@ -323,6 +327,68 @@ function defineRequestPosition(num_pos)
   return pos_f
 
 end
+
+
+
+
+
+
+
+
+
+
+
+-- Restituisce un vettore di num_wh elementi nel quale solo max_wh elementi sono true
+--
+function randomTrueFalseList(n, max_true)
+
+  local gh = defineRequestPosition(n)
+
+  local active_wh = {}
+
+  for j = 1, n do
+
+    local found = false
+
+    for i = 1, max_true do
+
+      if j == gh[i] then
+
+        active_wh[j] = true
+        found = true
+
+      end
+
+      if not found then active_wh[j] = false end
+
+    end
+
+  end
+
+  if loggingLevel > 6 then
+
+    for i = 1, n do
+
+      logging('finest', { 'randomTrueFalseList(n, max_true)' , 'active_wh [ ' .. i .. ' ] = ' .. tostring( active_wh[ i ] ) } )
+
+    end
+
+
+  end
+
+  return active_wh
+
+end
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3399,6 +3465,45 @@ local activation_code = {
 
 }
 
+
+
+local wh_selected = { Warehouse = { blue = {}, red = {} }, Warehouse_AB = { blue = {}, red = {} }}
+
+wh_selected.Warehouse.blue = randomTrueFalseList(2,1)
+wh_selected.Warehouse.red = randomTrueFalseList(3,1)
+wh_selected.Warehouse_AB.blue = randomTrueFalseList(4,2)
+wh_selected.Warehouse_AB.red = randomTrueFalseList(3,2)
+
+
+
+--[[
+if loggingLevel > 6 then
+
+  for k, v in pairs( wh_selected ) do
+
+    logging('finest', { 'main - wh_selected:  ' .. k } )
+
+    for k1, v1 in pairs(v) do
+
+      logging('finest', { 'main - wh_selected:  ' .. k1 } )
+
+      for i, vv in pairs(v1) do
+
+          logging('finest', { 'main - wh_selected:  ' .. i .. ' - ' .. tostring(vv) } )
+
+      end
+
+    end
+
+  end
+
+end
+]]
+
+
+
+
+
 local wh_activation = {
 
 
@@ -3406,18 +3511,18 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Zestafoni     =   { wh_selected.Warehouse.blue[1], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Khashuri      =   { true, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
+       Khashuri      =   { wh_selected.Warehouse.blue[2], false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
 
     red = {
 
-      Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Biteta        =   { wh_selected.Warehouse.red[1], true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Kvemo_Sba     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
+      Kvemo_Sba     =   { wh_selected.Warehouse.red[2], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Alagir        =   { wh_selected.Warehouse.red[3], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
 
@@ -3427,10 +3532,10 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Soganlug      =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
-      Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Vaziani       =   { wh_selected.Warehouse_AB.blue[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Soganlug      =   { wh_selected.Warehouse_AB.blue[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Tbilisi       =   { wh_selected.Warehouse_AB.blue[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kutaisi       =   { wh_selected.Warehouse_AB.blue[4], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Kvitiri       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kvitiri_Helo  =   { false, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
       Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
@@ -3439,10 +3544,10 @@ local wh_activation = {
 
     red = {
 
-      Mozdok        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
-      Mineralnye    =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Mozdok        =   { wh_selected.Warehouse_AB.red[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
+      Mineralnye    =   { wh_selected.Warehouse_AB.red[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Nalchik       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
+      Nalchik       =   { wh_selected.Warehouse_AB.red[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
 
     }
 
@@ -3515,13 +3620,13 @@ local AssetSkill = {
 
   blue = {
 
-    ground = { 4, 6 },
-    tank =   { 4, 6 },
-    artillery = { 4, 6 },
-    sam = { 4, 6 },
-    fighter_bomber = { 4, 6 },
+    ground = { 5, 6 },
+    tank =   { 5, 6 },
+    artillery = { 5, 6 },
+    sam = { 5, 6 },
+    fighter_bomber = { 5, 6 },
     fighter = { 4, 6 },
-    bomber = { 4, 6 },
+    bomber = { 5, 6 },
     transport = { 5, 6 },
     afac = { 5, 6 },
     awacs = { 5, 6 },
@@ -11372,7 +11477,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 45000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -11391,7 +11496,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
     -- valuta su ME queste due didtanze
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, 70000, 60000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 

@@ -19,7 +19,7 @@
 -- variable
 --- loggingLevel
 -- 0 = nessun messaggio di log, 1 = error, 2 = severe, 3 = warning, 4 = info, 5 = fine, 6 = finer/enter/exit, 7 = finest
-local loggingLevel = 7
+local loggingLevel = 0
 
 
 -- Debug messages for ARTY
@@ -369,7 +369,7 @@ function randomTrueFalseList(n, max_true)
 
     for i = 1, n do
 
-      logging('finest', { 'randomTrueFalseList(n, max_true)' , 'active_wh [ ' .. i .. ' ] = ' .. active_wh[ i ] } ) end
+      logging('finest', { 'randomTrueFalseList(n, max_true)' , 'active_wh [ ' .. i .. ' ] = ' .. tostring( active_wh[ i ] ) } )
 
     end
 
@@ -3467,38 +3467,29 @@ local activation_code = {
 
 
 
-local wh_selected = {
+local wh_selected = { Warehouse = { blue = {}, red = {} }, Warehouse_AB = { blue = {}, red = {} }}
 
-  Warehouse = {
-
-    blue = randomTrueFalseList(2,1),
-    red = randomTrueFalseList(3,1),
-
-  },
-
-  Warehouse_AB = {
-
-    blue = randomTrueFalseList(4,2),
-    red = randomTrueFalseList(3,2)
-
-  },
-
-}
+wh_selected.Warehouse.blue = randomTrueFalseList(2,1)
+wh_selected.Warehouse.red = randomTrueFalseList(3,1)
+wh_selected.Warehouse_AB.blue = randomTrueFalseList(4,2)
+wh_selected.Warehouse_AB.red = randomTrueFalseList(3,2)
 
 
+
+--[[
 if loggingLevel > 6 then
 
-  for k, v in pairs(wh_selected) do
+  for k, v in pairs( wh_selected ) do
 
-    logging('finest', { 'main - wh_selected:  ' , .. k } )
+    logging('finest', { 'main - wh_selected:  ' .. k } )
 
     for k1, v1 in pairs(v) do
 
-      logging('finest', { 'main - wh_selected:  ' , .. k1 } )
+      logging('finest', { 'main - wh_selected:  ' .. k1 } )
 
       for i, vv in pairs(v1) do
 
-          logging('finest', { 'main - wh_selected:  ' , .. i .. ' - ' .. tostring(vv) } )
+          logging('finest', { 'main - wh_selected:  ' .. i .. ' - ' .. tostring(vv) } )
 
       end
 
@@ -3507,7 +3498,7 @@ if loggingLevel > 6 then
   end
 
 end
-
+]]
 
 
 

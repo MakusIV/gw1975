@@ -293,6 +293,10 @@ end
 
 
 
+
+
+
+
 --- Restituisce un vettore contenente numenti da 1 a num_pos disposti casualmente
 -- @param: num_pos il numero di posizioni da sorteggiare (max 30)
 function defineRequestPosition(num_pos)
@@ -323,6 +327,68 @@ function defineRequestPosition(num_pos)
   return pos_f
 
 end
+
+
+
+
+
+
+
+
+
+
+
+-- Restituisce un vettore di num_wh elementi nel quale solo max_wh elementi sono true
+--
+function randomTrueFalseList(n, max_true)
+
+  local gh = defineRequestPosition(n)
+
+  local active_wh = {}
+
+  for j = 1, n do
+
+    local found = false
+
+    for i = 1, max_true do
+
+      if j == gh[i] then
+
+        active_wh[j] = true
+        found = true
+
+      end
+
+      if not found then active_wh[j] = false end
+
+    end
+
+  end
+
+  if loggingLevel > 6 then
+
+    for i = 1, n do
+
+      logging('finest', { 'randomTrueFalseList(n, max_true)' , 'active_wh [ ' .. i .. ' ] = ' .. tostring( active_wh[ i ] ) } )
+
+    end
+
+
+  end
+
+  return active_wh
+
+end
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3399,6 +3465,45 @@ local activation_code = {
 
 }
 
+
+
+local wh_selected = { Warehouse = { blue = {}, red = {} }, Warehouse_AB = { blue = {}, red = {} }}
+
+wh_selected.Warehouse.blue = randomTrueFalseList(2,1)
+wh_selected.Warehouse.red = randomTrueFalseList(3,1)
+wh_selected.Warehouse_AB.blue = randomTrueFalseList(4,2)
+wh_selected.Warehouse_AB.red = randomTrueFalseList(3,2)
+
+
+
+--[[
+if loggingLevel > 6 then
+
+  for k, v in pairs( wh_selected ) do
+
+    logging('finest', { 'main - wh_selected:  ' .. k } )
+
+    for k1, v1 in pairs(v) do
+
+      logging('finest', { 'main - wh_selected:  ' .. k1 } )
+
+      for i, vv in pairs(v1) do
+
+          logging('finest', { 'main - wh_selected:  ' .. i .. ' - ' .. tostring(vv) } )
+
+      end
+
+    end
+
+  end
+
+end
+]]
+
+
+
+
+
 local wh_activation = {
 
 
@@ -3406,18 +3511,18 @@ local wh_activation = {
 
     blue = {
 
-       Zestafoni     =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Zestafoni     =   { wh_selected.Warehouse.blue[1], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
        Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       Khashuri      =   { true, false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
+       Khashuri      =   { wh_selected.Warehouse.blue[2], false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
 
     red = {
 
-      Biteta        =   { false, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Biteta        =   { wh_selected.Warehouse.red[1], true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
       Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Kvemo_Sba     =   { true, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      Alagir        =   { false, false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
+      Kvemo_Sba     =   { wh_selected.Warehouse.red[2], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Alagir        =   { wh_selected.Warehouse.red[3], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
 
@@ -3427,10 +3532,10 @@ local wh_activation = {
 
     blue = {
 
-      Vaziani       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Soganlug      =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      Tbilisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
-      Kutaisi       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Vaziani       =   { wh_selected.Warehouse_AB.blue[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Soganlug      =   { wh_selected.Warehouse_AB.blue[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Tbilisi       =   { wh_selected.Warehouse_AB.blue[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kutaisi       =   { wh_selected.Warehouse_AB.blue[4], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Kvitiri       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
       Kvitiri_Helo  =   { false, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
       Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
@@ -3439,10 +3544,10 @@ local wh_activation = {
 
     red = {
 
-      Mozdok        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
-      Mineralnye    =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Mozdok        =   { wh_selected.Warehouse_AB.red[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
+      Mineralnye    =   { wh_selected.Warehouse_AB.red[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
       Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      Nalchik       =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
+      Nalchik       =   { wh_selected.Warehouse_AB.red[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
 
     }
 
