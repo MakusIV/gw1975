@@ -19,7 +19,7 @@
 -- variable
 --- loggingLevel
 -- 0 = nessun messaggio di log, 1 = error, 2 = severe, 3 = warning, 4 = info, 5 = fine, 6 = finer/enter/exit, 7 = finest
-local loggingLevel = 7
+local loggingLevel = 0
 
 
 -- Debug messages for ARTY
@@ -3499,7 +3499,7 @@ local AssetSkill = {
 
   red = {
 
-    ground = { 3, 6 },
+    ground = { 4, 6 },
     tank =   { 4, 6 },
     artillery = { 4, 6 },
     sam = { 4, 6 },
@@ -3515,13 +3515,13 @@ local AssetSkill = {
 
   blue = {
 
-    ground = { 3, 5 },
-    tank =   { 4, 5 },
-    artillery = { 4, 5 },
-    sam = { 4, 5 },
-    fighter_bomber = { 4, 5 },
-    fighter = { 4, 5 },
-    bomber = { 4, 5 },
+    ground = { 4, 6 },
+    tank =   { 4, 6 },
+    artillery = { 4, 6 },
+    sam = { 4, 6 },
+    fighter_bomber = { 4, 6 },
+    fighter = { 4, 6 },
+    bomber = { 4, 6 },
     transport = { 5, 6 },
     afac = { 5, 6 },
     awacs = { 5, 6 },

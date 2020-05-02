@@ -19,7 +19,7 @@
 -- variable
 --- loggingLevel
 -- 0 = nessun messaggio di log, 1 = error, 2 = severe, 3 = warning, 4 = info, 5 = fine, 6 = finer/enter/exit, 7 = finest
-local loggingLevel = 7
+local loggingLevel = 0
 
 
 -- Debug messages for ARTY
@@ -3499,7 +3499,7 @@ local AssetSkill = {
 
   red = {
 
-    ground = { 3, 6 },
+    ground = { 4, 6 },
     tank =   { 4, 6 },
     artillery = { 4, 6 },
     sam = { 4, 6 },
@@ -3515,13 +3515,13 @@ local AssetSkill = {
 
   blue = {
 
-    ground = { 3, 5 },
-    tank =   { 4, 5 },
-    artillery = { 4, 5 },
-    sam = { 4, 5 },
-    fighter_bomber = { 4, 5 },
-    fighter = { 4, 5 },
-    bomber = { 4, 5 },
+    ground = { 4, 6 },
+    tank =   { 4, 6 },
+    artillery = { 4, 6 },
+    sam = { 4, 6 },
+    fighter_bomber = { 4, 6 },
+    fighter = { 4, 6 },
+    bomber = { 4, 6 },
     transport = { 5, 6 },
     afac = { 5, 6 },
     awacs = { 5, 6 },
@@ -11372,7 +11372,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 50000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 40000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -11391,7 +11391,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
     -- valuta su ME queste due didtanze
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 
@@ -11516,11 +11516,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 50000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 40000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     -- A2ADispatcher:
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
     -- Setup Red CAP e GCI
