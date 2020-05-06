@@ -11815,7 +11815,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if wh_activation.Warehouse_AB.red.Nalchik[2] then
 
                local squadronName = "Nalchik CAS"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, casTemplateAirplane, 20 )
                configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche

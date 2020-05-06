@@ -3143,16 +3143,27 @@ local ground_group_template_blue = {
 
 
 
-local airbase_red = { AIRBASE.Caucasus.Mozdok, AIRBASE.Caucasus.Maykop_Khanskaya, AIRBASE.Caucasus.Novorossiysk, AIRBASE.Caucasus.Mineralnye_Vody, AIRBASE.Caucasus.Nalchik,
-                        AIRBASE.Caucasus.Beslan, AIRBASE.Caucasus.Gelendzhik, AIRBASE.Caucasus.Krasnodar_Pashkovsky, AIRBASE.Caucasus.Anapa_Vityazevo, AIRBASE.Caucasus.Krasnodar_Center, AIRBASE.Caucasus.Krymsk } -- aeroporti attivi in ME
-
-local airbase_blue = { AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Sochi_Adler, AIRBASE.Caucasus.Senaki_Kolkhi, AIRBASE.Caucasus.Gudauta, AIRBASE.Caucasus.Sukhumi_Babushara, AIRBASE.Caucasus.Kobuleti, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Soganlug,
-                        AIRBASE.Caucasus.Vaziani } -- aeroporti attivi in ME
 
 
-local typeTakeoff = { AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Takeoff.Runway, AI_A2A_DISPATCHER.Takeoff.Air }
 
-local typeLanding = { AI_A2A_DISPATCHER.Landing.NearAirbase, AI_A2A_DISPATCHER.Landing.AtRunway, AI_A2A_DISPATCHER.Landing.AtEngineShutdown }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------    THE CONFLICT --------------------------------------------------------------------------------------------
+
+
 
 local targetPoints = {
 
@@ -3182,98 +3193,18 @@ local targetPoints = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
------------------------------------------------------------------------------------------------------------    THE CONFLICT --------------------------------------------------------------------------------------------
-
-
-
-
-
 ---- CONFLICT CONFIGURATION
 
 
--- la Zona del conflitto attivata
-local conflictZone = 'Zone 1: South Ossetia'
+
+
+
+local typeTakeoff = { AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Takeoff.Runway, AI_A2A_DISPATCHER.Takeoff.Air }
+
+local typeLanding = { AI_A2A_DISPATCHER.Landing.NearAirbase, AI_A2A_DISPATCHER.Landing.AtRunway, AI_A2A_DISPATCHER.Landing.AtEngineShutdown }
+
+
+
 
 -- stato attivazione warehouse
 local activeWarehouse = true
@@ -3399,20 +3330,6 @@ local wh_activation = {
 
 
 }
--- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo, didi
--- OK attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = true    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = true  [ 6 ] = 'WH_GA activation' = false
- -- [ 2 ] = 'AI_CAS activation' = true             [ 3 ] = 'AI_BAI activation' = true               [  4 ] = 'AI_SEAD activation' = true
-
-
-
-
--- GORI CRASH: DOVREBBERO ESSERE LE AFAC MISSION (JTAC AIR)
-
-
-
--- attivati GORI con   [ 6 ] = 'WH_GA activation' = true [ 15 ] = 'WH_AFAC activation' = true
-
-
 
 
 
@@ -3652,141 +3569,145 @@ logging('info', { 'main' , 'Activation code module for Warehouse, Air War, Groun
 -----------------------------  TARGET -------------------------------------------------------------------------------------------
 
 
-if conflictZone == 'Zone 1: South Ossetia' then
+local airbase_red = { AIRBASE.Caucasus.Mozdok, AIRBASE.Caucasus.Maykop_Khanskaya, AIRBASE.Caucasus.Novorossiysk, AIRBASE.Caucasus.Mineralnye_Vody, AIRBASE.Caucasus.Nalchik,
+                        AIRBASE.Caucasus.Beslan, AIRBASE.Caucasus.Gelendzhik, AIRBASE.Caucasus.Krasnodar_Pashkovsky, AIRBASE.Caucasus.Anapa_Vityazevo, AIRBASE.Caucasus.Krasnodar_Center, AIRBASE.Caucasus.Krymsk } -- aeroporti attivi in ME
+
+local airbase_blue = { AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Sochi_Adler, AIRBASE.Caucasus.Senaki_Kolkhi, AIRBASE.Caucasus.Gudauta, AIRBASE.Caucasus.Sukhumi_Babushara, AIRBASE.Caucasus.Kobuleti, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Soganlug,
+                        AIRBASE.Caucasus.Senaki } -- aeroporti attivi in ME
 
 
 
 
 
-   -- Static Object che rappresentano target startegici (BAI, PINPOINT)
-   local staticObject = {
-
-      Warehouse = {
-
-        blue = {
-
-          { STATIC:FindByName( "blue wh" ),  targetPoints.warehouse },
-          { STATIC:FindByName( "blue wh #001" ), targetPoints.warehouse },
-          { STATIC:FindByName( "blue wh #002" ), targetPoints.warehouse }
-
-        },
-
-        red = {
-
-          { STATIC:FindByName( "red wh" ),  targetPoints.warehouse },
-          { STATIC:FindByName( "red wh #001" ), targetPoints.warehouse },
-          { STATIC:FindByName( "red wh #002" ), targetPoints.warehouse }
-
-        }
-
-      }, -- end Warehouse
 
 
-      Farp = {
+ -- Static Object che rappresentano target startegici (BAI, PINPOINT)
+ local staticObject = {
 
-        blue = {
+    Warehouse = {
 
-          { STATIC:FindByName( "blue farp" )  targetPoints.farp },
-          { STATIC:FindByName( "blue farp #001" )  targetPoints.farp },
-          { STATIC:FindByName( "blue farp #002" )  targetPoints.farp }
+      blue = {
 
-        },
+        { STATIC:FindByName( "blue wh" ),  targetPoints.warehouse }, -- Tskhinvali
+        { STATIC:FindByName( "blue wh #001" ), targetPoints.warehouse }, -- Zestafoni
+        { STATIC:FindByName( "blue wh #002" ), targetPoints.warehouse } -- Sacchere
 
-        red = {
+      },
 
-          { STATIC:FindByName( "red farp" )  targetPoints.farp },
-          { STATIC:FindByName( "red farp #001" )  targetPoints.farp },
-          { STATIC:FindByName( "red farp #002" )  targetPoints.farp }
+      red = {
 
-        }
+        { STATIC:FindByName( "red wh" ),  targetPoints.warehouse }, -- biteta-oni
+        { STATIC:FindByName( "red wh #001" ), targetPoints.warehouse }, -- Kvemo
+        { STATIC:FindByName( "red wh #002" ), targetPoints.warehouse } -- Alagir
 
-      }, -- end Farp
+      }
 
-      Warehouse_AB = {
-
-        blue = {
-
-          { STATIC:FindByName( "blue airbase" ),  targetPoints.airbase },
-          { STATIC:FindByName( "blue airbase #001" ),  targetPoints.airbase },
-          { STATIC:FindByName( "blue airbase #002" ),  targetPoints.airbase },
-          { STATIC:FindByName( "blue airbase #003" ),  targetPoints.airbase },
-          { STATIC:FindByName( "blue airbase #004" ),  targetPoints.airbase }
-
-        },
-
-        red = {
-
-          { STATIC:FindByName( "red airbase" ),  targetPoints.airbase },
-          { STATIC:FindByName( "red airbase #001" ),  targetPoints.airbase },
-          { STATIC:FindByName( "red airbase #002" ),  targetPoints.airbase },
-          { STATIC:FindByName( "red airbase #003" ),  targetPoints.airbase } -- mineralnye
+    }, -- end Warehouse
 
 
-        }
+    Farp = {
+
+      blue = {
+
+        { STATIC:FindByName( "blue farp" ),  targetPoints.farp },  -- Tskhinvali
+        { STATIC:FindByName( "blue farp #001" ),  targetPoints.farp },  -- Zestafoni
+        { STATIC:FindByName( "blue farp #002" ),  targetPoints.farp } -- Sacchere
+
+      },
+
+      red = {
+
+        { STATIC:FindByName( "red farp" ),  targetPoints.farp },  -- biteta-oni
+        { STATIC:FindByName( "red farp #001" ),  targetPoints.farp }, -- Kvemo
+        { STATIC:FindByName( "red farp #002" ),  targetPoints.farp } -- Alagir
+
+      }
+
+    }, -- end Farp
+
+    Warehouse_AB = {
+
+      blue = {
+
+        { STATIC:FindByName( "blue airbase" ),  targetPoints.airbase }, -- Senaki
+        { STATIC:FindByName( "blue airbase #001" ),  targetPoints.airbase }, -- Kutaisi
+        { STATIC:FindByName( "blue airbase #002" ),  targetPoints.airbase }, -- Tbilisi
+        { STATIC:FindByName( "blue airbase #003" ),  targetPoints.airbase }, -- Soganlug
+        { STATIC:FindByName( "blue airbase #004" ),  targetPoints.airbase } -- Batumi
+
+      },
+
+      red = {
+
+        { STATIC:FindByName( "red airbase" ),  targetPoints.airbase }, -- Beslan
+        { STATIC:FindByName( "red airbase #001" ),  targetPoints.airbase }, -- Nalchik
+        { STATIC:FindByName( "red airbase #002" ),  targetPoints.airbase }, -- Mozdok
+        { STATIC:FindByName( "red airbase #003" ),  targetPoints.airbase } -- Mineralnye
 
 
-      },  -- end Warehouse_AB
+      }
 
 
-      Stucture = {
-
-        blue = {
-
-          { STATIC:FindByName( "blue station" ), targetPoints.station },
-          { STATIC:FindByName( "blue storage" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "blue bridge" ),  targetPoints.bridge },
-          { STATIC:FindByName( "blue power" ),  targetPoints.power_plant_area },
-          { STATIC:FindByName( "blue farm" ),  targetPoints.production_plant_area },
-          { STATIC:FindByName( "blue port" ),  targetPoints.port }
-
-        },
-
-        red = {
-
-          { STATIC:FindByName( "red station" ), targetPoints.station },
-          { STATIC:FindByName( "red storage" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red bridge" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red power" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red farm" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red port" ),  targetPoints.port }
-
-        }
+    },  -- end Warehouse_AB
 
 
-      } -- end structure
+    Stucture = {
+
+      blue = {
+
+        { STATIC:FindByName( "blue station" ), targetPoints.station },
+        { STATIC:FindByName( "blue storage" ),  targetPoints.storage_area },
+        { STATIC:FindByName( "blue bridge" ),  targetPoints.bridge },
+        { STATIC:FindByName( "blue power" ),  targetPoints.power_plant_area },
+        { STATIC:FindByName( "blue farm" ),  targetPoints.production_plant_area },
+        { STATIC:FindByName( "blue port" ),  targetPoints.port }
+
+      },
+
+      red = {
+
+        { STATIC:FindByName( "red station" ), targetPoints.station },
+        { STATIC:FindByName( "red storage" ),  targetPoints.storage_area },
+        { STATIC:FindByName( "red bridge" ),  targetPoints.storage_area },
+        { STATIC:FindByName( "red power" ),  targetPoints.storage_area },
+        { STATIC:FindByName( "red farm" ),  targetPoints.storage_area },
+        { STATIC:FindByName( "red port" ),  targetPoints.port }
+
+      }
 
 
-    -- INSERIRE qui gli altri target: strategic, army e quelli sotto gia' definiti
-
-  } -- end staticObject
+    } -- end structure
 
 
+  -- INSERIRE qui gli altri target: strategic, army e quelli sotto gia' definiti
 
-  if loggingLevel >= 4 then
-
-    logging('info', { '- LIST STATIC OBJECT TABLE - ' , 'object: ' .. #staticObject } )
-
-    for i1, k1 in pairs( staticObject) do
-
-      logging('info', { ' - staticObject - ', i1 .. ' - object: ' .. #k1} )
-
-      for i2, k2 in pairs(k1) do
-
-        logging('info', { ' - staticObject - ', i2 .. ' - object: ' .. #k2 } )
-
-        for i3, k3 in pairs(k2) do
-
-          logging('info', { ' - staticObject - ', ' - ' .. i3 .. ' - ' .. k3[1]:GetName() .. '  -  ' .. k3[3][1] } )
-
-          --for i4, k4 in pairs(k3) do
+} -- end staticObject
 
 
-            --logging('info', {i4, ''} )
-            --logging('info', { i4, k4[2] .. ' -  points: ' .. k4[3] } )
 
-          --end
+if loggingLevel >= 4 then
 
-        end
+  logging('info', { '- LIST STATIC OBJECT TABLE - ' , 'object: ' .. #staticObject } )
+
+  for i1, k1 in pairs( staticObject) do
+
+    logging('info', { ' - staticObject - ', i1 .. ' - object: ' .. #k1} )
+
+    for i2, k2 in pairs(k1) do
+
+      logging('info', { ' - staticObject - ', i2 .. ' - object: ' .. #k2 } )
+
+      for i3, k3 in pairs(k2) do
+
+        logging('info', { ' - staticObject - ', ' - ' .. i3 .. ' - ' .. k3[1]:GetName() .. '  -  ' .. k3[3][1] } )
+
+        --for i4, k4 in pairs(k3) do
+
+
+          --logging('info', {i4, ''} )
+          --logging('info', { i4, k4[2] .. ' -  points: ' .. k4[3] } )
+
+        --end
 
       end
 
@@ -3794,815 +3715,273 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   end
 
+end
 
 
 
 
 
-  -- Zone definite su target strutture (edifici, ponti) startegici (BAI, PINPOINT)
-  local zoneTarget = {
 
-    structure = {
+-- Zone definite su target strutture (edifici, ponti) startegici (BAI, PINPOINT)
+local targetZone = {
 
-      red = {
 
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    structure = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    farm = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    military_base = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-
-    power_plant = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    storage = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    farm = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    }
-
-
-
-
-
-
-    Red_Farm = {
-
-      { ZONE:New('Target Zone Biteta Storage Area'), 'Target Zone Biteta Storage Area', targetPoints.storage_area },
-      { ZONE:New('Target Zone Kvemo Sba Storage Area'), 'Target Zone Kvemo Sba Storage Area', targetPoints.storage_area }
-
-    },
-
-    Red_Military_Base = {
-
-      { ZONE:New('Target_Zone_Beslan_EWR_Site'), 'Target_Zone_Beslan_EWR_Site', targetPoints.ewr_site }
-
-    },
-
-    Blue_Zestafoni_Bridges = {
-
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_1'), 'Target_Zone_Zestafoni_Bridge_1', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_2'), 'Target_Zone_Zestafoni_Bridge_2', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_3'), 'Target_Zone_Zestafoni_Bridge_3', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_4'), 'Target_Zone_Zestafoni_Bridge_4', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_5'), 'Target_Zone_Zestafoni_Bridge_5', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_6'), 'Target_Zone_Zestafoni_Bridge_6', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_7'), 'Target_Zone_Zestafoni_Bridge_7', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_8'), 'Target_Zone_Zestafoni_Bridge_8', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_9'), 'Target_Zone_Zestafoni_Bridge_9', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_10'), 'Target_Zone_Zestafoni_Bridge_10', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_11'), 'Target_Zone_Zestafoni_Bridge_11', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_12'), 'Target_Zone_Zestafoni_Bridge_12', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_13'), 'Target_Zone_Zestafoni_Bridge_13', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_14'), 'Target_Zone_Zestafoni_Bridge_14', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Zestafoni_Bridge_15'), 'Target_Zone_Zestafoni_Bridge_15', targetPoints.bridge }
-
-    },
-
-    Blue_Gori_Bridges = {
-
-      { ZONE:New('Target_Zone_Gori_Bridge_1'), 'Target_Zone_Gori_Bridge_1', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_2'), 'Target_Zone_Gori_Bridge_2', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_3'), 'Target_Zone_Gori_Bridge_3', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_4'), 'Target_Zone_Gori_Bridge_4', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_5'), 'Target_Zone_Gori_Bridge_5', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_6'), 'Target_Zone_Gori_Bridge_6', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_7'), 'Target_Zone_Gori_Bridge_7', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_8'), 'Target_Zone_Gori_Bridge_8', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_9'), 'Target_Zone_Gori_Bridge_5', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_10'), 'Target_Zone_Gori_Bridge_10', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_11'), 'Target_Zone_Gori_Bridge_11', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_12'), 'Target_Zone_Gori_Bridge_12', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_13'), 'Target_Zone_Gori_Bridge_13', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Gori_Bridge_14'), 'Target_Zone_Gori_Bridge_14', targetPoints.bridge }
-
-
-    },
-
-    Blue_Tbilisi_Bridges = {
-
-      { ZONE:New('Target_Zone_Tbilisi_Bridge_1'), 'Target_Zone_Tbilisi_Bridge_1', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Tbilisi_Bridge_2'), 'Target_Zone_Tbilisi_Bridge_2', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Tbilisi_Bridge_3'), 'Target_Zone_Tbilisi_Bridge_3', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Tbilisi_Bridge_4'), 'Target_Zone_Tbilisi_Bridge_4', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Tbilisi_Bridge_5'), 'Target_Zone_Tbilisi_Bridge_5', targetPoints.bridge },
-      { ZONE:New('Target_Zone_Tbilisi_Bridge_6'), 'Target_Zone_Tbilisi_Bridge_6', targetPoints.bridge }
-    },
-
-    Blue_Farm = {
-
-      { ZONE:New('Target Zone Gori Storage Area'), 'Target Zone Gori Storage Area', targetPoints.storage_area },
-      { ZONE:New('Target_Zone_Zestafoni_Structure'), 'Target_Zone_Zestafoni_Structure', targetPoints.storage_area },
-      { ZONE:New('Kaspi Target Zone'), 'Kaspi Target Zone', targetPoints.storage_area }
-
-    },
-
-    Blue_Military_Base = {
-
-      { ZONE:New('Target_Zone_Kutaisi_EWR'), 'Target_Zone_Kutaisi_EWR', targetPoints.ewr_site }
-
-    }
-
-  }
-
-
-
-
-
-
-
-
-
-
-  --NOTA redFrontZone e blueFrontZone sostituiti con la seguente struttura
-
-  local frontZone = {
+  structure = {
 
     red = {
 
-          { ZONE:New("red front"), targetPoints.front_zone },
-          { ZONE:New("red front #001"), targetPoints.front_zone }
-    },
+      { ZONE:New('red bridge'), targetPoints.bridge },
 
-    blue = {
-
-          { ZONE:New("blue front"), targetPoints.front_zone },
-          { ZONE:New("blue front #001"), targetPoints.front_zone }
-    }
-
-  }
-
-
-
-  -- NOTA redPatrolZone e bluePatrolZone sostituiti con la seguente struttura
-
-  local sweepZone = {
-
-    red = {
-
-      { ZONE:New("red sweep"), targetPoints.front_zone },
-      { ZONE:New("red sweep #001"), targetPoints.front_zone },
-      { ZONE:New("red sweep #002"), targetPoints.front_zone }
 
     },
 
     blue = {
 
-      { ZONE:New("blue sweep") , targetPoints.front_zone },
-      { ZONE:New("blue sweep #001") , targetPoints.front_zone },
-      { ZONE:New("blue sweep #002") targetPoints.front_zone }
+      { ZONE:New('blue bridge'), targetPoints.bridge },
 
     }
 
-  }
+  },
 
+  farm = {
 
+    red = {
 
-  -- i target per l'arty dei blue
-  -- imposterei target dei blue e toglierei il prefisso BLUE verifica la posizione delle zone
-  local targetZoneForBlueArty = {
+      { ZONE:New('red bridge'), targetPoints.bridge },
 
-    { ZONE:New("blue tar arty"), targetPoints.front_zone },
-    { ZONE:New("tar arty #001"), targetPoints.front_zone }
 
-  }
-
-  -- i target  per l'arty dei red
-  local targetZoneForRedArty = {
-
-    { ZONE:New("red tar arty") , targetPoints.front_zone },
-    { ZONE:New("red tar arty #001") , targetPoints.front_zone }
-
-  }
-
-  local afacZone = {
-
-    { ZONE:New("afac") , targetPoints.front_zone },
-    { ZONE:New("afac #001") , targetPoints.front_zone },
-  }
-
-
-
-  local redAwacsZone = {
-
-    ZONE:New("red awa"),
-    ZONE:New("red awa #001") ,
-    ZONE:New("red awa #002")
-
-  }
-
-  local blueAwacsZone = {
-
-    ZONE:New("blue awa"),
-    ZONE:New("blue awa #001") ,
-    ZONE:New("blue awa #002")
-
-  }
-
-
-
-  local redGroundGroup = {
-
-    { GROUP:FindByName('red armor'), targetPoints.armored },
-    { GROUP:FindByName('red armor #001'), targetPoints.armored },
-    { GROUP:FindByName('red mechanized'), targetPoints.mechanized },
-    { GROUP:FindByName('red mechanized #001'), targetPoints.mechanized },
-    { GROUP:FindByName('red antitank'), targetPoints.antitank },
-    { GROUP:FindByName('red antitank #001'), targetPoints.antitank },
-    { GROUP:FindByName('red ad'), targetPoints.sam },
-    { GROUP:FindByName('red hq'), targetPoints.hq },
-    { GROUP:FindByName('red sa-2'), targetPoints.sam },
-    { GROUP:FindByName('red sa-3'), targetPoints.sam },
-    { GROUP:FindByName('red ewr'), targetPoints.ewr_site },
-    { GROUP:FindByName('red ewr #001'), targetPoints.ewr_site }
-
-  }
-
-  local blueGroundGroup = {
-
-    { GROUP:FindByName('blue armor'), targetPoints.armored },
-    { GROUP:FindByName('blue mechanized'), targetPoints.mechanized },
-    { GROUP:FindByName('blue antitank'), targetPoints.antitank },
-    { GROUP:FindByName('blue ad'), targetPoints.sam },
-    { GROUP:FindByName('blue hq'), targetPoints.hq },
-    { GROUP:FindByName('blue ewr'), targetPoints.ewr_site },
-    { GROUP:FindByName('blue sa-2'), targetPoints.sam },
-    { GROUP:FindByName('blue sa-3'), targetPoints.sam }
-
-  }
-
-
-
-
-  -- POLIGONAL CAP ZONE - ridefinisci la struttura
-
-
-
-  local cap_zone_db_red = {
-
-    [1] = 'RED CAP ZONE BESLAN',
-    [2] = 'RED CAP ZONE NALCHIK',
-    [3] = 'RED CAP ZONE TEBERDA',
-    [4] = 'RED CAP ZONE SOCHI'
-
-    }
-
-
-  local cap_zone_db_blue = {
-
-    [1] = 'BLUE CAP ZONE TBILISI',
-    [2] = 'BLUE CAP ZONE KUTAISI',
-    [3] = 'BLUE CAP ZONE SUKUMI',
-    [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------------------------------------------  SCORING & TARGET ASSIGN -------------------------------------------------------------------------------
-
-  -- Static, Group an Zone that are specific target (for pinpoint mission)
-  local specific_target = {
-
-    red = { group_targ = {}, zone_targ = {}, static_targ = {} },
-    blue = { group_targ = {}, zone_targ = {}, static_targ = {} }
-
-  }
-
-  -- Zone that are searching area target
-  local global_target_zone = { red = {}, blue = {} }
-
-
-  Scoring = SCORING:New( "1975_GW_Scoring" )
-
-  Scoring:SetScaleDestroyScore( 100 )
-
-  Scoring:SetScaleDestroyPenalty( 400 )
-
-  local gtrg, gtrz, gtrs, gtbg, gtbz, gtbs, gtr, gtb = 1, 1, 1, 1, 1, 1, 1, 1
-
-  --Scoring:AddUnitScore( UNIT:FindByName( "Unit #001" ), 200 )
-
-
-  -- Assignment for targetZone
-  for k, targetZone in pairs(zoneTargetStructure) do
-
-    logging( 'finest', { 'main' , 'assign score an target for: ' .. k } )
-
-    for i = 1, #targetZone do
-
-      Scoring:AddZoneScore( targetZone[i][1], targetZone[i][3] )
-      logging('finest', { 'main' , 'assign score@: ' .. targetZone[i][1]:GetName()  .. ' - score value = ' .. targetZone[i][3][1] } )
-
-      if string.find( k,'Blue')  then
-
-        specific_target.blue.zone_targ[gtbz] = targetZone[i][1]
-        logging('finest', { 'main' , 'assign specific_target.blue.zone_targ[ ' .. gtbz .. '] = '  .. targetZone[i][1]:GetName() } )
-        gtbz = gtbz + 1
-
-      elseif string.find( k,'Red')  then
-
-        specific_target.red.zone_targ[gtrz] = targetZone[i][1]
-        logging('finest', { 'main' , 'assign specific_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZone[i][1]:GetName() } )
-        gtrz = gtrz + 1
-
-      end
-
-    end
-
-  end
-
-
-
-  -- Assignment for redFrontZone
-  for _, v in pairs(redFrontZone) do
-
-    Scoring:AddZoneScore( v[1], v[3] )
-    global_target_zone.red[gtr] = v[1]
-    logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtr .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
-    gtr = gtr + 1
-
-  end
-
-
-  -- Assignment for blueFrontZone
-  for _, v in pairs(blueFrontZone) do
-
-    Scoring:AddZoneScore( v[1], v[3] )
-    global_target_zone.blue[gtb] = v[1]
-    logging('finest', { 'main' , 'assign score and global_target.blue[ ' .. gtb .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
-    gtb = gtb + 1
-
-  end
-
-
-  -- Assignment for afacZone
-  for i = 1, #afacZone do
-
-    Scoring:AddZoneScore( afacZone[i][1], afacZone[i][3] )
-
-  end
-
-  -- Assignment for targetZoneForBlueArty
-  for _, v in pairs(targetZoneForBlueArty) do
-
-    Scoring:AddZoneScore( v[1], v[3] )
-    global_target_zone.red[gtr] = v[1]
-    logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtr .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
-    gtr = gtr + 1
-
-  end
-
-  -- Assignment for targetZoneForRedArty
-  for _, v in pairs(targetZoneForRedArty) do
-
-    Scoring:AddZoneScore( v[1], v[3] )
-    global_target_zone.blue[gtb] = v[1]
-    logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtb .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[3][1] } )
-    gtb = gtb + 1
-
-  end
-
-
-
-  -- Assignment for staticObject
-  logging('finest', { 'main' , 'num static_object = ' .. #staticObject } )
-
-  for k, type in pairs( staticObject ) do
-
-    logging('finest', { 'main' , 'static_object - type: ' .. k } )
-
-    for h, faction in pairs(type) do
-
-      logging('finest', { 'main' , 'static_object - faction: ' .. h } )
-
-        for j, targetObject in pairs(faction) do
-
-          Scoring:AddStaticScore( targetObject[1], targetObject[3] )
-
-          if string.find( h,'blue')  then
-
-            specific_target.blue.static_targ[gtbs] = targetObject[1]
-            logging('finest', { 'main' , ' - assign score and specific_target.blue.static_targ[ ' .. gtbs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
-            gtbs = gtbs + 1
-
-          elseif string.find( h,'red')  then
-
-            specific_target.red.static_targ[gtbs] = targetObject[1]
-            logging('finest', { 'main' , ' - assign score and specific_target.red.static_targ[ ' .. gtrs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[3][1] } )
-            gtrs = gtrs + 1
-
-          end
-
-        end
-
-    end
-
-  end
-
-
-
-
-
-  -- Assignment for redGroundGroup
-  for i = 1, #redGroundGroup do
-
-    Scoring:AddScoreGroup( redGroundGroup[i][1], redGroundGroup[i][2] )
-    specific_target.red.group_targ[gtrg] = redGroundGroup[i][1]
-    logging('finest', { 'main' , 'assign score and specific_target.red.group_targ[ ' .. gtrg .. '] = ' .. redGroundGroup[i][1]:GetName() .. ' - score value = ' .. redGroundGroup[i][2][1] } )
-    gtrg = gtrg + 1
-
-  end
-
-  -- Assignment for blueGroundGroup
-  for i = 1, #blueGroundGroup do
-
-    Scoring:AddScoreGroup( blueGroundGroup[i][1], blueGroundGroup[i][2] )
-    specific_target.blue.group_targ[gtbg] = blueGroundGroup[i][1]
-    logging('finest', { 'main' , 'assign score and specific_target.blue.group_targ[ ' .. gtbg .. '] = ' .. blueGroundGroup[i][1]:GetName() .. ' - score value = ' .. blueGroundGroup[i][2][1] } )
-    gtbg = gtbg + 1
-
-  end
-
-
-
-
-  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-  if loggingLevel >= 4 then
-
-    --- Printing logging info for specific_target table
-    for k, v in pairs(specific_target) do
-
-      logging( 'info', { 'main' , 'specific_target - faction = ' .. k } )
-
-      for h, w in pairs(v) do
-
-        logging( 'info', { 'main' , 'specific_target - target type = ' .. h } )
-
-        for _, j in pairs(w)  do
-
-          logging( 'info', { 'main' , 'specific_target - target name = ' .. j:GetName() } )
-
-        end
-
-      end
-
-    end
-
-
-    --- Printing logging info for global_target_zone table
-    for k, v in pairs(global_target_zone) do
-
-      logging( 'info', { 'main' , 'global_target_zone - faction = ' .. k } )
-
-      for h, w in pairs(v) do
-
-        logging( 'info', { 'main' , 'global_target_zone - target name = ' .. w:GetName() } )
-
-      end
-
-    end
-
-  end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  -- Crea il blue command center selezionando l'unita' HQ
-  HQ_BLUE = GROUP:FindByName( 'BLUE_HQ' )
-  blue_command_center = COMMANDCENTER:New( HQ_BLUE, 'BLUE_HQ' )
-
-  -- Crea il blue command center selezionando l'unita' HQ
-  HQ_RED = GROUP:FindByName( 'RED_HQ' )
-  red_command_center = COMMANDCENTER:New( HQ_RED, 'RED_HQ' )
-
-
-  -- SET_Group dedicati alla Detection A2G
-  -- Red side
-  detectionGroupSetRed = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
-  detectionGroupSetRed:FilterPrefixes( { "SQ red REC", "SQ red FAC", "RUSSIAN JTAC", "SQ red REC" } ) -- The DetectionSetGroup will search for groups that start with the name
-
-
-
-  -- Blue side
-  detectionGroupSetBlue = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
-  detectionGroupSetBlue:FilterPrefixes( { "SQ blue REC", "SQ blue FAC", "GEORGIAN JTAC", "SQ blue REC" } ) -- The DetectionSetGroup will search for groups that start with the name
-
-
-
-  -- SET_Group dedicati alla Detection A2A
-  -- Red side
-  detectionGroupSetRedA2A = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
-  detectionGroupSetRedA2A:FilterPrefixes( { "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
-
-
-
-  -- Blue side
-  detectionGroupSetBlueA2A = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
-  detectionGroupSetBlueA2A:FilterPrefixes( { "DF GEORGIA AWACS", "DF GEORGIA EWR", "DF USA EWR", "DF USA AWACS", "SQ blue AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  -- WAREHOUSE
-
-
-
-  logging('info', { 'main' , ' --------------------------------------------------  INIT WAREHOUSE SYSTEM'} )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  -- CREATING WAREHOUSE
-  local warehouse={}
-
-  warehouse.Biteta        =   WAREHOUSE:New( staticObject.Warehouse.red[ 1 ], "Biteta")  --Functional.Warehouse#WAREHOUSE
-  warehouse.Kvemo_Sba     =   WAREHOUSE:New( staticObject.Warehouse.red[ 2 ], "Kvemo_Sba")  --Functional.Warehouse#WAREHOUSE
-  warehouse.Alagir        =   WAREHOUSE:New( staticObject.Warehouse.red[ 3 ], "Alagir")  --Functional.Warehouse#WAREHOUSE
-  warehouse.Beslan        =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 1 ], "Beslan")  --Functional.Warehouse#WAREHOUSE
-  warehouse.Nalchik       =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 2 ], "Nalchik")  --Functional.Warehouse#WAREHOUSE
-  warehouse.Mozdok        =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 3 ], "Mozdok")  --Functional.Warehouse#WAREHOUSE
-  warehouse.Mineralnye    =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 4 ], "Mineralnye")  --Functional.Warehouse#WAREHOUSE
-
-
-  warehouse.Tskhinvali    =   WAREHOUSE:New( staticObject.Warehouse.blue[ 1 ], "Tskhinvali" )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Zestafoni     =   WAREHOUSE:New( staticObject.Warehouse.blue[ 2 ], "Zestafoni" )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Sachhere      =   WAREHOUSE:New( staticObject.Warehouse.blue[ 3 ], "Sachhere" )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Senaki        =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 1 ],  "Senaki" )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Kutaisi       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 2 ],  "Kutaisi" )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Tbilisi       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 3 ], "Tbilisi" )  --Functional.Warehouse#WAREHOUSE                                      warehouse.Tskhinvali = WAREHOUSE:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ], staticObject.Warehouse_AB.blue.Vaziani[ 2 ] )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Soganlug      =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 4 ], "Soganlug" )  --Functional.Warehouse#WAREHOUSE
-  warehouse.Batumi        =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 5 ], "Batumi")   --Functional.Warehouse#WAREHOUSE
-
-
-
-
-
-  local warehouse_red = {
-
-    farp = {
-
-      warehouse.Biteta,
-      warehouse.Kvemo_Sba,
-      warehouse.Alagir
     },
 
-    airbase = {
+    blue = {
 
-      warehouse.Mineralnye,
-      warehouse.Mozdok,
-      warehouse.Beslan,
-      warehouse.Nalchik
+      { ZONE:New('blue bridge'), targetPoints.bridge },
 
     }
-  }
 
-  local warehouse_blue = {
+  },
 
-    farp = {
+  military_base = {
 
-      warehouse.Zestafoni,
-      warehouse.Tskhinvali,
-      warehouse.Sachhere
+    red = {
+
+      { ZONE:New('red bridge'), targetPoints.bridge },
+
+
     },
 
-    airbase = {
+    blue = {
 
-      warehouse.Batumi,
-      warehouse.Kutaisi,
-      warehouse.Tbilisi,
-      warehouse.Senaki,
-      warehouse.Soganlug
+      { ZONE:New('blue bridge'), targetPoints.bridge },
 
     }
+
+  },
+
+
+  power_plant = {
+
+    red = {
+
+      { ZONE:New('red bridge'), targetPoints.bridge },
+
+
+    },
+
+    blue = {
+
+      { ZONE:New('blue bridge'), targetPoints.bridge },
+
+    }
+
+  },
+
+  storage = {
+
+    red = {
+
+      { ZONE:New('red bridge'), targetPoints.bridge },
+
+
+    },
+
+    blue = {
+
+      { ZONE:New('blue bridge'), targetPoints.bridge },
+
+    }
+
+  },
+
+  farm = {
+
+    red = {
+
+      { ZONE:New('red bridge'), targetPoints.bridge },
+
+
+    },
+
+    blue = {
+
+      { ZONE:New('blue bridge'), targetPoints.bridge },
+
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+--NOTA redFrontZone e blueFrontZone sostituiti con la seguente struttura
+
+local frontZone = {
+
+  red = {
+
+        { ZONE:New("red front"), targetPoints.front_zone },
+        { ZONE:New("red front #001"), targetPoints.front_zone },
+        { ZONE:New("red front #002"), targetPoints.front_zone }
+  },
+
+  blue = {
+
+        { ZONE:New("blue front"), targetPoints.front_zone },
+        { ZONE:New("blue front #001"), targetPoints.front_zone },
+        { ZONE:New("blue front #002"), targetPoints.front_zone }
+  }
+
+}
+
+
+
+-- NOTA redPatrolZone e bluePatrolZone sostituiti con la seguente struttura
+
+local sweepZone = {
+
+  red = {
+
+    { ZONE:New("red sweep"), targetPoints.front_zone },
+    { ZONE:New("red sweep #001"), targetPoints.front_zone },
+    { ZONE:New("red sweep #002"), targetPoints.front_zone }
+
+  },
+
+  blue = {
+
+    { ZONE:New("blue sweep") , targetPoints.front_zone },
+    { ZONE:New("blue sweep #001") , targetPoints.front_zone },
+    { ZONE:New("blue sweep #002") targetPoints.front_zone }
+
+  }
+
+}
+
+
+
+-- i target per l'arty dei blue
+-- imposterei target dei blue e toglierei il prefisso BLUE verifica la posizione delle zone
+local targetZoneForBlueArty = {
+
+  { ZONE:New("blue tar arty"), targetPoints.front_zone },
+  { ZONE:New("tar arty #001"), targetPoints.front_zone }
+
+}
+
+-- i target  per l'arty dei red
+local targetZoneForRedArty = {
+
+  { ZONE:New("red tar arty") , targetPoints.front_zone },
+  { ZONE:New("red tar arty #001") , targetPoints.front_zone }
+
+}
+
+local afacZone = {
+
+  { ZONE:New("afac") , targetPoints.front_zone },
+  { ZONE:New("afac #001") , targetPoints.front_zone },
+}
+
+
+
+local redAwacsZone = {
+
+  ZONE:New("red awa"),
+  ZONE:New("red awa #001") ,
+  ZONE:New("red awa #002")
+
+}
+
+local blueAwacsZone = {
+
+  ZONE:New("blue awa"),
+  ZONE:New("blue awa #001") ,
+  ZONE:New("blue awa #002")
+
+}
+
+
+
+local redGroundGroup = {
+
+  { GROUP:FindByName('red armor'), targetPoints.armored },
+  { GROUP:FindByName('red armor #001'), targetPoints.armored },
+  { GROUP:FindByName('red mechanized'), targetPoints.mechanized },
+  { GROUP:FindByName('red mechanized #001'), targetPoints.mechanized },
+  { GROUP:FindByName('red antitank'), targetPoints.antitank },
+  { GROUP:FindByName('red antitank #001'), targetPoints.antitank },
+  { GROUP:FindByName('red ad'), targetPoints.sam },
+  { GROUP:FindByName('red hq'), targetPoints.hq },
+  { GROUP:FindByName('red sa-2'), targetPoints.sam },
+  { GROUP:FindByName('red sa-3'), targetPoints.sam },
+  { GROUP:FindByName('red ewr'), targetPoints.ewr_site },
+  { GROUP:FindByName('red ewr #001'), targetPoints.ewr_site }
+
+}
+
+local blueGroundGroup = {
+
+  { GROUP:FindByName('blue armor'), targetPoints.armored },
+  { GROUP:FindByName('blue mechanized'), targetPoints.mechanized },
+  { GROUP:FindByName('blue antitank'), targetPoints.antitank },
+  { GROUP:FindByName('blue ad'), targetPoints.sam },
+  { GROUP:FindByName('blue hq'), targetPoints.hq },
+  { GROUP:FindByName('blue ewr'), targetPoints.ewr_site },
+  { GROUP:FindByName('blue sa-2'), targetPoints.sam },
+  { GROUP:FindByName('blue sa-3'), targetPoints.sam }
+
+}
+
+
+
+
+-- POLIGONAL CAP ZONE - ridefinisci la struttura
+
+
+
+local cap_zone_db_red = {
+
+  [1] = 'RED CAP ZONE BESLAN',
+  [2] = 'RED CAP ZONE NALCHIK',
+  [3] = 'RED CAP ZONE TEBERDA',
+  [4] = 'RED CAP ZONE SOCHI'
+
+  }
+
+
+local cap_zone_db_blue = {
+
+  [1] = 'BLUE CAP ZONE TBILISI',
+  [2] = 'BLUE CAP ZONE KUTAISI',
+  [3] = 'BLUE CAP ZONE SUKUMI',
+  [4] = 'BLUE CAP ZONE SOCHI GUDAUTA'
 
   }
 
@@ -4632,7 +4011,236 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  --------------------------------         RED WAREHOUSE OPERATION   ------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------  SCORING & TARGET ASSIGN -------------------------------------------------------------------------------
+
+-- Static, Group an Zone that are specific target (for pinpoint mission)
+local specific_target = {
+
+  red = { group_targ = {}, zone_targ = {}, static_targ = {} },
+  blue = { group_targ = {}, zone_targ = {}, static_targ = {} }
+
+}
+
+-- Zone that are searching area target
+local global_target_zone = { red = {}, blue = {} }
+
+
+Scoring = SCORING:New( "1975_GW_Scoring" )
+
+Scoring:SetScaleDestroyScore( 10 )
+
+Scoring:SetScaleDestroyPenalty( 40 )
+
+local gtrg, gtrz, gtrs, gtbg, gtbz, gtbs, gtr, gtb = 1, 1, 1, 1, 1, 1, 1, 1
+
+--Scoring:AddUnitScore( UNIT:FindByName( "Unit #001" ), 200 )
+
+
+-- Assignment for targetZone
+for k, v in pairs( targetZone ) do
+
+  logging( 'finest', { 'main' , 'assign score an target for: ' .. k } )
+
+  for k1, target in pairs( v )
+
+      for i = 1, #target do
+
+        Scoring:AddZoneScore( target[i][1], target[i][3] )
+        logging('finest', { 'main' , 'assign score@: ' .. target[i][1]:GetName()  .. ' - score value = ' .. target[i][3][1] } )
+
+        if k1 == 'blue'  then
+
+          specific_target.blue.zone_targ[gtbz] = target[i][1]
+          logging('finest', { 'main' , 'assign specific_target.blue.zone_targ[ ' .. gtbz .. '] = '  .. target[i][1]:GetName() } )
+          gtbz = gtbz + 1
+
+        elseif k1 == 'red'  then
+
+          specific_target.red.zone_targ[gtrz] = target[i][1]
+          logging('finest', { 'main' , 'assign specific_target.red.zone_targ[ ' .. gtrz .. '] = ' .. targetZone[i][1]:GetName() } )
+          gtrz = gtrz + 1
+
+        end
+
+      end
+
+    end
+
+end
+
+
+
+-- Assignment forFrontZone
+for k, v in pairs(frontZone) do
+
+  for _, v1 in pairs(v) do
+
+    Scoring:AddZoneScore( v1[1], v1[2] )
+
+    if k == 'red' then
+
+      global_target_zone.red[gtr] = v1[1]
+      logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtr .. '] = ' .. v1[1]:GetName() .. ' - score value = ' .. v1[2][1] } )
+      gtr = gtr + 1
+
+    elseif k == 'blue' then
+
+      global_target_zone.blue[gtb] = v1[1]
+      logging('finest', { 'main' , 'assign score and global_target.blue[ ' .. gtb .. '] = ' .. v1[1]:GetName() .. ' - score value = ' .. v1[2][1] } )
+      gtb = gtb + 1
+
+    end
+
+  end
+
+end
+
+
+
+-- assegnare anche per le sweep zone???
+
+-- Assignment for afacZone
+for i = 1, #afacZone do
+
+  Scoring:AddZoneScore( afacZone[i][1], afacZone[i][3] )
+
+end
+
+-- Assignment for targetZoneForBlueArty
+for _, v in pairs(targetZoneForBlueArty) do
+
+  Scoring:AddZoneScore( v[1], v[2] )
+  global_target_zone.red[gtr] = v[1]
+  logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtr .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[2][1] } )
+  gtr = gtr + 1
+
+end
+
+-- Assignment for targetZoneForRedArty
+for _, v in pairs(targetZoneForRedArty) do
+
+  Scoring:AddZoneScore( v[1], v[2] )
+  global_target_zone.blue[gtb] = v[1]
+  logging('finest', { 'main' , 'assign score and global_target_zone.red[ ' .. gtb .. '] = ' .. v[1]:GetName() .. ' - score value = ' .. v[2][1] } )
+  gtb = gtb + 1
+
+end
+
+
+
+-- Assignment for staticObject
+logging('finest', { 'main' , 'num static_object = ' .. #staticObject } )
+
+for k, type in pairs( staticObject ) do
+
+  logging('finest', { 'main' , 'static_object - type: ' .. k } )
+
+  for h, faction in pairs(type) do
+
+    logging('finest', { 'main' , 'static_object - faction: ' .. h } )
+
+      for _, targetObject in pairs(faction) do
+
+        Scoring:AddStaticScore( targetObject[1], targetObject[2] )
+
+        if h == 'blue'  then
+
+          specific_target.blue.static_targ[gtbs] = targetObject[1]
+          logging('finest', { 'main' , ' - assign score and specific_target.blue.static_targ[ ' .. gtbs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[2][1] } )
+          gtbs = gtbs + 1
+
+        elseif h == 'red'  then
+
+          specific_target.red.static_targ[gtbs] = targetObject[1]
+          logging('finest', { 'main' , ' - assign score and specific_target.red.static_targ[ ' .. gtrs .. '] = ' .. targetObject[1]:GetName() .. ' - score value = ' .. targetObject[2][1] } )
+          gtrs = gtrs + 1
+
+        end
+
+      end
+
+  end
+
+end
+
+
+
+
+
+-- Assignment for redGroundGroup
+for i = 1, #redGroundGroup do
+
+  Scoring:AddScoreGroup( redGroundGroup[i][1], redGroundGroup[i][2] )
+  specific_target.red.group_targ[gtrg] = redGroundGroup[i][1]
+  logging('finest', { 'main' , 'assign score and specific_target.red.group_targ[ ' .. gtrg .. '] = ' .. redGroundGroup[i][1]:GetName() .. ' - score value = ' .. redGroundGroup[i][2][1] } )
+  gtrg = gtrg + 1
+
+end
+
+-- Assignment for blueGroundGroup
+for i = 1, #blueGroundGroup do
+
+  Scoring:AddScoreGroup( blueGroundGroup[i][1], blueGroundGroup[i][2] )
+  specific_target.blue.group_targ[gtbg] = blueGroundGroup[i][1]
+  logging('finest', { 'main' , 'assign score and specific_target.blue.group_targ[ ' .. gtbg .. '] = ' .. blueGroundGroup[i][1]:GetName() .. ' - score value = ' .. blueGroundGroup[i][2][1] } )
+  gtbg = gtbg + 1
+
+end
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+if loggingLevel >= 4 then
+
+  --- Printing logging info for specific_target table
+  for k, v in pairs(specific_target) do
+
+    logging( 'info', { 'main' , 'specific_target - faction = ' .. k } )
+
+    for h, w in pairs(v) do
+
+      logging( 'info', { 'main' , 'specific_target - target type = ' .. h } )
+
+      for _, j in pairs(w)  do
+
+        logging( 'info', { 'main' , 'specific_target - target name = ' .. j:GetName() } )
+
+      end
+
+    end
+
+  end
+
+
+  --- Printing logging info for global_target_zone table
+  for k, v in pairs(global_target_zone) do
+
+    logging( 'info', { 'main' , 'global_target_zone - faction = ' .. k } )
+
+    for h, w in pairs(v) do
+
+      logging( 'info', { 'main' , 'global_target_zone - target name = ' .. w:GetName() } )
+
+    end
+
+  end
+
+end
 
 
 
@@ -4664,212 +4272,594 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  -------------------------------------- red DIDI warehouse operations -------------------------------------------------------------------------------------------------------
-
-  if wh_activation.Warehouse.red[ 2 ][ 1 ] then
-
-      logging('info', { 'main' , 'addAsset Didi warehouse'} )
-
-      warehouse.Kvemo_Sba:SetSpawnZone( ZONE:New("Didi Warehouse Spawn Zone") )
-      warehouse.Kvemo_Sba:Start()
 
 
-      warehouse.Kvemo_Sba:AddAsset(                 "Infantry Platoon Alpha",                   30)
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankA,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankB,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankC,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiAkatsia,       10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiGwozdika,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiKatiusha,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtilleryResupply, 10,           WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.jtac,              10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
-      warehouse.Kvemo_Sba:AddAsset(                air_template_red.TRAN_MI_26,                 20,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- attack
-      warehouse.Kvemo_Sba:AddAsset(                air_template_red.AFAC_MI_24,                 20,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
-      warehouse.Kvemo_Sba:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              20,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
 
 
-      logging('info', { 'main' , 'addrequest Didi warehouse'} )
 
 
-      local kvemo_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-      local num_mission = 4
-      local num_mission_helo = 3
-      local depart_time_helo = defineRequestPosition( num_mission_helo ) -- heli mission
-      local depart_time = defineRequestPosition( num_mission ) -- ground mission
-      local pos = 1
-      local pos_heli = 1
-      local startReqTimeArtillery = 1 -- Arty groups have first activation
-      local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
-      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local didi_sched = SCHEDULER:New( warehouse.Kvemo_Sba,
-
-        function()
-
-          -- artillery request
-          warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'Kvemo_Artillery_Resupply' )
-          warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery + 120 , warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'Kvemo_Artillery_Ops')
-
-          if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red[ 2 ][ 13 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.jtac, math.random( AssetQty.red.ground.recon[1], AssetQty.red.ground.recon[2] ), nil, nil, nil, 'JTAC Tsveri' ) pos = pos + 1  end
-
-          logging('finer', { 'Kvemo scheduler function' , 'addRequest Kvemo warehouse'} )
-
-        end, {}, start_ground_sched * kvemo_efficiency_influence, sched_interval, rand_ground_sched
-
-      ) -- END SCHEDULER
 
 
-      local groupResupplySet
 
-      -- Take care of the spawned units.
-      function warehouse.Kvemo_Sba:OnAfterSelfRequest( From,Event,To,groupset,request )
 
-        logging('enter', 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Crea il blue command center selezionando l'unita' HQ
+HQ_BLUE = GROUP:FindByName( 'BLUE_HQ' )
+blue_command_center = COMMANDCENTER:New( HQ_BLUE, 'BLUE_HQ' )
+
+-- Crea il blue command center selezionando l'unita' HQ
+HQ_RED = GROUP:FindByName( 'RED_HQ' )
+red_command_center = COMMANDCENTER:New( HQ_RED, 'RED_HQ' )
+
+
+-- SET_Group dedicati alla Detection A2G
+-- Red side
+detectionGroupSetRed = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+detectionGroupSetRed:FilterPrefixes( { "SQ red REC", "SQ red FAC", "RUSSIAN JTAC", "SQ red REC" } ) -- The DetectionSetGroup will search for groups that start with the name
+
+
+
+-- Blue side
+detectionGroupSetBlue = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+detectionGroupSetBlue:FilterPrefixes( { "SQ blue REC", "SQ blue FAC", "GEORGIAN JTAC", "SQ blue REC" } ) -- The DetectionSetGroup will search for groups that start with the name
+
+
+
+-- SET_Group dedicati alla Detection A2A
+-- Red side
+detectionGroupSetRedA2A = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+detectionGroupSetRedA2A:FilterPrefixes( { "DF CCCP AWACS", "DF CCCP EWR", "SQ red AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+
+
+
+-- Blue side
+detectionGroupSetBlueA2A = SET_GROUP:New() -- Defense a set of group objects, called DetectionSetGroup.
+detectionGroupSetBlueA2A:FilterPrefixes( { "DF GEORGIA AWACS", "DF GEORGIA EWR", "DF USA EWR", "DF USA AWACS", "SQ blue AWACS" } ) -- The DetectionSetGroup will search for groups that start with the name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- WAREHOUSE
+
+
+
+logging('info', { 'main' , ' --------------------------------------------------  INIT WAREHOUSE SYSTEM'} )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- CREATING WAREHOUSE
+local warehouse={}
+
+warehouse.Biteta        =   WAREHOUSE:New( staticObject.Warehouse.red[ 1 ], "Biteta")  --Functional.Warehouse#WAREHOUSE
+warehouse.Kvemo_Sba     =   WAREHOUSE:New( staticObject.Warehouse.red[ 2 ], "Kvemo_Sba")  --Functional.Warehouse#WAREHOUSE
+warehouse.Alagir        =   WAREHOUSE:New( staticObject.Warehouse.red[ 3 ], "Alagir")  --Functional.Warehouse#WAREHOUSE
+warehouse.Beslan        =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 1 ], "Beslan")  --Functional.Warehouse#WAREHOUSE
+warehouse.Nalchik       =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 2 ], "Nalchik")  --Functional.Warehouse#WAREHOUSE
+warehouse.Mozdok        =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 3 ], "Mozdok")  --Functional.Warehouse#WAREHOUSE
+warehouse.Mineralnye    =   WAREHOUSE:New( staticObject.Warehouse_AB.red[ 4 ], "Mineralnye")  --Functional.Warehouse#WAREHOUSE
+
+
+warehouse.Tskhinvali    =   WAREHOUSE:New( staticObject.Warehouse.blue[ 1 ], "Tskhinvali" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Zestafoni     =   WAREHOUSE:New( staticObject.Warehouse.blue[ 2 ], "Zestafoni" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Sachhere      =   WAREHOUSE:New( staticObject.Warehouse.blue[ 3 ], "Sachhere" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Senaki        =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 1 ],  "Senaki" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Kutaisi       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 2 ],  "Kutaisi" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Tbilisi       =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 3 ], "Tbilisi" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Soganlug      =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 4 ], "Soganlug" )  --Functional.Warehouse#WAREHOUSE
+warehouse.Batumi        =   WAREHOUSE:New( staticObject.Warehouse_AB.blue[ 5 ], "Batumi")   --Functional.Warehouse#WAREHOUSE
+
+
+
+
+
+local warehouse_red = {
+
+  farp = {
+
+    warehouse.Biteta,
+    warehouse.Kvemo_Sba,
+    warehouse.Alagir
+  },
+
+  airbase = {
+
+    warehouse.Mineralnye,
+    warehouse.Mozdok,
+    warehouse.Beslan,
+    warehouse.Nalchik
+
+  }
+}
+
+local warehouse_blue = {
+
+  farp = {
+
+    warehouse.Zestafoni,
+    warehouse.Tskhinvali,
+    warehouse.Sachhere
+  },
+
+  airbase = {
+
+    warehouse.Batumi,
+    warehouse.Kutaisi,
+    warehouse.Tbilisi,
+    warehouse.Senaki,
+    warehouse.Soganlug
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------         RED WAREHOUSE OPERATION   ------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------- red DIDI warehouse operations -------------------------------------------------------------------------------------------------------
+
+if wh_activation.Warehouse.red[ 2 ][ 1 ] then
+
+    logging('info', { 'main' , 'addAsset Didi warehouse'} )
+
+    warehouse.Kvemo_Sba:SetSpawnZone( ZONE:New("Didi Warehouse Spawn Zone") )
+    warehouse.Kvemo_Sba:Start()
+
+
+    warehouse.Kvemo_Sba:AddAsset(                 "Infantry Platoon Alpha",                   30)
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankA,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankB,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankC,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiAkatsia,       10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiGwozdika,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiKatiusha,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtilleryResupply, 10,           WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.jtac,              10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                air_template_red.TRAN_MI_26,                 20,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- attack
+    warehouse.Kvemo_Sba:AddAsset(                air_template_red.AFAC_MI_24,                 20,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+    warehouse.Kvemo_Sba:AddAsset(                air_template_red.AFAC_Mi_8MTV2,              20,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+
+
+    logging('info', { 'main' , 'addrequest Didi warehouse'} )
+
+
+    local kvemo_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+    local num_mission = 4
+    local num_mission_helo = 3
+    local depart_time_helo = defineRequestPosition( num_mission_helo ) -- heli mission
+    local depart_time = defineRequestPosition( num_mission ) -- ground mission
+    local pos = 1
+    local pos_heli = 1
+    local startReqTimeArtillery = 1 -- Arty groups have first activation
+    local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
+    local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local didi_sched = SCHEDULER:New( warehouse.Kvemo_Sba,
+
+      function()
+
+        -- artillery request
+        warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'Kvemo_Artillery_Resupply' )
+        warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery + 120 , warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'Kvemo_Artillery_Ops')
+
+        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 2 ][ 13 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.jtac, math.random( AssetQty.red.ground.recon[1], AssetQty.red.ground.recon[2] ), nil, nil, nil, 'JTAC Tsveri' ) pos = pos + 1  end
+
+        logging('finer', { 'Kvemo scheduler function' , 'addRequest Kvemo warehouse'} )
+
+      end, {}, start_ground_sched * kvemo_efficiency_influence, sched_interval, rand_ground_sched
+
+    ) -- END SCHEDULER
+
+
+    local groupResupplySet
+
+    -- Take care of the spawned units.
+    function warehouse.Kvemo_Sba:OnAfterSelfRequest( From,Event,To,groupset,request )
+
+      logging('enter', 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+
+      local groupset = groupset --Core.Set#SET_GROUP
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
+
+      -- Get assignment of this request.
+      local assignment = warehouse.Kvemo_Sba:GetAssignment(request)
+
+      logging('finer', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+
+      if assignment == 'tkviavi_attack_1' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[1], 'enemy_attack', false, 1, true, suppr_param  )
+
+
+      elseif assignment == 'tkviavi_attack_2' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[1], 'enemy_attack', false, 1, true, suppr_param  )
+
+
+      elseif assignment == 'tseveri_attack_1' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[1], 'enemy_attack', false, 1, true, suppr_param )
+
+
+      elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
+
+
+      elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
+
+
+
+      elseif assignment == 'AFAC_Khashuri_Est' then -- att: Jtac are ground mission (i think)
+
+        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Khashuri_Est[ 1 ] )
+
+
+
+      elseif assignment == 'JTAC Tsveri' then -- att: Jtac are ground mission (i think)
+
+        activeJTAC( 'ground', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
+
+
+
+      -- launch mission function: arty resupply
+      elseif assignment == 'Kvemo_Artillery_Resupply' then
+
+        groupResupplySet = groupset
+        -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
+        --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
+        activeGO_TO_ZONE_GROUND( groupset, targetZoneForBlueArty.TSKHINVALI_2[1], false, 1 )
+
+
+
+      -- launch mission function: arty
+      elseif assignment == 'Kvemo_Artillery_Ops' then
+
+          nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
+          -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
+          activateDetectionReport = false
+
+
+          -- lista dei target e delle ammo
+          param = {
+
+              listTargetInfo = {
+
+                  --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
+
+                  [1] = {
+                    targetCoordinate = targetZoneForRedArty.TKVIAVI_2[1]:GetRandomCoordinate(),
+                    priority = 10,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 10,
+                    weaponType = ARTY.WeaponType.Auto
+                  },
+
+                  [2] = {
+                    targetCoordinate = targetZoneForRedArty.TKVIAVI_3[1]:GetRandomCoordinate(),
+                    priority = 50,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 7,
+                    weaponType = ARTY.WeaponType.Auto
+                  },
+
+                  [3] = {
+                    targetCoordinate = targetZoneForRedArty.TKVIAVI_4[1]:GetRandomCoordinate(),
+                    priority = 50,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 7,
+                    weaponType = ARTY.WeaponType.Auto
+                  }
+
+              },
+
+              commandCenter = blue_command_center,
+
+              resupplySet = groupResupplySet,
+
+              speed = 60, -- km/h Akatsia max 60 km/h
+
+              onRoad = true,
+
+              maxDistance = 20,
+
+              maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+
+
+          }
+
+
+          logging('info', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
+
+          activeGO_TO_ARTY( groupset, targetZoneForBlueArty.TSKHINVALI_2[1], param, true, 70 )
+
+      else
+
+          logging('warning', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
+
+      end -- if elseif else
+
+
+    end -- end function warehouse.Kvemo_Sba:OnAfterSelfRequest( From,Event,To,groupset,request )
+
+
+end -- wh_activation.Warehouse.red.Kvemo_Sba then
+
+-- END red Kvemo_Sba warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------- red BITETA warehouse operations ------------------------------------------------------------------------------------------------------------
+
+if wh_activation.Warehouse.red[ 1 ][ 1 ] then
+
+    -- Biteta warehouse e' una supply line warehouse: funziona da collegamento per il trasferimento degli asset tra i diversi nodi della supply line
+
+
+
+    warehouse.Biteta:SetSpawnZone(ZONE:New("Warehouse Biteta Spawn Zone"))
+
+    warehouse.Biteta:Start()
+
+    -- Biteta: front farp-warehouse.  Receive resupply from Didi
+
+    warehouse.Biteta:AddAsset(                "Infantry Platoon Alpha", 50 )
+    warehouse.Biteta:AddAsset(              ground_group_template_red.antitankC,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.antitankB,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              air_template_red.CAS_MI_24V,                20,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]    ) -- attack
+    warehouse.Biteta:AddAsset(              air_template_red.TRAN_MI_24,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- attack
+    warehouse.Biteta:AddAsset(              air_template_red.AFAC_MI_24,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+    warehouse.Biteta:AddAsset(              air_template_red.AFAC_Mi_8MTV2,             10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+
+    logging('info', { 'main' , 'addAsset Biteta warehouse' } )
+
+
+    local ambrolauri_attack_1 = 'AMBROLAURI_attack_1'
+    local chiatura_attack_1 = 'CHIATURA_attack_1'
+
+    logging('info', { 'main' , 'addRequest Biteta warehouse'} )
+
+    --local depart_time = defineRequestPosition(3)
+    local biteta_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+
+    local num_mission = 3
+    local num_mission_helo = 1
+    local depart_time = defineRequestPosition( num_mission )
+    local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+    local pos = 1
+    local pos_heli = 1
+    local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local biteta_sched = SCHEDULER:New( warehouse.Biteta,
+
+      function()
+
+        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
+        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
+        if wh_activation.Warehouse.red[ 1 ][ 14 ] and pos <= num_mission  then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Alagir,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Alagir' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 1 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Biteta:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2] ), nil, nil, nil, 'AFAC_CZ_ONI') pos_heli = pos_heli + 1 end
+        --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' ) pos = pos + 1 end
+
+        logging('finer', { 'Biteta scheduler function' , 'addRequest Biteta warehouse'} )
+
+      end, {}, start_ground_sched * biteta_efficiency_influence, sched_interval, rand_ground_sched
+
+    )  -- END SCHEDULER
+
+
+
+    -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
+    -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
+
+    function warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+        logging('enter', 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
         local groupset = groupset --Core.Set#SET_GROUP
         local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
         local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
         -- Get assignment of this request.
-        local assignment = warehouse.Kvemo_Sba:GetAssignment(request)
+        local assignment=warehouse.Biteta:GetAssignment(request)
 
-        logging('finer', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+        logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-        if assignment == 'tkviavi_attack_1' then
+        if assignment == 'AMBROLAURI_attack_1' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
-
-
-        elseif assignment == 'tkviavi_attack_2' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
 
 
-        elseif assignment == 'tseveri_attack_1' then
+        elseif assignment == 'CHIATURA_attack_1' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-        elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
-
-          activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
-        elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+        elseif assignment == 'AFAC_CZ_ONI' then
 
-          activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
-
-
-
-        elseif assignment == 'AFAC_Khashuri_Est' then -- att: Jtac are ground mission (i think)
-
-          activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Khashuri_Est[ 1 ] )
+            activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
 
 
-
-        elseif assignment == 'JTAC Tsveri' then -- att: Jtac are ground mission (i think)
-
-          activeJTAC( 'ground', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
-
-
-
-        -- launch mission function: arty resupply
-        elseif assignment == 'Kvemo_Artillery_Resupply' then
-
-          groupResupplySet = groupset
-          -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
-          --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
-          activeGO_TO_ZONE_GROUND( groupset, targetZoneForBlueArty.TSKHINVALI_2[1], false, 1 )
-
-
-
-        -- launch mission function: arty
-        elseif assignment == 'Kvemo_Artillery_Ops' then
-
-            nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
-            -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
-            activateDetectionReport = false
-
-
-            -- lista dei target e delle ammo
-            param = {
-
-                listTargetInfo = {
-
-                    --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
-
-                    [1] = {
-                      targetCoordinate = targetZoneForRedArty.TKVIAVI_2[1]:GetRandomCoordinate(),
-                      priority = 10,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 10,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [2] = {
-                      targetCoordinate = targetZoneForRedArty.TKVIAVI_3[1]:GetRandomCoordinate(),
-                      priority = 50,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 7,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [3] = {
-                      targetCoordinate = targetZoneForRedArty.TKVIAVI_4[1]:GetRandomCoordinate(),
-                      priority = 50,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 7,
-                      weaponType = ARTY.WeaponType.Auto
-                    }
-
-                },
-
-                commandCenter = blue_command_center,
-
-                resupplySet = groupResupplySet,
-
-                speed = 60, -- km/h Akatsia max 60 km/h
-
-                onRoad = true,
-
-                maxDistance = 20,
-
-                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
-
-
-            }
-
-
-            logging('info', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
-
-            activeGO_TO_ARTY( groupset, targetZoneForBlueArty.TSKHINVALI_2[1], param, true, 70 )
 
         else
 
-            logging('warning', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+            logging('warning', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
 
+        end -- if elsif else
 
-        end -- if elseif else
 
+        logging('exit', 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
-      end -- end function warehouse.Kvemo_Sba:OnAfterSelfRequest( From,Event,To,groupset,request )
+    end -- end function
 
 
-  end -- wh_activation.Warehouse.red.Kvemo_Sba then
 
-  -- END red Kvemo_Sba warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
+end -- wh_activation.Warehouse.red.Biteta then
 
+-- END red BITETA warehouse operations --------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -4913,151 +4903,152 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  ---------------------------------------------- red BITETA warehouse operations ------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse.red[ 1 ][ 1 ] then
 
-      -- Biteta warehouse e' una supply line warehouse: funziona da collegamento per il trasferimento degli asset tra i diversi nodi della supply line
 
 
 
-      warehouse.Biteta:SetSpawnZone(ZONE:New("Warehouse Biteta Spawn Zone"))
 
-      warehouse.Biteta:Start()
 
-      -- Biteta: front farp-warehouse.  Receive resupply from Didi
 
-      warehouse.Biteta:AddAsset(                "Infantry Platoon Alpha", 50 )
-      warehouse.Biteta:AddAsset(              ground_group_template_red.antitankC,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
-      warehouse.Biteta:AddAsset(              ground_group_template_red.antitankB,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
-      warehouse.Biteta:AddAsset(              air_template_red.CAS_MI_24V,                20,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]    ) -- attack
-      warehouse.Biteta:AddAsset(              air_template_red.TRAN_MI_24,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- attack
-      warehouse.Biteta:AddAsset(              air_template_red.AFAC_MI_24,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
-      warehouse.Biteta:AddAsset(              air_template_red.AFAC_Mi_8MTV2,             10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
 
-      logging('info', { 'main' , 'addAsset Biteta warehouse' } )
 
 
-      local ambrolauri_attack_1 = 'AMBROLAURI_attack_1'
-      local chiatura_attack_1 = 'CHIATURA_attack_1'
 
-      logging('info', { 'main' , 'addRequest Biteta warehouse'} )
 
-      --local depart_time = defineRequestPosition(3)
-      local biteta_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
 
-      local num_mission = 3
-      local num_mission_helo = 1
-      local depart_time = defineRequestPosition( num_mission )
-      local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
-      local pos = 1
-      local pos_heli = 1
-      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local biteta_sched = SCHEDULER:New( warehouse.Biteta,
 
-        function()
 
-          if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
-          if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
-          if wh_activation.Warehouse.red[ 1 ][ 14 ] and pos <= num_mission  then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Alagir,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Alagir' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red[ 1 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Biteta:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2] ), nil, nil, nil, 'AFAC_CZ_ONI') pos_heli = pos_heli + 1 end
-          --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' ) pos = pos + 1 end
 
-          logging('finer', { 'Biteta scheduler function' , 'addRequest Biteta warehouse'} )
 
-        end, {}, start_ground_sched * biteta_efficiency_influence, sched_interval, rand_ground_sched
 
-      )  -- END SCHEDULER
 
 
 
-      -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
-      -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
 
-      function warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-          logging('enter', 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
-          local groupset = groupset --Core.Set#SET_GROUP
-          local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-          local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
-          -- Get assignment of this request.
-          local assignment=warehouse.Biteta:GetAssignment(request)
 
-          logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-          if assignment == 'AMBROLAURI_attack_1' then
 
-              activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
 
 
-          elseif assignment == 'CHIATURA_attack_1' then
 
-              activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
-          elseif assignment == 'AFAC_CZ_ONI' then
 
-              activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
 
 
 
-          else
 
-              logging('warning', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
 
-          end -- if elsif else
 
 
-          logging('exit', 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
-      end -- end function
 
 
 
 
-  end -- wh_activation.Warehouse.red.Biteta then
 
-  -- END red BITETA warehouse operations --------------------------------------------------------------------------------------------------------------------------
 
 
 
 
 
 
+------------------------------------------------- red Warehouse ALAGIR operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
+if wh_activation.Warehouse.red[ 3 ][ 1 ] then
 
 
+    warehouse.Alagir:Start()
 
+    -- Alagir: link wharehouse.  Send resupply to Didi, Kvemo_Sba. Receive resupply from Beslan, Mineralnye, Nalchik
 
+    logging('info', { 'main' , 'addAsset Kvemo_Sba warehouse'} )
 
+    warehouse.Alagir:AddAsset(               air_template_red.CAS_MI_24V,               52,                WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter_bomber[2])]    ) -- attack
+    warehouse.Alagir:AddAsset(               air_template_red.CAS_Mi_8MTV2,             52,                WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
+    warehouse.Alagir:AddAsset(               air_template_red.TRAN_MI_26,               50,                WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
+    warehouse.Alagir:AddAsset(               air_template_red.AFAC_MI_24,               50,                WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+    warehouse.Alagir:AddAsset(               air_template_red.AFAC_Mi_8MTV2,            50,                WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+    warehouse.Alagir:AddAsset(               ground_group_template_red.antitankA,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]  )
+    warehouse.Alagir:AddAsset(               ground_group_template_red.antitankB,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]  )
+    warehouse.Alagir:AddAsset(               ground_group_template_red.antitankC,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]  )
+    warehouse.Alagir:AddAsset(               ground_group_template_red.ArmorA,          50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]    ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.ArmorB,          50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]   ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiAkatsia,     50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]   ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiGwozdika,    50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]    ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiKatiusha,    50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]    ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]    ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.mechanizedA,     50,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]    ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.mechanizedB,     50,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]    ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.mechanizedC,     50,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.antitankA,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]   ) -- Ground troops
+    warehouse.Alagir:AddAsset(               ground_group_template_red.TransportA,      50,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- transport
+    warehouse.Alagir:AddAsset(               ground_group_template_red.TransportB,      50,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- transport
+    warehouse.Alagir:AddAsset(               ground_group_template_red.TroopTransport,  50,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- transport troop
 
 
 
 
+    logging('info', { 'main' , 'addrequest Alagir warehouse'} )
 
+    local alagir_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+    local num_mission = 3
+    local num_mission_helo = 2
+    local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
+    local depart_time = defineRequestPosition( num_mission ) -- ground mission
+    local pos = 1
+    local pos_heli = 1
+    local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local alagir_sched = SCHEDULER:New( warehouse.Alagir,
 
+      function()
 
+        -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+        if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'Transfer to Biteta') pos_heli = pos_heli + 1  end
+        if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'Transfer to Kvemo_Sba') pos_heli = pos_heli + 1  end
+        -- inserisci missioni cargoSet
 
+        -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
+        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Batumi' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Alagir,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Alagir' ) pos = pos + 1  end
 
+        logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
 
+      end, {}, start_ground_sched * alagir_efficiency_influence, sched_interval, rand_ground_sched
 
+    ) -- END SCHEDULER
 
 
+    -- Take care of the spawned units.
+    function warehouse.Alagir:OnAfterSelfRequest( From,Event,To,groupset,request )
 
+      logging('enter', 'warehouse.Alagir:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+      logging('info', { 'main' , 'warehouse.Alagir:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
 
+      local groupset = groupset --Core.Set#SET_GROUP
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      -- Get assignment of this request.
+      local assignment = warehouse.Kvemo_Sba:GetAssignment(request)
 
+      logging('finer', { 'warehouse.Alagir:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
+    end -- end function warehouse.Alagir:OnAfterSelfRequest( From,Event,To,groupset,request )
 
 
 
+end -- wh_activation.Warehouse.red.Alagir then
 
+------------------------------------------------- END Warehouse ALAGIR operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -5117,110 +5108,116 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+---------------------------------------------------------------- red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
+if wh_activation.Warehouse_AB.red[ 4 ][ 1 ] then
 
 
-  ------------------------------------------------- red Warehouse ALAGIR operations -------------------------------------------------------------------------------------------------------------------------
+    logging('info', { 'main' , 'init Warehouse MINERALNYE operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
+    warehouse.Mineralnye:Start()
 
 
-  if wh_activation.Warehouse.red[ 3 ][ 1 ] then
+    -- Mineralnye e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
+    -- Send resupply to Kvemo_Sba
 
+    logging('info', { 'main' , 'addAsset Mineralnye warehouse'} )
 
-      warehouse.Alagir:Start()
+    warehouse.Mineralnye:AddAsset(            air_template_red.CAP_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])] ) -- Fighter
+    warehouse.Mineralnye:AddAsset(            air_template_red.GCI_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  ) -- Bomber - Cas
+    warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            15,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.GA_Su_25_Missile,          10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.AWACS_TU_22,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.awacs[1], AssetSkill.red.awacs[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.REC_SU_24MR,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.awacs[1], AssetSkill.red.awacs[2])]  )
+    warehouse.Mineralnye:AddAsset(            air_template_red.CAS_MI_24V,                10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]       ) -- attack
+    warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_24,                24,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
+    warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]    ) -- transport
+    warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]    ) -- transport
+    warehouse.Mineralnye:AddAsset(            ground_group_template_red.Truck,             3 )
 
-      -- Alagir: link wharehouse.  Send resupply to Didi, Kvemo_Sba. Receive resupply from Beslan, Mineralnye, Nalchik
 
-      logging('info', { 'main' , 'addAsset Kvemo_Sba warehouse'} )
 
-      warehouse.Alagir:AddAsset(               air_template_red.CAS_MI_24V,               52,                WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter_bomber[2])]    ) -- attack
-      warehouse.Alagir:AddAsset(               air_template_red.CAS_Mi_8MTV2,             52,                WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
-      warehouse.Alagir:AddAsset(               air_template_red.TRAN_MI_26,               50,                WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
-      warehouse.Alagir:AddAsset(               air_template_red.AFAC_MI_24,               50,                WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
-      warehouse.Alagir:AddAsset(               air_template_red.AFAC_Mi_8MTV2,            50,                WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
-      warehouse.Alagir:AddAsset(               ground_group_template_red.antitankA,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]  )
-      warehouse.Alagir:AddAsset(               ground_group_template_red.antitankB,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]  )
-      warehouse.Alagir:AddAsset(               ground_group_template_red.antitankC,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]  )
-      warehouse.Alagir:AddAsset(               ground_group_template_red.ArmorA,          50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]    ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.ArmorB,          50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]   ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiAkatsia,     50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]   ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiGwozdika,    50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]    ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiKatiusha,    50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]    ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.ArtiHeavyMortar, 50,                WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])]    ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.mechanizedA,     50,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]    ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.mechanizedB,     50,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]    ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.mechanizedC,     50,                WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.antitankA,       50,                WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])]   ) -- Ground troops
-      warehouse.Alagir:AddAsset(               ground_group_template_red.TransportA,      50,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- transport
-      warehouse.Alagir:AddAsset(               ground_group_template_red.TransportB,      50,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- transport
-      warehouse.Alagir:AddAsset(               ground_group_template_red.TroopTransport,  50,                WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])]   ) -- transport troop
+    logging('info', { 'main' , 'addrequest Mineralnye warehouse'} )
 
 
 
 
-      logging('info', { 'main' , 'addrequest Alagir warehouse'} )
+    local mineralnye_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+    local num_mission = 9
+    local depart_time = defineRequestPosition( num_mission )
+    local pos = 1
+    local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+    local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+    local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-      local alagir_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-      local num_mission = 3
-      local num_mission_helo = 2
-      local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
-      local depart_time = defineRequestPosition( num_mission ) -- ground mission
-      local pos = 1
-      local pos_heli = 1
-      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local mineralnye_sched = SCHEDULER:New( staticObject.Warehouse_AB.red[ 4 ][ 1 ],
 
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local alagir_sched = SCHEDULER:New( warehouse.Alagir,
+      function()
 
-        function()
+        -- Priority Mission Request
+        if wh_activation.Warehouse_AB.red[ 4 ][ 9 ]  then warehouse.Mineralnye:__AddRequest( startReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_TU_22, 1, nil, nil, nil, "AWACS")  end
+        -- Normal Mission Request
+        if wh_activation.Warehouse_AB.red[ 4 ][ 15 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 8 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 5 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Missile_R, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 4 ][ 11 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Alagir, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
 
-          -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'Transfer to Biteta') pos_heli = pos_heli + 1  end
-          if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'Transfer to Kvemo_Sba') pos_heli = pos_heli + 1  end
-          -- inserisci missioni cargoSet
 
-          -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-          if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Batumi' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
-          if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Alagir,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Alagir' ) pos = pos + 1  end
+        logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
 
-          logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
+    end, {}, start_sched * mineralnye_efficiency_influence, sched_interval, rand_sched
 
-        end, {}, start_ground_sched * alagir_efficiency_influence, sched_interval, rand_ground_sched
+    ) -- end mineralnye_sched = SCHEDULER:New( nil, ..)
 
-      ) -- END SCHEDULER
 
+      -- Do something with the spawned aircraft.
+    function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-      -- Take care of the spawned units.
-      function warehouse.Alagir:OnAfterSelfRequest( From,Event,To,groupset,request )
+      --local groupset=groupset --Core.Set#SET_GROUP
+      --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      logging('enter', 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+      logging('info', { 'main' , 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
 
-        logging('enter', 'warehouse.Alagir:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-        logging('info', { 'main' , 'warehouse.Alagir:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      if request.assignment == "AFAC_afacZone.Tskhunvali_Tkviavi" then
 
-        local groupset = groupset --Core.Set#SET_GROUP
-        local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        -- Get assignment of this request.
-        local assignment = warehouse.Kvemo_Sba:GetAssignment(request)
+        local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
 
-        logging('finer', { 'warehouse.Alagir:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
+        assignDetectionGroupSetTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-      end -- end function warehouse.Alagir:OnAfterSelfRequest( From,Event,To,groupset,request )
 
+      elseif request.assignment == "AWACS" then
 
+        logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. redAwacsZone.alagir:GetName() } )
 
-  end -- wh_activation.Warehouse.red.Alagir then
+        activeAWACS( groupset, warehouse.Mineralnye, red_command_center, nil, redAwacsZone.alagir, math.random(6000, 9000), 6000 )
 
-  ------------------------------------------------- END Warehouse ALAGIR operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
 
 
+      elseif request.assignment == "BAI POINT" then
 
 
+        local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]--avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+        local patrolZone = redPatrolZone.mineralnye[1]
 
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
+        logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
+        activeBAI( 'Interdiction from Mineralnye against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
@@ -5230,169 +5227,218 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+    elseif request.assignment == "FIGHTER SWEEP" then
 
+        local homeAirbase =  AIRBASE.Caucasus.Mineralnye_Vody
+        local patrolZone =  redPatrolZone.mineralnye[1] -- CAMBIA IN red sweep #00..
+        local engageRange = math.random(10000, 20000)
+        local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 9000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
 
+        logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
 
 
 
 
 
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING AIRBASE" then
 
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Mineralnye
+        local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
 
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING WAREHOUSE" then
 
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Mineralnye
+        local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
 
 
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING MIL ZONE" then
 
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Mineralnye
+        local target = targetZone.military_base.blue[ math.random( 1, #targetZone.military_base.blue ) ][ 1 ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
 
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING FARM" then
 
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Mineralnye
+        local target = targetZone.farm.blue[ math.random( 1, #targetZone.farm.blue ) ][ 1 ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
-  ---------------------------------------------------------------- red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
+        logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-  if wh_activation.Warehouse_AB.red[ 4 ][ 1 ] then
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-      logging('info', { 'main' , 'init Warehouse MINERALNYE operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
-      warehouse.Mineralnye:Start()
 
 
-      -- Mineralnye e' una delle principale warehouse russe nell'area. Qui sono immagazzinate la maggior parte degli asset da impiegare nella zona dei combattimenti
-      -- Send resupply to Kvemo_Sba
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING STRUCTURE" then
 
-      logging('info', { 'main' , 'addAsset Mineralnye warehouse'} )
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-      warehouse.Mineralnye:AddAsset(            air_template_red.CAP_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])] ) -- Fighter
-      warehouse.Mineralnye:AddAsset(            air_template_red.GCI_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  ) -- Bomber - Cas
-      warehouse.Mineralnye:AddAsset(            air_template_red.BOM_TU_22_Bomb,            15,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.GA_Su_25_Missile,          10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.AWACS_TU_22,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.awacs[1], AssetSkill.red.awacs[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.REC_SU_24MR,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.awacs[1], AssetSkill.red.awacs[2])]  )
-      warehouse.Mineralnye:AddAsset(            air_template_red.CAS_MI_24V,                10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]       ) -- attack
-      warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_24,                24,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
-      warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]    ) -- transport
-      warehouse.Mineralnye:AddAsset(            air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]    ) -- transport
-      warehouse.Mineralnye:AddAsset(            ground_group_template_red.Truck,             3 )
+        local home = warehouse.Mineralnye
+        local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-      logging('info', { 'main' , 'addrequest Mineralnye warehouse'} )
 
 
 
 
-      local mineralnye_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
-      local num_mission = 9
-      local depart_time = defineRequestPosition( num_mission )
-      local pos = 1
-      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local mineralnye_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Mineralnye[ 1 ],
 
-        function()
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+  elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-          -- Priority Mission Request
-          if wh_activation.Warehouse_AB.red[ 4 ][ 9 ]  then warehouse.Mineralnye:__AddRequest( startReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_TU_22, 1, nil, nil, nil, "AWACS")  end
-          -- Normal Mission Request
-          if wh_activation.Warehouse_AB.red[ 4 ][ 15 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 8 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 5 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Missile_R, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 7 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 4 ][ 11 ] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Alagir, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+        -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+        --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Mineralnye", 5000, nil)
+        --local pickupZone =  cargoZone.Warehouse_AB.red.Mineralnye
+        --local deployZone =  cargoZone.Warehouse.red.Alagir
+        --local speed = math.random( 100 , 250 )
 
+        --logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-          logging('info', { 'main' , 'Mineralnye scheduler - start time:' .. start_sched *  mineralnye_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
+        --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
-      end, {}, start_sched * mineralnye_efficiency_influence, sched_interval, rand_sched
+  elseif request.assignment == "AWACS" then
 
-      ) -- end mineralnye_sched = SCHEDULER:New( nil, ..)
+        --local homeAirbase =  AIRBASE.Caucasus.Batumi
+        --local patrolZone =  bluePatrolZone.kutaisi[1]
+        --local engageRange = math.random(10000, 20000)
+        --local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+        --local patrolFloorAltitude = 7000
+        --local patrolCeilAltitude = 9000
+        --local minSpeedPatrol = 400
+        --local maxSpeedPatrol = 600
+        --local maxSpeedEngage = 1000
+        --local minSpeedEngage = 600
 
+        logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName() } )
+        --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-        -- Do something with the spawned aircraft.
-      function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
+        -- addGroupSet(detectionGroupSetBlue, groupset)
 
-        --local groupset=groupset --Core.Set#SET_GROUP
-        --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        logging('enter', 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-        logging('info', { 'main' , 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
+        activeAWACS( groupset, warehouse.Mineralnye, red_command_center, nil, redAwacsZone.alagir, math.random(7000,9000), 5000 )
 
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if request.assignment == "AFAC_afacZone.Tskhunvali_Tkviavi" then
 
-          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
 
-          assignDetectionGroupSetTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+      else
 
+        logging('warning', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
-        elseif request.assignment == "AWACS" then
+      end-- end if..elseif
 
-          logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. redAwacsZone.alagir:GetName() } )
+      logging('exit', 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
-          activeAWACS( groupset, warehouse.Mineralnye, red_command_center, nil, redAwacsZone.alagir, math.random(6000, 9000), 6000 )
+    end -- end function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
 
+    --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+    function warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)
 
+        local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
+        logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
-        elseif request.assignment == "BAI POINT" then
 
-          --[[
-          local avalaible_target_zones = {
 
-              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
-              zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
-              zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1],
-              zoneTargetStructure.Blue_Farm[math.random( 1, #zoneTargetStructure.Blue_Farm) ][1]
+    end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-          }
-          ]]
 
+end -- end wh_activation.Warehouse_AB.red[ 4 ] then
+---------------------------------------------------------------- END red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]--avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-          local patrolZone = redPatrolZone.mineralnye[1]
 
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
-          logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-          activeBAI( 'Interdiction from Mineralnye against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
@@ -5402,229 +5448,1054 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------ red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+if wh_activation.Warehouse_AB.red[ 3 ][1] then
+
+
+    logging('info', { 'main' , 'addAsset Mozdok warehouse'} )
+
+    warehouse.Mozdok:Start()
+
+    warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]   )
+    warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]   )
+    warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.awacs[1], AssetSkill.red.awacs[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]     ) -- attack
+    warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,         10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.GA_Su_25_Bomb,             10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
+    warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- transport
+    warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- transport
+
+    logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
+
+    local mozdok_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+    local num_mission = 10
+    local depart_time = defineRequestPosition(9)
+    local pos = 1
+    local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+    local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+    local requestStartTime = startReqTimeAir + offSetStartSchedule
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local mozdok_sched = SCHEDULER:New( staticObject.Warehouse_AB.red[ 3 ][ 1 ],
+
+      function()
+
+        -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+        if wh_activation.Warehouse_AB.red[ 3 ][ 8 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 8 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_SU_24M_HRocket, math.random( AssetQty.red.air.ga[1], AssetQty.red.air.ga[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 5 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 11 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvemo_Sba, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 3 ][ 15 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
+
+        logging('info', { 'main' , 'Mozdok scheduler - start time:' .. start_sched *  mozdok_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
+
+
+    end, {}, start_sched * mozdok_efficiency_influence, sched_interval, rand_sched
+
+    ) -- end mozdok_sched = SCHEDULER:New( nil, ..)
+
+    -- Do something with the spawned aircraft.
+    function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+      --local groupset=groupset --Core.Set#SET_GROUP
+      --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      logging('enter', 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+      logging('info', { 'main' , 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      if request.assignment == "AFAC_afacZone.Tskhunvali_Tkviavi" then
+
+        local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
+
+        assignDetectionGroupSetTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+
+
+      elseif request.assignment == "BAI POINT" then
+
+
+        local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+        local patrolZone = redPatrolZone.beslan[1]
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Mozdok against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      elseif request.assignment == "BAI TARGET" then
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+        local percRequestKill = math.random( 0 , 100 ) * 0.01
+        local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
+        local patrolZone = redPatrolZone.beslan[1]
+        local engageZone = frontZone.blue[ 1, math.random(1, #frontZone.blue ) ]
+
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Mozdok', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+    elseif request.assignment == "FIGHTER SWEEP" then
+
+        local homeAirbase =  AIRBASE.Caucasus.Mozdok
+        local patrolZone =  redPatrolZone.beslan[1]
+        local engageRange = math.random(10000, 20000)
+        local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 9000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING AIRBASE" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Mozdok
+        local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING WAREHOUSE" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Mozdok
+        local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING MIL ZONE" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Mozdok
+        local target = targetZone.military_base.blue[ math.random( 1, #targetZone.military_base.blue ) ][ 1 ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING STRUCTURE" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Mozdok
+        local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING FARM" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Mozdok
+        local target = targetZone.farm.blue[ math.random( 1, #targetZone.farm.blue ) ][ 1 ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+      elseif request.assignment == "TRANSPORT INFANTRY FARP" then
+
+
+
+        -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+        --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Mozdok", 5000, nil)
+
+        --local pickupZone =  cargoZone.Warehouse_AB.red.Mozdok
+        --local deployZone =  cargoZone.Warehouse.red.Alagir
+        --local speed = math.random( 100 , 250 )
+
+        --logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+
+          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+
+
+      else
+
+        logging('warning', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+
+      end -- end if..elseif
+
+      logging('exit', 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+
+    end -- end function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+
+
+
+    --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+    function warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)
+
+      local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+      logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+
+
+
+    end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+
+end -- end wh_activation.Warehouse_AB.red[ 3 ] then
+------------------------------------------------------------------ END red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------ red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+if wh_activation.Warehouse_AB.red[ 1 ][1] then
+
+    logging('info', { 'main' , 'addAsset Beslan warehouse'} )
+
+    warehouse.Beslan:Start()
+
+    -- Beslan e' una delle principale warehouse russe nell'area.
+    -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
+
+    warehouse.Beslan:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]       ) -- attack
+    warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Cluster,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.GA_Su_25_Missile,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_24_Bomb,            10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_24_Structure,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_17_Structure,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])] )
+    warehouse.Beslan:AddAsset(               air_template_red.REC_SU_24MR,               10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])] )
+    warehouse.Beslan:AddAsset(               air_template_red.AWACS_Mig_25RTB,           10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])] )
+    warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
+    warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
+    warehouse.Beslan:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
+    warehouse.Beslan:AddAsset(               air_template_red.TRAN_YAK_40,                4,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- transport
+    warehouse.Beslan:AddAsset(               air_template_red.AFAC_L_39C,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+    warehouse.Beslan:AddAsset(               air_template_red.AFAC_Yak_52,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
+
+    logging('info', { 'main' , 'AddRequest Beslan warehouse'} )
+
+
+
+
+    local beslan_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+    local num_mission = 9
+    local depart_time = defineRequestPosition( num_mission )
+    local pos = 1
+    local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+    local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+    local requestStartTime = startReqTimeAir + offSetStartSchedule
+
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local beslan_sched = SCHEDULER:New( staticObject.Warehouse_AB.red[ 1 ][ 1 ],
+
+      function()
+
+        -- Priority Mission Request
+        if wh_activation.Warehouse_AB.red[ 1 ][9] then warehouse.Beslan:__AddRequest( startReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, 1, nil, nil, nil, "AWACS")  end -- sostituire con un AWACS su 24 da realizzare
+        -- Normal Mission Request
+        if wh_activation.Warehouse_AB.red[ 1 ][8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random( AssetQty.red.air.cas[1], AssetQty.red.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random( AssetQty.red.air.cas[1], AssetQty.red.air.cas[2] ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI BOMBING STRUCTURE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_17_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Missile_R, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE Sachhere") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE TBILISI") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][11] and pos <= num_mission then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvemo_Sba, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 1 ][15] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
+
+        logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * ( 1 + rand_sched)} )
+
+    end, {}, start_sched * beslan_efficiency_influence, sched_interval, rand_sched
+
+    )
+
+
+    -- Do something with the spawned aircraft.
+    function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+      --local groupset=groupset --Core.Set#SET_GROUP
+      --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      logging('enter', 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+      logging('info', { 'main' , 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
+
+        local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
+
+        assignDetectionGroupSetTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+
+
+
+      elseif request.assignment == "BAI TARGET" then
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+        local percRequestKill = math.random( 0 , 100 ) * 0.01
+        local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
+        local patrolZone = redPatrolZone.nalchik[1]
+        local engageZone = frontZone.blue[ 1, math.random(1, #frontZone.blue ) ]
+
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Beslan', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+      elseif request.assignment == "AWACS" then
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. redAwacsZone.beslan:GetName() } )
+
+        activeAWACS( groupset, warehouse.Beslan, red_command_center, nil, redAwacsZone.beslan, math.random(6000, 9000), 6000 )
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BAI TARGET 2" then
+
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+        local percRequestKill = math.random( 0 , 100 ) * 0.01
+        local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
+        local patrolZone = redPatrolZone.beslan[1]
+        local engageZone = frontZone.blue[ 1, math.random(1, #frontZone.blue ) ]
+
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Beslan', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BAI BOMBING STRUCTURE" then
+
+
+        local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+        local patrolZone = redPatrolZone.beslan[1]
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Beslan against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING AIRBASE" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Beslan
+        local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING WAREHOUSE" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Beslan
+        local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING STRUCTURE Sachhere" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Beslan
+        local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING STRUCTURE TBILISI" then
+
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+        local home = warehouse.Beslan
+        local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
+
+        logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+  elseif request.assignment == "TRANSPORT INFANTRY FARP" then
+
+        -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+        --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Beslan", 5000, nil)
+        --local pickupZone =  cargoZone.Warehouse_AB.red.Beslan
+        --local deployZone =  cargoZone.Warehouse.red.Alagir
+        --local speed = math.random( 100 , 250 )
+
+        --logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+
+        --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+
+
+      else
+
+        logging('warning', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+
+      end -- end if..elseif
+
+      logging('exit', 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+
+    end -- end function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+
+    --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+    function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
+
+      local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+      logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+
+
+    end -- end function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
+
+end -- end wh_activation.Warehouse_AB.red[ 1 ] then
+----------------------------------------------------------------- END red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------- red Nalchik warehouse operations ------------------------------------------------------------------------------------------------------------------------
+
+if wh_activation.Warehouse_AB.red[ 2 ][1] then
+
+
+
+    warehouse.Nalchik:Start()
+    -- Nalchik e' una delle principale warehouse russe nell'area.
+    -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
+
+    warehouse.Nalchik:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.CAP_Mig_23MLD,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.GCI_Mig_23MLD,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]       ) -- attack
+    warehouse.Nalchik:AddAsset(               air_template_red.CAS_Mig_27K_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.CAS_Mig_27K_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_ROCKET_Heavy,   10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_ROCKET_Light,   10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_Bomb_Light,     10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.GA_Su_25_Bomb,             10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.BOM_MIG_27K_Structure,     10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.BOM_MIG_27K_Airbase,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
+    warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
+    warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
+    warehouse.Nalchik:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
+    warehouse.Nalchik:AddAsset(               air_template_red.TRAN_YAK_40,            10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
+    warehouse.Nalchik:AddAsset(               air_template_red.AFAC_L_39C,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])]  ) -- AFAC
+    warehouse.Nalchik:AddAsset(               air_template_red.AFAC_Yak_52,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])]  ) -- AFAC
+    warehouse.Nalchik:AddAsset(               air_template_red.REC_Mig_25RTB,             10,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])]  ) -- AFAC
+
+    logging('info', { 'main' , 'addAsset Nalchik warehouse'} )
+
+
+
+    logging('info', { 'main' , 'addrequest Nalchik warehouse'} )
+
+
+    local nalchik_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+    local num_mission = 9
+    local depart_time = defineRequestPosition( num_mission )
+    local pos = 1
+    local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+    local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+    local requestStartTime = startReqTimeAir + offSetStartSchedule
+
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local nalchik_sched = SCHEDULER:New( staticObject.Warehouse_AB.red[ 2 ][ 1 ],
+
+      function()
+
+        -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+        if wh_activation.Warehouse_AB.red[ 2 ][8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Rocket, math.random(AssetQty.red.air.cas[1], AssetQty.red.air.cas[2]), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][5] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2]), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random( AssetQty.red.air.ga[1], AssetQty.red.air.ga[2] ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.cas[1], AssetQty.red.air.cas[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KHASHURI") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][11] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Alagir, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2]), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+        if wh_activation.Warehouse_AB.red[ 2 ][15] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_Mig_25RTB, 1, nil, nil, nil, "AFAC_ZONE_Tskhunvali_Tkviavi") pos = pos + 1  end
+        logging('info', { 'main' , 'Nalchik scheduler - start time:' .. start_sched *  nalchik_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
+
+    end, {}, start_sched * nalchik_efficiency_influence, sched_interval, rand_sched
+
+    )
+
+
+    -- Do something with the spawned aircraft.
+    function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+      --local groupset=groupset --Core.Set#SET_GROUP
+      --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      logging('enter', 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+      logging('info', { 'main' , 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      if assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+        local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
+
+        assignDetectionGroupTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+
+      elseif request.assignment == "BAI TARGET" then
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+        local percRequestKill = math.random( 0 , 100 ) * 0.01
+        local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
+        local patrolZone = redPatrolZone.nalchik[1]
+        local engageZone = frontZone.blue[ 1, math.random(1, #frontZone.blue ) ]
+
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Nalchik', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
       elseif request.assignment == "FIGHTER SWEEP" then
 
-          local homeAirbase =  AIRBASE.Caucasus.Mineralnye_Vody
-          local patrolZone =  redPatrolZone.mineralnye[1] -- CAMBIA IN red sweep #00..
-          local engageRange = math.random(10000, 20000)
-          local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 9000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
 
-          logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+        local homeAirbase =  AIRBASE.Caucasus.Nalchik
+        local patrolZone =  redPatrolZone.nalchik[1]
+        local engageRange = math.random(10000, 20000)
+        local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 9000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
 
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING AIRBASE" then
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+      ------------------------------------------------------------------------------------------------------ assignment for BAI
+      elseif request.assignment == "BAI TARGET 2" then
 
-          local home = warehouse.Mineralnye
-          local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
 
-          logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+        local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+        local patrolZone = redPatrolZone.nalchik[1]
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
+        activeBAI( 'Interdiction from Nalchik against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING WAREHOUSE" then
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+      ------------------------------------------------------------------------------------------------------ assignment for BAI
+      elseif request.assignment == "BAI POINT" then
 
-          local home = warehouse.Mineralnye
-          local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
 
-          logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+        local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+        local patrolZone = redPatrolZone.nalchik[1]
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
+        activeBAI( 'Interdiction from Nalchik against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING MIL ZONE" then
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-          local home = warehouse.Mineralnye
-          local target = zoneTargetStructure.Blue_Military_Base[ math.random( 1, #zoneTargetStructure.Blue_Military_Base ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
 
-          logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING AIRBASE" then
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Nalchik
+        local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING FARM" then
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-          local home = warehouse.Mineralnye
-          local target = zoneTargetStructure.Blue_Farm[ math.random( 1, #zoneTargetStructure.Blue_Farm ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
 
-          logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING WAREHOUSE" then
 
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Nalchik
+        local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING STRUCTURE" then
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-          local home = warehouse.Mineralnye
-          local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
 
-          logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
+      elseif request.assignment == "BOMBING STRUCTURE KHASHURI" then
 
+        -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+        local home = warehouse.Nalchik
+        local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ]
+        local toTargetAltitude = math.random(5000, 7000)
+        local toHomeAltitude = math.random(3000, 5000)
+        local bombingDirection = math.random(270, 359)
+        local bombingAltitude = math.random(4000, 6000)
+        local diveBomb = false
+        local bombRunDistance = 20000
+        local bombRunDirection = math.random(270, 359)
+        local speedBombRun = math.random(400, 600)
 
+        logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
+        activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-    elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-          --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Mineralnye", 5000, nil)
-          --local pickupZone =  cargoZone.Warehouse_AB.red.Mineralnye
-          --local deployZone =  cargoZone.Warehouse.red.Alagir
-          --local speed = math.random( 100 , 250 )
 
-          --logging('info', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
-    elseif request.assignment == "AWACS" then
 
-          --local homeAirbase =  AIRBASE.Caucasus.Batumi
-          --local patrolZone =  bluePatrolZone.kutaisi[1]
-          --local engageRange = math.random(10000, 20000)
-          --local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-          --local patrolFloorAltitude = 7000
-          --local patrolCeilAltitude = 9000
-          --local minSpeedPatrol = 400
-          --local maxSpeedPatrol = 600
-          --local maxSpeedEngage = 1000
-          --local minSpeedEngage = 600
 
-          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. bluePatrolZone.kutaisi[1]:GetName() } )
-          --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-          -- addGroupSet(detectionGroupSetBlue, groupset)
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+  elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
-          activeAWACS( groupset, warehouse.Mineralnye, red_command_center, nil, redAwacsZone.alagir, math.random(7000,9000), 5000 )
 
+        -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+        --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
+        --local pickupZone =  cargoZone.Warehouse_AB.red.Nalchik
+        --local deployZone =  cargoZone.Warehouse.red.Alagir
+        --local speed = math.random( 100 , 250 )
 
+        --logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-        else
+        --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
-          logging('warning', { 'warehouse.Myneralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+      else
 
-        end-- end if..elseif
+        logging('warning', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
-        logging('exit', 'warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+      end -- end if ..elseif
 
-      end -- end function warehouse.Mineralnye:OnAfterSelfRequest(From,Event,To,groupset,request)
+      logging('exit', 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
+    end -- end function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
-      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-      function warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)
 
-          local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-          logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
-          --[[
-          -- So we start another request.
-          if request.assignment=="PATROL" then
+    --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+    function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
 
-            logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'Mineralnye scheduled PATROL mission' })
-              --activeCAPWarehouse(groupset, "Patrol Zone Mineralnye", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
+      local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-          end
+      logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
-          if request.assignment=="BAI TARGET" then
 
-            logging('info', { 'warehouse.Mineralnye:OnAfterDelivered(From,Event,To,request)' , 'Mineralnye scheduled BAI TARGET mission' })
-            activeBAIWarehouseA('Interdiction from Mineralnye to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
+    end -- end function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
 
-          end -- end if
-          ]]
+end --  end wh_activation.Warehouse_AB.red[ 2 ] then
+------------------------------------------------------------------- END red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-      end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
 
-  end -- end wh_activation.Warehouse_AB.red[ 4 ] then
-  ---------------------------------------------------------------- END red Mineralnye warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -5677,1764 +6548,184 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  ------------------------------------------------------------------ red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
 
-  if wh_activation.Warehouse_AB.red[ 3 ][1] then
 
 
-      logging('info', { 'main' , 'addAsset Mozdok warehouse'} )
 
-      warehouse.Mozdok:Start()
 
-      warehouse.Mozdok:AddAsset(                air_template_red.GCI_Mig_21Bis,             10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]   )
-      warehouse.Mozdok:AddAsset(                air_template_red.CAP_Mig_21Bis,             15,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]   )
-      warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.BOM_SU_24_Structure,       10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.BOM_TU_22_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.bomber[1], AssetSkill.red.bomber[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.REC_SU_24MR,               10,         WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.awacs[1], AssetSkill.red.awacs[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.CAS_Mig_27K_Rocket,        10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.CAS_MI_24V,                12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]     ) -- attack
-      warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_Bomb,            10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.GA_SU_24M_HRocket,         10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.GA_Su_25_Bomb,             10,         WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_24,                12,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
-      warehouse.Mozdok:AddAsset(                air_template_red.TRAN_MI_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- transport
-      warehouse.Mozdok:AddAsset(                air_template_red.TRAN_AN_26,                10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- transport
 
-      logging('info', { 'main' , 'addrequest Mozdok warehouse'} )
 
-      local mozdok_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
-      local num_mission = 10
-      local depart_time = defineRequestPosition(9)
-      local pos = 1
-      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local mozdok_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Mozdok[ 1 ],
 
-        function()
 
-          -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if wh_activation.Warehouse_AB.red[ 3 ][ 8 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 8 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_SU_24M_HRocket, math.random( AssetQty.red.air.ga[1], AssetQty.red.air.ga[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 5 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 7 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 11 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvemo_Sba, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 3 ][ 15 ] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
 
-          logging('info', { 'main' , 'Mozdok scheduler - start time:' .. start_sched *  mozdok_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
 
 
-      end, {}, start_sched * mozdok_efficiency_influence, sched_interval, rand_sched
 
-      ) -- end mozdok_sched = SCHEDULER:New( nil, ..)
 
-      -- Do something with the spawned aircraft.
-      function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-        --local groupset=groupset --Core.Set#SET_GROUP
-        --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        logging('enter', 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-        logging('info', { 'main' , 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
 
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if request.assignment == "AFAC_afacZone.Tskhunvali_Tkviavi" then
 
-          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
 
-          assignDetectionGroupSetTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
 
 
-        elseif request.assignment == "BAI POINT" then
 
-          --[[
-          local avalaible_target_zones = {
 
-              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
-              zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
-              zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
 
-          }
-          ]]
 
-          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-          local patrolZone = redPatrolZone.beslan[1]
 
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-          activeBAI( 'Interdiction from Mozdok against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        elseif request.assignment == "BAI TARGET" then
+----------------------------------------------------------- BLUE WAREHOUSE OPERATIONS
 
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
-          local patrolZone = redPatrolZone.beslan[1]
-          local engageZone = blueFrontZone.TSVERI[1]
 
-          for _, v in pairs(redFrontZone) do
 
-            if math.random(1,10) < 5 then
 
-              engageZone = v[1]
-              break
 
-            end -- end if
 
-          end -- end for
 
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-          activeBAI( 'Interdiction from Mozdok', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-      elseif request.assignment == "FIGHTER SWEEP" then
 
-          local homeAirbase =  AIRBASE.Caucasus.Mozdok
-          local patrolZone =  redPatrolZone.beslan[1]
-          local engageRange = math.random(10000, 20000)
-          local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 9000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING AIRBASE" then
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+------------------------------------------------- blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------------
 
-          local home = warehouse.Mozdok
-          local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
+ifwh_activation.Warehouse.blue[ 2 ][1] then
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+    warehouse.Zestafoni:SetSpawnZone(ZONE:New("Warehouse ZESTAFONI Spawn Zone"))
+    warehouse.Zestafoni:Start()
 
 
+    warehouse.Zestafoni:AddAsset(           ground_group_template_blue.antitankB,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])] )
+    warehouse.Zestafoni:AddAsset(           ground_group_template_blue.antitankA,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])] )
+    warehouse.Zestafoni:AddAsset(           air_template_blue.TRAN_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  )  -- Transport
+    warehouse.Zestafoni:AddAsset(           air_template_blue.TRAN_UH_60A,                 10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  )  -- Transport
+    warehouse.Zestafoni:AddAsset(           air_template_blue.TRAN_CH_47,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+    warehouse.Zestafoni:AddAsset(           ground_group_template_blue.TransportA,         10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+    warehouse.Zestafoni:AddAsset(           ground_group_template_blue.TransportB,         10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+    warehouse.Zestafoni:AddAsset(           ground_group_template_blue.TroopTransport,     10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+    warehouse.Zestafoni:AddAsset(           air_template_blue.CAS_MI_24V,                  12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]       ) -- Attack
+    warehouse.Zestafoni:AddAsset(           air_template_blue.AFAC_MI_24,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]  ) -- AFAC
+    warehouse.Zestafoni:AddAsset(           air_template_blue.AFAC_SA342L,                 10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]  ) -- AFAC
+    warehouse.Zestafoni:AddAsset(           ground_group_template_blue.ArtilleryResupply,  10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
 
+    logging('info', { 'main' , 'addAsset Zestafoni warehouse'} )
+    logging('info', { 'main' , 'addrequest Zestafoni warehouse'} )
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING WAREHOUSE" then
+    local zestafoni_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+    local num_mission = 5 -- the number of mission request ( _addRequest() )
+    local num_mission_helo = 0
+    local depart_time = defineRequestPosition(num_mission)
+    local pos = 1
+    local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local zestafoni_sched = SCHEDULER:New( warehouse.Zestafoni,
 
-          local home = warehouse.Mozdok
-          local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
+      function()
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+        ifwh_activation.Warehouse.blue[ 2 ][12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'CZ_PEREVI_attack_1' ) pos = pos + 1  end
+        ifwh_activation.Warehouse.blue[ 2 ][12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'CZ_PEREVI_attack_2' ) pos = pos + 1  end
+        ifwh_activation.Warehouse.blue[ 2 ][12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'CZ_ONI_attack_3' ) pos = pos + 1  end
+        ifwh_activation.Warehouse.blue[ 2 ][14] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.TroopTransport, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'Troop_transport' ) pos = pos + 1  end
+        ifwh_activation.Warehouse.blue[ 2 ][14] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.TransportA, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'Ground_transport' ) pos = pos + 1  end
+    end, {}, start_ground_sched * zestafoni_efficiency_influence, sched_interval, rand_ground_sched
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+    ) -- END SCHEDULER
 
+    -- l'eventuale variazione causale dei parametri di missione la devi fare sulla AddRequest: io la farei solo sulle quantit�
 
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING MIL ZONE" then
+    -- Take care of the spawned units.
+    function warehouse.Zestafoni:OnAfterSelfRequest( From,Event,To,groupset,request )
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+      logging('enter', 'warehouse.ZESTAFONI:OnAfterSelfRequest(From,Event,To,groupset,request)' )
 
-          local home = warehouse.Mozdok
-          local target = zoneTargetStructure.Blue_Military_Base[ math.random( 1, #zoneTargetStructure.Blue_Military_Base ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
+      local groupset = groupset --Core.Set#SET_GROUP
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+      -- Get assignment of this request.
+      local assignment = warehouse.Zestafoni:GetAssignment(request)
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+      logging('info', { 'warehouse.ZESTAFONI:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
+      if assignment == 'CZ_PEREVI_attack_1' then
 
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ], 'enemy_attack', false, 1, true, suppr_param )
 
+      elseif assignment == 'CZ_PEREVI_attack_2' then
 
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ], 'enemy_attack', false, 1, true, suppr_param  )
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING STRUCTURE" then
+      elseif assignment == 'CZ_ONI_attack_3' then
 
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][1], 'enemy_attack', false, 1, true, suppr_param  )
 
-          local home = warehouse.Mozdok
-          local target = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
+      else
 
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+          logging('warning', { 'warehouse.Zestafoni:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
 
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+      end
 
+    end -- end function
 
 
+    --[[
 
 
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING FARM" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Mozdok
-          local target = zoneTargetStructure.Blue_Farm[ math.random( 1, #zoneTargetStructure.Blue_Farm ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-        elseif request.assignment == "TRANSPORT INFANTRY FARP" then
-
-
-
-          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-          --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Mozdok", 5000, nil)
-
-          --local pickupZone =  cargoZone.Warehouse_AB.red.Mozdok
-          --local deployZone =  cargoZone.Warehouse.red.Alagir
-          --local speed = math.random( 100 , 250 )
-
-          --logging('info', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-
-            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-
-        else
-
-          logging('warning', { 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
-
-        end -- end if..elseif
-
-        logging('exit', 'warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-
-      end -- end function warehouse.Mozdok:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-
-
-
-      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-      function warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)
-
-        local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-        logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-
-        --[[
-        -- So we start another request.
-        if request.assignment=="PATROL" then
-
-          logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'Mozdok scheduled PATROL mission' })
-            --activeCAPWarehouse(groupset, "Patrol Zone Mozdok", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-
-        end
-
-        if request.assignment=="BAI TARGET" then
-
-          logging('info', { 'warehouse.Mozdok:OnAfterDelivered(From,Event,To,request)' , 'Mozdok scheduled BAI TARGET mission' })
-          activeBAIWarehouseA('Interdiction from Mozdok to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-        end -- end if
-
-        ]]
-
-      end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
-
-  end -- end wh_activation.Warehouse_AB.red[ 3 ] then
-  ------------------------------------------------------------------ END red Mozdok warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------------------------------ red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-  if wh_activation.Warehouse_AB.red[ 1 ][1] then
-
-      logging('info', { 'main' , 'addAsset Beslan warehouse'} )
-
-      warehouse.Beslan:Start()
-
-      -- Beslan e' una delle principale warehouse russe nell'area.
-      -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
-
-      warehouse.Beslan:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]       ) -- attack
-      warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.CAS_Su_17M4_Cluster,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.GA_Su_25_Missile,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_24_Bomb,            10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_24_Structure,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Beslan:AddAsset(               air_template_red.BOM_SU_17_Structure,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])] )
-      warehouse.Beslan:AddAsset(               air_template_red.REC_SU_24MR,               10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])] )
-      warehouse.Beslan:AddAsset(               air_template_red.AWACS_Mig_25RTB,           10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])] )
-      warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
-      warehouse.Beslan:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
-      warehouse.Beslan:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
-      warehouse.Beslan:AddAsset(               air_template_red.TRAN_YAK_40,                4,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])] ) -- transport
-      warehouse.Beslan:AddAsset(               air_template_red.AFAC_L_39C,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
-      warehouse.Beslan:AddAsset(               air_template_red.AFAC_Yak_52,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
-
-      logging('info', { 'main' , 'AddRequest Beslan warehouse'} )
-
-
-
-
-      local beslan_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
-      local num_mission = 9
-      local depart_time = defineRequestPosition( num_mission )
-      local pos = 1
-      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-      local requestStartTime = startReqTimeAir + offSetStartSchedule
-
-
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local beslan_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Beslan[ 1 ],
-
-        function()
-
-          -- Priority Mission Request
-          if wh_activation.Warehouse_AB.red[ 1 ][9] then warehouse.Beslan:__AddRequest( startReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AWACS_Mig_25RTB, 1, nil, nil, nil, "AWACS")  end -- sostituire con un AWACS su 24 da realizzare
-          -- Normal Mission Request
-          if wh_activation.Warehouse_AB.red[ 1 ][8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Cluster, math.random( AssetQty.red.air.cas[1], AssetQty.red.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Su_17M4_Bomb, math.random( AssetQty.red.air.cas[1], AssetQty.red.air.cas[2] ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][8] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI BOMBING STRUCTURE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_17_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Missile_R, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE GORI") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][7] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE TBILISI") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][11] and pos <= num_mission then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvemo_Sba, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 1 ][15] and pos <= num_mission  then warehouse.Beslan:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Beslan, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
-
-          logging('info', { 'main' , 'Beslan scheduler - start time:' .. start_sched *  beslan_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * ( 1 + rand_sched)} )
-
-      end, {}, start_sched * beslan_efficiency_influence, sched_interval, rand_sched
-
-      )
-
-
-      -- Do something with the spawned aircraft.
-      function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-        --local groupset=groupset --Core.Set#SET_GROUP
-        --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        logging('enter', 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-        logging('info', { 'main' , 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
-
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
-
-          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
-
-          assignDetectionGroupSetTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-
-
-
-        elseif request.assignment == "BAI TARGET" then
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
-          local patrolZone = redPatrolZone.nalchik[1]
-          local engageZone = blueFrontZone.TKVIAVI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Beslan', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-        elseif request.assignment == "AWACS" then
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. redAwacsZone.beslan:GetName() } )
-
-          activeAWACS( groupset, warehouse.Beslan, red_command_center, nil, redAwacsZone.beslan, math.random(6000, 9000), 6000 )
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BAI TARGET 2" then
-
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
-          local patrolZone = redPatrolZone.beslan[1]
-          local engageZone = blueFrontZone.TKVIAVI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Beslan', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BAI BOMBING STRUCTURE" then
-
-          --[[
-          local avalaible_target_zones = {
-
-              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
-              zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
-              zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
-
-          }
-          ]]
-
-          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-          local patrolZone = redPatrolZone.beslan[1]
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Beslan against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING AIRBASE" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Beslan
-          local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING WAREHOUSE" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Beslan
-          local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING STRUCTURE GORI" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Beslan
-          local target = zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING STRUCTURE TBILISI" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Beslan
-          local target = zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-    elseif request.assignment == "TRANSPORT INFANTRY FARP" then
-
-          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-          --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Beslan", 5000, nil)
-          --local pickupZone =  cargoZone.Warehouse_AB.red.Beslan
-          --local deployZone =  cargoZone.Warehouse.red.Alagir
-          --local speed = math.random( 100 , 250 )
-
-          --logging('info', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-
-          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-
-        else
-
-          logging('warning', { 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
-
-        end -- end if..elseif
-
-        logging('exit', 'warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-
-      end -- end function warehouse.Beslan:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-
-      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-      function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
-
-        local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-        logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-
-        --[[
-        -- So we start another request.
-        if request.assignment=="PATROL" then
-
-          logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'Beslan scheduled PATROL mission' })
-            --activeCAPWarehouse(groupset, "Patrol Zone Beslan", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-
-        end
-
-        if request.assignment=="BAI TARGET" then
-
-          logging('info', { 'warehouse.Beslan:OnAfterDelivered(From,Event,To,request)' , 'Beslan scheduled BAI TARGET mission' })
-          activeBAIWarehouseA('Interdiction from Beslan to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-        end -- end if
-        ]]
-
-      end -- end function warehouse.Beslan:OnAfterDelivered(From,Event,To,request)
-
-  end -- end wh_activation.Warehouse_AB.red[ 1 ] then
-  ----------------------------------------------------------------- END red Beslan warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------------------------------- red Nalchik warehouse operations ------------------------------------------------------------------------------------------------------------------------
-
-  if wh_activation.Warehouse_AB.red[ 2 ][1] then
-
-
-
-      warehouse.Nalchik:Start()
-      -- Nalchik e' una delle principale warehouse russe nell'area.
-      -- Receive reupply from Mozdok and Mineralnye. Send resupply to Kvemo_Sba
-
-      warehouse.Nalchik:AddAsset(               air_template_red.CAP_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.CAP_Mig_23MLD,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.GCI_Mig_21Bis,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.GCI_Mig_23MLD,             15,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter[1], AssetSkill.red.fighter[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.CAS_MI_24V,                10,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]       ) -- attack
-      warehouse.Nalchik:AddAsset(               air_template_red.CAS_Mig_27K_Bomb,          10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.CAS_Mig_27K_Rocket,        10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_ROCKET_Heavy,   10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_ROCKET_Light,   10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.GA_Mig_27K_Bomb_Light,     10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.GA_Su_25_Bomb,             10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.BOM_MIG_27K_Structure,     10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.BOM_MIG_27K_Airbase,       10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]  )
-      warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_24,                24,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,            1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
-      warehouse.Nalchik:AddAsset(               air_template_red.TRAN_MI_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           20000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
-      warehouse.Nalchik:AddAsset(               air_template_red.TRAN_AN_26,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,           9000, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- transport
-      warehouse.Nalchik:AddAsset(               air_template_red.TRAN_YAK_40,            10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]  ) -- transport
-      warehouse.Nalchik:AddAsset(               air_template_red.AFAC_L_39C,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])]  ) -- AFAC
-      warehouse.Nalchik:AddAsset(               air_template_red.AFAC_Yak_52,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])]  ) -- AFAC
-      warehouse.Nalchik:AddAsset(               air_template_red.REC_Mig_25RTB,             10,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])]  ) -- AFAC
-
-      logging('info', { 'main' , 'addAsset Nalchik warehouse'} )
-
-
-
-      logging('info', { 'main' , 'addrequest Nalchik warehouse'} )
-
-
-      local nalchik_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
-      local num_mission = 9
-      local depart_time = defineRequestPosition( num_mission )
-      local pos = 1
-      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-      local requestStartTime = startReqTimeAir + offSetStartSchedule
-
-
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local nalchik_sched = SCHEDULER:New( staticObject.Warehouse_AB.red.Nalchik[ 1 ],
-
-        function()
-
-          -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-          if wh_activation.Warehouse_AB.red[ 2 ][8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Rocket, math.random(AssetQty.red.air.cas[1], AssetQty.red.air.cas[2]), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][5] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2]), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random( AssetQty.red.air.ga[1], AssetQty.red.air.ga[2] ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.cas[1], AssetQty.red.air.cas[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KHASHURI") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][11] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Alagir, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random(AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2]), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red[ 2 ][15] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_Mig_25RTB, 1, nil, nil, nil, "AFAC_ZONE_Tskhunvali_Tkviavi") pos = pos + 1  end
-          logging('info', { 'main' , 'Nalchik scheduler - start time:' .. start_sched *  nalchik_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
-
-      end, {}, start_sched * nalchik_efficiency_influence, sched_interval, rand_sched
-
-      )
-
-
-      -- Do something with the spawned aircraft.
-      function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-        --local groupset=groupset --Core.Set#SET_GROUP
-        --local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        logging('enter', 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-        logging('info', { 'main' , 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request) - ' .. 'request.assignment: ' .. request.assignment })
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
-
-          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
-
-          assignDetectionGroupTask(groupset, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-
-        elseif request.assignment == "BAI TARGET" then
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = blueGroundGroup[ math.random( 1, #blueGroundGroup ) ][ 1 ]
-          local patrolZone = redPatrolZone.nalchik[1]
-          local engageZone = blueFrontZone.GORI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Nalchik', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-        elseif request.assignment == "FIGHTER SWEEP" then
-
-
-          local homeAirbase =  AIRBASE.Caucasus.Nalchik
-          local patrolZone =  redPatrolZone.nalchik[1]
-          local engageRange = math.random(10000, 20000)
-          local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 9000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
-
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for BAI
-        elseif request.assignment == "BAI TARGET 2" then
-
-          --[[
-          local avalaible_target_zones = {
-
-              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
-              zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
-              zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
-
-          }
-          ]]
-
-          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-          local patrolZone = redPatrolZone.nalchik[1]
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Nalchik against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for BAI
-        elseif request.assignment == "BAI POINT" then
-
-          --[[
-          local avalaible_target_zones = {
-
-              zoneTargetStructure.Blue_Kutaisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Kutaisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges) ][1],
-              zoneTargetStructure.Blue_Gori_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Gori_Bridges) ][1],
-              zoneTargetStructure.Blue_Tbilisi_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Tbilisi_Bridges) ][1],
-              zoneTargetStructure.Blue_Military_Base[math.random( 1, #zoneTargetStructure.Blue_Military_Base) ][1]
-
-          }
-          ]]
-
-          local engageZone = specific_target.blue.zone_targ[ math.random(1, #specific_target.blue.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-          local patrolZone = redPatrolZone.nalchik[1]
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Nalchik against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING AIRBASE" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Nalchik
-          local target = warehouse_blue.airbase[ math.random( 1, #warehouse_blue.airbase ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING WAREHOUSE" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Nalchik
-          local target = warehouse_blue.farp[ math.random( 1, #warehouse_blue.farp ) ]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset (devi introdurre il ritardo)
-        elseif request.assignment == "BOMBING STRUCTURE KHASHURI" then
-
-          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-          local home = warehouse.Nalchik
-          local target = zoneTargetStructure.Blue_Zestafoni_Bridges[ math.random( 1, #zoneTargetStructure.Blue_Zestafoni_Bridges ) ][1]
-          local toTargetAltitude = math.random(5000, 7000)
-          local toHomeAltitude = math.random(3000, 5000)
-          local bombingDirection = math.random(270, 359)
-          local bombingAltitude = math.random(4000, 6000)
-          local diveBomb = false
-          local bombRunDistance = 20000
-          local bombRunDirection = math.random(270, 359)
-          local speedBombRun = math.random(400, 600)
-
-          logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
-
-          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-    elseif request.assignment == "TRANSPORT INFANTRY FARP" then
-
-
-          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-          --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
-          --local pickupZone =  cargoZone.Warehouse_AB.red.Nalchik
-          --local deployZone =  cargoZone.Warehouse.red.Alagir
-          --local speed = math.random( 100 , 250 )
-
-          --logging('info', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-
-          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-        else
-
-          logging('warning', { 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
-
-        end -- end if ..elseif
-
-        logging('exit', 'warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-
-      end -- end function warehouse.Nalchik:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-
-
-
-
-      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-      function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
-
-        local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-        logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-
-        --[[
-        -- So we start another request.
-        if request.assignment=="PATROL" then
-
-          logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'Nalchik scheduled PATROL mission' })
-            --activeCAPWarehouse(groupset, "Patrol Zone Nalchik", 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-
-        end
-
-        if request.assignment=="BAI TARGET" then
-
-          logging('info', { 'warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)' , 'Nalchik scheduled BAI TARGET mission' })
-          activeBAIWarehouseA('Interdiction from Nalchik to Tkviavi', groupset, 'target', redFrontZone.DIDI_CUPTA[2], blueFrontZone.TKVIAVI[2], 400, 1000, AI.Task.WeaponExpend.ALL, 2, 300, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-        end -- end if
-        ]]
-
-      end -- end function warehouse.Nalchik:OnAfterDelivered(From,Event,To,request)
-
-  end --  end wh_activation.Warehouse_AB.red[ 2 ] then
-  ------------------------------------------------------------------- END red Nalchik warehouse operations -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ----------------------------------------------------------- BLUE WAREHOUSE OPERATIONS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------------- blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------------
-
-  ifwh_activation.Warehouse.blue[ 2 ][1] then
-
-
-      warehouse.Zestafoni:SetSpawnZone(ZONE:New("Warehouse ZESTAFONI Spawn Zone"))
-      warehouse.Zestafoni:Start()
-
-
-      -- Zestafoni e' la warehouse di collegamento per rifornire khashuri e Gori
-      warehouse.Zestafoni:AddAsset(           ground_group_template_blue.antitankB,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])] )
-      warehouse.Zestafoni:AddAsset(           ground_group_template_blue.antitankA,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])] )
-      warehouse.Zestafoni:AddAsset(           air_template_blue.TRAN_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  )  -- Transport
-      warehouse.Zestafoni:AddAsset(           air_template_blue.TRAN_UH_60A,                 10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  )  -- Transport
-      warehouse.Zestafoni:AddAsset(           air_template_blue.TRAN_CH_47,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-      warehouse.Zestafoni:AddAsset(           ground_group_template_blue.TransportA,         10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Zestafoni:AddAsset(           ground_group_template_blue.TransportB,         10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Zestafoni:AddAsset(           ground_group_template_blue.TroopTransport,     10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Zestafoni:AddAsset(           air_template_blue.CAS_MI_24V,                  12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]       ) -- Attack
-      warehouse.Zestafoni:AddAsset(           air_template_blue.AFAC_MI_24,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]  ) -- AFAC
-      warehouse.Zestafoni:AddAsset(           air_template_blue.AFAC_SA342L,                 10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]  ) -- AFAC
-      warehouse.Zestafoni:AddAsset(           ground_group_template_blue.ArtilleryResupply,  10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-
-      logging('info', { 'main' , 'addAsset Zestafoni warehouse'} )
-
-      -- ZESTAFONI warehouse e' una frontline warehouse: invia gli asset sul campo con task assegnato. Didi e' rifornita da Biteta Warehouse
-
-      logging('info', { 'main' , 'addrequest Zestafoni warehouse'} )
-
-
-      local zestafoni_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-      local num_mission = 5 -- the number of mission request ( _addRequest() )
-      local num_mission_helo = 0
-      local depart_time = defineRequestPosition(num_mission)
-      local pos = 1
-      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local zestafoni_sched = SCHEDULER:New( warehouse.Zestafoni,
-
-        function()
-
-          ifwh_activation.Warehouse.blue[ 2 ][12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'CZ_PEREVI_attack_1' ) pos = pos + 1  end
-          ifwh_activation.Warehouse.blue[ 2 ][12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'CZ_PEREVI_attack_2' ) pos = pos + 1  end
-          ifwh_activation.Warehouse.blue[ 2 ][12] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'CZ_ONI_attack_3' ) pos = pos + 1  end
-          ifwh_activation.Warehouse.blue[ 2 ][14] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.TroopTransport, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'Troop_transport' ) pos = pos + 1  end
-          ifwh_activation.Warehouse.blue[ 2 ][14] and pos <= num_mission then warehouse.Zestafoni:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Khashuri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.TransportA, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'Ground_transport' ) pos = pos + 1  end
-      end, {}, start_ground_sched * zestafoni_efficiency_influence, sched_interval, rand_ground_sched
-
-      ) -- END SCHEDULER
-
-      -- l'eventuale variazione causale dei parametri di missione la devi fare sulla AddRequest: io la farei solo sulle quantit�
-
-
-
-
-
-      -- Take care of the spawned units.
-      function warehouse.Zestafoni:OnAfterSelfRequest( From,Event,To,groupset,request )
-
-        logging('enter', 'warehouse.ZESTAFONI:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-
-        local groupset = groupset --Core.Set#SET_GROUP
-        local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
-
-        -- Get assignment of this request.
-        local assignment = warehouse.Zestafoni:GetAssignment(request)
-
-        logging('info', { 'warehouse.ZESTAFONI:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
-
-        if assignment == 'CZ_PEREVI_attack_1' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param )
-
-        elseif assignment == 'CZ_PEREVI_attack_2' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.CZ_ONI[1], 'enemy_attack', false, 1, true, suppr_param  )
-
-        elseif assignment == 'CZ_ONI_attack_3' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.CZ_PEREVI[1], 'enemy_attack', false, 1, true, suppr_param  )
-
-        else
-
-            logging('warning', { 'warehouse.Zestafoni:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
-
-        end
-
-      end -- end function
-
-
-      --[[
-
-
-      -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
-      -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
-      --
-      function warehouse.Zestafoni:OnAfterAssetDead( From, Event, To, asset, request )
-
-          local asset = asset       --Functional.Warehouse#WAREHOUSE.Assetitem
-          local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-          -- Get assignment.
-          local assignment = warehouse.Zestafoni:GetAssignment( request )
-
-          logging('info', { 'warehouse.Zestafoni:OnAfterAssetDead(From, Event, To, asset, request)' , 'assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename } )
-
-          -- Request resupply for dead asset from Batumi.
-          warehouse.Kutaisi:AddRequest( warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply" )
-
-          -- Send asset to Battle zone either now or when they arrive.
-          warehouse.Zestafoni:AddRequest( warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
-
-      end -- end function
-
-      ]]
-
-  end -- end wh_activation.Warehouse.blue[ 2 ] then
-  ------------------------------------------------- END blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ------------------------------------------------ blue Warehouse GORI operations ----------------------------------------------------------------------------------------------------------------------------
-
-    if wh_activation.Warehouse.blue[ 3 ][1] then
-
-      logging('info', { 'main' , 'addAsset Gori warehouse'} )
-
-      warehouse.Sachhere:SetSpawnZone(ZONE:New("Gori WH Spawn Zone"))
-      warehouse.Sachhere:Start()
-
-
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.antitankA,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.antitankB,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.antitankC,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArmorA,             10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArmorB,             10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiAkatsia,        10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  )
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiGwozdika,       10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiKatiusha,       10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiHeavyMortar,    10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.mechanizedA,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.mechanizedB,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.mechanizedC,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-      warehouse.Sachhere:AddAsset(               air_template_blue.CAS_MI_24V,                  12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]       ) -- Attack
-      warehouse.Sachhere:AddAsset(               air_template_blue.TRAN_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] )  -- Transport
-      warehouse.Sachhere:AddAsset(               air_template_blue.TRAN_UH_60A,                 10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.TroopTransport,     10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtilleryResupply,  10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Sachhere:AddAsset(               ground_group_template_blue.jtac,               10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-      warehouse.Sachhere:AddAsset(               air_template_blue.AFAC_MI_24,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
-      warehouse.Sachhere:AddAsset(               air_template_blue.AFAC_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
-      warehouse.Sachhere:AddAsset(               air_template_blue.AFAC_SA342L,                 10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
-
-
-      logging('info', { 'main' , 'addrequest Gori warehouse'} )
-
-
-      local gori_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-      local num_mission = 7 -- the number of mission request ( _addRequest() )
-      local depart_time = defineRequestPosition( num_mission )
-      local num_mission_helo = 3 -- the number of mission request ( _addRequest() )
-      local depart_time_helo = defineRequestPosition( num_mission_helo )
-      local pos = 1
-      local pos_heli = 1
-      local startReqTimeArtillery = 1 -- Arty groups have first activation
-      local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
-      local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
-
-      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local gori_sched = SCHEDULER:New( warehouse.Sachhere,
-
-        function()
-
-          -- artillery request
-          warehouse.Sachhere:__AddRequest( startReqTimeArtillery, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtilleryResupply, 1, nil, nil, nil, 'GORI_Artillery_Resupply' )
-          warehouse.Sachhere:__AddRequest( startReqTimeArtillery + 120 , warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtiAkatsia, 1, nil, nil, nil, 'GORI_Artillery_Ops')
-
-
-          if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'TSKHINVALI_Attack_APC' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'TSKHINVALI_attack_2' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'SATIHARI_attack_1' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'SATIHARI_attack_2' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][13] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, math.random( AssetQty.blue.ground.recon[1], AssetQty.blue.ground.recon[2] ), nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][13] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, math.random( AssetQty.blue.ground.recon[1], AssetQty.blue.ground.recon[2] ), nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][15] and pos_heli <= num_mission_helo then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Sachhere,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-          if wh_activation.Warehouse.blue[ 3 ][15] and pos_heli <= num_mission_helo then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Sachhere,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.blue[ 3 ][15] and pos_heli <= num_mission_helo then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
-
-          logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
-
-        end, {}, start_ground_sched *  gori_efficiency_influence, sched_interval, rand_ground_sched
-
-      ) -- end gori_sched
-
-
-      local groupResupplySet
-
-      -- Take care of the spawned units.
-      function warehouse.Sachhere:OnAfterSelfRequest( From,Event,To,groupset,request )
-
-        logging('enter', 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-
-        local groupset = groupset --Core.Set#SET_GROUP
-        local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-        local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
-
-        -- Get assignment of this request.
-        local assignment = warehouse.Sachhere:GetAssignment(request)
-
-        logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames()} )
-
-        -- launch mission functions: mech
-        if assignment == 'TSKHINVALI_Attack_APC' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-        elseif assignment == 'TSKHINVALI_attack_2' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-        elseif assignment == 'DIDMUKHA_attack_1' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-
-        elseif assignment == 'SATIHARI_attack_1' then
-
-            activeGO_TO_BATTLE( groupset, redFrontZone.SATIHARI[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-
-        elseif assignment == 'SATIHARI_attack_2' then
-
-             activeGO_TO_BATTLE( groupset, redFrontZone.DIDI_CUPTA[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-        -- launch mission functions: helo
-        elseif assignment == 'AFAC_ZONE_Tskhunvali_Tkviavi' then
-
-            logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   GORI AFAC MISSION               <---------------                       '} )
-
-            activeJTAC( 'air', warehouse.Sachhere, groupset, blue_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
-
-
-
-        elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
-
-            logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   GORI AFAC MISSION               <---------------                       '} )
-
-            activeJTAC( 'air', warehouse.Sachhere, groupset, blue_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
-
-
-
-        elseif assignment == 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi' then
-
-            -- addGroupSet(detectionGroupSetBlue, groupset)
-
-            logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   GORI AFAC MISSION               <---------------                       '} )
-
-            activeJTAC( 'air', warehouse.Sachhere, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[ 1 ] )
-
-
-
-        elseif assignment == 'JTAC_SATIHARI' then
-
-            -- addGroupSet(detectionGroupSetBlue, groupset)
-
-            activeJTAC( 'ground', warehouse.Sachhere, groupset, blue_command_center, nil, redFrontZone.SATIHARI[1] )
-
-
-
-        elseif assignment == 'JTAC_TSKHINVALI' then
-
-            -- addGroupSet(detectionGroupSetBlue, groupset)
-
-            activeJTAC( 'ground', warehouse.Sachhere, groupset, blue_command_center, nil, redFrontZone.TSKHINVALI[1] )
-
-
-
-
-        -- launch mission function: arty resupply
-        elseif assignment == 'GORI_Artillery_Resupply' then
-
-          groupResupplySet = groupset
-          -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
-          --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
-          activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_5[1], false, 1 )
-
-
-
-
-        -- launch mission function: arty
-        elseif assignment == 'GORI_Artillery_Ops' then
-
-            nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
-            -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
-            activateDetectionReport = false
-
-
-            -- lista dei target e delle ammo
-            param = {
-
-                listTargetInfo = {
-
-                    --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
-
-                    [1] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_1[1]:GetRandomCoordinate(),
-                      priority = 10,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 10,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [2] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
-                      priority = 50,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 7,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [3] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
-                      priority = 50,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 7,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [4] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_3[1]:GetRandomCoordinate(),
-                      priority = 70,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 5,
-                      weaponType = ARTY.WeaponType.Auto
-                    }
-
-
-                },
-
-                commandCenter = blue_command_center,
-
-                resupplySet = groupResupplySet,
-
-                speed = 60, -- km/h Akatsia max 60 km/h
-
-                onRoad = true,
-
-                maxDistance = 20,
-
-                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
-
-
-            }
-
-
-            logging('info', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
-
-            activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_5[1], param, true, 70 )
-
-        else
-
-            logging('warning', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
-
-        end
-
-        logging('exit', 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' )
-
-      end -- function warehouse.Sachhere:OnAfterSelfRequest( From,Event,To,groupset,request )
-
-
-      --[[
-
-      -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
-      -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
-      --
-      function warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )
-
-        logging('enter', 'warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )' )
+    -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
+    -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
+    --
+    function warehouse.Zestafoni:OnAfterAssetDead( From, Event, To, asset, request )
 
         local asset = asset       --Functional.Warehouse#WAREHOUSE.Assetitem
         local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-          -- Get assignment.
-        local assignment = warehouse.Sachhere:GetAssignment( request )
+        -- Get assignment.
+        local assignment = warehouse.Zestafoni:GetAssignment( request )
 
-        logging('info', { 'warehouse.Sachhere:OnAfterAssetDead(From, Event, To, asset, request)' , 'assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename } )
+        logging('info', { 'warehouse.Zestafoni:OnAfterAssetDead(From, Event, To, asset, request)' , 'assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename } )
 
-          -- Request resupply for dead asset from Batumi.
+        -- Request resupply for dead asset from Batumi.
+        warehouse.Kutaisi:AddRequest( warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply" )
 
-          warehouse.Soganlug:AddRequest( warehouse.Sachhere, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply" )
+        -- Send asset to Battle zone either now or when they arrive.
+        warehouse.Zestafoni:AddRequest( warehouse.Zestafoni, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
 
-          -- Send asset to Battle zone either now or when they arrive.
-          warehouse.Sachhere:AddRequest( warehouse.Sachhere, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
+    end -- end function
 
-          logging('exit', 'warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )' )
+    ]]
 
-      end --  warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )
+end -- end wh_activation.Warehouse.blue[ 2 ] then
+------------------------------------------------- END blue Warehouse ZESTAFONI operations -------------------------------------------------------------------------------------------------------------------
 
-      ]]
 
 
-    end -- wh_activation.Warehouse.blue[ 3 ] then
-    ----------------------------------------------- END blue Warehouse GORI operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -7496,178 +6787,751 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    ------------------------------------------------- blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
 
 
-    if wh_activation.Warehouse_AB.blue[ 5 ][1] then
 
 
-        --  Batumi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
-        -- Batumi - Zestafoni - Gori
-        -- Batumi e' utilizzato come aeroporto militare. Da Batumi decollano voli per trasporto merci e missioni di pinpoint strike CAS e BAI.
 
 
 
-        warehouse.Batumi:Start()
 
-        warehouse.Batumi:AddAsset(              air_template_blue.CAP_F_5,                  10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
-        warehouse.Batumi:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.GCI_F_4,                  10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.GCI_F_14A,                10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.GCI_AJS_37,               10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.REC_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Structure,      10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Sparse_Light,   10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_AV_88_Structure,      10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_AV_88_Heavy_Structure,10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_AJS_37,               10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_AV_88_Bomb,           10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_AV_88_Cluster,        10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_AV_88_Rocket,         10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_5E_3_Bomb,          10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_5E_3_Rocket,        10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_5E_3_Cluster,       10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.CAS_AJS_37,               10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_B_1B,                 10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.BOM_B_52H,                10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]  )
-        warehouse.Batumi:AddAsset(              air_template_blue.TRAN_AN_26,               10,            WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, 9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Batumi:AddAsset(              air_template_blue.TRAN_C_130,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, 9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Batumi:AddAsset(               air_template_blue.TRAN_UH_1H,              10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport ) -- Transport
-        warehouse.Batumi:AddAsset(              air_template_blue.TRAN_UH_60A,              10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,  4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Batumi:AddAsset(              air_template_blue.TRAN_CH_47,               10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Batumi:AddAsset(               air_template_blue.AWACS_F_4,               10,            WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])]     ) -- AWACS
-        warehouse.Batumi:AddAsset(              air_template_blue.AWACS_B_1B,               10,             WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])]  ) -- AWACS
 
-        logging('info', { 'main' , 'addAsset Batumi warehouse'} )
 
-        local batumi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-        local num_mission = 9
-        local depart_time = defineRequestPosition( num_mission )
-        local pos = 1
-        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local batumi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Batumi[ 1 ],
 
-          function()
 
 
 
-             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
 
-             -- Priority Mission Request
-             if wh_activation.Warehouse_AB.blue[ 5 ][9] then warehouse.Batumi:__AddRequest( startReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS")  end
-             -- Normal Mission Request
-             if wh_activation.Warehouse_AB.blue[ 5 ][15] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 5 ][8] and pos <= num_mission  then  warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-             if wh_activation.Warehouse_AB.blue[ 5 ][8] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-             if wh_activation.Warehouse_AB.blue[ 5 ][7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 5 ][7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 5 ][7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 5 ][11] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 5 ][11] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Sachhere, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 5 ][10] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "RECON AIRBASE") pos = pos + 1  end
 
-             logging('info', { 'main' , 'Batumi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
 
-         end, {}, start_sched *  batumi_efficiency_influence, sched_interval, rand_sched
 
-        ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
 
 
 
-        -- Do something with the spawned aircraft.
-        function warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
 
-          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+  ------------------------------------------------ blue Warehouse Sachhere operations ----------------------------------------------------------------------------------------------------------------------------
 
+  if wh_activation.Warehouse.blue[ 3 ][ 1 ] then
 
+    logging('info', { 'main' , 'addAsset Sachhere warehouse'} )
 
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+    warehouse.Sachhere:SetSpawnZone(ZONE:New("Sachhere WH Spawn Zone"))
+    warehouse.Sachhere:Start()
 
-          if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
 
-            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.antitankA,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.antitankB,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.antitankC,          10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArmorA,             10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArmorB,             10,         WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiAkatsia,        10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  )
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiGwozdika,       10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiKatiusha,       10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtiHeavyMortar,    10,         WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.mechanizedA,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.mechanizedB,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.mechanizedC,        10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+    warehouse.Sachhere:AddAsset(               air_template_blue.CAS_MI_24V,                  12,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]       ) -- Attack
+    warehouse.Sachhere:AddAsset(               air_template_blue.TRAN_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] )  -- Transport
+    warehouse.Sachhere:AddAsset(               air_template_blue.TRAN_UH_60A,                 10,         WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.TroopTransport,     10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.ArtilleryResupply,  10,         WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+    warehouse.Sachhere:AddAsset(               ground_group_template_blue.jtac,               10,         WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+    warehouse.Sachhere:AddAsset(               air_template_blue.AFAC_MI_24,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
+    warehouse.Sachhere:AddAsset(               air_template_blue.AFAC_UH_1H,                  10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
+    warehouse.Sachhere:AddAsset(               air_template_blue.AFAC_SA342L,                 10,         WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])] ) -- AFAC
 
-            assignDetectionGroupSetTask(groupset, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
+    logging('info', { 'main' , 'addrequest Sachhere warehouse'} )
 
 
-          elseif request.assignment == "BAI TARGET" then
+    local sachhere_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+    local num_mission = 7 -- the number of mission request ( _addRequest() )
+    local depart_time = defineRequestPosition( num_mission )
+    local num_mission_helo = 3 -- the number of mission request ( _addRequest() )
+    local depart_time_helo = defineRequestPosition( num_mission_helo )
+    local pos = 1
+    local pos_heli = 1
+    local startReqTimeArtillery = 1 -- Arty groups have first activation
+    local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
+    local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local sachhere_sched = SCHEDULER:New( warehouse.Sachhere,
+
+      function()
+
+        -- artillery request
+        warehouse.Sachhere:__AddRequest( startReqTimeArtillery, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtilleryResupply, 1, nil, nil, nil, 'Sachhere_Artillery_Resupply' )
+        warehouse.Sachhere:__AddRequest( startReqTimeArtillery + 120 , warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.ArtiAkatsia, 1, nil, nil, nil, 'Sachhere_Artillery_Ops')
+
+
+        if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC,       math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'TSKHINVALI_Attack_APC' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'TSKHINVALI_attack_2' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'DIDMUKHA_attack_1' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankA, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ) , nil, nil, nil, 'SATIHARI_attack_1' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][12] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'SATIHARI_attack_2' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][13] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, math.random( AssetQty.blue.ground.recon[1], AssetQty.blue.ground.recon[2] ), nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][13] and pos <= num_mission  then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, math.random( AssetQty.blue.ground.recon[1], AssetQty.blue.ground.recon[2] ), nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][15] and pos_heli <= num_mission_helo then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Sachhere,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+        if wh_activation.Warehouse.blue[ 3 ][15] and pos_heli <= num_mission_helo then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Sachhere,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.blue[ 3 ][15] and pos_heli <= num_mission_helo then warehouse.Sachhere:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Sachhere,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+
+        logging('finer', { 'Sachhere scheduler function' , 'addRequest Sachhere warehouse'} )
+
+      end, {}, start_ground_sched *  sachhere_efficiency_influence, sched_interval, rand_ground_sched
+
+    ) -- end Sachhere_sched
+
+
+    local groupResupplySet
+
+    -- Take care of the spawned units.
+    function warehouse.Sachhere:OnAfterSelfRequest( From,Event,To,groupset,request )
+
+      logging('enter', 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+
+      local groupset = groupset --Core.Set#SET_GROUP
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      local suppr_param = {retreatZone = nil, fallBack = true, takeCover = true, delay = 300}
+
+      -- Get assignment of this request.
+      local assignment = warehouse.Sachhere:GetAssignment(request)
+
+      logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames()} )
+
+      -- launch mission functions: mech
+      if assignment == 'TSKHINVALI_Attack_APC' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][1], 'enemy_attack', false, 1, true, suppr_param )
+
+
+      elseif assignment == 'TSKHINVALI_attack_2' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][1], 'enemy_attack', false, 1, true, suppr_param )
+
+
+      elseif assignment == 'DIDMUKHA_attack_1' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][1], 'enemy_attack', false, 1, true, suppr_param )
+
+
+
+      elseif assignment == 'SATIHARI_attack_1' then
+
+          activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][1], 'enemy_attack', false, 1, true, suppr_param )
+
+
+
+      elseif assignment == 'SATIHARI_attack_2' then
+
+           activeGO_TO_BATTLE( groupset, frontZone.red[ 1, math.random(1, #frontZone.red ) ][1], 'enemy_attack', false, 1, true, suppr_param )
+
+
+      -- launch mission functions: helo
+      elseif assignment == 'AFAC_ZONE_Tskhunvali_Tkviavi' then
+
+          logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   Sachhere AFAC MISSION               <---------------                       '} )
+
+          activeJTAC( 'air', warehouse.Sachhere, groupset, blue_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
+
+
+
+      elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+
+          logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   Sachhere AFAC MISSION               <---------------                       '} )
+
+          activeJTAC( 'air', warehouse.Sachhere, groupset, blue_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
+
+
+
+      elseif assignment == 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi' then
+
+          -- addGroupSet(detectionGroupSetBlue, groupset)
+
+          logging('finer', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , '                  ----------->               ATTENZIONE   Sachhere AFAC MISSION               <---------------                       '} )
+
+          activeJTAC( 'air', warehouse.Sachhere, groupset, blue_command_center, nil, frontZone.red[ 1, math.random(1, #frontZone.red ) ] )
+
+
+
+      elseif assignment == 'JTAC_SATIHARI' then
+
+          -- addGroupSet(detectionGroupSetBlue, groupset)
+
+          activeJTAC( 'ground', warehouse.Sachhere, groupset, blue_command_center, nil, frontZone.red[ 1, math.random(1, #frontZone.red ) ] )
+
+
+
+      elseif assignment == 'JTAC_TSKHINVALI' then
+
+          -- addGroupSet(detectionGroupSetBlue, groupset)
+
+          activeJTAC( 'ground', warehouse.Sachhere, groupset, blue_command_center, nil, frontZone.red[ 1, math.random(1, #frontZone.red ) ] )
+
+
+
+
+      -- launch mission function: arty resupply
+      elseif assignment == 'Sachhere_Artillery_Resupply' then
+
+        groupResupplySet = groupset
+        -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
+        --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
+        activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_5[1], false, 1 )
+
+
+
+
+      -- launch mission function: arty
+      elseif assignment == 'Sachhere_Artillery_Ops' then
+
+          nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
+          -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
+          activateDetectionReport = false
+
+
+          -- lista dei target e delle ammo
+          param = {
+
+              listTargetInfo = {
+
+                  --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
+
+                  [1] = {
+                    targetCoordinate = targetZoneForBlueArty.DIDMUKHA_1[1]:GetRandomCoordinate(),
+                    priority = 10,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 10,
+                    weaponType = ARTY.WeaponType.Auto
+                  },
+
+                  [2] = {
+                    targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
+                    priority = 50,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 7,
+                    weaponType = ARTY.WeaponType.Auto
+                  },
+
+                  [3] = {
+                    targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
+                    priority = 50,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 7,
+                    weaponType = ARTY.WeaponType.Auto
+                  },
+
+                  [4] = {
+                    targetCoordinate = targetZoneForBlueArty.DIDMUKHA_3[1]:GetRandomCoordinate(),
+                    priority = 70,
+                    radiusTarget = 500,
+                    num_shots = 10,
+                    num_engagements = 5,
+                    weaponType = ARTY.WeaponType.Auto
+                  }
+
+
+              },
+
+              commandCenter = blue_command_center,
+
+              resupplySet = groupResupplySet,
+
+              speed = 60, -- km/h Akatsia max 60 km/h
+
+              onRoad = true,
+
+              maxDistance = 20,
+
+              maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+
+
+          }
+
+
+          logging('info', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
+
+          activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_5[1], param, true, 70 )
+
+      else
+
+          logging('warning', { 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'Assignment not found'} )
+
+      end
+
+      logging('exit', 'warehouse.Sachhere:OnAfterSelfRequest(From,Event,To,groupset,request)' )
+
+    end -- function warehouse.Sachhere:OnAfterSelfRequest( From,Event,To,groupset,request )
+
+
+    --[[
+
+    -- Questa funzione gestisce le richieste di rifornmento verso la warehouse di biteta (link) quando gli asset vengono distrutti
+    -- questa implememntazione garantisce un coinvolgimento costante di mezzi nella zona di combattimento fino a quando i rifornimenti sono erogati
+    --
+    function warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )
+
+      logging('enter', 'warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )' )
+
+      local asset = asset       --Functional.Warehouse#WAREHOUSE.Assetitem
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+        -- Get assignment.
+      local assignment = warehouse.Sachhere:GetAssignment( request )
+
+      logging('info', { 'warehouse.Sachhere:OnAfterAssetDead(From, Event, To, asset, request)' , 'assignment = ' .. assignment .. '  - assetGroupName = ' .. asset.templatename } )
+
+        -- Request resupply for dead asset from Batumi.
+
+        warehouse.Soganlug:AddRequest( warehouse.Sachhere, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, nil, nil, nil, nil, "Resupply" )
+
+        -- Send asset to Battle zone either now or when they arrive.
+        warehouse.Sachhere:AddRequest( warehouse.Sachhere, WAREHOUSE.Descriptor.ATTRIBUTE, asset.attribute, 1, nil, nil, nil, assignment )
+
+        logging('exit', 'warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )' )
+
+    end --  warehouse.Sachhere:OnAfterAssetDead( From, Event, To, asset, request )
+
+    ]]
+
+
+  end -- wh_activation.Warehouse.blue[ 3 ] then
+  ----------------------------------------------- END blue Warehouse Sachhere operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ------------------------------------------------- blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
+
+
+  if wh_activation.Warehouse_AB.blue[ 5 ][1] then
+
+
+
+      warehouse.Batumi:Start()
+
+      warehouse.Batumi:AddAsset(              air_template_blue.CAP_F_5,                  10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
+      warehouse.Batumi:AddAsset(              air_template_blue.CAP_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.GCI_F_4,                  10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.GCI_F_14A,                10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.GCI_AJS_37,               10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.REC_F_4,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Structure,      10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Sparse_Light,   10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_AV_88_Structure,      10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_AV_88_Heavy_Structure,10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_AJS_37,               10,         WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_AV_88_Bomb,           10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_AV_88_Cluster,        10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_AV_88_Rocket,         10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_5E_3_Bomb,          10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_5E_3_Rocket,        10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_F_5E_3_Cluster,       10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.CAS_AJS_37,               10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_B_1B,                 10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.BOM_B_52H,                10,           WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]  )
+      warehouse.Batumi:AddAsset(              air_template_blue.TRAN_AN_26,               10,            WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, 9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Batumi:AddAsset(              air_template_blue.TRAN_C_130,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE, 9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Batumi:AddAsset(               air_template_blue.TRAN_UH_1H,              10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport ) -- Transport
+      warehouse.Batumi:AddAsset(              air_template_blue.TRAN_UH_60A,              10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,  4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Batumi:AddAsset(              air_template_blue.TRAN_CH_47,               10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO, 12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Batumi:AddAsset(               air_template_blue.AWACS_F_4,               10,            WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])]     ) -- AWACS
+      warehouse.Batumi:AddAsset(              air_template_blue.AWACS_B_1B,               10,             WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])]  ) -- AWACS
+
+      logging('info', { 'main' , 'addAsset Batumi warehouse'} )
+
+      local batumi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 9
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
+
+      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+      local batumi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue[ 5 ][ 1 ],
+
+        function()
+
+
+
+           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+
+           -- Priority Mission Request
+           if wh_activation.Warehouse_AB.blue[ 5 ][9] then warehouse.Batumi:__AddRequest( startReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_B_1B, 1, nil, nil, nil, "AWACS")  end
+           -- Normal Mission Request
+           if wh_activation.Warehouse_AB.blue[ 5 ][15] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 5 ][8] and pos <= num_mission  then  warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue[ 5 ][8] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue[ 5 ][7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_1B, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 5 ][7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 5 ][7] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_B_52H, math.random( AssetQty.blue.air.heavy_bomb[1], AssetQty.blue.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 5 ][11] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 5 ][11] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Sachhere, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 5 ][10] and pos <= num_mission  then warehouse.Batumi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_F_4, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "RECON AIRBASE") pos = pos + 1  end
+
+           logging('info', { 'main' , 'Batumi scheduler - start time:' .. start_sched *  batumi_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
+
+       end, {}, start_sched *  batumi_efficiency_influence, sched_interval, rand_sched
+
+      ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
+
+
+
+      -- Do something with the spawned aircraft.
+      function warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+
+
+        logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+
+        if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
+
+          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
+
+          assignDetectionGroupSetTask(groupset, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+
+
+        elseif request.assignment == "BAI TARGET" then
+
+          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+          local percRequestKill = math.random( 0 , 100 ) * 0.01
+          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
+          local patrolZone = bluePatrolZone.kutaisi[1]
+          local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ]
+
+          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+          activeBAI( 'Interdiction from Batumi', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+        ----------------------------------------------------------------------------------------------------- assignment for BAI asset
+        elseif request.assignment == "BAI STRUCTURE" then
+
+
+            local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+            local patrolZone = bluePatrolZone.kutaisi[1]
 
             speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
-            -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-            local percRequestKill = math.random( 0 , 100 ) * 0.01
-            local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
-            local patrolZone = bluePatrolZone.kutaisi[1]
-            local engageZone = redFrontZone.TSKHINVALI[1]
-
-            for _, v in pairs(redFrontZone) do
-
-              if math.random(1,10) < 5 then
-
-                engageZone = v[1]
-                break
-
-              end -- end if
-
-            end -- end for
-
-
-            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
             logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-            activeBAI( 'Interdiction from Batumi', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-          ----------------------------------------------------------------------------------------------------- assignment for BAI asset
-          elseif request.assignment == "BAI STRUCTURE" then
-
-              --[[
-              local avalaible_target_zones = {
-
-                  zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
-                  zoneTargetStructure.Red_Biteta_Bridges[ math.random( 1, #zoneTargetStructure.Red_Biteta_Bridges) ][1],
-                  --zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
-
-              }
-              ]]
-
-              local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-              local patrolZone = bluePatrolZone.kutaisi[1]
-
-              speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-              activeBAI( 'Interdiction from Batumi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+            activeBAI( 'Interdiction from Batumi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
 
-        elseif request.assignment == "AWACS" then
+      elseif request.assignment == "AWACS" then
 
 
-            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacslZone: ' .. blueAwacsZone.kutaisi:GetName() } )
+          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacslZone: ' .. blueAwacsZone.kutaisi:GetName() } )
 
-            activeAWACS( groupset, warehouse.Batumi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(7000,9000), 5000 )
+          activeAWACS( groupset, warehouse.Batumi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(7000,9000), 5000 )
 
-            --[[
+          --[[
+          local toTargetAltitude = math.random(7000, 9000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local reconDirection = math.random(270, 359)
+          local reconAltitude = math.random(5000, 7000)
+          local reconRunDistance = 20000
+          local reconRunDirection = math.random(270, 359)
+          local speedReconRun = math.random(400, 600)
+          local targets = { cargoZone.Warehouse_AB.red.Mozdok, cargoZone.Warehouse_AB.red.Mineralnye, cargoZone.Warehouse_AB.red.Beslan, cargoZone.Warehouse_AB.red.Nalchik }
+          local target = targets[ math.random( 1 , #targets ) ]
+          local home =  warehouse.Batumi
+
+
+          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+          activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
+
+
+          ]]
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING AIRBASE" then
+
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+            local home = warehouse.Batumi
+            local toTargetAltitude = math.random(5000, 7000)
+            local toHomeAltitude = math.random(3000, 5000)
+            local bombingDirection = math.random(270, 359)
+            local bombingAltitude = math.random(4000, 6000)
+            local diveBomb = false
+            local bombRunDistance = 20000
+            local bombRunDirection = math.random(270, 359)
+            local speedBombRun = math.random(400, 600)
+
+            local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING WAREHOUSE" then
+
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+            local home = warehouse.Batumi
+            local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
+            local toTargetAltitude = math.random(5000, 7000)
+            local toHomeAltitude = math.random(3000, 5000)
+            local bombingDirection = math.random(270, 359)
+            local bombingAltitude = math.random(4000, 6000)
+            local diveBomb = false
+            local bombRunDistance = 20000
+            local bombRunDirection = math.random(270, 359)
+            local speedBombRun = math.random(400, 600)
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING MIL ZONE" then
+
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+            local home = warehouse.Batumi
+            local target = targetZone.military_base.red[ math.random( 1, #targetZone.military_base.red ) ][1]
+            local toTargetAltitude = math.random(5000, 7000)
+            local toHomeAltitude = math.random(3000, 5000)
+            local bombingDirection = math.random(270, 359)
+            local bombingAltitude = math.random(4000, 6000)
+            local diveBomb = false
+            local bombRunDistance = 20000
+            local bombRunDirection = math.random(270, 359)
+            local speedBombRun = math.random(400, 600)
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
+    elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
+
+
+
+            -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+            --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
+
+            --local destination = AIRBASE.Caucasus.Tbilisi_Lochini --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+            --local speed = math.random( 300 , 500 )
+
+            --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+
+            --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Batumi, speed, cargoGroupSet )
+
+
+
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+    elseif request.assignment == "TRANSPORT INFANTRY FARP" then
+
+
+
+          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+          --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
+
+          --local pickupZone =  cargoZone.Warehouse_AB.blue.Batumi
+          --local deployZone =  cargoZone.Warehouse.blue.Gori
+          --local speed = math.random( 100 , 250 )
+
+          --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+
+
+
+
+    ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+    elseif request.assignment == "DISPATCHING AIRBASE TRANSPORT" then
+
+
+          local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+          local AirplanesSet = groupset
+
+          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() } )
+
+          local PickupZoneSet = SET_ZONE:New()
+          local DeployZoneSet = SET_ZONE:New()
+
+          PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Batumi ) )
+          DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Kutaisi ) )
+          DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Tbilisi_Lochini ) )
+
+          AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, cargoGroupSet, PickupZoneSet, DeployZoneSet )
+
+          AICargoDispatcherAirplanes.SetPickupRadius(1000, 30)--: Sets or randomizes the pickup location for the carrier around the cargo coordinate in a radius defined an outer and optional inner radius.
+          AICargoDispatcherAirplanes.SetPickupSpeed(600, 350)--: Set the speed or randomizes the speed in km/h to pickup the cargo.
+          AICargoDispatcherAirplanes.SetPickupHeight(9000, 3000)--: Set the height or randomizes the height in meters to pickup the cargo.
+          AICargoDispatcherAirplanes.SetDeployRadius(1000, 30)--: Sets or randomizes the deploy location for the carrier around the cargo coordinate in a radius defined an outer and an optional inner radius.
+          AICargoDispatcherAirplanes.SetDeploySpeed(400, 300)--: Set the speed or randomizes the speed in km/h to deploy the cargo.
+          AICargoDispatcherAirplanes.SetDeployHeight(7000, 4000)--: Set the height or randomizes the height in meters to deploy the cargo.
+          AICargoDispatcherAirplanes.SetHomeZone(AIRBASE.Caucasus.Batumi)
+
+
+          AICargoDispatcherAirplanes:Start()
+
+          function AICargoDispatcherAirplanes:OnAfterLoaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, PickupZone )
+
+             logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterLoaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+          function AICargoDispatcherAirplanes:OnAfterPickedUp( From, Event, To, CarrierGroup, PickupZone )
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterPickedUp ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+
+          function AICargoDispatcherAirplanes:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeploy ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+          function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, DeployZone )
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+          function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+          function AICargoDispatcherAirplanes:OnAfterUnloaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnloaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+          function AICargoDispatcherAirplanes:OnAfterDeployed( From, Event, To, CarrierGroup, DeployZone )
+
+            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeployed ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+
+          end
+
+          logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+
+
+
+
+
+
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+      elseif request.assignment == "RECON AIRBASE" then
+
             local toTargetAltitude = math.random(7000, 9000)
             local toHomeAltitude = math.random(3000, 5000)
             local reconDirection = math.random(270, 359)
@@ -7682,754 +7546,42 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
-            activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
-
-
-            ]]
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING AIRBASE" then
-
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-              local home = warehouse.Batumi
-              local toTargetAltitude = math.random(5000, 7000)
-              local toHomeAltitude = math.random(3000, 5000)
-              local bombingDirection = math.random(270, 359)
-              local bombingAltitude = math.random(4000, 6000)
-              local diveBomb = false
-              local bombRunDistance = 20000
-              local bombRunDirection = math.random(270, 359)
-              local speedBombRun = math.random(400, 600)
-
-              local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING WAREHOUSE" then
-
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-              local home = warehouse.Batumi
-              local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
-              local toTargetAltitude = math.random(5000, 7000)
-              local toHomeAltitude = math.random(3000, 5000)
-              local bombingDirection = math.random(270, 359)
-              local bombingAltitude = math.random(4000, 6000)
-              local diveBomb = false
-              local bombRunDistance = 20000
-              local bombRunDirection = math.random(270, 359)
-              local speedBombRun = math.random(400, 600)
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING MIL ZONE" then
-
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-              local home = warehouse.Batumi
-              local target = zoneTargetStructure.Red_Military_Base[ math.random( 1, #zoneTargetStructure.Red_Military_Base ) ][1]
-              local toTargetAltitude = math.random(5000, 7000)
-              local toHomeAltitude = math.random(3000, 5000)
-              local bombingDirection = math.random(270, 359)
-              local bombingAltitude = math.random(4000, 6000)
-              local diveBomb = false
-              local bombRunDistance = 20000
-              local bombRunDirection = math.random(270, 359)
-              local speedBombRun = math.random(400, 600)
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
-
-              activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
-      elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
-
-
-
-              -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-              --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
-
-              --local destination = AIRBASE.Caucasus.Tbilisi_Lochini --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-              --local speed = math.random( 300 , 500 )
-
-              --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-
-              --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Batumi, speed, cargoGroupSet )
-
-
-
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-      elseif request.assignment == "TRANSPORT INFANTRY FARP" then
-
-
-
-            -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            --local cargoGroupSet = generateCargoSet("Infantry", "Cargo Infantry Nalchik", 5000, nil)
-
-            --local pickupZone =  cargoZone.Warehouse_AB.blue.Batumi
-            --local deployZone =  cargoZone.Warehouse.blue.Gori
-            --local speed = math.random( 100 , 250 )
-
-            --logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count: ' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-
-
-
-      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-      elseif request.assignment == "DISPATCHING AIRBASE TRANSPORT" then
-
-
-            local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-            local AirplanesSet = groupset
-
-            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() } )
-
-            local PickupZoneSet = SET_ZONE:New()
-            local DeployZoneSet = SET_ZONE:New()
-
-            PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Batumi ) )
-            DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Kutaisi ) )
-            DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Tbilisi_Lochini ) )
-
-            AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, cargoGroupSet, PickupZoneSet, DeployZoneSet )
-
-            AICargoDispatcherAirplanes.SetPickupRadius(1000, 30)--: Sets or randomizes the pickup location for the carrier around the cargo coordinate in a radius defined an outer and optional inner radius.
-            AICargoDispatcherAirplanes.SetPickupSpeed(600, 350)--: Set the speed or randomizes the speed in km/h to pickup the cargo.
-            AICargoDispatcherAirplanes.SetPickupHeight(9000, 3000)--: Set the height or randomizes the height in meters to pickup the cargo.
-            AICargoDispatcherAirplanes.SetDeployRadius(1000, 30)--: Sets or randomizes the deploy location for the carrier around the cargo coordinate in a radius defined an outer and an optional inner radius.
-            AICargoDispatcherAirplanes.SetDeploySpeed(400, 300)--: Set the speed or randomizes the speed in km/h to deploy the cargo.
-            AICargoDispatcherAirplanes.SetDeployHeight(7000, 4000)--: Set the height or randomizes the height in meters to deploy the cargo.
-            AICargoDispatcherAirplanes.SetHomeZone(AIRBASE.Caucasus.Batumi)
-
-
-            AICargoDispatcherAirplanes:Start()
-
-            function AICargoDispatcherAirplanes:OnAfterLoaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, PickupZone )
-
-               logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterLoaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-            function AICargoDispatcherAirplanes:OnAfterPickedUp( From, Event, To, CarrierGroup, PickupZone )
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterPickedUp ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-
-            function AICargoDispatcherAirplanes:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeploy ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-            function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, DeployZone )
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-            function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-            function AICargoDispatcherAirplanes:OnAfterUnloaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnloaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-            function AICargoDispatcherAirplanes:OnAfterDeployed( From, Event, To, CarrierGroup, DeployZone )
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeployed ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
-
-            end
-
-            logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-
-
-
-
-
-
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-        elseif request.assignment == "RECON AIRBASE" then
-
-              local toTargetAltitude = math.random(7000, 9000)
-              local toHomeAltitude = math.random(3000, 5000)
-              local reconDirection = math.random(270, 359)
-              local reconAltitude = math.random(5000, 7000)
-              local reconRunDistance = 20000
-              local reconRunDirection = math.random(270, 359)
-              local speedReconRun = math.random(400, 600)
-              local targets = { cargoZone.Warehouse_AB.red.Mozdok, cargoZone.Warehouse_AB.red.Mineralnye, cargoZone.Warehouse_AB.red.Beslan, cargoZone.Warehouse_AB.red.Nalchik }
-              local target = targets[ math.random( 1 , #targets ) ]
-              local home =  warehouse.Batumi
-
-
-              logging('info', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
-
-              -- addGroupSet(detectionGroupSetBlue, groupset)
-
-              activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
-
-
-          else
-
-            logging('warning', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
-
-          end -- end if ...elseif
-
-
-        end --  warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-
-          --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-         -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
-        function warehouse.Batumi:OnAfterDelivered(From,Event,To,request)
-
-          -- le diverse opzioni disponibili per la scelta casuale della missione
-          local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
-
-          logging('info', { 'warehouse.Batumi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
-
-          -- manca il groupset
-          -- So we start another request.
-          --if request.assignment=="PATROL" then
-
-            --local pos = math.random( 1 , #param )
-
-            --logging('info', { 'warehouse.Batumi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled PATROL mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-            --activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Batumi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-            -- warehouse.Batumi:AddRequest(warehouse.Pampa, WAREHOUSE.Descriptor.ATTRIBUTE, request.cargoattribute, request.ndelivered, WAREHOUSE.TransportType.APC, WAREHOUSE.Quantity.ALL)
-
-          --end
-
-          --if request.assignment=="BAI STRUCTURE" then
-
-            --logging('info', { 'warehouse.Batumi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled BAI STRUCTURE mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-            --activeBAIWarehouseT('Interdiction from Batumi', groupset, 'target', redFrontZone.BAI_Zone_Batumi[2], redFrontZone.BAI_Zone_Batumi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
-
-          --end -- end if
-
-        end -- end warehouse.Batumi:OnAfterDelivered(From,Event,To,request)
-
-    end -- wh_activation.Warehouse_AB.blue[ 5 ] then
-    ------------------------------------------------- END blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ------------------------------------------------- blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
-
-    if wh_activation.Warehouse_AB.blue[ 2 ][1] then
-
-
-        warehouse.Kutaisi:Start()
-
-        --  Kutaisi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
-        -- Kutaisi - Zestafoni - Gori
-        -- Kutaisi e' utilizzato come aeroporto militare. Da Kutaisi decollano voli per trasporto merci e missioni di pinpoint strike CAS e BAI.
-
-        warehouse.Kutaisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            20,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]   ) -- Fighter
-        warehouse.Kutaisi:AddAsset(               air_template_blue.CAP_F_5,                  20,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]   ) -- Fighter
-        warehouse.Kutaisi:AddAsset(               air_template_blue.REC_L_39ZA,                10,            WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.recon[1], AssetSkill.blue.recon[2])]  ) -- Reco
-        warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,        10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
-        warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,       10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
-        warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,          10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
-        warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_L_39ZA_HRocket,       10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
-        warehouse.Kutaisi:AddAsset(               air_template_blue.TRAN_AN_26,                10,            WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Kutaisi:AddAsset(               air_template_blue.TRAN_C_130,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport ) -- Transport
-        warehouse.Kutaisi:AddAsset(               air_template_blue.TRAN_CH_47,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Kutaisi:AddAsset(               air_template_blue.AWACS_F_4,                 10,             WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])] ) -- AWACS
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.Truck,           10,             WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankA,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankB,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankC,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArmorA,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArmorB,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]  ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.TransportA,      10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.TransportB,      10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-        warehouse.Kutaisi:AddAsset(               ground_group_template_blue.TroopTransport,  10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-
-        logging('info', { 'main' , 'addAsset Kutaisi warehouse'} )
-
-
-
-
-
-        local kutaisi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-        local num_mission = 11
-        local depart_time = defineRequestPosition( num_mission )
-        local pos = 1
-        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-        local requestStartTime = startReqTimeAir + offSetStartSchedule
-
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local kutaisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Kutaisi[ 1 ],
-
-          function()
-
-
-
-             -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-             -- Priority Mission
-             if wh_activation.Warehouse_AB.blue[ 2 ][9] then warehouse.Kutaisi:__AddRequest( startReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, 1, nil, nil, nil, "AWACS")  end
-             -- Normal Mission Request
-             if wh_activation.Warehouse_AB.blue[ 2 ][15] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39ZA, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-             if wh_activation.Warehouse_AB.blue[ 2 ][8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-             if wh_activation.Warehouse_AB.blue[ 2 ][5] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( AssetQty.blue.ground.transport[1], AssetQty.blue.ground.transport[2] ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
-             if wh_activation.Warehouse_AB.blue[ 2 ][10] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39ZA, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "RECON FARP") pos = pos + 1  end
-
-
-             logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  kutaisi_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
-
-         end, {}, start_sched *  kutaisi_efficiency_influence, sched_interval, rand_sched
-
-      ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
-
-
-
-      -- Do something with the spawned aircraft.
-      function warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)
-
-
-
-        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
-
-          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
-
-          assignDetectionGroupSetTask(groupset, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-
-
-        elseif request.assignment == "BAI TARGET" then
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
-          local patrolZone = bluePatrolZone.kutaisi[1]
-          local engageZone = redFrontZone.TSKHINVALI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Kutaisi', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        elseif request.assignment == "BAI STRUCTURE" then
-
-            --[[
-            local avalaible_target_zones = {
-
-                zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
-                zoneTargetStructure.Red_Biteta_Bridges[ math.random( 1, #zoneTargetStructure.Red_Biteta_Bridges) ][1],
-                --zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
-
-            }
-            ]]
-
-            local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-            local patrolZone = bluePatrolZone.kutaisi[1]
-
-            speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-            activeBAI( 'Interdiction from Kutaisi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-
-        elseif request.assignment == "AWACS" then
-
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. blueAwacsZone.kutaisi:GetName()} )
-
-          activeAWACS( groupset, warehouse.Kutaisi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(5000, 9000), 5000 )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-
-        elseif request.assignment == "FIGHTER SWEEP" then
-
-          local homeAirbase =  AIRBASE.Caucasus.Kutaisi
-          local patrolZone =  bluePatrolZone.kutaisi[1]
-          local engageRange = math.random(10000, 20000)
-          local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 9000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
-
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
-
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
-      elseif request.assignment == "FIGHTER SWEEP 2" then
-
-          local homeAirbase =  AIRBASE.Caucasus.Kutaisi
-          local engageZone = redFrontZone.TSKHINVALI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          local patrolZone =  bluePatrolZone.kutaisi[1]
-          local engageRange = math.random(10000, 20000)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 9000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
-
-
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
-
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-        elseif request.assignment == "BOMBING AIRBASE" then
-
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-            local home = warehouse.Kutaisi
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
-
-            local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
-
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-        elseif request.assignment == "BOMBING WAREHOUSE" then
-
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-            local home = warehouse.Kutaisi
-            local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
-
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-
-          elseif request.assignment == "BOMBING MIL ZONE" then
-
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-            local home = warehouse.Kutaisi
-            local target = zoneTargetStructure.Red_Military_Base[ math.random( 1, #zoneTargetStructure.Red_Military_Base ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
-
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
-
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
-          elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
-
-
-            -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kutaisi", 5000, nil)
-
-            --local destination = AIRBASE.Caucasus.Batumi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-            --local speed = math.random( 300 , 500 )
-
-            --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-
-            --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, destination, speed, cargoGroupSet )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-        elseif request.assignment == "TRANSPORT INFANTRY FARP" then
-
-
-            -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
-            --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kutaisi", 5000, nil)
-
-            --local pickupZone =  cargoZone.Warehouse_AB.blue.Kutaisi
-            --local deployZone =  cargoZone.Warehouse.blue.Gori
-            --local speed = math.random( 100 , 250 )
-
-            --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-
-            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-        elseif request.assignment == "RECON FARP" then
-
-            local toTargetAltitude = math.random(7000, 9000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local reconDirection = math.random(270, 359)
-            local reconAltitude = math.random(5000, 7000)
-            local reconRunDistance = 20000
-            local reconRunDirection = math.random(270, 359)
-            local speedReconRun = math.random(400, 600)
-            local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
-            local target = targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.Kutaisi
-
-
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
-
-            -- -- addGroupSet(detectionGroupSetBlue, groupset)
+            -- addGroupSet(detectionGroupSetBlue, groupset)
 
             activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
-
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-        elseif request.assignment == "TRANSFER MECHANIZED SELFPROPELLED" then
-
-            logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - tblisi scheduled mission number - request.assignment: ' .. request.assignment .. '  - ASSET DELIVERD: ACQUISITO DALLA WAREHOUSE DI DESTINAZIONE' })
 
         else
 
-            logging('warning', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+          logging('warning', { 'warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
         end -- end if ...elseif
 
 
-      end  --end  function warehouse.Kutaisi:OnAfterSelfRequest(From, Event, To, groupset, request)
+      end --  warehouse.Batumi:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
-
-
-      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-      -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
-      function warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)
+        --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+       -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
+      function warehouse.Batumi:OnAfterDelivered(From,Event,To,request)
 
         -- le diverse opzioni disponibili per la scelta casuale della missione
         local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-        logging('info', { 'warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
+        logging('info', { 'warehouse.Batumi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
 
-        -- manca il groupset
-        -- So we start another request.
-        --if request.assignment=="PATROL" then
 
-          --local pos = math.random( 1 , #param )
 
-          --logging('info', { 'warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled PATROL mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-          --activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Kutaisi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-          -- warehouse.Batumi:AddRequest(warehouse.Pampa, WAREHOUSE.Descriptor.ATTRIBUTE, request.cargoattribute, request.ndelivered, WAREHOUSE.TransportType.APC, WAREHOUSE.Quantity.ALL)
+      end -- end warehouse.Batumi:OnAfterDelivered(From,Event,To,request)
 
-        --end
+  end -- wh_activation.Warehouse_AB.blue[ 5 ] then
+  ------------------------------------------------- END blue Warehouse BATUMI operations -------------------------------------------------------------------------------------------------------------------------
 
-        --if request.assignment=="BAI STRUCTURE" then
 
-          --logging('info', { 'warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled BAI STRUCTURE mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-          --activeBAIWarehouseT('Interdiction from Kutaisi', groupset, 'target', redFrontZone.BAI_Zone_Kutaisi[2], redFrontZone.BAI_Zone_Kutaisi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
-        --end -- end if
 
-      end -- end warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)
 
-    end -- wh_activation.Warehouse_AB.blue[ 2 ] then
 
-    ------------------------------------------------- END blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -8475,424 +7627,275 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  ------------------------------------------------- blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
 
+  if wh_activation.Warehouse_AB.blue[ 2 ][1] then
 
 
+      warehouse.Kutaisi:Start()
 
+      warehouse.Kutaisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            20,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]   ) -- Fighter
+      warehouse.Kutaisi:AddAsset(               air_template_blue.CAP_F_5,                  20,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]   ) -- Fighter
+      warehouse.Kutaisi:AddAsset(               air_template_blue.REC_L_39ZA,                10,            WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.recon[1], AssetSkill.blue.recon[2])]  ) -- Reco
+      warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,        10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
+      warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,       10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
+      warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,          10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
+      warehouse.Kutaisi:AddAsset(               air_template_blue.CAS_L_39ZA_HRocket,       10,            WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) --  CAS
+      warehouse.Kutaisi:AddAsset(               air_template_blue.TRAN_AN_26,                10,            WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Kutaisi:AddAsset(               air_template_blue.TRAN_C_130,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport ) -- Transport
+      warehouse.Kutaisi:AddAsset(               air_template_blue.TRAN_CH_47,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Kutaisi:AddAsset(               air_template_blue.AWACS_F_4,                 10,             WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])] ) -- AWACS
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.Truck,           10,             WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankA,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankB,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.antitankC,       10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArmorA,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArmorB,          10,            WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,            WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]  ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,            WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    ) -- Ground troops
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.TransportA,      10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.TransportB,      10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Kutaisi:AddAsset(               ground_group_template_blue.TroopTransport,  10,            WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
 
+      logging('info', { 'main' , 'addAsset Kutaisi warehouse'} )
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ------------------------------------------------------------ blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
-
-    if wh_activation.Warehouse_AB.blue[ 3 ][ 1 ] then -- true activate tbilisi wh operations
-
-      -- Nota: Tipo Operazioni Bomber, Transport, AWACS
-
-
-      logging('info', { 'main' , 'init Warehouse TBILISI operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
-
-      -- INITIALIZE WAREHOUSE.
-
-
-      -- START WAREHOUSE
-      warehouse.Tbilisi:Start()
-
-      logging('info', { 'main' , 'addAsset Tbilisi warehouse'} )
-      -- ADD ASSET
-      -- Tbilisi e' una delle principali warehouse della Georgia, nei suoi depositi sono immagazzinate tutti gli asset che riforniscono le seguenti supply line
-      -- Tbilisi - Gori
-      -- Tbilisi e' utilizzato come aeroporto internazionale civile e non e' attaccato dalla forze sovietiche. Da Tbilisi decollano voli per trasporto merci e missioni di pinpoint strike e BAI.
-      -- non decollano elicotteri
-
-
-
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,        10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AJS_37,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_AN_26,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]   ) -- Transport
-       warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_C_130,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,               9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]    ) -- Transport
-       warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_CH_47,               10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]   ) -- Transport
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_SU_24_Bomb,           15,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_52H,                10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Structure,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_1B,                 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_AJS_37,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]   ) -- Bomber
-       warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]    ) -- Heli CAS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_B_1B,               10,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])]   ) -- AWACS
-       warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,              10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AFAC
-       warehouse.Tbilisi:AddAsset(               air_template_blue.REC_L_39ZA,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AFAC EXPERIMENTAL PROTOTYPE
-       warehouse.Tbilisi:AddAsset(               air_template_blue.REC_F_4,                  10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AFAC EXPERIMENTAL PROTOTYPE
-       warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_F_4,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AWACS
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]      ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]      ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]      ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportA,      12,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportB,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
-       warehouse.Tbilisi:AddAsset(               ground_group_template_blue.Truck,           10,           WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
-
-
-
-
-
-
-      -- blue Tbilisi warehouse operations
-
-      logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
-
-      local tblisi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
-      local num_mission = 6
+      local kutaisi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+      local num_mission = 11
       local depart_time = defineRequestPosition( num_mission )
       local pos = 1
       local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-      local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
       local requestStartTime = startReqTimeAir + offSetStartSchedule
 
       -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-      local tblisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Tbilisi[ 1 ],
+      local kutaisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue[ 2 ][ 1 ],
 
         function()
 
 
 
-           -- Priority Mission Request
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 9 ] then warehouse.Tbilisi:__AddRequest( startReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, 1, nil, nil, nil, "AWACS")  end
+           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
+           -- Priority Mission
+           if wh_activation.Warehouse_AB.blue[ 2 ][9] then warehouse.Kutaisi:__AddRequest( startReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, 1, nil, nil, nil, "AWACS")  end
            -- Normal Mission Request
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 8 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 8 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 5 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 7 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 7 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-           if wh_activation.Warehouse_AB.blue[ 3 ][ 7 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-           --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-           --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
-           --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-           --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
-           --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][15] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39ZA, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue[ 2 ][8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+           if wh_activation.Warehouse_AB.blue[ 2 ][5] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Sachhere, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][11] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Sachhere, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( AssetQty.blue.ground.transport[1], AssetQty.blue.ground.transport[2] ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue[ 2 ][10] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39ZA, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "RECON FARP") pos = pos + 1  end
 
 
-           logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched * tblisi_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
+           logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched *  kutaisi_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * (1-rand_sched) .. ' - ' .. sched_interval * (1+rand_sched)} )
 
-       end, {}, start_sched * tblisi_efficiency_influence, sched_interval, rand_sched
+       end, {}, start_sched *  kutaisi_efficiency_influence, sched_interval, rand_sched
 
-      ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
-
-
-
-      -- Do something with the spawned aircraft.
-      function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)
+    ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
 
 
 
-        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+    -- Do something with the spawned aircraft.
+    function warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        if request.assignment == "BAI TARGET" then
-
-          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-          local percRequestKill = math.random( 0 , 100 ) * 0.01
-          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
-          local patrolZone = bluePatrolZone.tbilisi[1]
-          local engageZone = redFrontZone.TSKHINVALI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-          activeBAI( 'Interdiction from Tbilisi', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+      logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-        elseif request.assignment == "BAI STRUCTURE" then
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
 
-          --[[
-          local avalaible_target_zones = {
+        local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
 
-              zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
-              zoneTargetStructure.Red_Biteta_Bridges[ math.random( 1, #zoneTargetStructure.Red_Biteta_Bridges) ][1],
-              zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
+        assignDetectionGroupSetTask(groupset, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-          }
-          ]]
+
+
+      elseif request.assignment == "BAI TARGET" then
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+        local percRequestKill = math.random( 0 , 100 ) * 0.01
+        local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
+        local patrolZone = bluePatrolZone.kutaisi[1]
+        local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ]
+
+
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Kutaisi', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      elseif request.assignment == "BAI STRUCTURE" then
+
 
           local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-          local patrolZone = bluePatrolZone.tbilisi[1]
+          local patrolZone = bluePatrolZone.kutaisi[1]
 
           speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-          activeBAI( 'Interdiction from Tbilisi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
+          activeBAI( 'Interdiction from Kutaisi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
 
       elseif request.assignment == "AWACS" then
 
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. blueAwacsZone.tbilisi:GetName() } )
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. blueAwacsZone.kutaisi:GetName()} )
 
-          activeAWACS( groupset, warehouse.Tbilisi, blue_command_center, nil, blueAwacsZone.tbilisi, math.random(5000, 9000), 5000 )
-
-
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for FIGHTER SWEEP asset
-
-        elseif request.assignment == "FIGHTER SWEEP" then
-
-          local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
-          local patrolZone =  bluePatrolZone.tbilisi[1]
-          local engageRange = math.random(10000, 20000)
-          local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 7000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
-
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
-
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
-      elseif request.assignment == "FIGHTER SWEEP 2" then
-
-          local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
-          local engageZone = redFrontZone.TSKHINVALI[1]
-
-          for _, v in pairs(redFrontZone) do
-
-            if math.random(1,10) < 5 then
-
-              engageZone = v[1]
-              break
-
-            end -- end if
-
-          end -- end for
-
-
-          local patrolZone =  bluePatrolZone.tbilisi[1]
-          local engageRange = math.random(10000, 20000)
-          local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 7000
-          local minSpeedPatrol = 400
-          local maxSpeedPatrol = 600
-          local minSpeedEngage = 600
-          local maxSpeedEngage = 1000
-
-
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
-
-          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
-
-
-
-
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-        elseif request.assignment == "BOMBING AIRBASE" then
-
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
-
-            local home = warehouse.Tbilisi
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
-
-            local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
-
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
-
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+        activeAWACS( groupset, warehouse.Kutaisi, blue_command_center, nil, blueAwacsZone.kutaisi, math.random(5000, 9000), 5000 )
 
 
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-        elseif request.assignment == "BOMBING WAREHOUSE" then
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
 
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+      elseif request.assignment == "FIGHTER SWEEP" then
 
-            local home = warehouse.Tbilisi
-            local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+        local homeAirbase =  AIRBASE.Caucasus.Kutaisi
+        local patrolZone =  bluePatrolZone.kutaisi[1]
+        local engageRange = math.random(10000, 20000)
+        local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 9000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
-
-
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING MIL ZONE" then
 
-            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-            local home = warehouse.Tbilisi
-            local target = zoneTargetStructure.Red_Military_Base[ math.random( 1, #zoneTargetStructure.Red_Military_Base ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
+    elseif request.assignment == "FIGHTER SWEEP 2" then
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+        local homeAirbase =  AIRBASE.Caucasus.Kutaisi
+        local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ]
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+        local patrolZone =  bluePatrolZone.kutaisi[1]
+        local engageRange = math.random(10000, 20000)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 9000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
+
+
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+      elseif request.assignment == "BOMBING AIRBASE" then
+
+          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Kutaisi
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+      elseif request.assignment == "BOMBING WAREHOUSE" then
+
+          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Kutaisi
+          local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+
+        elseif request.assignment == "BOMBING MIL ZONE" then
+
+          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Kutaisi
+          local target = targetZone.military_base.red[ math.random( 1, #targetZone.military_base.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -8903,29 +7906,541 @@ if conflictZone == 'Zone 1: South Ossetia' then
         elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
 
+          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+          --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles Kutaisi", 5000, nil)
 
-            --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Vehicles' ):FilterStart()
+          --local destination = AIRBASE.Caucasus.Batumi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+          --local speed = math.random( 300 , 500 )
 
+          --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-            --local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
-            --local speed = math.random( 300 , 500 )
-
-            --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
-            --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
-
-
+          --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, destination, speed, cargoGroupSet )
 
 
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-        elseif request.assignment == "TRANSPORT INFANTRY AIRBASE" then
+
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+      elseif request.assignment == "TRANSPORT INFANTRY FARP" then
+
+
+          -- generateCargoSet(typeCargo, nameGroupCargo, loadRadius, nearRadius)
+          --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Kutaisi", 5000, nil)
+
+          --local pickupZone =  cargoZone.Warehouse_AB.blue.Kutaisi
+          --local deployZone =  cargoZone.Warehouse.blue.Gori
+          --local speed = math.random( 100 , 250 )
+
+          --logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - : ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+
+          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
-          --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+      elseif request.assignment == "RECON FARP" then
+
+          local toTargetAltitude = math.random(7000, 9000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local reconDirection = math.random(270, 359)
+          local reconAltitude = math.random(5000, 7000)
+          local reconRunDistance = 20000
+          local reconRunDirection = math.random(270, 359)
+          local speedReconRun = math.random(400, 600)
+          local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
+          local target = targets[ math.random( 1 , #targets ) ]
+          local home = warehouse.Kutaisi
+
+
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+
+          -- -- addGroupSet(detectionGroupSetBlue, groupset)
+
+          activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
+
+
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+      elseif request.assignment == "TRANSFER MECHANIZED SELFPROPELLED" then
+
+          logging('info', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - tblisi scheduled mission number - request.assignment: ' .. request.assignment .. '  - ASSET DELIVERD: ACQUISITO DALLA WAREHOUSE DI DESTINAZIONE' })
+
+      else
+
+          logging('warning', { 'warehouse.Kutaisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+
+      end -- end if ...elseif
+
+
+    end  --end  function warehouse.Kutaisi:OnAfterSelfRequest(From, Event, To, groupset, request)
+
+
+
+
+    --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+    -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
+    function warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)
+
+      -- le diverse opzioni disponibili per la scelta casuale della missione
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+
+      logging('info', { 'warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
+
+
+
+    end -- end warehouse.Kutaisi:OnAfterDelivered(From,Event,To,request)
+
+  end -- wh_activation.Warehouse_AB.blue[ 2 ] then
+
+  ------------------------------------------------- END blue Warehouse KUTAISI operations -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ------------------------------------------------------------ blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
+
+  if wh_activation.Warehouse_AB.blue[ 3 ][ 1 ] then -- true activate tbilisi wh operations
+
+    -- Nota: Tipo Operazioni Bomber, Transport, AWACS
+
+
+    logging('info', { 'main' , 'init Warehouse TBILISI operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
+
+    -- INITIALIZE WAREHOUSE.
+
+
+    -- START WAREHOUSE
+    warehouse.Tbilisi:Start()
+
+    logging('info', { 'main' , 'addAsset Tbilisi warehouse'} )
+
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]    ) -- Fighter
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,        10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_AJS_37,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber CAS
+     warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_AN_26,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]   ) -- Transport
+     warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_C_130,               10,         WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,               9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]    ) -- Transport
+     warehouse.Tbilisi:AddAsset(               air_template_blue.TRAN_CH_47,               10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]   ) -- Transport
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_SU_24_Bomb,           15,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_52H,                10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Structure,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_B_1B,                 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.BOM_AJS_37,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.bomber[1], AssetSkill.blue.bomber[2])]   ) -- Bomber
+     warehouse.Tbilisi:AddAsset(               air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]    ) -- Heli CAS
+     warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_B_1B,               10,           WAREHOUSE.Attribute.AIR_AWACS, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.awacs[1], AssetSkill.blue.awacs[2])]   ) -- AWACS
+     warehouse.Tbilisi:AddAsset(               air_template_blue.AFAC_L_39ZA,              10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AFAC
+     warehouse.Tbilisi:AddAsset(               air_template_blue.REC_L_39ZA,               10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AFAC EXPERIMENTAL PROTOTYPE
+     warehouse.Tbilisi:AddAsset(               air_template_blue.REC_F_4,                  10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AFAC EXPERIMENTAL PROTOTYPE
+     warehouse.Tbilisi:AddAsset(               air_template_blue.AWACS_F_4,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.afac[1], AssetSkill.blue.afac[2])]   ) -- AWACS
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedA,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]      ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedB,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]      ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.mechanizedC,     10,          WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]      ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorA,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArmorB,          10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiAkatsia,     10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiGwozdika,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiKatiusha,    10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.ArtiHeavyMortar, 10,          WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.artillery[1], AssetSkill.blue.artillery[2])]    ) -- Ground troops
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportA,      12,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TransportB,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
+     warehouse.Tbilisi:AddAsset(               ground_group_template_blue.Truck,           10,           WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
+
+
+
+
+
+
+    -- blue Tbilisi warehouse operations
+
+    logging('info', { 'main' , 'addrequest Tbilisi warehouse'} )
+
+    local tblisi_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+    local num_mission = 6
+    local depart_time = defineRequestPosition( num_mission )
+    local pos = 1
+    local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+    local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+    local requestStartTime = startReqTimeAir + offSetStartSchedule
+
+    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+    local tblisi_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue[ 3 ][ 1 ],
+
+      function()
+
+
+
+         -- Priority Mission Request
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 9 ] then warehouse.Tbilisi:__AddRequest( startReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AWACS_F_4, 1, nil, nil, nil, "AWACS")  end
+         -- Normal Mission Request
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 8 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 8 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 5 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 7 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 7 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+         if wh_activation.Warehouse_AB.blue[ 3 ][ 7 ] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+         --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+         --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY AIRBASE") pos = pos + 1  end
+         --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Zestafoni, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+         --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Sachhere, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT CRATE FARP") pos = pos + 1  end
+         --if wh_activation.Warehouse_AB.blue[ 3 ][11] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_C_130, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "DISPATCHING AIRBASE TRANSPORT") pos = pos + 1  end
+
+
+         logging('info', { 'main' , 'Tblisi scheduler - start time:' .. start_sched * tblisi_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
+
+     end, {}, start_sched * tblisi_efficiency_influence, sched_interval, rand_sched
+
+    ) -- end  tblisi_sched = SCHEDULER:New( nil, ..)
+
+
+
+    -- Do something with the spawned aircraft.
+    function warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+
+
+      logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      if request.assignment == "BAI TARGET" then
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+        local percRequestKill = math.random( 0 , 100 ) * 0.01
+        local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
+        local patrolZone = bluePatrolZone.tbilisi[1]
+        local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ]
+
+
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Tbilisi', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+      elseif request.assignment == "BAI STRUCTURE" then
+
+
+
+        local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+        local patrolZone = bluePatrolZone.tbilisi[1]
+
+        speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+        activeBAI( 'Interdiction from Tbilisi against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+
+    elseif request.assignment == "AWACS" then
+
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - awacsZone: ' .. blueAwacsZone.tbilisi:GetName() } )
+
+        activeAWACS( groupset, warehouse.Tbilisi, blue_command_center, nil, blueAwacsZone.tbilisi, math.random(5000, 9000), 5000 )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for FIGHTER SWEEP asset
+
+      elseif request.assignment == "FIGHTER SWEEP" then
+
+        local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
+        local patrolZone =  bluePatrolZone.tbilisi[1]
+        local engageRange = math.random(10000, 20000)
+        local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 7000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
+
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
+    elseif request.assignment == "FIGHTER SWEEP 2" then
+
+        local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
+        local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ]
+
+        local patrolZone =  bluePatrolZone.tbilisi[1]
+        local engageRange = math.random(10000, 20000)
+        local patrolFloorAltitude = 4000
+        local patrolCeilAltitude = 7000
+        local minSpeedPatrol = 400
+        local maxSpeedPatrol = 600
+        local minSpeedEngage = 600
+        local maxSpeedEngage = 1000
+
+
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+        logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+        activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+      elseif request.assignment == "BOMBING AIRBASE" then
+
+          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Tbilisi
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+      elseif request.assignment == "BOMBING WAREHOUSE" then
+
+          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Tbilisi
+          local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING MIL ZONE" then
+
+          -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Tbilisi
+          local target = targetZone.military_base.red[ math.random( 1, #targetZone.military_base.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for TRANSPORT asset
+      elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
+
+
+
+          --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Vehicles' ):FilterStart()
 
 
           --local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
@@ -8941,13 +8456,50 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-
-          ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-          elseif request.assignment == "TRANSPORT INFANTRY FARP" then
-
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+      elseif request.assignment == "TRANSPORT INFANTRY AIRBASE" then
 
 
-            --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+
+        --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+
+
+        --local destination = AIRBASE.Caucasus.Kutaisi --airbase_blue[ math.random( 1 , #airbase_blue ) ]
+        --local speed = math.random( 300 , 500 )
+
+        --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
+        --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Tbilisi_Lochini, speed, cargoGroupSet )
+
+
+
+
+
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+        elseif request.assignment == "TRANSPORT INFANTRY FARP" then
+
+
+
+          --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Infantry' ):FilterStart()
+
+
+          --local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
+          --local deployZone =  cargoZone.Warehouse.blue.Gori
+          --local speed = math.random( 100 , 250 )
+
+          --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+          --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
+
+
+
+      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+      elseif request.assignment == "TRANSPORT CRATE FARP" then
+
+
+            --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Workmaterials' ):FilterStart()
 
 
             --local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
@@ -8959,181 +8511,161 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-        elseif request.assignment == "TRANSPORT CRATE FARP" then
 
 
-              --local cargoGroupSet = SET_CARGO:New():FilterTypes( 'Workmaterials' ):FilterStart()
 
+    ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+    elseif request.assignment == "DISPATCHING AIRBASE TRANSPORT" then
 
-              --local pickupZone =  cargoZone.Warehouse_AB.blue.Tbilisi
-              --local deployZone =  cargoZone.Warehouse.blue.Gori
-              --local speed = math.random( 100 , 250 )
 
-              --logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
-              --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
+          local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
+          local AirplanesSet = groupset
 
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() } )
 
+          local PickupZoneSet = SET_ZONE:New()
+          local DeployZoneSet = SET_ZONE:New()
 
+          PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Tbilisi_Lochini ) )
+          DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Kutaisi ) )
+          DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Batumi ) )
 
+          AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, cargoGroupSet, PickupZoneSet, DeployZoneSet )
 
-      ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-      elseif request.assignment == "DISPATCHING AIRBASE TRANSPORT" then
+          AICargoDispatcherAirplanes.SetPickupRadius(1000, 30)--: Sets or randomizes the pickup location for the carrier around the cargo coordinate in a radius defined an outer and optional inner radius.
+          AICargoDispatcherAirplanes.SetPickupSpeed(600, 350)--: Set the speed or randomizes the speed in km/h to pickup the cargo.
+          AICargoDispatcherAirplanes.SetPickupHeight(9000, 3000)--: Set the height or randomizes the height in meters to pickup the cargo.
+          AICargoDispatcherAirplanes.SetDeployRadius(1000, 30)--: Sets or randomizes the deploy location for the carrier around the cargo coordinate in a radius defined an outer and an optional inner radius.
+          AICargoDispatcherAirplanes.SetDeploySpeed(400, 300)--: Set the speed or randomizes the speed in km/h to deploy the cargo.
+          AICargoDispatcherAirplanes.SetDeployHeight(7000, 4000)--: Set the height or randomizes the height in meters to deploy the cargo.
+          AICargoDispatcherAirplanes.SetHomeZone(AIRBASE.Caucasus.Tbilisi_Lochini)
 
 
+          AICargoDispatcherAirplanes:Start()
 
-            local cargoGroupSet = SET_CARGO:New():FilterTypes( "Infantry" ):FilterStart()
-            local AirplanesSet = groupset
+          function AICargoDispatcherAirplanes:OnAfterLoaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, PickupZone )
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() } )
+             logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterLoaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            local PickupZoneSet = SET_ZONE:New()
-            local DeployZoneSet = SET_ZONE:New()
+          end
 
-            PickupZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Tbilisi_Lochini ) )
-            DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Kutaisi ) )
-            DeployZoneSet:AddZone( ZONE_AIRBASE:New( AIRBASE.Caucasus.Batumi ) )
+          function AICargoDispatcherAirplanes:OnAfterPickedUp( From, Event, To, CarrierGroup, PickupZone )
 
-            AICargoDispatcherAirplanes = AI_CARGO_DISPATCHER_AIRPLANE:New( AirplanesSet, cargoGroupSet, PickupZoneSet, DeployZoneSet )
+            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterPickedUp ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            AICargoDispatcherAirplanes.SetPickupRadius(1000, 30)--: Sets or randomizes the pickup location for the carrier around the cargo coordinate in a radius defined an outer and optional inner radius.
-            AICargoDispatcherAirplanes.SetPickupSpeed(600, 350)--: Set the speed or randomizes the speed in km/h to pickup the cargo.
-            AICargoDispatcherAirplanes.SetPickupHeight(9000, 3000)--: Set the height or randomizes the height in meters to pickup the cargo.
-            AICargoDispatcherAirplanes.SetDeployRadius(1000, 30)--: Sets or randomizes the deploy location for the carrier around the cargo coordinate in a radius defined an outer and an optional inner radius.
-            AICargoDispatcherAirplanes.SetDeploySpeed(400, 300)--: Set the speed or randomizes the speed in km/h to deploy the cargo.
-            AICargoDispatcherAirplanes.SetDeployHeight(7000, 4000)--: Set the height or randomizes the height in meters to deploy the cargo.
-            AICargoDispatcherAirplanes.SetHomeZone(AIRBASE.Caucasus.Tbilisi_Lochini)
+          end
 
 
-            AICargoDispatcherAirplanes:Start()
+          function AICargoDispatcherAirplanes:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
 
-            function AICargoDispatcherAirplanes:OnAfterLoaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, PickupZone )
+            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeploy ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-               logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterLoaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+          end
 
-            end
+          function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, DeployZone )
 
-            function AICargoDispatcherAirplanes:OnAfterPickedUp( From, Event, To, CarrierGroup, PickupZone )
+            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterPickedUp ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+          end
 
-            end
+          function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
 
+            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            function AICargoDispatcherAirplanes:OnAfterDeploy( From, Event, To, CarrierGroup, Coordinate, Speed, Height, DeployZone )
+          end
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeploy ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+          function AICargoDispatcherAirplanes:OnAfterUnloaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
 
-            end
+            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnloaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, DeployZone )
+          end
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+          function AICargoDispatcherAirplanes:OnAfterDeployed( From, Event, To, CarrierGroup, DeployZone )
 
-            end
+            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeployed ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            function AICargoDispatcherAirplanes:OnAfterUnload( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
+          end
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnload ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            end
 
-            function AICargoDispatcherAirplanes:OnAfterUnloaded( From, Event, To, CarrierGroup, Cargo, CarrierUnit, DeployZone )
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterUnloaded ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            end
 
-            function AICargoDispatcherAirplanes:OnAfterDeployed( From, Event, To, CarrierGroup, DeployZone )
 
-              logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request):    **** OnAfterDeployed ****  ' , 'groupset name: ' .. CarrierGroup:GetObjectNames() .. ' - cargoGroupSet: ' .. Cargo:GetObjectNames() .. ' - cargo.count: ' .. Cargo:Count() .. ' - CarrierUnit: ' .. CarrierUnit:GetName() .. ' - PickupZone: ' .. PickupZone:GetName() } )
 
-            end
+      ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+    elseif request.assignment == "RECON FARP" then
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
+          local toTargetAltitude = math.random(7000, 9000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local reconDirection = math.random(270, 359)
+          local reconAltitude = math.random(5000, 7000)
+          local reconRunDistance = 20000
+          local reconRunDirection = math.random(270, 359)
+          local speedReconRun = math.random(400, 600)
+          local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
+          local target = targets[ math.random( 1 , #targets ) ]
+          local home = warehouse.warehouse.Tbilisi
 
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
+          -- addGroupSet(detectionGroupSetBlue, groupset)
 
+          activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-      elseif request.assignment == "RECON FARP" then
+      ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+      elseif request.assignment == "TRANSFER MECHANIZED SELFPROPELLED" then
 
-            local toTargetAltitude = math.random(7000, 9000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local reconDirection = math.random(270, 359)
-            local reconAltitude = math.random(5000, 7000)
-            local reconRunDistance = 20000
-            local reconRunDirection = math.random(270, 359)
-            local speedReconRun = math.random(400, 600)
-            local targets = { cargoZone.Warehouse.red.Biteta, cargoZone.Warehouse.red.Didi, cargoZone.Warehouse.red.Kvemo_Sba, cargoZone.Warehouse.red.Alagir }
-            local target = targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.warehouse.Tbilisi
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+          logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - tblisi scheduled mission number - request.assignment: ' .. request.assignment .. '  - ASSET DELIVERD: ACQUISITO DALLA WAREHOUSE DI DESTINAZIONE' })
 
-            -- addGroupSet(detectionGroupSetBlue, groupset)
 
-            activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
+      else
 
+        logging('warning', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
+      end
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-        elseif request.assignment == "TRANSFER MECHANIZED SELFPROPELLED" then
 
+    end  --end  function warehouse.Tbilisi:OnAfterSelfRequest(From, Event, To, groupset, request)
 
-            logging('info', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - tblisi scheduled mission number - request.assignment: ' .. request.assignment .. '  - ASSET DELIVERD: ACQUISITO DALLA WAREHOUSE DI DESTINAZIONE' })
 
 
-        else
 
-          logging('warning', { 'warehouse.Tbilisi:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+     -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
+    function warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
 
-        end
+      -- le diverse opzioni disponibili per la scelta casuale della missione
+      local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
+      logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
 
 
-      end  --end  function warehouse.Tbilisi:OnAfterSelfRequest(From, Event, To, groupset, request)
+    end -- end warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
 
+  end -- end if tbilisi_wh_activation
+  ------------------------------------------------------------ END blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
 
 
 
-        --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-       -- DA ELIMINARE: LA RIPETIZIONE DELLA MISSIONE E' ESEGUITA DALLO SCHEDULER
-      function warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
 
-        -- le diverse opzioni disponibili per la scelta casuale della missione
-        local request = request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-        logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled mission number - request.assignment: ' .. request.assignment })
 
-        -- manca il groupset
-        -- So we start another request.
-        --if request.assignment=="PATROL" then
 
-          --local pos = math.random( 1 , #param )
 
-          --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled PATROL mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-          --activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Tbilisi[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
-          -- warehouse.Batumi:AddRequest(warehouse.Pampa, WAREHOUSE.Descriptor.ATTRIBUTE, request.cargoattribute, request.ndelivered, WAREHOUSE.TransportType.APC, WAREHOUSE.Quantity.ALL)
 
-        --end
 
-        --if request.assignment=="BAI STRUCTURE" then
 
-          --logging('info', { 'warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)' , 'tblisi scheduled BAI STRUCTURE mission number:  - pos: ' .. pos .. ' - groupset name: ' .. groupset:GetObjectNames()} )
-          --activeBAIWarehouseT('Interdiction from Tbilisi', groupset, 'target', redFrontZone.BAI_Zone_Tbilisi[2], redFrontZone.BAI_Zone_Tbilisi[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
-        --end -- end if
 
-      end -- end warehouse.Tbilisi:OnAfterDelivered(From,Event,To,request)
 
-    end -- end if tbilisi_wh_activation
-    ------------------------------------------------------------ END blue Warehouse TBILISI operations ----------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -9189,215 +8721,148 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  ------------------------------------------------------------ blue Warehouse Senaki operations ----------------------------------------------------------------------------------------------------------------------------
 
+  if wh_activation.Warehouse_AB.blue[ 1 ][ 1 ] then
 
+      logging('info', { 'main' , 'init Warehouse Senaki operations' } )
 
 
+      warehouse.Senaki:Start()
 
+      -- Senaki e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas transport
 
+      warehouse.Senaki:AddAsset(              air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Senaki:AddAsset(              air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Senaki:AddAsset(              air_template_blue.CAP_L_39ZA,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
+      warehouse.Senaki:AddAsset(              air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
+      warehouse.Senaki:AddAsset(              air_template_blue.CAS_Su_17M4_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
+      warehouse.Senaki:AddAsset(              air_template_blue.CAS_Su_17M4_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
+      warehouse.Senaki:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
+      warehouse.Senaki:AddAsset(              air_template_blue.GA_A_10A_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
+      warehouse.Senaki:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Heli CAS
+      warehouse.Senaki:AddAsset(              air_template_blue.TRAN_UH_1H,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  ) -- Transport
+      warehouse.Senaki:AddAsset(              air_template_blue.TRAN_UH_60A,              10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]    ) -- Transport
+      warehouse.Senaki:AddAsset(              air_template_blue.TRAN_CH_47,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]   ) -- Transport
+      warehouse.Senaki:AddAsset(              air_template_blue.TRAN_AN_26,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  )
+      warehouse.Senaki:AddAsset(              air_template_blue.AFAC_L_39ZA,              10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
+      warehouse.Senaki:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+      warehouse.Senaki:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+      warehouse.Senaki:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
+      warehouse.Senaki:AddAsset(              ground_group_template_blue.TransportA,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
+      warehouse.Senaki:AddAsset(              ground_group_template_blue.TransportB,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
+      warehouse.Senaki:AddAsset(              ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    )-- Transport
 
+      logging('info', { 'main' , 'addAsset Senaki warehouse'} )
 
 
 
+      -- blue Senaki warehouse operations
 
+      logging('info', { 'main' , 'addrequest Senaki warehouse'} )
 
 
+      local senaki_efficiency_influence = math.random(10, 20) * 0.1
+      local num_mission = 8
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-    ------------------------------------------------------------ blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
+      local Senaki_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue[ 1 ][ 1 ],
 
-    if wh_activation.Warehouse_AB.blue[ 1 ][1] then
+          function()
 
-        logging('info', { 'main' , 'init Warehouse VAZIANI operations' } )
 
 
-        warehouse.Tskhinvali:Start()
+              if wh_activation.Warehouse_AB.blue[ 1 ][15] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( startReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")  end -- AFAC, ...
+              if wh_activation.Warehouse_AB.blue[ 1 ][8] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+              if wh_activation.Warehouse_AB.blue[ 1 ][8] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+              if wh_activation.Warehouse_AB.blue[ 1 ][5] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue[ 1 ][5] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP 2") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
+              if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
+              --if wh_activation.Warehouse_AB.blue[ 1 ][11] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
+              --if wh_activation.Warehouse_AB.blue[ 1 ][11] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
+              --if wh_activation.Warehouse_AB.blue[ 1 ][14] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( AssetQty.blue.ground.transport[1], AssetQty.blue.ground.transport[2] ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
 
-        -- Vaziani e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas transport
+              logging('info', { 'main' , 'Senaki scheduler - start time:' .. start_sched *  senaki_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
 
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAP_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAP_L_39ZA,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  )
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAS_Su_17M4_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAS_Su_17M4_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAS_Su_17M4_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.GA_A_10A_Bomb,            10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.CAS_MI_24V,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]   ) -- Heli CAS
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.TRAN_UH_1H,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  ) -- Transport
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.TRAN_UH_60A,              10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]    ) -- Transport
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.TRAN_CH_47,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]   ) -- Transport
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.TRAN_AN_26,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  )
-        warehouse.Tskhinvali:AddAsset(              air_template_blue.AFAC_L_39ZA,              10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Bomber BAI
-        warehouse.Tskhinvali:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-        warehouse.Tskhinvali:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-        warehouse.Tskhinvali:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]    ) -- Ground troops
-        warehouse.Tskhinvali:AddAsset(              ground_group_template_blue.TransportA,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
-        warehouse.Tskhinvali:AddAsset(              ground_group_template_blue.TransportB,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]   ) -- Transport
-        warehouse.Tskhinvali:AddAsset(              ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]    )-- Transport
+          end, {}, start_sched * senaki_efficiency_influence, sched_interval, rand_sched
 
-        logging('info', { 'main' , 'addAsset Vaziani warehouse'} )
+      ) -- end  Senaki_sched = SCHEDULER:New( nil, ..)
 
 
 
-        -- blue Vaziani warehouse operations
 
-        logging('info', { 'main' , 'addrequest Vaziani warehouse'} )
 
 
-        local vaziani_efficiency_influence = math.random(10, 20) * 0.1
-        local num_mission = 8
-        local depart_time = defineRequestPosition( num_mission )
-        local pos = 1
-        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-        local offSetStartSchedule = 300 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-        local vaziani_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Vaziani[ 1 ],
+      -- Do something with the spawned aircraft.
+      function warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)
 
-            function()
+        logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' ,  ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+        if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
 
-                if wh_activation.Warehouse_AB.blue[ 1 ][15] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( startReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")  end -- AFAC, ...
-                if wh_activation.Warehouse_AB.blue[ 1 ][8] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-                if wh_activation.Warehouse_AB.blue[ 1 ][8] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-                if wh_activation.Warehouse_AB.blue[ 1 ][5] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue[ 1 ][5] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP 2") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue[ 1 ][7] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE BITETA") pos = pos + 1  end
-                --if wh_activation.Warehouse_AB.blue[ 1 ][11] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Batumi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, math.random( AssetQty.blue.air.transport[1], AssetQty.blue.air.transport[2] ), nil, nil, nil, "TRANSPORT VEHICLE AIRBASE") pos = pos + 1  end
-                --if wh_activation.Warehouse_AB.blue[ 1 ][11] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_CH_47, math.random( AssetQty.blue.heli.transport[1], AssetQty.blue.heli.transport[2] ), nil, nil, nil, "TRANSPORT INFANTRY FARP") pos = pos + 1  end
-                --if wh_activation.Warehouse_AB.blue[ 1 ][14] and pos <= num_mission then warehouse.Tskhinvali:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, math.random( AssetQty.blue.ground.transport[1], AssetQty.blue.ground.transport[2] ), nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+          local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Senaki_Kolkhi )
 
-                logging('info', { 'main' , 'Vaziani scheduler - start time:' .. start_sched *  vaziani_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
+          assignDetectionGroupSetTask(groupset, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-            end, {}, start_sched * vaziani_efficiency_influence, sched_interval, rand_sched
 
-        ) -- end  vaziani_sched = SCHEDULER:New( nil, ..)
+        elseif request.assignment == "BAI TARGET" then
 
 
+          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
 
+          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+          local  percRequestKill = math.random( 0 , 100 ) * 0.01
+          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
+          local patrolZone = bluePatrolZone.tbilisi[1]
+          local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ]
 
 
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
-        -- Do something with the spawned aircraft.
-        function warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)
+          activeBAI( 'Interdiction from Senaki', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
-          logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' ,  ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "AFAC_afacZone.Didmukha_Tsveri" then
+        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+        elseif request.assignment == "BAI STRUCTURE" then
 
-            local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
 
-            assignDetectionGroupSetTask(groupset, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
+          local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
+          local patrolZone = bluePatrolZone.vaziani[1]
 
-          elseif request.assignment == "BAI TARGET" then
 
+          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
-            speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
 
+          activeBAI( 'Interdiction from Senaki against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
 
-            -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-            local  percRequestKill = math.random( 0 , 100 ) * 0.01
-            local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
-            local patrolZone = bluePatrolZone.tbilisi[1]
-            local engageZone = redFrontZone.TSKHINVALI[1]
 
-            for _, v in pairs(redFrontZone) do
 
-              if math.random(1,10) < 5 then
 
-                engageZone = v[1]
-                break
 
-              end -- end if
+        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+        elseif request.assignment == "FIGHTER SWEEP" then
 
-            end -- end for
-
-
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-            activeBAI( 'Interdiction from Vaziani', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          elseif request.assignment == "BAI STRUCTURE" then
-
-            --[[
-            local avalaible_target_zones = {
-
-                zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges) ][1],
-                zoneTargetStructure.Red_Biteta_Bridges[ math.random( 1, #zoneTargetStructure.Red_Biteta_Bridges) ][1],
-                zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges) ][1]
-
-            }
-            ]]
-
-            local engageZone = specific_target.red.zone_targ[ math.random(1, #specific_target.red.zone_targ) ] --avalaible_target_zones[ math.random( 1, #avalaible_target_zones ) ]
-            local patrolZone = bluePatrolZone.vaziani[1]
-
-
-            speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageZone: ' .. engageZone:GetName() } )
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
-
-            activeBAI( 'Interdiction from Vaziani against structure', groupset, 'bombing', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, nil, nil, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
-
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          elseif request.assignment == "FIGHTER SWEEP" then
-
-              -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
-              local homeAirbase =  AIRBASE.Caucasus.Vaziani
-              local patrolZone =  bluePatrolZone.vaziani[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
-              local engageRange = math.random(10000, 20000)
-              local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-              local patrolFloorAltitude = 4000
-              local patrolCeilAltitude = 9000
-              local minSpeedPatrol = 400
-              local maxSpeedPatrol = 600
-              local minSpeedEngage = 600
-              local maxSpeedEngage = 1000
-
-              logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-              logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
-
-              activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase)
-
-
-
-
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
-        elseif request.assignment == "FIGHTER SWEEP 2" then
-
-            local homeAirbase =  AIRBASE.Caucasus.Vaziani
-            local engageZone = redFrontZone.TSKHINVALI[1]
-
-            for _, v in pairs(redFrontZone) do
-
-              if math.random(1,10) < 5 then
-
-                engageZone = v[1]
-                break
-
-              end -- end if
-
-            end -- end for
-
+            -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
+            local homeAirbase =  AIRBASE.Caucasus.Senaki_Kolkhi
             local patrolZone =  bluePatrolZone.vaziani[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
             local engageRange = math.random(10000, 20000)
+            local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
             local patrolFloorAltitude = 4000
             local patrolCeilAltitude = 9000
             local minSpeedPatrol = 400
@@ -9405,233 +8870,248 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local minSpeedEngage = 600
             local maxSpeedEngage = 1000
 
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName() } )
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+            logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+            logging('info', { 'wwarehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
+            activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase)
 
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
+      elseif request.assignment == "FIGHTER SWEEP 2" then
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING AIRBASE" then
+          local homeAirbase =  AIRBASE.Caucasus.Senaki_Kolkhi
+          local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ][ 1 ]
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+          local patrolZone =  bluePatrolZone.vaziani[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
+          local engageRange = math.random(10000, 20000)
+          local patrolFloorAltitude = 4000
+          local patrolCeilAltitude = 9000
+          local minSpeedPatrol = 400
+          local maxSpeedPatrol = 600
+          local minSpeedEngage = 600
+          local maxSpeedEngage = 1000
 
-            local home = warehouse.Tskhinvali
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName() } )
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
 
-            local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase )
 
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING AIRBASE" then
 
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+          local home = warehouse.Tskhinvali
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING WAREHOUSE" then
+          local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            local home = warehouse.Tskhinvali
-            local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING WAREHOUSE" then
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING MIL ZONE" then
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+          local home = warehouse.Tskhinvali
+          local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
-            local home = warehouse.Tskhinvali
-            local target = zoneTargetStructure.Red_Military_Base[ math.random( 1, #zoneTargetStructure.Red_Military_Base ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING MIL ZONE" then
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING STRUCTURE BITETA" then
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+          local home = warehouse.Tskhinvali
+          local target = targetZone.military_base.red[ math.random( 1, #targetZone.military_base.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
-            local home = warehouse.Tskhinvali
-            local target = zoneTargetStructure.Red_Biteta_Bridges[ math.random( 1, #zoneTargetStructure.Red_Biteta_Bridges ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
-          elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING STRUCTURE BITETA" then
 
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+          local home = warehouse.Tskhinvali
+          local target = targetZone.structure.red[ math.random( 1, #targetZone.structure.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
-              --local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-              --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles", 5000, nil)
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
-              --local speed = math.random( 300 , 500 )
 
-              --logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-              --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Vaziani, destination, speed, cargoGroupSet )
+        ------------------------------------------------------------------------------------------------------ assignment for TRASNPORT asset
+        elseif request.assignment == "TRANSPORT VEHICLE AIRBASE" then
 
 
 
+            --local destination = airbase_blue[ math.random( 1 , #airbase_blue ) ]
 
+            --local cargoGroupSet = generateCargoSet('Vehicles', "Cargo Vehicles", 5000, nil)
 
-          ----------------------------------------------------------------------------------------------------- assignment for TRASNPORT asset
-      elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
+            --local speed = math.random( 300 , 500 )
 
+            --logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - destination: ' .. destination } )
 
-              --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Vaziani", 5000, nil)
+            --activeCargoAirPlane( groupset, AIRBASE.Caucasus.Vaziani, destination, speed, cargoGroupSet )
 
 
-              --local pickupZone =  cargoZone.Warehouse_AB.blue.Vaziani
-              --local deployZone =  cargoZone.Warehouse.blue.Khashuri
-              --local speed = math.random( 100 , 250 )
 
-              --logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-              --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
+        ----------------------------------------------------------------------------------------------------- assignment for TRASNPORT asset
+    elseif request.assignment == "TRANSPORT INFANTRY FARP" then
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for RECON asset
-          elseif request.assignment == "RECON AIRBASE" then
+            --local cargoGroupSet = generateCargoSet('Infantry', "Cargo Infantry Vaziani", 5000, nil)
 
-            local toTargetAltitude = math.random(7000, 9000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local reconDirection = math.random(270, 359)
-            local reconAltitude = math.random(5000, 7000)
-            local reconRunDistance = 20000
-            local reconRunDirection = math.random(270, 359)
-            local speedReconRun = math.random(400, 600)
-            local targets = { cargoZone.Warehouse_AB.red.Mozdok, cargoZone.Warehouse_AB.red.Mineralnye, cargoZone.Warehouse_AB.red.Beslan, cargoZone.Warehouse_AB.red.Nalchik }
-            local target = targets[ math.random( 1 , #targets ) ]
-            local home = warehouse.Tskhinvali
 
-            logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
+            --local pickupZone =  cargoZone.Warehouse_AB.blue.Vaziani
+            --local deployZone =  cargoZone.Warehouse.blue.Khashuri
+            --local speed = math.random( 100 , 250 )
 
-            -- addGroupSet(detectionGroupSetBlue, groupset)
+            --logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - cargoGroupSet: ' .. cargoGroupSet:GetObjectNames() .. ' - cargo.count' .. cargoGroupSet:Count() .. ' - speed: ' .. speed .. ' - pickupZone: ' .. pickupZone:GetName() .. ' - deployZone: ' .. deployZone:GetName() } )
 
-            activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
+            --activeCargoHelicopter( groupset, pickupZone, deployZone, speed, cargoGroupSet )
 
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for RECON asset
+        elseif request.assignment == "RECON AIRBASE" then
 
-          ------------------------------------------------------------------------------------------------------ assignment for ground transport
-          elseif request.assignment == "TRANSFER MECHANIZED SELFPROPELLED" then
+          local toTargetAltitude = math.random(7000, 9000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local reconDirection = math.random(270, 359)
+          local reconAltitude = math.random(5000, 7000)
+          local reconRunDistance = 20000
+          local reconRunDirection = math.random(270, 359)
+          local speedReconRun = math.random(400, 600)
+          local targets = { cargoZone.Warehouse_AB.red.Mozdok, cargoZone.Warehouse_AB.red.Mineralnye, cargoZone.Warehouse_AB.red.Beslan, cargoZone.Warehouse_AB.red.Nalchik }
+          local target = targets[ math.random( 1 , #targets ) ]
+          local home = warehouse.Tskhinvali
 
-              logging('info', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - tblisi scheduled mission number - request.assignment: ' .. request.assignment .. '  - ASSET DELIVERD: ACQUISITO DALLA WAREHOUSE DI DESTINAZIONE' })
+          logging('info', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - home: ' .. home.alias .. ' - target: ' .. target:GetName() .. ' - toTargetAltitude: ' .. toTargetAltitude .. ' - toHomeAltitude: ' .. toHomeAltitude .. ' - reconDirection: ' .. reconDirection .. ' - reconAltitude: ' .. reconAltitude .. ' - reconRunDistance: ' .. reconRunDistance .. ' - reconRunDirection: ' .. reconRunDirection .. ' - speedReconRun: ' .. speedReconRun } )
 
-          else
+          -- addGroupSet(detectionGroupSetBlue, groupset)
 
-              logging('warning', { 'warehouse.Tskhinvali:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
+          activeRECON(groupset, home, target, toTargetAltitude, toHomeAltitude, reconDirection, reconAltitude, reconRunDistance, reconRunDirection, speedReconRun )
 
-          end -- end if ..elseif
 
-        end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
 
-        --- quando ritorna alla base viene 'riassorbito' e quindi viene lanciato questo evento. Utilizzato per rilanciare la missione dopo un RTB
-        -- puo' non servire se le missioni sono schedulate
-        function warehouse.Tskhinvali:OnAfterDelivered(From,Event,To,request)
 
-              -- le diverse opzioni disponibili per la scelta casuale della missione
-              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-              logging('info', { 'warehouse.Tskhinvali:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+        ------------------------------------------------------------------------------------------------------ assignment for ground transport
+        elseif request.assignment == "TRANSFER MECHANIZED SELFPROPELLED" then
 
-              if request.assignment=="AFAC_afacZone.Didmukha_Tsveri" then
+            logging('info', { 'warehouse.Senakii:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - tblisi scheduled mission number - request.assignment: ' .. request.assignment .. '  - ASSET DELIVERD: ACQUISITO DALLA WAREHOUSE DI DESTINAZIONE' })
 
-                  logging('info', { 'warehouse.Tskhinvali:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled AFAC_afacZone.Didmukha_Tsveri'})
-                  warehouse.Tskhinvali:__AddRequest( startReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")
+        else
 
-              end
+            logging('warning', { 'warehouse.Senaki:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
-        end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+        end -- end if ..elseif
 
-        function warehouse.Tskhinvali:OnAfterDead(From,Event,To,request)
+      end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
 
-              -- le diverse opzioni disponibili per la scelta casuale della missione
-              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
+      --- quando ritorna alla base viene 'riassorbito' e quindi viene lanciato questo evento. Utilizzato per rilanciare la missione dopo un RTB
+      -- puo' non servire se le missioni sono schedulate
+      function warehouse.Tskhinvali:OnAfterDelivered(From,Event,To,request)
 
-              logging('info', { 'warehouse.Tskhinvali:OnAfterDead(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
+            -- le diverse opzioni disponibili per la scelta casuale della missione
+            local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-              if request.assignment=="AFAC_afacZone.Didmukha_Tsveri" then
+            logging('info', { 'warehouse.Senaki:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
-                  logging('info', { 'warehouse.Tskhinvali:OnAfterDelivered(From,Event,To,request)' , 'vaziani scheduled AFAC_afacZone.Didmukha_Tsveri'})
-                  warehouse.Tskhinvali:__AddRequest( startReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")
+            if request.assignment=="AFAC_afacZone.Didmukha_Tsveri" then
 
-              end
+                logging('info', { 'warehouse.Senaki:OnAfterDelivered(From,Event,To,request)' , 'Senaki scheduled AFAC_afacZone.Didmukha_Tsveri'})
+                warehouse.Tskhinvali:__AddRequest( startReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")
 
-        end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
+            end
 
+      end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-    end --end wh_activation.Warehouse_AB.blue[ 1 ]
-    ------------------------------------------------------------ END blue Warehouse Vaziani operations ----------------------------------------------------------------------------------------------------------------------------
+      function warehouse.Tskhinvali:OnAfterDead(From,Event,To,request)
 
+            -- le diverse opzioni disponibili per la scelta casuale della missione
+            local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
+            logging('info', { 'warehouse.Senaki:OnAfterDead(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
+            if request.assignment=="AFAC_afacZone.Didmukha_Tsveri" then
 
+                logging('info', { 'warehouse.Senaki:OnAfterDelivered(From,Event,To,request)' , 'Senaki scheduled AFAC_afacZone.Didmukha_Tsveri'})
+                warehouse.Tskhinvali:__AddRequest( startReqTimeAir, warehouse.Tskhinvali, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")
 
+            end
 
+      end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
 
+  end --end wh_activation.Warehouse_AB.blue[ 1 ]
+  ------------------------------------------------------------ END blue Warehouse Senaki operations ----------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -9687,115 +9167,142 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -------------------------------------------------------------- blue Warehouse Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
-    if wh_activation.Warehouse_AB.blue[ 4 ][1] then
 
 
 
-        warehouse.Soganlug:Start()
 
 
-        -- Soganlug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
 
 
-        warehouse.Soganlug:AddAsset(              air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
-        warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
-        warehouse.Soganlug:AddAsset(              air_template_blue.GCI_AJS_37,               10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  ) -- Fighter
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber BAI
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber BAI
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber BAI
-        warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
-        warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
-        warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
-        warehouse.Soganlug:AddAsset(               air_template_blue.CAS_AJS_37,              10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
-        warehouse.Soganlug:AddAsset(               air_template_blue.CAS_A_10A_Rocket,        10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
-        warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
-        warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
-        warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
-        warehouse.Soganlug:AddAsset(               air_template_blue.BOM_AJS_37,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Heli CAS
-        warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Heli CAS
-        warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_AN_26,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] )
-        warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_1H,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_60A,              10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  ) -- Transport
-        warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_CH_47,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_C_130,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
-        warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
-        warehouse.Soganlug:AddAsset(              ground_group_template_blue.TransportA,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-        warehouse.Soganlug:AddAsset(              ground_group_template_blue.TransportB,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
-        warehouse.Soganlug:AddAsset(              ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]  )-- Transport
+  -------------------------------------------------------------- blue Warehouse Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
-        logging('info', { 'main' , 'addAsset Soganlug warehouse'} )
+  if wh_activation.Warehouse_AB.blue[ 4 ][1] then
 
 
-        -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, AWACS, Transport
 
+      warehouse.Soganlug:Start()
 
-        logging('info', { 'main' , 'init Warehouse Soganlug operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
-        -- Red targets at Soganlug X (late activated). for test
-        local RedTargets=GROUP:FindByName("Russian Antitank Defence@Sathiari")
+      -- Soganlug e' un aeroporto vicino Tbilisi dove sono gestiti le risorse aeree fighter, reco, cas, transport
 
 
-        -- blue Soganlug warehouse operations
+      warehouse.Soganlug:AddAsset(              air_template_blue.GCI_Mig_21Bis,            10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
+      warehouse.Soganlug:AddAsset(              air_template_blue.GCI_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
+      warehouse.Soganlug:AddAsset(              air_template_blue.GCI_AJS_37,               10,           WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAP_F_5,                  10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])]  ) -- Fighter
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAP_AJS_37,               10,          WAREHOUSE.Attribute.AIR_FIGHTER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter[1], AssetSkill.blue.fighter[2])] )
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAS_F_4E_Rocket,          10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber BAI
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39C_Rocket,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber BAI
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAS_L_39ZA_HRocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber BAI
+      warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Bomb,         10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
+      warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Rocket,       10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
+      warehouse.Soganlug:AddAsset(               air_template_blue.CAS_F_5E_3_Cluster,      10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
+      warehouse.Soganlug:AddAsset(               air_template_blue.CAS_AJS_37,              10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
+      warehouse.Soganlug:AddAsset(               air_template_blue.CAS_A_10A_Rocket,        10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber CAS
+      warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Heavy,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
+      warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Light,   10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
+      warehouse.Soganlug:AddAsset(               air_template_blue.BOM_F_4_E_Sparse_Cluster, 10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
+      warehouse.Soganlug:AddAsset(               air_template_blue.BOM_AJS_37,               10,          WAREHOUSE.Attribute.AIR_BOMBER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])] ) -- Bomber
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_1H,                10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Heli CAS
+      warehouse.Soganlug:AddAsset(              air_template_blue.CAS_UH_60A,               10,          WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.fighter_bomber[1], AssetSkill.blue.fighter_bomber[2])]  ) -- Heli CAS
+      warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_AN_26,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,             9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] )
+      warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_1H,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              2000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_UH_60A,              10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              4000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])]  ) -- Transport
+      warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_CH_47,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTHELO,              12700, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Soganlug:AddAsset(              air_template_blue.TRAN_C_130,               10,          WAREHOUSE.Attribute.AIR_TRANSPORTPLANE,              9000, nil, nil, AI.Skill[ math.random(AssetSkill.blue.transport[1], AssetSkill.blue.transport[2])] ) -- Transport
+      warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankA,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankB,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Soganlug:AddAsset(              ground_group_template_blue.antitankC,       10,          WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.tank[1], AssetSkill.blue.tank[2])]  ) -- Ground troops
+      warehouse.Soganlug:AddAsset(              ground_group_template_blue.TransportA,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Soganlug:AddAsset(              ground_group_template_blue.TransportB,      10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])] ) -- Transport
+      warehouse.Soganlug:AddAsset(              ground_group_template_blue.TroopTransport,  10,          WAREHOUSE.Attribute.GROUND_TRUCK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.blue.ground[1], AssetSkill.blue.ground[2])]  )-- Transport
 
-        logging('info', { 'main' , 'addrequest Soganlug warehouse'} )
+      logging('info', { 'main' , 'addAsset Soganlug warehouse'} )
 
 
-        local depart_time = defineRequestPosition(9) -- list of position
+      -- Nota: Tipo Operazioni CAP, GCI, CAS, SEAD, RECO, AWACS, Transport
 
-        local soganlug_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
-        local num_mission = 8
-        local depart_time = defineRequestPosition( num_mission )
-        local pos = 1
-        local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
-        local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
-        local requestStartTime = startReqTimeAir + offSetStartSchedule
 
-        -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-        local soganlug_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue.Soganlug[ 1 ],
+      logging('info', { 'main' , 'init Warehouse Soganlug operations' } ) -- verifica se c'e' una istruzione che consente di inviare tutti gli elementi di blueFrontZone come stringa
 
-          function()
+      -- Red targets at Soganlug X (late activated). for test
+      local RedTargets=GROUP:FindByName("Russian Antitank Defence@Sathiari")
 
 
+      -- blue Soganlug warehouse operations
 
-            if wh_activation.Warehouse_AB.blue[ 4 ][8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-            if wh_activation.Warehouse_AB.blue[ 4 ][8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster,  math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-            if wh_activation.Warehouse_AB.blue[ 4 ][5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-            if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-            if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
-            if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI") pos = pos + 1  end
-            if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE DIDI") pos = pos + 1  end
-            if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA") pos = pos + 1  end
-            --if wh_activation.Warehouse_AB.blue[ 4 ][5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "FIGHTER SWEEP F4") pos = pos + 1  end
-          --  if wh_activation.Warehouse_AB.blue[ 4 ][11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21") pos = pos + 1  end
-          --  if wh_activation.Warehouse_AB.blue[ 4 ][11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT") pos = pos + 1  end
-          --  if wh_activation.Warehouse_AB.blue[ 4 ][11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2") pos = pos + 1  end
-          --  if wh_activation.Warehouse_AB.blue[ 4 ][14] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
-            logging('info', { 'main' , 'Soganlug scheduler - start time:' .. start_sched *  soganlug_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
+      logging('info', { 'main' , 'addrequest Soganlug warehouse'} )
 
-        end, {}, start_sched * soganlug_efficiency_influence, sched_interval, rand_sched
 
-        )
+      local depart_time = defineRequestPosition(9) -- list of position
 
+      local soganlug_efficiency_influence = math.random(10, 20) * 0.1 -- Influence start_sched (from 1 to inf)
+      local num_mission = 8
+      local depart_time = defineRequestPosition( num_mission )
+      local pos = 1
+      local sched_interval =   num_mission * waitReqTimeAir / activeAirRequestRatio
+      local offSetStartSchedule = 0 -- offSet per il ritardo di attivazione delle request. Serve per dare la precedenza a request prioritarie
+      local requestStartTime = startReqTimeAir + offSetStartSchedule
 
+      -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+      local soganlug_sched = SCHEDULER:New( staticObject.Warehouse_AB.blue[ 4 ][ 1 ],
 
+        function()
 
-        -- Do something with the spawned aircraft.
-        function warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)
 
 
-          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+          if wh_activation.Warehouse_AB.blue[ 4 ][8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+          if wh_activation.Warehouse_AB.blue[ 4 ][8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster,  math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
+          if wh_activation.Warehouse_AB.blue[ 4 ][5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE DIDI") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.blue[ 4 ][7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA") pos = pos + 1  end
+          --if wh_activation.Warehouse_AB.blue[ 4 ][5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "FIGHTER SWEEP F4") pos = pos + 1  end
+        --  if wh_activation.Warehouse_AB.blue[ 4 ][11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21") pos = pos + 1  end
+        --  if wh_activation.Warehouse_AB.blue[ 4 ][11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT") pos = pos + 1  end
+        --  if wh_activation.Warehouse_AB.blue[ 4 ][11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Sachhere, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2") pos = pos + 1  end
+        --  if wh_activation.Warehouse_AB.blue[ 4 ][14] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.mechanizedA, 2, nil, nil, nil, "TRANSFER MECHANIZED SELFPROPELLED") pos = pos + 1  end
+          logging('info', { 'main' , 'Soganlug scheduler - start time:' .. start_sched *  soganlug_efficiency_influence .. ' ; scheduling time: ' .. sched_interval * ( 1 - rand_sched ) .. ' - ' .. sched_interval * ( 1 + rand_sched ) } )
 
+      end, {}, start_sched * soganlug_efficiency_influence, sched_interval, rand_sched
 
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          if request.assignment == "BAI TARGET" then
+      )
 
+
+
+
+      -- Do something with the spawned aircraft.
+      function warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)
+
+
+        logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , ' **** REQUEST ASSIGNEMNT **** : ' .. request.assignment .. ' - groupset name: ' .. groupset:GetObjectNames()  })
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+        if request.assignment == "BAI TARGET" then
+
+
+          speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
+
+          -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
+          local percRequestKill = math.random( 0 , 100 ) * 0.01
+          local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
+          local patrolZone = bluePatrolZone.soganlug[1]
+          local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ]
+
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+
+          activeBAI( 'Interdiction from Soganlug', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for BAI asset
+        elseif request.assignment == "BAI TARGET BIS" then
 
             speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
 
@@ -9803,18 +9310,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local percRequestKill = math.random( 0 , 100 ) * 0.01
             local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
             local patrolZone = bluePatrolZone.soganlug[1]
-            local engageZone = redFrontZone.DIDI_CUPTA[1]
-
-            for _, v in pairs(redFrontZone) do
-
-              if math.random(1,10) < 5 then
-
-                engageZone = v[1]
-                break
-
-              end -- end if
-
-            end -- end for
+            local engageZone = frontZone.red[ 1, math.random(1, #frontZone.red ) ]
 
 
             logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
@@ -9825,58 +9321,81 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for BAI asset
-          elseif request.assignment == "BAI TARGET BIS" then
-
-              speed_attack, altitude_attack, speed_patrol_min, altitude_patrol_min, speed_patrol_max, altitude_patrol_max, attack_angle, num_attack, num_weapon, time_to_engage, time_to_RTB = calcParamForBAI('fighter_bomber')
-
-              -- dovrebbe essere calcolato in base alla quantità di unità contenuta nel target group (vedi funzione per avere numero unità)
-              local percRequestKill = math.random( 0 , 100 ) * 0.01
-              local target = redGroundGroup[ math.random( 1, #redGroundGroup ) ][ 1 ]
-              local patrolZone = bluePatrolZone.soganlug[1]
-              local engageZone = redFrontZone.SATIHARI[1]
-
-              for _, v in pairs(redFrontZone) do
-
-                if math.random(1,10) < 5 then
-
-                  engageZone = v[1]
-                  break
-
-                end -- end if
-
-              end -- end for
 
 
-              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName()  .. ' - percRequestKill: ' .. percRequestKill .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - targetZone: ' .. engageZone:GetName() } )
-              logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'speed_attack: ' .. speed_attack .. ' - altitude_attack: ' .. altitude_attack .. ' - speed_patrol_min: ' .. speed_patrol_min .. ' - altitude_patrol_min: ' .. altitude_patrol_min .. ' - speed_patrol_max: ' .. speed_patrol_max .. ' - altitude_patrol_max: ' .. altitude_patrol_max .. ' - attack_angle: ' .. attack_angle .. ' - num_attack: ' .. num_attack .. ' - num_weapon: ' .. num_weapon .. ' - time_to_engage: ' .. time_to_engage .. ' - time_to_RTB: ' .. time_to_RTB } )
+        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
+        elseif request.assignment == "FIGHTER SWEEP" then
 
-              activeBAI( 'Interdiction from Soganlug', groupset, 'target', patrolZone, engageZone, speed_attack, altitude_attack, num_weapon, num_attack, attack_angle, target, percRequestKill, altitude_patrol_min, altitude_patrol_max, speed_patrol_min, speed_patrol_max, time_to_engage, time_to_RTB, 1 )
+          -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
+          local homeAirbase =  AIRBASE.Caucasus.Soganlug
+          local patrolZone =  bluePatrolZone.soganlug[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
+          local engageRange = math.random(10000, 20000)
+          local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
+          local patrolFloorAltitude = 4000
+          local patrolCeilAltitude = 9000
+          local minSpeedPatrol = 400
+          local maxSpeedPatrol = 600
+          local minSpeedEngage = 600
+          local maxSpeedEngage = 1000
+
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+
+          activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase)
 
 
 
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          elseif request.assignment == "FIGHTER SWEEP" then
 
-            -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
-            local homeAirbase =  AIRBASE.Caucasus.Soganlug
-            local patrolZone =  bluePatrolZone.soganlug[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
-            local engageRange = math.random(10000, 20000)
-            local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
-            local patrolFloorAltitude = 4000
-            local patrolCeilAltitude = 9000
-            local minSpeedPatrol = 400
-            local maxSpeedPatrol = 600
-            local minSpeedEngage = 600
-            local maxSpeedEngage = 1000
+      ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING AIRBASE" then
 
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - patrolZone: ' .. patrolZone:GetName() .. ' - engageRange: ' .. engageRange .. ' - engageZone: ' .. engageZone:GetName()} )
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'patrolFloorAltitude: ' .. patrolFloorAltitude .. ' - patrolCeilAltitude: ' .. patrolCeilAltitude .. ' - minSpeedPatrol: ' .. minSpeedPatrol .. ' - maxSpeedPatrol: ' .. maxSpeedPatrol .. ' - minSpeedEngage: ' .. minSpeedEngage .. ' - maxSpeedEngage: ' .. maxSpeedEngage} )
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-            activePATROL(groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage, homeAirbase)
+          local home = warehouse.Soganlug
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+
+
+
+
+
+
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING WAREHOUSE" then
+
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+
+          local home = warehouse.Soganlug
+          local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
+
+          local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
@@ -9885,168 +9404,125 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING AIRBASE" then
+        elseif request.assignment == "BOMBING STRUCTURE KUTAISI" then
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-            local home = warehouse.Soganlug
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+          local home = warehouse.Soganlug
+          local target = targetZone.farm.red[ math.random( 1, #targetZone.farm.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
-            local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING STRUCTURE DIDI" then
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING WAREHOUSE" then
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
+          local home = warehouse.Soganlug
+          local target = targetZone.military_base.red[ math.random( 1, #targetZone.military_base.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
-            local home = warehouse.Soganlug
-            local target = warehouse_red.farp[ math.random( 1, #warehouse_red.farp ) ]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            local target = warehouse_red.airbase[ math.random( 1, #warehouse_red.airbase ) ]
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target.alias } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
+        ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
+        elseif request.assignment == "BOMBING STRUCTURE KVEMO_SBA" then
 
+            -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
+          local home = warehouse.Soganlug
+          local target = targetZone.farp.red[ math.random( 1, #targetZone.farp.red ) ][1]
+          local toTargetAltitude = math.random(5000, 7000)
+          local toHomeAltitude = math.random(3000, 5000)
+          local bombingDirection = math.random(270, 359)
+          local bombingAltitude = math.random(4000, 6000)
+          local diveBomb = false
+          local bombRunDistance = 20000
+          local bombRunDirection = math.random(270, 359)
+          local speedBombRun = math.random(400, 600)
 
+          logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING STRUCTURE KUTAISI" then
+          activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-            local home = warehouse.Soganlug
-            local target = zoneTargetStructure.Red_Farm[ math.random( 1, #zoneTargetStructure.Red_Farm ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
 
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+        else
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
+          logging('warning', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
 
+        end
 
+      end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
 
+      --- When the helo is out of fuel, it will return to the carrier and should be delivered.
+      function warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)
 
+            -- le diverse opzioni disponibili per la scelta casuale della missione
+            local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING STRUCTURE DIDI" then
+            logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-            local home = warehouse.Soganlug
-            local target = zoneTargetStructure.Red_Didi_Bridges[ math.random( 1, #zoneTargetStructure.Red_Didi_Bridges ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
+      end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
+  end -- end wh_activation.Warehouse_AB.blue[ 4 ] then
+  -------------------------------------------------------------END blue Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
 
 
-          ------------------------------------------------------------------------------------------------------ assignment for STRATEGIC BOMBING asset
-          elseif request.assignment == "BOMBING STRUCTURE KVEMO_SBA" then
 
-              -- in linea di massima sarebbe opportuno effettuare una Fighter sweep prima del bombing
 
-            local home = warehouse.Soganlug
-            local target = zoneTargetStructure.Red_Kvemo_Sba_Bridges[ math.random( 1, #zoneTargetStructure.Red_Kvemo_Sba_Bridges ) ][1]
-            local toTargetAltitude = math.random(5000, 7000)
-            local toHomeAltitude = math.random(3000, 5000)
-            local bombingDirection = math.random(270, 359)
-            local bombingAltitude = math.random(4000, 6000)
-            local diveBomb = false
-            local bombRunDistance = 20000
-            local bombRunDirection = math.random(270, 359)
-            local speedBombRun = math.random(400, 600)
 
-            logging('info', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'groupset name: ' .. groupset:GetObjectNames() .. ' - target: ' .. target:GetName() } )
 
-            activeBOMBING( groupset, home, target, toTargetAltitude, toHomeAltitude, bombingDirection, bombingAltitude, diveBomb, bombRunDistance, bombRunDirection, speedBombRun )
 
 
 
-          else
 
-            logging('warning', { 'warehouse.Soganlug:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'no task defined for this request ' } )
 
 
-          end
 
-        end  --end  function warehouse.Kobuleti:OnAfterSelfRequest(From, Event, To, groupset, request)
 
-        --- When the helo is out of fuel, it will return to the carrier and should be delivered.
-        function warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)
 
-              -- le diverse opzioni disponibili per la scelta casuale della missione
-              local request=request   --Functional.Warehouse#WAREHOUSE.Pendingitem
 
-              logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'request.assignment: ' .. request.assignment })
-            --[[
-              -- manca il groupset
-              -- So we start another request.
-              if request.assignment=="PATROL" then
 
-                logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'Soganlug scheduled PATROL mission' })
-                activeCAPWarehouse(groupset, redFrontZone.BAI_Zone_Soganlug[2], 'circle', 10000, nil, 2000, 3000, 500, 600, 600, 800 )
 
-              end
 
-              if request.assignment=="BAI TARGET" then
 
-                logging('info', { 'warehouse.Soganlug:OnAfterDelivered(From,Event,To,request)' , 'Soganlug scheduled BAI TARGET mission' })
-                activeBAIWarehouseT('Interdiction from Soganlug', groupset, 'target', redFrontZone.BAI_Zone_Soganlug[2], redFrontZone.BAI_Zone_Soganlug[2], 400, 1000, 4, 2, RedTargets, 3, 500, 1000, 500, 600, 300, -3600, 1 )
 
-              end -- end if
-              ]]
 
-        end -- end function warehouse.Stennis:OnAfterDelivered(From,Event,To,request)
 
-    end -- end wh_activation.Warehouse_AB.blue[ 4 ] then
-    -------------------------------------------------------------END blue Soganlug operations ----------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -10080,6 +9556,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+  -------------------------------------------------- END WAREHOUSE OPERATIONS
 
 
 
@@ -10107,7 +9584,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-    -------------------------------------------------- END WAREHOUSE OPERATIONS
 
 
 
@@ -10133,6 +9609,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+--      AIRWAR (CAP e GCI ONLY)
 
 
 
@@ -10141,6 +9618,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+-- END CAP ZONE
 
 
 
@@ -10160,7 +9638,6 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  --      AIRWAR (CAP e GCI ONLY)
 
 
 
@@ -10169,322 +9646,321 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-  -- END CAP ZONE
 
 
 
 
 
 
+------------------------------------------------------------------------   AI A2A Dispatching ---------------------------------------------------------------
 
 
 
 
+if active_AI_A2A_red then
 
 
+  -- RED FORCE CAP-GCI
 
+  -- NOTA: UTILIZZATO SOLO PER LE CAP E GCI AI-
 
 
 
+  -- Nota le GCI sono attivate quando non c'e' nessuno aereo alleato disponibile per l'ingaggio dell'incursore
+  --
+  -- Il dispatcher() imposta l'intercettazione dalla base pi� vicina distante meno del gci_radius. Credo che la base pi� vicina dovrebbe essere scelta da quelle abilitate trmite assign_gci
+  --
+  -- Credo che per poter utilizzare esclusivamente le gci suad devi dedicare a loro l'uso di un aeroporto: quindi scegli per le cap gli aeroporti vicino al fronte, mentre quelli lontani per i gci
 
 
+  logging('info', { 'active_AI_A2A_red' , 'Starting'} )
 
 
 
+  -- Setup generale
 
 
+  detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
+  local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 40000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
+  --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
+  -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
+  -- local Detection_Red = detection(prefix_detector.red, 30000)
 
+  -- local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, nil )
 
+  --- A2ADispatcher red:
+  -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
+  -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze (le CAP): 20000
+  -- true/false: view tactital display
+  --local A2ADispatcher_Red = dispatcher(detection, 70000, 20000, true)
 
+  -- A2ADispatcher:
+  -- definisci la distanza GCI in modo da attivare gli intercettori solo per nemici prossimi alle airbase e/o zone strategiche: vedi su ME 50km
+  -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
+  -- valuta su ME queste due didtanze
+  A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
+  configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 
 
+  -- Setup Red CAP e GCI
 
-  ------------------------------------------------------------------------   AI A2A Dispatching ---------------------------------------------------------------
+  local num_group = math.random(1, 3)
+  local min_time_cap = 300
+  local max_time_cap = 900
+  local min_alt = 4000
+  local max_alt = 9000
+  local min_speed_patrol = 500
+  local max_speed_patrol = 800
+  local min_speed_engage = 800
+  local max_speed_engage = 1200
 
+  -- AWACS
+  --local spawnDetectionGroup = SPAWN:New( air_template_red.AWACS_TU_22 )
+  --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+  --spawnDetectionGroup:InitCleanUp(180)
+  --local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
 
+  --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+  --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
+  --logging('info', { 'activeAI_A2A_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-  if active_AI_A2A_red then
+  --assignDetectionGroupTask(detectionGroup, redAwacsZone.alagir, airbase, 7000, 9000, 0.5 )
 
 
-    -- RED FORCE CAP-GCI
 
-    -- NOTA: UTILIZZATO SOLO PER LE CAP E GCI AI-
 
 
+  if wh_activation.Warehouse_AB.red[ 3 ][1] then
 
-    -- Nota le GCI sono attivate quando non c'e' nessuno aereo alleato disponibile per l'ingaggio dell'incursore
-    --
-    -- Il dispatcher() imposta l'intercettazione dalla base pi� vicina distante meno del gci_radius. Credo che la base pi� vicina dovrebbe essere scelta da quelle abilitate trmite assign_gci
-    --
-    -- Credo che per poter utilizzare esclusivamente le gci suad devi dedicare a loro l'uso di un aeroporto: quindi scegli per le cap gli aeroporti vicino al fronte, mentre quelli lontani per i gci
+    logging('info', { 'wh_activation.Warehouse_AB.red[ 3 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 3 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 3 ][17]) } )
 
+    A2ADispatcher:SetSquadron('Mozdok CAP', AIRBASE.Caucasus.Mozdok, {air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_23MLD}, 15)
+    A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_L_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
 
-    logging('info', { 'active_AI_A2A_red' , 'Starting'} )
+    if wh_activation.Warehouse_AB.red[ 3 ][16] then assign_cap ( cap_zone_db_red[1], 'Mozdok CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red[ 3 ][17] then assign_gci('Mozdok GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
+  end
 
 
-    -- Setup generale
 
 
-    detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
+  if wh_activation.Warehouse_AB.red[ 1 ][1] then
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 40000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    logging('info', { 'wh_activation.Warehouse_AB.red[ 1 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 1 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 1 ][17]) } )
 
-    --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
-    -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
-    -- local Detection_Red = detection(prefix_detector.red, 30000)
+    A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, {air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
 
-    -- local Detection_Red = detectionAI_A2A( prefix_detector.red, 30000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, nil )
+    if wh_activation.Warehouse_AB.red[ 1 ][16] then assign_cap ( cap_zone_db_red[2], 'Beslan CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red[ 1 ][17] then assign_gci('Beslan GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
-    --- A2ADispatcher red:
-    -- distanza massima di attivazione GCI = 70 km (rispetto le airbase),
-    -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze (le CAP): 20000
-    -- true/false: view tactital display
-    --local A2ADispatcher_Red = dispatcher(detection, 70000, 20000, true)
+  end
 
-    -- A2ADispatcher:
-    -- definisci la distanza GCI in modo da attivare gli intercettori solo per nemici prossimi alle airbase e/o zone strategiche: vedi su ME 50km
-    -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
-    -- valuta su ME queste due didtanze
-    A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
+  if wh_activation.Warehouse_AB.red[ 2 ][1] then
 
+    logging('info', { 'wh_activation.Warehouse_AB.red[ 2 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 2 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 2 ][17]) } )
 
-    -- Setup Red CAP e GCI
+    A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_H_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
 
-    local num_group = math.random(1, 3)
-    local min_time_cap = 300
-    local max_time_cap = 900
-    local min_alt = 4000
-    local max_alt = 9000
-    local min_speed_patrol = 500
-    local max_speed_patrol = 800
-    local min_speed_engage = 800
-    local max_speed_engage = 1200
+    if wh_activation.Warehouse_AB.red[ 2 ][16] then assign_cap ( cap_zone_db_red[1], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red[ 2 ][17] then assign_gci('Nalchik GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
-    -- AWACS
-    --local spawnDetectionGroup = SPAWN:New( air_template_red.AWACS_TU_22 )
-    --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-    --spawnDetectionGroup:InitCleanUp(180)
-    --local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
+  end
 
-    --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-    --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
-    --logging('info', { 'activeAI_A2A_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+  if wh_activation.Warehouse_AB.red[ 4 ][1] then
 
-    --assignDetectionGroupTask(detectionGroup, redAwacsZone.alagir, airbase, 7000, 9000, 0.5 )
+    logging('info', { 'wh_activation.Warehouse_AB.red[ 4 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 4 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 4 ][17]) } )
 
+    A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis}, 15)
+    A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
 
 
+    if wh_activation.Warehouse_AB.red[ 4 ][16] then assign_cap ( cap_zone_db_red[2], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.red[ 4 ][17] then assign_gci('Mineralnye GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
+  end
 
-    if wh_activation.Warehouse_AB.red[ 3 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.red[ 3 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 3 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 3 ][17]) } )
+end -- if active_AI_A2A_red
 
-      A2ADispatcher:SetSquadron('Mozdok CAP', AIRBASE.Caucasus.Mozdok, {air_template_red.CAP_Mig_21Bis, air_template_red.CAP_Mig_23MLD}, 15)
-      A2ADispatcher:SetSquadron('Mozdok GCI', AIRBASE.Caucasus.Mozdok, {air_template_red.GCI_Mig_21Bis, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_L_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis, air_template_red.GCI_Mig_19P}, 15)
 
-      if wh_activation.Warehouse_AB.red[ 3 ][16] then assign_cap ( cap_zone_db_red[1], 'Mozdok CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red[ 3 ][17] then assign_gci('Mozdok GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
-    end
 
 
 
 
-    if wh_activation.Warehouse_AB.red[ 1 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.red[ 1 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 1 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 1 ][17]) } )
+if active_AI_A2A_blue then
 
-      A2ADispatcher:SetSquadron('Beslan GCI', AIRBASE.Caucasus.Beslan, {air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_Mig_21Bis}, 15)
-      A2ADispatcher:SetSquadron('Beslan CAP', AIRBASE.Caucasus.Beslan, air_template_red.CAP_Mig_23MLD, 15)
 
-      if wh_activation.Warehouse_AB.red[ 1 ][16] then assign_cap ( cap_zone_db_red[2], 'Beslan CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red[ 1 ][17] then assign_gci('Beslan GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
+  -- BLUE FORCE CAP-GCI (OK)
 
-    end
 
+    logging('info', { 'active_AI_A2A_blue' , 'Starting'} )
 
+  -- Kutaisi
 
-    if wh_activation.Warehouse_AB.red[ 2 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.red[ 2 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 2 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 2 ][17]) } )
+  -- Setup generale
 
-      A2ADispatcher:SetSquadron('Nalchik GCI', AIRBASE.Caucasus.Nalchik, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis}, 15)
-      A2ADispatcher:SetSquadron('Nalchik CAP', AIRBASE.Caucasus.Nalchik, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_H_Mig_21Bis, air_template_red.CAP_Mig_19P}, 15)
+  --- detection blue: e' la distanza massima di rilevamento dei radar
+  -- i distanza impostata a 100 km
+  -- local Detection_Blue = detection(prefix_detector.blue, 30000)
+  --local Detection_Blue = detectionAI_A2A( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
 
-      if wh_activation.Warehouse_AB.red[ 2 ][16] then assign_cap ( cap_zone_db_red[1], 'Nalchik CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red[ 2 ][17] then assign_gci('Nalchik GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
+  --- A2ADispatcher blue:
+  -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
+  -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
+  -- true/false: view tactital display
+  --local A2ADispatcher_Blue = dispatcher(Detection_Blue, 70000, 20000, true)
 
-    end
+  detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
+  local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 40000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
-    if wh_activation.Warehouse_AB.red[ 4 ][1] then
+  -- A2ADispatcher:
+  A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
+  configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
-      logging('info', { 'wh_activation.Warehouse_AB.red[ 4 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 4 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.red[ 4 ][17]) } )
 
-      A2ADispatcher:SetSquadron('Mineralnye GCI', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.GCI_Mig_25PD, air_template_red.GCI_H_Mig_21Bis, air_template_red.GCI_B_Mig_21Bis}, 15)
-      A2ADispatcher:SetSquadron('Mineralnye CAP', AIRBASE.Caucasus.Mineralnye_Vody, {air_template_red.CAP_Mig_23MLD, air_template_red.CAP_Mig_21Bis}, 15)
+  -- Setup Red CAP e GCI
 
+  local num_group = math.random(1, 3)
+  local min_time_cap = 300
+  local max_time_cap = 900
+  local min_alt = 4000
+  local max_alt = 9000
+  local min_speed_patrol = 500
+  local max_speed_patrol = 800
+  local min_speed_engage = 800
+  local max_speed_engage = 1200
 
-      if wh_activation.Warehouse_AB.red[ 4 ][16] then assign_cap ( cap_zone_db_red[2], 'Mineralnye CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.red[ 4 ][17] then assign_gci('Mineralnye GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher) end
 
-    end
+  -- AWACS
+  --local spawnDetectionGroup = SPAWN:New( air_template_blue.AWACS_B_1B )
+  --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+  --spawnDetectionGroup:InitCleanUp(180)
+  --local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
+  --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+  --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
+  --logging('info', { 'activeAI_A2A_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-  end -- if active_AI_A2A_red
+  --assignDetectionGroupTask(detectionGroup, blueAwacsZone.kutaisi, airbase, 7000, 9000, 0.5 )
 
 
 
+  -- Setup cap e gci
 
+  -- CAP and GCI
 
+  if wh_activation.Warehouse_AB.blue[ 2 ][1] then
 
+    logging('info', { 'wh_activation.Warehouse_AB.blue[ 2 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 2 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 2 ][17]) } )
 
+    A2ADispatcher:SetSquadron('Kutaisi CAP', AIRBASE.Caucasus.Kutaisi, air_template_blue.CAP_F_5, 15 )
+    A2ADispatcher:SetSquadron('Kutaisi GCI', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_F_5, 15 )
 
-  if active_AI_A2A_blue then
+    if wh_activation.Warehouse_AB.blue[ 2 ][16] then assign_cap ( cap_zone_db_blue[1], 'Kutaisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue[ 2 ][17] then assign_gci('Kutaisi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
+  end
 
-    -- BLUE FORCE CAP-GCI (OK)
 
 
-      logging('info', { 'active_AI_A2A_blue' , 'Starting'} )
+  if wh_activation.Warehouse_AB.blue[ 1 ][1] then
 
-    -- Kutaisi
+    logging('info', { 'wh_activation.Warehouse_AB.blue[ 1 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 1 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 1 ][17]) } )
 
+    A2ADispatcher:SetSquadron('Senaki CAP', AIRBASE.Caucasus.Senaki_Kolkhi, {air_template_blue.CAP_F_4, air_template_blue.CAP_F_5}, 15)
+    A2ADispatcher:SetSquadron('Senaki GCI', AIRBASE.Caucasus.Senaki_Kolkhi, {air_template_blue.GCI_F_4, air_template_blue.GCI_F_5}, 15)
 
-    -- Setup generale
+    if wh_activation.Warehouse_AB.blue[ 1 ][16] then assign_cap ( cap_zone_db_blue[2], 'Senaki CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue[ 1 ][17] then assign_gci('Senaki GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    --- detection blue: e' la distanza massima di rilevamento dei radar
-    -- i distanza impostata a 100 km
-    -- local Detection_Blue = detection(prefix_detector.blue, 30000)
-    --local Detection_Blue = detectionAI_A2A( prefix_detector.blue, 30000, categories, nil, nil, nil, nil )
+  end
 
-    --- A2ADispatcher blue:
-    -- distanza massima di attivazione GCI = 70 km (rispetto le aribase),
-    -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
-    -- true/false: view tactital display
-    --local A2ADispatcher_Blue = dispatcher(Detection_Blue, 70000, 20000, true)
 
-    detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 40000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+  if wh_activation.Warehouse_AB.blue[ 4 ][1] then
 
-    -- A2ADispatcher:
-    A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    logging('info', { 'wh_activation.Warehouse_AB.blue[ 4 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 4 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 4 ][17]) } )
 
+    A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, { air_template_blue.CAP_L_Mig_21Bis, air_template_blue.CAP_AJS_37 }, 15)
+    A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, { air_template_blue.GCI_Mig_21Bis, air_template_blue.GCI_AJS_37}, 15)
 
-    -- Setup Red CAP e GCI
+    if wh_activation.Warehouse_AB.blue[ 4 ][16] then assign_cap ( cap_zone_db_blue[1], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue[ 4 ][17] then assign_gci('Soganlug GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    local num_group = math.random(1, 3)
-    local min_time_cap = 300
-    local max_time_cap = 900
-    local min_alt = 4000
-    local max_alt = 9000
-    local min_speed_patrol = 500
-    local max_speed_patrol = 800
-    local min_speed_engage = 800
-    local max_speed_engage = 1200
+  end
 
 
-    -- AWACS
-    --local spawnDetectionGroup = SPAWN:New( air_template_blue.AWACS_B_1B )
-    --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-    --spawnDetectionGroup:InitCleanUp(180)
-    --local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
-    --local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-    --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
-    --logging('info', { 'activeAI_A2A_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+  if wh_activation.Warehouse_AB.blue[ 3 ][1] then
 
-    --assignDetectionGroupTask(detectionGroup, blueAwacsZone.kutaisi, airbase, 7000, 9000, 0.5 )
+    logging('info', { 'wh_activation.Warehouse_AB.blue[ 3 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 3 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 3 ][17]) } )
 
+    A2ADispatcher:SetSquadron('Tbilisi CAP', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_Mig_19P}, 15)
+    A2ADispatcher:SetSquadron('Tbilisi GCI', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.GCI_Mig_19P, air_template_blue.GCI_AJS_37}, 15)
 
+    if wh_activation.Warehouse_AB.blue[ 3 ][16] then assign_cap ( cap_zone_db_blue[2], 'Tbilisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue[ 3 ][17] then assign_gci('Tbilisi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    -- Setup cap e gci
+  end
 
-    -- CAP and GCI
 
-    if wh_activation.Warehouse_AB.blue[ 2 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.blue[ 2 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 2 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 2 ][17]) } )
 
-      A2ADispatcher:SetSquadron('Kutaisi CAP', AIRBASE.Caucasus.Kutaisi, air_template_blue.CAP_F_5, 15 )
-      A2ADispatcher:SetSquadron('Kutaisi GCI', AIRBASE.Caucasus.Kutaisi, air_template_blue.GCI_F_5, 15 )
+  if wh_activation.Warehouse_AB.blue[ 5 ][1] then
 
-      if wh_activation.Warehouse_AB.blue[ 2 ][16] then assign_cap ( cap_zone_db_blue[1], 'Kutaisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue[ 2 ][17] then assign_gci('Kutaisi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
+    logging('info', { 'wh_activation.Warehouse_AB.blue[ 5 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 5 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 5 ][17]) } )
 
-    end
+    A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4, air_template_blue.CAP_AJS_37}, 15)
+    A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_F_4}, 15)
 
+    if wh_activation.Warehouse_AB.blue[ 5 ][16] then assign_cap ( cap_zone_db_blue[1], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
+    if wh_activation.Warehouse_AB.blue[ 5 ][17] then assign_gci('Batumi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
+  end
 
-    if wh_activation.Warehouse_AB.blue[ 1 ][1] then
+end -- if active_AI_A2A_blue
 
-      logging('info', { 'wh_activation.Warehouse_AB.blue[ 1 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 1 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 1 ][17]) } )
 
-      A2ADispatcher:SetSquadron('Vaziani CAP', AIRBASE.Caucasus.Vaziani, {air_template_blue.CAP_F_4, air_template_blue.CAP_F_5}, 15)
-      A2ADispatcher:SetSquadron('Vaziani GCI', AIRBASE.Caucasus.Vaziani, {air_template_blue.GCI_F_4, air_template_blue.GCI_F_5}, 15)
 
-      if wh_activation.Warehouse_AB.blue[ 1 ][16] then assign_cap ( cap_zone_db_blue[2], 'Vaziani CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue[ 1 ][17] then assign_gci('Vaziani GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    end
 
 
 
-    if wh_activation.Warehouse_AB.blue[ 4 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.blue[ 4 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 4 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 4 ][17]) } )
 
-      A2ADispatcher:SetSquadron('Soganlug CAP', AIRBASE.Caucasus.Soganlug, { air_template_blue.CAP_L_Mig_21Bis, air_template_blue.CAP_AJS_37 }, 15)
-      A2ADispatcher:SetSquadron('Soganlug GCI', AIRBASE.Caucasus.Soganlug, { air_template_blue.GCI_Mig_21Bis, air_template_blue.GCI_AJS_37}, 15)
 
-      if wh_activation.Warehouse_AB.blue[ 4 ][16] then assign_cap ( cap_zone_db_blue[1], 'Soganlug CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue[ 4 ][17] then assign_gci('Soganlug GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    end
 
 
 
-    if wh_activation.Warehouse_AB.blue[ 3 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.blue[ 3 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 3 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 3 ][17]) } )
 
-      A2ADispatcher:SetSquadron('Tbilisi CAP', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_Mig_19P}, 15)
-      A2ADispatcher:SetSquadron('Tbilisi GCI', AIRBASE.Caucasus.Tbilisi_Lochini, {air_template_blue.GCI_Mig_19P, air_template_blue.GCI_AJS_37}, 15)
 
-      if wh_activation.Warehouse_AB.blue[ 3 ][16] then assign_cap ( cap_zone_db_blue[2], 'Tbilisi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue[ 3 ][17] then assign_gci('Tbilisi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    end
 
 
 
 
-    if wh_activation.Warehouse_AB.blue[ 5 ][1] then
 
-      logging('info', { 'wh_activation.Warehouse_AB.blue[ 5 ]' , 'CAP activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 5 ][16]) .. 'GCI activation: ' .. tostring(wh_activation.Warehouse_AB.blue[ 5 ][17]) } )
 
-      A2ADispatcher:SetSquadron('Batumi GCI', AIRBASE.Caucasus.Batumi, {air_template_blue.GCI_F_14A, air_template_blue.GCI_F_4, air_template_blue.CAP_AJS_37}, 15)
-      A2ADispatcher:SetSquadron('Batumi CAP', AIRBASE.Caucasus.Batumi, {air_template_blue.CAP_AJS_37, air_template_blue.CAP_F_4}, 15)
 
-      if wh_activation.Warehouse_AB.blue[ 5 ][16] then assign_cap ( cap_zone_db_blue[1], 'Batumi CAP', min_alt, max_alt, min_speed_patrol, max_speed_patrol, min_speed_engage, max_speed_engage, num_group, min_time_cap, max_time_cap, 1, parAirbOp.cap[ 1 ], parAirbOp.cap[ 2 ], A2ADispatcher ) end
-      if wh_activation.Warehouse_AB.blue[ 5 ][17] then assign_gci('Batumi GCI', 800, 1200, parAirbOp.gci[ 1 ], parAirbOp.gci[ 2 ], A2ADispatcher ) end
 
-    end
 
-  end -- if active_AI_A2A_blue
 
 
 
@@ -10505,631 +9981,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
 
 
 
+-- info @ https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/AI.AI_A2G_Dispatcher.html
 
 
 
+if activeAI_A2G_Dispatching_Red then
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
-
-
-
-  -- info @ https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/AI.AI_A2G_Dispatcher.html
-
-
-
-  if activeAI_A2G_Dispatching_Red then
-
-
-      logging('enter', 'activeAI_A2G_Dispatching_Red' )
-
-
-      -- il detectionSetGroup va istanziato globalmente e suddiviso nelle diverse zone:
-      -- detectionSetGroupHq1, ..
-      -- dalle Farp vengono generati voli FAC e addizionati ai detectionSetGroup di competenza
-      -- conviene suddividere tra gli aeroporti le tipologie SEAD, BAI e CAS
-      -- local detectionGroup = generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude)
-
-
-      detectionGroupSetRed:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
-
-      -- This command defines the reconnaissance network.
-      -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-      -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-
-
-      --printGroupSet( detectionGroupSetRed )
-
-      local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1: Ossetia Scenario
-
-
-      -- A2G Dispatching for Red HQ1 OSSETIA SCENARIO
-      if activeAI_A2G_Dispatching_HQ1 then
-
-
-
-         local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
-
-         -- Setup the A2A dispatcher, and initialize it.
-         local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
-
-         configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
-
-
-
-         -- A2G BESLAN (Squadron Su-17, Su-24)
-
-         if wh_activation.Warehouse_AB.red[ 1 ][1] then
-
-             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-             --[[
-             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
-             spawnDetectionGroup:SpawnScheduled( 3600, 0.5 )
-             spawnDetectionGroup:InitCleanUp(180)
-             local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-
-
-
-             logging('info', { 'Warehouse_AB.red.Beslan - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-
-             logging('info', { 'Warehouse_AB.red.Beslan - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-             function detectionGroup:OnEventDead( EventData )
-
-                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                -- When the last detectionGroup of the group is declared dead, respawn the group.
-                if detectionGroup:GetSize() == 1 then
-
-                  detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                  logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                  assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                end
-
-             end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-            function detectionGroup:OnEventLand( EventData )
-
-                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                     logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                     -- When the last detectionGroup of the group is declared dead, respawn the group.
-                     if detectionGroup:GetSize() == 1 then
-
-                       detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                       logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                       assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                     end
-
-            end -- end function detectionGroup:OnEventLand( EventData )
-            ]]
-
-
-               -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
-               -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
-               -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
-
-
-             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_SU_24M_HRocket }
-             local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
-             local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
-
-             if wh_activation.Warehouse_AB.red[ 1 ][2] then
-
-               -- Set Defence Squadron
-               local squadronName = "Beslan CAS"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
-
-               -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
-
-               -- PATROL CAS MISSION
-               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-
-             end
-
-             if wh_activation.Warehouse_AB.red[ 1 ][3] then
-
-
-                -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-               squadronName = "Beslan BAI"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, baiTemplate, 20 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
-
-             end
-
-
-             if wh_activation.Warehouse_AB.red[ 1 ][4] then
-
-               -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-               squadronName = "Beslan SEAD"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, seadTemplate, 20 )
-               configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
-               --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-             end
-
-
-
-         end -- if wh_activation.Warehouse_AB.red[ 1 ]
-
-
-         -- A2G Nalchik (Squadron Su-17, Mig-27, Reco Mig 25)
-
-         if wh_activation.Warehouse_AB.red[ 2 ][1] then
-
-             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-             --[[
-             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
-             local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-
-             logging('info', { 'Warehouse_AB.red.Nalchik - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-             logging('info', { 'Warehouse_AB.red.Nalchik - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-             function detectionGroup:OnEventDead( EventData )
-
-                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                -- When the last detectionGroup of the group is declared dead, respawn the group.
-                if detectionGroup:GetSize() == 1 then
-
-                  detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                  logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                  assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                end
-
-             end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-             function detectionGroup:OnEventLand( EventData )
-
-                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                     logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                     -- When the last detectionGroup of the group is declared dead, respawn the group.
-                     if detectionGroup:GetSize() == 1 then
-
-                       detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                       logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                       assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                     end
-
-             end -- end function detectionGroup:OnEventLand( EventData )
-             ]]
-
-             --A2GDispatcher:SetDefaultGrouping()
-
-             local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb }
-             local baiTemplate = { air_template_red.GA_SU_24M_HRocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_Sparse_Light, air_template_red.GA_Mig_27K_Missile_R }
-             local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17 }
-
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             if wh_activation.Warehouse_AB.red[ 2 ][2] then
-
-               local squadronName = "Nalchik CAS"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
-
-               -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-             end
-
-
-             -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             if wh_activation.Warehouse_AB.red[ 2 ][3] then
-
-               squadronName = "Nalchik BAI"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, baiTemplate, 20 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
-
-             end
-
-
-             -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             if wh_activation.Warehouse_AB.red[ 2 ][4] then
-
-               squadronName = "Nalchik SEAD"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, seadTemplate, 20 )
-               configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-             end
-
-
-
-         end -- if wh_activation.Warehouse_AB.red[ 2 ]
-
-
-         -- A2G Mineralnye (squadron Mig-27 CAS e BAI, Su_24 Sead)
-
-         if wh_activation.Warehouse_AB.red[ 4 ][1] then
-
-             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-             --[[
-             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
-             local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-             logging('info', { 'Warehouse_AB.red.Mineralnye - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-             logging('info', { 'Warehouse_AB.red.Mineralnye - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-             function detectionGroup:OnEventDead( EventData )
-
-                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                -- When the last detectionGroup of the group is declared dead, respawn the group.
-                if detectionGroup:GetSize() == 1 then
-
-                  detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                  logging('info', { 'Warehouse_AB.red.Mineralnye - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                  assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                end
-
-             end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-             function detectionGroup:OnEventLand( EventData )
-
-                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                     logging('info', { 'Warehouse_AB.red.Mineralnye - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                     -- When the last detectionGroup of the group is declared dead, respawn the group.
-                     if detectionGroup:GetSize() == 1 then
-
-                       detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                       logging('info', { 'Warehouse_AB.red.Mineralnye - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                       assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                     end
-
-             end -- end function detectionGroup:OnEventLand( EventData )
-             ]]
-
-             --A2GDispatcher:SetDefaultGrouping()
-
-             local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light }
-             local baiTemplate = { air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light, air_template_red.GA_Mig_27K_Missile_R, air_template_red.GA_Mig_27K_Missile_L }
-             local seadTemplate = { air_template_red.SEAD_SU_24 }
-
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             if wh_activation.Warehouse_AB.red[ 4 ][2] then
-
-               local squadronName =  "Mineralnye CAS"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, casTemplateAirplane, 20 )
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
-
-               -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-              --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-             end
-
-             -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             if wh_activation.Warehouse_AB.red[ 4 ][3] then
-
-               squadronName = "Mineralnye BAI"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, baiTemplate, 20 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
-
-             end
-
-             -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-             if wh_activation.Warehouse_AB.red[ 4 ][4] then
-
-               squadronName = "Mineralnye SEAD"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mineralnye_Vody, seadTemplate, 20 )
-               --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-               configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
-
-             end
-
-         end -- if wh_activation.Warehouse_AB.red[ 4 ]
-
-
-
-         -- A2G Mozdok (Squadron Tu-22, Su-24 solo Bai)
-
-         if wh_activation.Warehouse_AB.red[ 3 ][1] then
-
-             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-             --[[
-             local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
-             local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
-             local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-             logging('info', { 'Warehouse_AB.red.Mozdok - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-             logging('info', { 'Warehouse_AB.red.Mozdok - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-             function detectionGroup:OnEventDead( EventData )
-
-                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                -- When the last detectionGroup of the group is declared dead, respawn the group.
-                if detectionGroup:GetSize() == 1 then
-
-                  detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                  logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                  assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                end
-
-             end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-             function detectionGroup:OnEventLand( EventData )
-
-                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                     logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                     -- When the last detectionGroup of the group is declared dead, respawn the group.
-                     if detectionGroup:GetSize() == 1 then
-
-                       detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                       logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                       assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
-
-                     end
-
-             end -- end function detectionGroup:OnEventLand( EventData )
-             ]]
-                 --A2GDispatcher:SetDefaultGrouping()
-
-             --local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
-             local baiTemplate = { air_template_red.BOM_TU_22_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.GA_SU_24M_HRocket }
-             --local seadTemplate = { air_template_red.SEAD_SU_24 }
-
-
-             -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-             if wh_activation.Warehouse_AB.red[ 3 ][3] then
-
-               local squadronName = "Mozdok BAI"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Mozdok, baiTemplate, 30 )
-               configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
-
-             end
-
-
-         end -- if wh_activation.Warehouse_AB.red[ 3 ]
-
-
-
-         -- A2G DIDI_CUPTA
-
-         if wh_activation.Warehouse.red.Didi[1] then
-
-             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-
-             local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-             local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.red.Didi_1[1] )
-             local airbase = warehouse.Kvemo_Sba
-
-
-
-             logging('info', { 'Warehouse.red.Didi - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-             assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
-
-             logging('info', { 'Warehouse.red.Didi - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-             function detectionGroup:OnEventDead( EventData )
-
-                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                logging('info', { 'Warehouse.red.Didi - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                -- When the last detectionGroup of the group is declared dead, respawn the group.
-                if detectionGroup:GetSize() == 1 then
-
-                  detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.red.Didi_1[1] )
-
-                  logging('info', { 'Warehouse.red.Didi - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                  assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
-
-                end
-
-             end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-             function detectionGroup:OnEventLand( EventData )
-
-                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                     logging('info', { 'Warehouse.red.Didi - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                     -- When the last detectionGroup of the group is declared dead, respawn the group.
-                     if detectionGroup:GetSize() == 1 then
-
-                       detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.red.Didi_1[1] )
-
-                       logging('info', { 'Warehouse.red.Didi - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                       assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
-
-                     end
-
-             end -- end function detectionGroup:OnEventLand( EventData )
-
-             local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
-             local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
-
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             if wh_activation.Warehouse.red.Didi[2] then
-
-               local squadronName = "Didi CAS"
-               A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.red.Didi_1[1]:GetName(), casTemplateHeli, 20) -- FARP Didi
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
-
-               -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
-
-             end
-
-
-         end -- if wh_activation.Warehouse_AB.red.Didi
-
-
-
-         -- A2G Biteta
-
-         if wh_activation.Warehouse.red.Biteta[1] then
-
-             -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-
-             local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
-             --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-             --spawnDetectionGroup:InitCleanUp(600)
-             local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
-             local airbase = warehouse.Biteta
-
-             logging('info', { 'Warehouse.red.Biteta - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-             assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
-
-             logging('info', { 'Warehouse.red.Biteta - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-             function detectionGroup:OnEventDead( EventData )
-
-                --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                logging('info', { 'Warehouse.red.Biteta - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                -- When the last detectionGroup of the group is declared dead, respawn the group.
-                if detectionGroup:GetSize() == 1 then
-
-                  detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
-
-                  logging('info', { 'Warehouse.red.Biteta - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                  assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
-
-                end
-
-             end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-            function detectionGroup:OnEventLand( EventData )
-
-                     --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                     logging('info', { 'Warehouse.red.Biteta - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                     -- When the last detectionGroup of the group is declared dead, respawn the group.
-                     if detectionGroup:GetSize() == 1 then
-
-                       detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red.Biteta[1] )
-
-                       logging('info', { 'Warehouse.red.Biteta - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                       assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
-
-                     end
-
-            end -- end function detectionGroup:OnEventLand( EventData )
-
-
-             local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
-             --local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             if wh_activation.Warehouse.red.Biteta[2] then
-
-               local squadronName = "Biteta CAS"
-               A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.red.Biteta[1]:GetName(), casTemplateHeli, 20 ) --FARP Biteta
-               configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
-
-               -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-               configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-             end
-
-         end -- if wh_activation.Warehouse_AB.red.Biteta
-
-
-      end -- if activeAI_A2G_Dispatching_HQ1
-
-
-  end -- if activeAI_A2G_Dispatching_Red
-
-
-  if activeAI_A2G_Dispatching_Blue then
-
-    logging('enter', 'activeAI_A2G_Dispatching_Blue' )
+    logging('enter', 'activeAI_A2G_Dispatching_Red' )
 
 
     -- il detectionSetGroup va istanziato globalmente e suddiviso nelle diverse zone:
@@ -11139,147 +10002,68 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- local detectionGroup = generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude)
 
 
-    detectionGroupSetBlue:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+    detectionGroupSetRed:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
+
+    -- This command defines the reconnaissance network.
+    -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+    -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
 
 
-    local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1
+    --printGroupSet( detectionGroupSetRed )
 
-    -- A2G Dispatching for Red HQ1
+    local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1: Ossetia Scenario
+
+
+    -- A2G Dispatching for Red HQ1 OSSETIA SCENARIO
     if activeAI_A2G_Dispatching_HQ1 then
 
 
-       -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
 
-
-       -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
-       -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
-       -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
-       -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
-       -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
-
-       -- This command defines the reconnaissance network.
-       -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
-       -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-       local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+       local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
 
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+       configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
-       -- A2G Vaziani (Squadron B1-B, B-52, F4 Rec)
+       -- A2G BESLAN (Squadron Su-17, Su-24)
 
-       if wh_activation.Warehouse_AB.blue[ 5 ][1] then
-
-           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
-           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
-           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-
-           logging('info', { 'Warehouse_AB.blue.Batumi - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-           logging('info', { 'Warehouse_AB.blue.Batumi - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-
-           function detectionGroup:OnEventDead( EventData )
-
-              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-              -- When the last detectionGroup of the group is declared dead, respawn the group.
-              if detectionGroup:GetSize() == 1 then
-
-                detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-              end
-
-            end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-            function detectionGroup:OnEventLand( EventData )
-
-                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                   -- When the last detectionGroup of the group is declared dead, respawn the group.
-                   if detectionGroup:GetSize() == 1 then
-
-                     detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                     logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                     assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-                   end
-
-            end -- end function detectionGroup:OnEventLand( EventData )
-
-
-            local baiTemplate = { air_template_blue.BOM_B_1B, air_template_blue.BOM_B_52H}
-
-
-
-
-            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-            if wh_activation.Warehouse_AB.blue[ 5 ][3] then
-
-              local squadronName = "Batumi BAI"
-              A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Batumi, baiTemplate, 20 )
-              configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
-
-            end
-
-       end -- if wh_activation.Warehouse_AB.red.Batumi
-
-
-
-
-       -- A2G Vaziani (Squadron Su-17, F4 Rec)
-
-       if wh_activation.Warehouse_AB.blue[ 1 ][1] then
+       if wh_activation.Warehouse_AB.red[ 1 ][1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
            --[[
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
-           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Vaziani )
-           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           --spawnDetectionGroup:InitCleanUp(600)
-
+           local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+           spawnDetectionGroup:SpawnScheduled( 3600, 0.5 )
+           spawnDetectionGroup:InitCleanUp(180)
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Beslan )
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
 
-           logging('info', { 'Warehouse_AB.blue.Vaziani - activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
 
-           logging('info', { 'Warehouse_AB.blue.Vaziani - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+           logging('info', { 'Warehouse_AB.red.Beslan - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+
+           logging('info', { 'Warehouse_AB.red.Beslan - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
            function detectionGroup:OnEventDead( EventData )
 
               --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse_AB.blue.Vaziani - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+              logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
               -- When the last detectionGroup of the group is declared dead, respawn the group.
               if detectionGroup:GetSize() == 1 then
 
                 detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                logging('info', { 'Warehouse_AB.blue.Vaziani - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+                assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
               end
 
@@ -11290,204 +10074,106 @@ if conflictZone == 'Zone 1: South Ossetia' then
           function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse_AB.blue.Vaziani - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+                   logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
                    -- When the last detectionGroup of the group is declared dead, respawn the group.
                    if detectionGroup:GetSize() == 1 then
 
                      detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                     logging('info', { 'Warehouse_AB.blue.Vaziani - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                     logging('info', { 'Warehouse_AB.red.Beslan - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                     assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-                   end
-
-          end -- end function detectionGroup:OnEventLand( EventData )
-
-          ]]
-
-          local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
-          local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Cluster}
-          local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
-
-          if wh_activation.Warehouse_AB.blue[ 1 ][2] then
-
-            local squadronName = "Vaziani CAS"
-            A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, casTemplateAirplane, 30 )
-
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
-
-             -- PATROL CAS MISSION
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-          end
-
-           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-          if wh_activation.Warehouse_AB.blue[ 1 ][3] then
-
-             squadronName = "Vaziani BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, baiTemplate, 20 )
-             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
-
-          end
-
-
-           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-          if wh_activation.Warehouse_AB.blue[ 1 ][4] then
-
-             squadronName = "Vaziani SEAD"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Vaziani, seadTemplate, 20 )
-             --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-             configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
-
-          end
-
-       end -- if wh_activation.Warehouse_AB.red.Vaziani
-
-
-
-
-
-
-
-
-       -- A2G Soganlug (Squadron Su-17, F4 Rec)
-
-       if wh_activation.Warehouse_AB.blue[ 4 ][1] then
-
-           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
-           --[[
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
-           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Soganlug )
-           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           --spawnDetectionGroup:InitCleanUp(600)
-
-           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
-
-           logging('info', { 'Warehouse_AB.blue.Soganlug - activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-           logging('info', { 'Warehouse_AB.blue.Soganlug - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
-
-
-           function detectionGroup:OnEventDead( EventData )
-
-              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-              -- When the last detectionGroup of the group is declared dead, respawn the group.
-              if detectionGroup:GetSize() == 1 then
-
-                detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-              end
-
-           end -- end function detectionGroup:OnEventDead( EventData )
-
-
-
-          function detectionGroup:OnEventLand( EventData )
-
-                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
-
-                   -- When the last detectionGroup of the group is declared dead, respawn the group.
-                   if detectionGroup:GetSize() == 1 then
-
-                     detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
-
-                     logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
-
-                     assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+                     assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
                    end
 
           end -- end function detectionGroup:OnEventLand( EventData )
           ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_AJS_37, air_template_blue.CAS_F_4E_Rocket, air_template_blue.CAS_F_5E_3_Rocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
-           local baiTemplate = { air_template_blue.BOM_AJS_37, air_template_blue.BOM_F_4_E_Sparse_Heavy, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light}
-           local seadTemplate = { air_template_blue.SEAD_AJS37, air_template_blue.SEAD_F_4E_H }
 
-           if wh_activation.Warehouse_AB.blue[ 4 ][2] then
+             -- SEAD: Suppression of Air Defenses, which are ground targets that have medium or long range radar emitters.
+             -- CAS : Close Air Support, when there are enemy ground targets close to friendly units.
+             -- BAI : Battlefield Air Interdiction, which are targets further away from the frond-line
 
-             local squadronName = "Soganlug CAS"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, casTemplateAirplane, 30 )
+
+           local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb, air_template_red.GA_SU_24M_HRocket }
+           local baiTemplate = { air_template_red.GA_SU_24M_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.BOM_SU_17_Structure }
+           local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17, air_template_red.SEAD_SU_24 }
+
+           local airbase = AIRBASE.Caucasus.Beslan
+
+           if wh_activation.Warehouse_AB.red[ 1 ][ 2 ] then
+
+             -- Set Defence Squadron
+             local squadronName = airbase .. " CAS"
+             A2GDispatcher:SetSquadron( squadronName, airbase, casTemplateAirplane, 20 )
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
              -- PATROL CAS MISSION
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.red[ 1, math.random(1, #frontZone.red ) ] , 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
 
            end
 
-           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           if wh_activation.Warehouse_AB.blue[ 4 ][3] then
+           if wh_activation.Warehouse_AB.red[ 1 ][ 3 ] then
 
-             squadronName = "Soganlug BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, baiTemplate, 20 )
+
+              -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+             squadronName = airbase .. " BAI"
+             A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 20 )
              configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
 
-           -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           if wh_activation.Warehouse_AB.blue[ 4 ][4] then
+           if wh_activation.Warehouse_AB.red[ 1 ][ 4 ] then
 
-             squadronName = "Soganlug SEAD"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, seadTemplate, 20 )
-             --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+             squadronName = airbase .. " SEAD"
+             A2GDispatcher:SetSquadron( squadronName, airbase, seadTemplate, 20 )
              configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
+             --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
            end
 
-       end -- if wh_activation.Warehouse_AB.red.Soganlug
 
 
+       end -- if wh_activation.Warehouse_AB.red[ 1 ]
 
 
+       -- A2G Nalchik (Squadron Su-17, Mig-27, Reco Mig 25)
 
-
-
-       -- A2G Kutaisi (Squadron F4, F5)
-
-       if wh_activation.Warehouse_AB.blue[ 2 ][1] then
+       if wh_activation.Warehouse_AB.red[ 2 ][1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
            --[[
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
-           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
+           local spawnDetectionGroup = SPAWN:New( air_template_red.REC_Mig_25RTB )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Nalchik )
            local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           logging('info', { 'Warehouse_AB.blue.Kutaisi - activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+           logging('info', { 'Warehouse_AB.red.Nalchik - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           logging('info', { 'Warehouse_AB.blue.Kutaisi - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
+
+           logging('info', { 'Warehouse_AB.red.Nalchik - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
            function detectionGroup:OnEventDead( EventData )
 
               --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+              logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
               -- When the last detectionGroup of the group is declared dead, respawn the group.
               if detectionGroup:GetSize() == 1 then
 
                 detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+                assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
               end
 
@@ -11498,103 +10184,97 @@ if conflictZone == 'Zone 1: South Ossetia' then
            function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+                   logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
                    -- When the last detectionGroup of the group is declared dead, respawn the group.
                    if detectionGroup:GetSize() == 1 then
 
                      detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                     logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                     logging('info', { 'Warehouse_AB.red.Nalchik - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                     assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+                     assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
            ]]
 
-           local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
-           local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.BOM_F_4_E_Sparse_Heavy, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light}
-           local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
+           --A2GDispatcher:SetDefaultGrouping()
 
+           local casTemplateAirplane = { air_template_red.CAS_Su_17M4_Rocket, air_template_red.CAS_Su_17M4_Cluster, air_template_red.CAS_Su_17M4_Bomb }
+           local baiTemplate = { air_template_red.GA_SU_24M_HRocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_Sparse_Light, air_template_red.GA_Mig_27K_Missile_R }
+           local seadTemplate = { air_template_red.SEAD_SU_17, air_template_red.SEAD_MIX_SU_17 }
 
-           if wh_activation.Warehouse_AB.blue[ 2 ][2] then
+           local airbase = AIRBASE.Caucasus.Nalchik
 
-             -- Set Defence Squadron
-             local squadronName = "Kutaisi CAS"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, casTemplateAirplane, 20 )
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           if wh_activation.Warehouse_AB.red[ 2 ][2] then
 
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             local squadronName = airbase .. " CAS"
+             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, casTemplateAirplane, 20 )
              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
-             -- PATROL CAS MISSION
-             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.red[ 1, math.random(1, #frontZone.red ) ], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
            end
 
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           if wh_activation.Warehouse_AB.blue[ 2 ][3] then
+           if wh_activation.Warehouse_AB.red[ 2 ][3] then
 
-             squadronName = "Kutaisi BAI"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, baiTemplate, 20 )
+             squadronName = airbase .. " BAI"
+             A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 20 )
              configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
 
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           if wh_activation.Warehouse_AB.blue[ 2 ][4] then
+           if wh_activation.Warehouse_AB.red[ 2 ][4] then
 
-             squadronName = "Kutaisi SEAD"
-             A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, seadTemplate, 20 )
+             squadronName = airbase .. " SEAD"
+             A2GDispatcher:SetSquadron( squadronName, airbase, seadTemplate, 20 )
              configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
            end
 
 
-       end -- if wh_activation.Warehouse_AB.red.Kutaisi
+
+       end -- if wh_activation.Warehouse_AB.red[ 2 ]
 
 
+       -- A2G Mineralnye (squadron Mig-27 CAS e BAI, Su_24 Sead)
 
-
-       -- A2G Kvitiri (Squadron F5, L-39)
-
-       if wh_activation.Warehouse_AB.blue.Kvitiri[1] then
+       if wh_activation.Warehouse_AB.red[ 4 ][1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
            --[[
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_L_39ZA )
-           local airbase = warehouse.Kvitiri
-           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
-           --spawnDetectionGroup:InitCleanUp(600)
+           local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mineralnye_Vody )
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
-           local detectionGroup = spawnDetectionGroup:SpawnFromStatic(staticObject.Warehouse_AB.blue.Kvitiri[1])
+           logging('info', { 'Warehouse_AB.red.Mineralnye - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           logging('info', { 'Warehouse_AB.blue.Kvitiri - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-           assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
-
-           logging('info', { 'Warehouse_AB.blue.Kvitiri - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+           logging('info', { 'Warehouse_AB.red.Mineralnye - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
            function detectionGroup:OnEventDead( EventData )
 
               --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse_AB.blue.Kvitiri - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+              logging('info', { 'detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
               -- When the last detectionGroup of the group is declared dead, respawn the group.
               if detectionGroup:GetSize() == 1 then
 
                 detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                logging('info', { 'Warehouse_AB.blue.Kvitiri - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                logging('info', { 'Warehouse_AB.red.Mineralnye - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                detectionGroup:StartUncontrolled()
-                detectionGroup:OptionROTPassiveDefense()
-                detectionGroup:Route(WayPoints)
+                assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
               end
 
@@ -11605,100 +10285,95 @@ if conflictZone == 'Zone 1: South Ossetia' then
            function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse_AB.blue.Kvitiri - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+                   logging('info', { 'Warehouse_AB.red.Mineralnye - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
                    -- When the last detectionGroup of the group is declared dead, respawn the group.
                    if detectionGroup:GetSize() == 1 then
 
                      detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                     logging('info', { 'Warehouse_AB.blue.Kvitiri - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                     logging('info', { 'Warehouse_AB.red.Mineralnye - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                     detectionGroup:StartUncontrolled()
-                     detectionGroup:OptionROTPassiveDefense()
-                     detectionGroup:Route(WayPoints)
+                     assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
            ]]
 
-           --local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
-           local casTemplate = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_Antitank_SA_342, air_template_blue.CAS_Mistral_SA_342 }
-           local baiTemplate = { air_template_blue.BOM_Mi_8MTV2 }
-           local seadTemplate = { air_template_blue.CAS_Mistral_SA_342 }
+           --A2GDispatcher:SetDefaultGrouping()
 
-           if wh_activation.Warehouse_AB.blue.Kvitiri[2] then
+           local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light }
+           local baiTemplate = { air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_Sparse_Light, air_template_red.GA_Mig_27K_Missile_R, air_template_red.GA_Mig_27K_Missile_L }
+           local seadTemplate = { air_template_red.SEAD_SU_24 }
 
-             local squadronName = "Kvitiri CAS"
-             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri[1]:GetName(), casTemplate, 20 ) --FARP Kvitiri
+           local airbase = AIRBASE.Caucasus.Mineralnye_Vody
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           if wh_activation.Warehouse_AB.red[ 4 ][ 2 ] then
+
+             local squadronName =  airbase .. " CAS"
+             A2GDispatcher:SetSquadron( squadronName, airbase, casTemplateAirplane, 20 )
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
              -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.red[ 1, math.random(1, #frontZone.red ) ], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
 
-              -- PATROL CAS MISSION
-              --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, redFrontZone.SATIHARI[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
-
-            end
-
-
+           end
 
            -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
-           if wh_activation.Warehouse_AB.blue.Kvitiri[3] then
+           if wh_activation.Warehouse_AB.red[ 4 ][ 3 ] then
 
-             squadronName = "Kvitiri BAI"
-             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri[1]:GetName(), baiTemplate, 20 ) --FARP Kvitiri
+             squadronName = airbase .. " BAI"
+             A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 20 )
              configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
-
            -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
-           if wh_activation.Warehouse_AB.blue.Kvitiri[4] then
+           if wh_activation.Warehouse_AB.red[ 4 ][4] then
 
-             squadronName = "Kvitiri SEAD"
-             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri[1]:GetName(), seadTemplate, 20 ) --FARP Kvitiri
+             squadronName = airbase .. " SEAD"
+             A2GDispatcher:SetSquadron( squadronName, airbase, seadTemplate, 20 )
              --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
              configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
 
            end
 
-
-       end -- if wh_activation.Warehouse_AB.red.Kvitiri
-
+       end -- if wh_activation.Warehouse_AB.red[ 4 ]
 
 
 
-       -- A2G Kvitiri_Helo
+       -- A2G Mozdok (Squadron Tu-22, Su-24 solo Bai)
 
-       if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[1] then
+       if wh_activation.Warehouse_AB.red[ 3 ][1] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+           --[[
+           local spawnDetectionGroup = SPAWN:New( air_template_red.REC_SU_24MR )
+           local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Mozdok )
+           local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
-           local airbase = warehouse.Kvitiri_Helo
-           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Kvitiri_Helo[1] )
+           logging('info', { 'Warehouse_AB.red.Mozdok - activeAI_A2G_Dispatching_Red' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-           logging('info', { 'Warehouse_AB.blue.Kvitiri_Helo - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+           assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
-           assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
-
-           logging('info', { 'Warehouse_AB.blue.Kvitiri_Helo - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+           logging('info', { 'Warehouse_AB.red.Mozdok - activeAI_A2G_Dispatching_Red' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
            function detectionGroup:OnEventDead( EventData )
 
               --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse_AB.blue.Kvitiri_Helo - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+              logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
               -- When the last detectionGroup of the group is declared dead, respawn the group.
               if detectionGroup:GetSize() == 1 then
 
-                detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Kvitiri_Helo[1] )
+                detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                logging('info', { 'Warehouse_AB.blue.Kvitiri_Helo - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
+                assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
               end
 
@@ -11709,71 +10384,73 @@ if conflictZone == 'Zone 1: South Ossetia' then
            function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse_AB.blue.Kvitiri_Helo - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+                   logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
                    -- When the last detectionGroup of the group is declared dead, respawn the group.
                    if detectionGroup:GetSize() == 1 then
 
-                     detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Kvitiri_Helo[1] )
+                     detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
-                     logging('info', { 'Warehouse_AB.blue.Kvitiri_Helo - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                     logging('info', { 'Warehouse_AB.red.Mozdok - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-                     assignDetectionGroupTask(detectionGroup, redFrontZone.CZ_PEREVI[ 1 ], airbase, 1000, 700, 0.5 )
+                     assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 7000, 2000, 0.5 )
 
                    end
 
            end -- end function detectionGroup:OnEventLand( EventData )
+           ]]
+               --A2GDispatcher:SetDefaultGrouping()
 
-           local casTemplate = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_Antitank_SA_342, air_template_blue.CAS_Mistral_SA_342, air_template_blue.BOM_Mi_8MTV2 }
-
-           if wh_activation.Warehouse_AB.blue.Kvitiri_Helo[2] then
-
-             local squadronName = "Kvitiri_Helo CAS"
-             -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Kvitiri_Helo[1]:GetName(), casTemplate, 50 ) -- FARP Kvitiri Helo
-             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
+           --local casTemplateAirplane = { air_template_red.CAS_Mig_27K_Bomb, air_template_red.CAS_Mig_27K_Rocket, air_template_red.GA_Mig_27K_Bomb_Light, air_template_red.GA_Mig_27K_ROCKET_Heavy, air_template_red.GA_Mig_27K_ROCKET_Light, air_template_red.GA_Mig_27K_Sparse_Light}
+           local baiTemplate = { air_template_red.BOM_TU_22_Bomb, air_template_red.BOM_SU_24_Bomb, air_template_red.BOM_SU_24_Structure, air_template_red.GA_SU_24M_HRocket }
+           --local seadTemplate = { air_template_red.SEAD_SU_24 }
 
 
-             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
-             --configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+           -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+           if wh_activation.Warehouse_AB.red[ 3 ][ 3 ] then
+
+             local airbase = AIRBASE.Caucasus.Mozdok
+             local squadronName = airbase .. " BAI"
+             A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 30 )
+             configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
 
            end
 
-       end -- if wh_activation.Warehouse_AB.red.Kvitiri_Helo
+
+       end -- if wh_activation.Warehouse_AB.red[ 3 ]
 
 
 
+       -- A2G KVEMO_SBA
 
-
-
-       -- A2G GORI
-
-       if wh_activation.Warehouse.blue[ 3 ][1] then
+       if wh_activation.Warehouse.red[ 2 ][ 1 ] then
 
            -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
-           local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
-           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Gori[1] )
-           local airbase = warehouse.Gori
+           local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
+           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.red[ 2 ][ 1 ] )
+           local airbase = warehouse.Kvemo_Sba
 
-           logging('info', { 'Warehouse.blue.Gori - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+
+           logging('info', { 'Warehouse.red[ 2 ] - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
            assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
-           logging('info', { 'Warehouse.blue.Gori - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+           logging('info', { 'Warehouse.red[ 2 ] - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
 
 
            function detectionGroup:OnEventDead( EventData )
 
               --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-              logging('info', { 'Warehouse.blue.Gori - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+              logging('info', { 'Warehouse.red[ 2 ] - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
               -- When the last detectionGroup of the group is declared dead, respawn the group.
               if detectionGroup:GetSize() == 1 then
 
-                detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Gori[1] )
+                detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.red.[ 2 ][ 1 ] )
 
-                logging('info', { 'Warehouse.blue.Gori - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                logging('info', { 'Warehouse.red[ 2 ] - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
                 assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
@@ -11782,17 +10459,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
            end -- end function detectionGroup:OnEventDead( EventData )
 
 
+
            function detectionGroup:OnEventLand( EventData )
 
                    --self:E( { "Size ", Size = detectionGroup:GetSize() } )
-                   logging('info', { 'Warehouse.blue.Gori - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+                   logging('info', { 'Warehouse.red[ 2 ] - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
 
                    -- When the last detectionGroup of the group is declared dead, respawn the group.
                    if detectionGroup:GetSize() == 1 then
 
-                     detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue.Gori[1] )
+                     detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.red[ 2 ][ 1 ] )
 
-                     logging('info', { 'Warehouse.blue.Gori - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+                     logging('info', { 'Warehouse.red[ 2 ] - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
                      assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
 
@@ -11800,13 +10478,15 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            end -- end function detectionGroup:OnEventLand( EventData )
 
-           local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_Antitank_SA_342, CAS_Mistral_SA_342, air_template_blue.BOM_Mi_8MTV2 }
+           local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
+           local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
 
 
-           if wh_activation.Warehouse.blue[ 3 ][2] then
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           if wh_activation.Warehouse.red[ 2 ][ 2 ] then
 
-             local squadronName = "Gori CAS"
-             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue.Gori[1]:GetName(), casTemplateHeli, 20 ) -- FARP GORI
+             local squadronName = "Kvemo_Sba CAS"
+             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.red[ 2 ][ 1 ]:GetName(), casTemplateHeli, 20) -- FARP Didi
              configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
 
              -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
@@ -11814,231 +10494,815 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
            end
 
-       end -- if wh_activation.Warehouse_AB.red.Gori
+
+       end -- if wh_activation.Warehouse_AB.red.Didi
+
+
+
+       -- A2G Biteta
+
+       if wh_activation.Warehouse.red[ 1 ][ 1 ] then
+
+           -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+           local spawnDetectionGroup = SPAWN:New( air_template_red.AFAC_Mi_8MTV2 )
+           --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+           --spawnDetectionGroup:InitCleanUp(600)
+           local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red[ 1 ][ 1 ] )
+           local airbase = warehouse.Biteta
+
+           logging('info', { 'Warehouse.red[ 1 ] - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+           assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
+
+           logging('info', { 'Warehouse.red[ 1 ] - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+           function detectionGroup:OnEventDead( EventData )
+
+              --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+              logging('info', { 'Warehouse.red[ 1 ] - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+              -- When the last detectionGroup of the group is declared dead, respawn the group.
+              if detectionGroup:GetSize() == 1 then
+
+                detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red[ 1 ][ 1 ] )
+
+                logging('info', { 'Warehouse.red[ 1 ] - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
+
+              end
+
+           end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+          function detectionGroup:OnEventLand( EventData )
+
+                   --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                   logging('info', { 'Warehouse.red[ 1 ] - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                   -- When the last detectionGroup of the group is declared dead, respawn the group.
+                   if detectionGroup:GetSize() == 1 then
+
+                     detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Warehouse.red[ 1 ][ 1 ] )
+
+                     logging('info', { 'Warehouse.red[ 1 ] - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                     assignDetectionGroupTask(detectionGroup, afacZone.Didi_South[ 1 ], airbase, 1000, 700, 0.5 )
+
+                   end
+
+          end -- end function detectionGroup:OnEventLand( EventData )
+
+
+           local casTemplateHeli = { air_template_red.CAS_MI_24V, air_template_red.CAS_Mi_8MTV2 }
+           --local seadTemplateHeli = { air_template_red.CAS_Mi_8MTV2 }
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           if wh_activation.Warehouse.red.Biteta[2] then
+
+             local squadronName = "Biteta CAS"
+             A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.red[ 1 ][ 1 ]:GetName(), casTemplateHeli, 20 ) --FARP Biteta
+             configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
+
+             -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+             configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.red[ 1, math.random(1, #frontZone.red ) ], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+           end
+
+       end -- if wh_activation.Warehouse_AB.red.Biteta
 
 
     end -- if activeAI_A2G_Dispatching_HQ1
 
 
-
-  end -- if activeAI_A2G_Dispatching_Blue
-
+end -- if activeAI_A2G_Dispatching_Red
 
 
-  ------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
+if activeAI_A2G_Dispatching_Blue then
+
+  logging('enter', 'activeAI_A2G_Dispatching_Blue' )
 
 
+  -- il detectionSetGroup va istanziato globalmente e suddiviso nelle diverse zone:
+  -- detectionSetGroupHq1, ..
+  -- dalle Farp vengono generati voli FAC e addizionati ai detectionSetGroup di competenza
+  -- conviene suddividere tra gli aeroporti le tipologie SEAD, BAI e CAS
+  -- local detectionGroup = generateDetectioA2G_Group(name, aircraftTemplate, routeAltitude, detectionAltitude)
 
 
+  detectionGroupSetBlue:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed,
 
 
+  local activeAI_A2G_Dispatching_HQ1 = true -- per il teatro 1
+
+  -- A2G Dispatching for Red HQ1
+  if activeAI_A2G_Dispatching_HQ1 then
 
 
+     -- GENERATION AND ACTIVATION OF AI_A2G_DISPATCHER
 
 
+     -- NOTA: dovrebbe acquisire dinamicamente i nuovi gruppi detection: verificare con i gruppi generati dalle WH. Devono comunque essere definiti i template in ME e attivati dalle WH prima(?) della creazione della AI_A2G??
+     -- quindi devi trasformarla in una funzione e la stessa cosa dovrebbe essere realizzata per AI_A2A.
+     -- NO! Per separare la gestione delle operazioni terrestri (WH) da quelle aeree (AI_A2A, AI_A2G) la generazione dei detection group deve essere gestita qui:
+     -- con uno scheduler che periodicamente lancia missioni detection ovvero (meglio) utilizzando lo spawn di un template e utilizzare una funzione evento (OnEventDead) per rigenerare awacs, recon e AFAC, distrutti.
+     -- mentre le FAC, JTAC dovrebbero continuare ad essere gestite dalla WH.
 
+     -- This command defines the reconnaissance network.
+     -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
+     -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
+     local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
 
+     -- Setup the A2A dispatcher, and initialize it.
+     local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------- CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
-
-  -- RAT (Random Air Traffic) OK
-
-  -- Name: RAT-005 - Restricted Coalition
-  -- Author: funkyfranky
-  -- Date Created: 24 Sep 2017
-  --
-  -- # Situation:
-  --
-  -- Spawn several aircraft of the same type at airports belonging to a certain coalition.
-  -- In the mission editor, we have set Sochi-Adler, Gelendzhik, Batumi, Senaki-Kolkhi and Kutaisi to red.
-  -- Likewise, Tbilisi-Lochini, Beslan, Nalchik, Mozdok and Mineralnye-Vody were set to blue.
-  --
-  -- # Test cases:
-  --
-  -- 1. Observe three Yak-40 aircraft being spawned at red airports only. The will also only get destination airports belonging to that coalition.
-  -- 2. Observe three Yak-40 being spawned at blue airports only. The coalition of the aircraft is changed manually.
-
-
-  ---   airbase   table
-  --
-  --    AIRBASE.Caucasus.Gelendzhik
-  --    AIRBASE.Caucasus.Krasnodar_Pashkovsky
-  --    AIRBASE.Caucasus.Sukhumi_Babushara
-  --    AIRBASE.Caucasus.Gudauta
-  --    AIRBASE.Caucasus.Batumi
-  --    AIRBASE.Caucasus.Senaki_Kolkhi
-  --    AIRBASE.Caucasus.Kobuleti
-  --    AIRBASE.Caucasus.Kutaisi
-  --    AIRBASE.Caucasus.Tbilisi_Lochini
-  --    AIRBASE.Caucasus.Soganlug
-  --    AIRBASE.Caucasus.Vaziani
-  --    AIRBASE.Caucasus.Anapa_Vityazevo
-  --    AIRBASE.Caucasus.Krasnodar_Center
-  --    AIRBASE.Caucasus.Novorossiysk
-  --    AIRBASE.Caucasus.Krymsk
-  --    AIRBASE.Caucasus.Maykop_Khanskaya
-  --    AIRBASE.Caucasus.Sochi_Adler
-  --    AIRBASE.Caucasus.Mineralnye_Vody
-  --    AIRBASE.Caucasus.Nalchik
-  --    AIRBASE.Caucasus.Mozdok
-  --    AIRBASE.Caucasus.Beslan
+     configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
+     -- A2G Senaki (Squadron B1-B, B-52, F4 Rec)
 
-  local interval_civ_sched = 1800
-  local start_civ_sched = 10
-  local rand_civ_sched = 0.30
+     if wh_activation.Warehouse_AB.blue[ 5 ][ 1 ] then
 
+         -- SPAWN DETECTION AIRCRAFT AT AIRBASE
 
-
-  ------------------------------------------- RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
-
-  local red_civilian_traffic = false
-
-  if red_civilian_traffic then
-
-    local civilian_aircraft = {
-
-      air_template_red.TRAN_AN_26,
-      air_template_red.TRAN_YAK_40,
-      --air_template_red.TRAN_MI_26
-
-    }
-
-    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-    local red_civilian_traffic_sched = SCHEDULER:New( nil,
-
-        function()
-
-          -- Create RAT object. Additionally, to the template group name we give the group an alias to be able to distinguish to another group created from this template.
-          local civ_transport = RAT:New( civilian_aircraft[ math.random( 1, #civilian_aircraft ) ], "red civilian transport" )
-
-          -- Change coalition of Antonof to red.
-          civ_transport:SetCoalitionAircraft("red")
+         local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+         local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Batumi )
+         local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
 
 
-          -- This restricts the possible departure and destination airports the airports belonging to the red coalition.
-          -- Here it is important that in the mission editor enough (>2) airports have been set to red! Otherwise there will be no possible departure and/or destination airports.
-          civ_transport:SetCoalition("sameonly")
+         logging('info', { 'Warehouse_AB.blue.Batumi - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
 
-          -- Explicitly exclude Senaki from possible departures and destinations.
-          civ_transport:ExcludedAirports("Nalchik", "Beslan", "Nalchik", "Mineralnye_Vody")
+         assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+         logging('info', { 'Warehouse_AB.blue.Batumi - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+
+         function detectionGroup:OnEventDead( EventData )
+
+            --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+            logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+            -- When the last detectionGroup of the group is declared dead, respawn the group.
+            if detectionGroup:GetSize() == 1 then
+
+              detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+              logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+              assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+            end
+
+          end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+          function detectionGroup:OnEventLand( EventData )
+
+                 --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                 logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                 -- When the last detectionGroup of the group is declared dead, respawn the group.
+                 if detectionGroup:GetSize() == 1 then
+
+                   detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                   logging('info', { 'Warehouse_AB.blue.Batumi - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                   assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+                 end
+
+          end -- end function detectionGroup:OnEventLand( EventData )
+
+
+          local baiTemplate = { air_template_blue.BOM_B_1B, air_template_blue.BOM_B_52H}
+
+
+          airbase = AIRBASE.Caucasus.Batumi
+
+          -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+          if wh_activation.Warehouse_AB.blue[ 5 ][ 3 ] then
+
+            local squadronName = airbase .. " BAI"
+            A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 20 )
+            configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
+
+          end
+
+     end -- if wh_activation.Warehouse_AB.red.Batumi
+
+
+
+
+     -- A2G Senaki (Squadron Su-17, F4 Rec)
+
+     if wh_activation.Warehouse_AB.blue[ 1 ][ 1 ] then
+
+         -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+         --[[
+         local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+         local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Senaki_Kolkhi )
+         --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+         --spawnDetectionGroup:InitCleanUp(600)
+
+         local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+         --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+
+         logging('info', { 'Warehouse_AB.blue.Senaki - activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+         assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+         logging('info', { 'Warehouse_AB.blue.Senaki - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+         function detectionGroup:OnEventDead( EventData )
+
+            --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+            logging('info', { 'Warehouse_AB.blue.Senaki - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+            -- When the last detectionGroup of the group is declared dead, respawn the group.
+            if detectionGroup:GetSize() == 1 then
+
+              detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+              logging('info', { 'Warehouse_AB.blue.Senaki - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+              assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+            end
+
+         end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+        function detectionGroup:OnEventLand( EventData )
+
+                 --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                 logging('info', { 'Warehouse_AB.blue.Senaki - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                 -- When the last detectionGroup of the group is declared dead, respawn the group.
+                 if detectionGroup:GetSize() == 1 then
+
+                   detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                   logging('info', { 'Warehouse_AB.blue.Senaki - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                   assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+                 end
+
+        end -- end function detectionGroup:OnEventLand( EventData )
+
+        ]]
+
+        local casTemplateAirplane = { air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Cluster }
+        local baiTemplate = { air_template_blue.CAS_Su_17M4_Bomb, air_template_blue.CAS_Su_17M4_Rocket, air_template_blue.CAS_Su_17M4_Cluster}
+        local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
+
+        local airbase = AIRBASE.Caucasus.Senaki_Kolkhi
+
+        if wh_activation.Warehouse_AB.blue[ 1 ][2] then
+
+          local squadronName = airbase .. " CAS"
+          A2GDispatcher:SetSquadron( squadronName, airbase, casTemplateAirplane, 30 )
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
+
+           -- PATROL CAS MISSION
+           configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.blue[ 1, math.random(1, #frontZone.blue ) ], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+        end
+
+         -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+        if wh_activation.Warehouse_AB.blue[ 1 ][3] then
+
+           squadronName = airbase .. " BAI"
+           A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 20 )
+           configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
+
+        end
+
+
+         -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+        if wh_activation.Warehouse_AB.blue[ 1 ][4] then
+
+           squadronName = airbase .. " SEAD"
+           A2GDispatcher:SetSquadron( squadronName, airbase, seadTemplate, 20 )
+           --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+           configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
+
+        end
+
+     end -- if wh_activation.Warehouse_AB.red.Senaki
+
+
+
+
+
+
+
+
+     -- A2G Soganlug (Squadron Su-17, F4 Rec)
+
+     if wh_activation.Warehouse_AB.blue[ 4 ][1] then
+
+         -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+         --[[
+         local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+         local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Soganlug )
+         --spawnDetectionGroup:SpawnScheduled( 3600, 0.3 )
+         --spawnDetectionGroup:InitCleanUp(600)
+
+         local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+         --local detectionGroup = spawnDetectionGroup:SpawnFromVec2(airbase:GetCoordinate():GetVec2(), 1000)
+
+         logging('info', { 'Warehouse_AB.blue.Soganlug - activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+         assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+         logging('info', { 'Warehouse_AB.blue.Soganlug - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+         function detectionGroup:OnEventDead( EventData )
+
+            --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+            logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+            -- When the last detectionGroup of the group is declared dead, respawn the group.
+            if detectionGroup:GetSize() == 1 then
+
+              detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+              logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+              assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+            end
+
+         end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+        function detectionGroup:OnEventLand( EventData )
+
+                 --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                 logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                 -- When the last detectionGroup of the group is declared dead, respawn the group.
+                 if detectionGroup:GetSize() == 1 then
+
+                   detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                   logging('info', { 'Warehouse_AB.blue.Soganlug - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                   assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+                 end
+
+        end -- end function detectionGroup:OnEventLand( EventData )
+        ]]
+
+         local casTemplateAirplane = { air_template_blue.CAS_AJS_37, air_template_blue.CAS_F_4E_Rocket, air_template_blue.CAS_F_5E_3_Rocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
+         local baiTemplate = { air_template_blue.BOM_AJS_37, air_template_blue.BOM_F_4_E_Sparse_Heavy, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light}
+         local seadTemplate = { air_template_blue.SEAD_AJS37, air_template_blue.SEAD_F_4E_H }
+
+         local airbase = AIRBASE.Caucasus.Soganlug
+
+         if wh_activation.Warehouse_AB.blue[ 4 ][ 2 ] then
+
+           local squadronName = airbase .. " CAS"
+           A2GDispatcher:SetSquadron( squadronName, airbase, casTemplateAirplane, 30 )
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
+
+           -- PATROL CAS MISSION
+           configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.blue[ 1, math.random(1, #frontZone.blue ) ], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+         end
+
+         -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+         if wh_activation.Warehouse_AB.blue[ 4 ][ 3 ] then
+
+           squadronName = airbase .. " BAI"
+           A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, baiTemplate, 20 )
+           configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
+
+         end
+
+
+         -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+         if wh_activation.Warehouse_AB.blue[ 4 ][ 4 ] then
+
+           squadronName = airbase .. " SEAD"
+           A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Soganlug, seadTemplate, 20 )
+           --configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+           configureAI_A2G_SEAD_Mission( A2GDispatcher, squadronName, parAirbOp.sead[ 1 ], parAirbOp.sead[ 2 ], nil, 0.5, 700, 500, 2000, 3500)
+
+         end
+
+     end -- if wh_activation.Warehouse_AB.red.Soganlug
+
+
+
+
+
+
+
+     -- A2G Kutaisi (Squadron F4, F5)
+
+     if wh_activation.Warehouse_AB.blue[ 2 ][ 1 ] then
+
+         -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+         --[[
+         local spawnDetectionGroup = SPAWN:New( air_template_blue.REC_F_4 )
+         local airbase = AIRBASE:FindByName( AIRBASE.Caucasus.Kutaisi )
+         local detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+         logging('info', { 'Warehouse_AB.blue.Kutaisi - activeAI_A2G_Dispatching_Blue' , 'airbase = ' .. airbase:GetName() .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+         assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+         logging('info', { 'Warehouse_AB.blue.Kutaisi - activeAI_A2G_Dispatching_Blue' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+         function detectionGroup:OnEventDead( EventData )
+
+            --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+            logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+            -- When the last detectionGroup of the group is declared dead, respawn the group.
+            if detectionGroup:GetSize() == 1 then
+
+              detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+              logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+              assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+            end
+
+         end -- end function detectionGroup:OnEventDead( EventData )
+
+
+
+         function detectionGroup:OnEventLand( EventData )
+
+                 --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                 logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                 -- When the last detectionGroup of the group is declared dead, respawn the group.
+                 if detectionGroup:GetSize() == 1 then
+
+                   detectionGroup = spawnDetectionGroup:SpawnAtAirbase(airbase, SPAWN.Takeoff.Cold)
+
+                   logging('info', { 'Warehouse_AB.blue.Kutaisi - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                   assignDetectionGroupTask(detectionGroup, afacZone.Didmukha_Tsveri[ 1 ], airbase, 4000, 2000, 0.5 )
+
+                 end
+
+         end -- end function detectionGroup:OnEventLand( EventData )
+         ]]
+
+         local casTemplateAirplane = { air_template_blue.CAS_L_39C_Rocket, air_template_blue.CAS_L_39ZA_HRocket, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light, air_template_blue.BOM_F_4_E_Sparse_Cluster, air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.CAS_F_5E_3_Cluster }
+         local baiTemplate = { air_template_blue.CAS_F_5E_3_Bomb, air_template_blue.BOM_F_4_E_Sparse_Heavy, air_template_blue.CAS_F_5E_3_Cluster, air_template_blue.BOM_F_4_E_Sparse_Light}
+         local seadTemplate = { air_template_blue.SEAD_F_4E_L, air_template_blue.SEAD_F_4E_M, air_template_blue.SEAD_F_4E_H }
+
+         local airbase = AIRBASE.Caucasus.Kutaisi
+
+         if wh_activation.Warehouse_AB.blue[ 2 ][ 2 ] then
+
+           -- Set Defence Squadron
+           local squadronName = airbase .. " CAS"
+           A2GDispatcher:SetSquadron( squadronName, airbase, casTemplateAirplane, 20 )
+
+           -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
+
+           -- PATROL CAS MISSION
+           configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, frontZone.blue[ 1, math.random(1, #frontZone.blue ) ], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+         end
+
+
+         -- BAI MISSION: invia attacchi se rilevate minaccia nel territorio nemico
+         if wh_activation.Warehouse_AB.blue[ 2 ][ 3 ] then
+
+           squadronName = airbase .. " BAI"
+           A2GDispatcher:SetSquadron( squadronName, airbase, baiTemplate, 20 )
+           configureAI_A2G_BAI_Mission( A2GDispatcher, squadronName, parAirbOp.bai[ 1 ], parAirbOp.bai[ 2 ], nil, 0.5, 500, 700, 3000, 5000)
+
+         end
+
+
+         -- PATROL SEAD MISSION: invia attacchi in zona Patrol pronti ad intervenire se rilevata minaccia SAM
+         if wh_activation.Warehouse_AB.blue[ 2 ][ 4 ] then
+
+           squadronName = airbase .. " SEAD"
+           A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Kutaisi, seadTemplate, 20 )
+           configureAI_A2G_PATROL_SEAD_Mission( A2GDispatcher, squadronName, afacZone.Tskhunvali_Tkviavi[1], 1, 2000, 3500, 400, 600, 500, 700, 'RADIO')
+
+         end
+
+
+     end -- if wh_activation.Warehouse_AB.red.Kutaisi
+
+
+
+
+
+
+     -- A2G Sachhere
+
+     if wh_activation.Warehouse.blue[ 3 ][ 1 ] then
+
+         -- SPAWN DETECTION AIRCRAFT AT AIRBASE
+
+         local spawnDetectionGroup = SPAWN:New( air_template_blue.AFAC_UH_1H )
+         local detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue[ 3 ][ 1 ] ) --CAMBIA PER SACHHERE
+         local airbase = warehouse.Sachhere
+
+         logging('info', { 'Warehouse.blue.Sachhere - activeAI_A2G_Dispatching' , 'airbase = ' .. airbase.alias .. 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+         assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
+
+         logging('info', { 'Warehouse.blue.Sachhere - activeAI_A2G_Dispatching' , 'add detectionGroup = ' .. detectionGroup:GetName() .. ' in ' .. detectionGroupSetRed:GetObjectNames() .. ' - NOW PRINT ELEMENT OF SET' } )
+
+
+         function detectionGroup:OnEventDead( EventData )
+
+            --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+            logging('info', { 'Warehouse.blue.Sachhere - detectionGroup:OnEventDead( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+            -- When the last detectionGroup of the group is declared dead, respawn the group.
+            if detectionGroup:GetSize() == 1 then
+
+              detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue[ 3 ][ 1 ] ) --CAMBIA PER SACHHERE
+
+              logging('info', { 'Warehouse.blue.Sachhere - detectionGroup:OnEventDead( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+              assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
+
+            end
+
+         end -- end function detectionGroup:OnEventDead( EventData )
+
+
+         function detectionGroup:OnEventLand( EventData )
+
+                 --self:E( { "Size ", Size = detectionGroup:GetSize() } )
+                 logging('info', { 'Warehouse.blue.Sachhere - detectionGroup:OnEventLand( EventData )' , 'detectionGroup:GetSize() = ' .. detectionGroup:GetSize() } )
+
+                 -- When the last detectionGroup of the group is declared dead, respawn the group.
+                 if detectionGroup:GetSize() == 1 then
+
+                   detectionGroup = spawnDetectionGroup:SpawnFromStatic( staticObject.Farp.blue[ 3 ][ 1 ] ) --CAMBIA PER SACHHERE
+
+                   logging('info', { 'Warehouse.blue.Sachhere - detectionGroup:OnEventLand( EventData )' , 'name detectionGroup = ' .. detectionGroup:GetName() } )
+
+                   assignDetectionGroupTask(detectionGroup, afacZone.Tskhunvali_Tkviavi[ 1 ], airbase, 1000, 700, 0.5 )
+
+                 end
+
+         end -- end function detectionGroup:OnEventLand( EventData )
+
+         local casTemplateHeli = { air_template_blue.CAS_UH_1H, air_template_blue.CAS_SA_342, air_template_blue.CAS_Antitank_SA_342, CAS_Mistral_SA_342, air_template_blue.BOM_Mi_8MTV2 }
+
+
+         if wh_activation.Warehouse.blue[ 3 ][ 2 ] then
+
+           local squadronName = "Sachhere CAS"
+           A2GDispatcher:SetSquadron( squadronName, staticObject.Farp.blue[ 3 ][ 1 ]:GetName(), casTemplateHeli, 20 ) -- FARP Sachhere
+           configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], 60 * 4, 0.3, 200, 300, 700, 1500)
+
+           -- PATROL CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
+           configureAI_A2G_PATROL_CAS_Mission( A2GDispatcher, squadronName, afacZone.Sathiari_Tkviavi[1], 1, 300, 700, 200, 300, 200, 300, 'RADIO')
+
+         end
+
+     end -- if wh_activation.Warehouse.blue.Sachhere
+
+
+  end -- if activeAI_A2G_Dispatching_HQ1
+
+
+
+end -- if activeAI_A2G_Dispatching_Blue
+
+
+
+------------------------------------------------------------------------   AI A2G Dispatching ---------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--[[  DISABLED
+
+
+
+
+------------------------------------------- CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+-- RAT (Random Air Traffic) OK
+
+-- Name: RAT-005 - Restricted Coalition
+-- Author: funkyfranky
+-- Date Created: 24 Sep 2017
+--
+-- # Situation:
+--
+-- Spawn several aircraft of the same type at airports belonging to a certain coalition.
+-- In the mission editor, we have set Sochi-Adler, Gelendzhik, Batumi, Senaki-Kolkhi and Kutaisi to red.
+-- Likewise, Tbilisi-Lochini, Beslan, Nalchik, Mozdok and Mineralnye-Vody were set to blue.
+--
+-- # Test cases:
+--
+-- 1. Observe three Yak-40 aircraft being spawned at red airports only. The will also only get destination airports belonging to that coalition.
+-- 2. Observe three Yak-40 being spawned at blue airports only. The coalition of the aircraft is changed manually.
+
+
+---   airbase   table
+--
+--    AIRBASE.Caucasus.Gelendzhik
+--    AIRBASE.Caucasus.Krasnodar_Pashkovsky
+--    AIRBASE.Caucasus.Sukhumi_Babushara
+--    AIRBASE.Caucasus.Gudauta
+--    AIRBASE.Caucasus.Batumi
+--    AIRBASE.Caucasus.Senaki_Kolkhi
+--    AIRBASE.Caucasus.Kobuleti
+--    AIRBASE.Caucasus.Kutaisi
+--    AIRBASE.Caucasus.Tbilisi_Lochini
+--    AIRBASE.Caucasus.Soganlug
+--    AIRBASE.Caucasus.Vaziani
+--    AIRBASE.Caucasus.Anapa_Vityazevo
+--    AIRBASE.Caucasus.Krasnodar_Center
+--    AIRBASE.Caucasus.Novorossiysk
+--    AIRBASE.Caucasus.Krymsk
+--    AIRBASE.Caucasus.Maykop_Khanskaya
+--    AIRBASE.Caucasus.Sochi_Adler
+--    AIRBASE.Caucasus.Mineralnye_Vody
+--    AIRBASE.Caucasus.Nalchik
+--    AIRBASE.Caucasus.Mozdok
+--    AIRBASE.Caucasus.Beslan
+
+
+
+
+local interval_civ_sched = 1800
+local start_civ_sched = 10
+local rand_civ_sched = 0.30
+
+
+
+------------------------------------------- RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+local red_civilian_traffic = false
+
+if red_civilian_traffic then
+
+  local civilian_aircraft = {
+
+    air_template_red.TRAN_AN_26,
+    air_template_red.TRAN_YAK_40,
+    --air_template_red.TRAN_MI_26
+
+  }
+
+  -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+  local red_civilian_traffic_sched = SCHEDULER:New( nil,
+
+      function()
+
+        -- Create RAT object. Additionally, to the template group name we give the group an alias to be able to distinguish to another group created from this template.
+        local civ_transport = RAT:New( civilian_aircraft[ math.random( 1, #civilian_aircraft ) ], "red civilian transport" )
+
+        -- Change coalition of Antonof to red.
+        civ_transport:SetCoalitionAircraft("red")
+
+
+        -- This restricts the possible departure and destination airports the airports belonging to the red coalition.
+        -- Here it is important that in the mission editor enough (>2) airports have been set to red! Otherwise there will be no possible departure and/or destination airports.
+        civ_transport:SetCoalition("sameonly")
+
+        -- Explicitly exclude Senaki from possible departures and destinations.
+        civ_transport:ExcludedAirports("Nalchik", "Beslan", "Nalchik", "Mineralnye_Vody")
+
+        -- Spawn from 1 to 4 aircraft.
+        civ_transport:Spawn(math.random(1, 4))
+
+        logging('info', { 'main' , 'blue_civilian_traffic_sched SCHEDULER - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * ( 1 - rand_civ_sched ) } )
+
+      end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
+
+  ) -- end  scheduler
+
+end -- end if red_civilian_traffic
+
+------------------------------------------- END RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------- BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+if blue_civilian_traffic then
+
+  local civilian_aircraft = {
+
+    air_template_blue.TRAN_AN_26,
+    air_template_blue.TRAN_YAK_40,
+    --air_template_blue.TRAN_UH_60A,
+    --air_template_blue.TRAN_CH_47,
+    air_template_blue.TRAN_C_130
+
+  }
+
+  -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
+  local blue_civilian_traffic_sched = SCHEDULER:New( nil,
+
+      function()
+
+        -- Create RAT object. Alias is "Yak Blue". If the same template is used multiple times, it is important to give each RAT object an indiviual name!
+        local civ_transport=RAT:New(civilian_aircraft[math.random(1, #civilian_aircraft)], "blue civilian transport")
+
+        -- Change coalition of Yak to blue.
+        civ_transport:SetCoalitionAircraft("blue")
+
+        -- This restricts the possible departure and destination airports the airports belonging to the blue coalition since the coalition is changed manually.
+        civ_transport:SetCoalition("sameonly")
+
+        -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
+        civ_transport:Livery({"Georgian Airlines"})
+
+        -- Explicitly exclude Nalchik from possible departures and destinations.
+        civ_transport:ExcludedAirports({"Kutaisi", "Gudauta", "Sochi-Adler"})
+
+
 
           -- Spawn from 1 to 4 aircraft.
           civ_transport:Spawn(math.random(1, 4))
 
-          logging('info', { 'main' , 'blue_civilian_traffic_sched SCHEDULER - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * ( 1 - rand_civ_sched ) } )
+         logging('info', { 'main' , 'blue_civilian_traffic_sched SCHEDULER - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * ( 1 - rand_civ_sched ) } )
 
-        end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
+      end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
 
-    ) -- end  scheduler
+  ) -- end  scheduler
 
-  end -- end if red_civilian_traffic
+end -- end if
 
-  ------------------------------------------- END RED CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------- END BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  ------------------------------------------- BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
-
-
-
-  if blue_civilian_traffic then
-
-    local civilian_aircraft = {
-
-      air_template_blue.TRAN_AN_26,
-      air_template_blue.TRAN_YAK_40,
-      --air_template_blue.TRAN_UH_60A,
-      --air_template_blue.TRAN_CH_47,
-      air_template_blue.TRAN_C_130
-
-    }
-
-    -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
-    local blue_civilian_traffic_sched = SCHEDULER:New( nil,
-
-        function()
-
-          -- Create RAT object. Alias is "Yak Blue". If the same template is used multiple times, it is important to give each RAT object an indiviual name!
-          local civ_transport=RAT:New(civilian_aircraft[math.random(1, #civilian_aircraft)], "blue civilian transport")
-
-          -- Change coalition of Yak to blue.
-          civ_transport:SetCoalitionAircraft("blue")
-
-          -- This restricts the possible departure and destination airports the airports belonging to the blue coalition since the coalition is changed manually.
-          civ_transport:SetCoalition("sameonly")
-
-          -- We also change the livery of these groups. If a table of liveries is given, each spawned group gets a random livery.
-          civ_transport:Livery({"Georgian Airlines"})
-
-          -- Explicitly exclude Nalchik from possible departures and destinations.
-          civ_transport:ExcludedAirports({"Kutaisi", "Gudauta", "Sochi-Adler"})
-
-
-
-            -- Spawn from 1 to 4 aircraft.
-            civ_transport:Spawn(math.random(1, 4))
-
-           logging('info', { 'main' , 'blue_civilian_traffic_sched SCHEDULER - start time:' .. start_civ_sched .. ' ; scheduling time: ' .. interval_civ_sched * ( 1 - rand_civ_sched ) } )
-
-        end, {}, start_civ_sched, interval_civ_sched, rand_civ_sched
-
-    ) -- end  scheduler
-
-  end -- end if
-
-  ------------------------------------------- END BLUE CIVILIAN AIR TRAFFIC ------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-end -- end if conflictZone == 'Zone 1: South Ossetia' then
+]]
