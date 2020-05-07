@@ -1,4 +1,4 @@
-[ 4 ][ 4 ]
+
 
 
 -- 1975 Georgian War (gw1975.lua)
@@ -19,7 +19,7 @@
 -- variable
 --- loggingLevel
 -- 0 = nessun messaggio di log, 1 = error, 2 = severe, 3 = warning, 4 = info, 5 = fine, 6 = finer/enter/exit, 7 = finest
-local loggingLevel = 0
+local loggingLevel = 7
 
 
 -- Debug messages for ARTY
@@ -3177,12 +3177,8 @@ local targetPoints = {
   power_plant_area = { math.random( 20, 30 ) },
   production_plant_area = { math.random( 10, 30 ) },
   station = { math.random( 10, 30 ) },
-  railway = { math.random( 10, 20 ) },
   bridge = { math.random( 10, 30 ) },
-  front_zone = { math.random( 10, 30 ) },
-  armored = { math.random( 4, 6 ) },
-  mechanized = { math.random( 4, 6 ) },
-  antitank = { math.random( 4, 6 ) },
+  ground_group = { math.random( 4, 6 ) },
   sam = { math.random( 5, 10 ) },
   hq = { math.random( 10, 20 ) }
 
@@ -3732,29 +3728,22 @@ local targetZone = {
 
       { ZONE:New('red bridge'), targetPoints.bridge },
 
+      { ZONE:New('red port'), targetPoints.port },
+      { ZONE:New('red storage'), targetPoints.storage },
+      { ZONE:New('red station'), targetPoints.station },
+      { ZONE:New('red power'), targetPoints.power_plant_area },
+      { ZONE:New('red farm'), targetPoints.production_plant_area }
 
     },
 
     blue = {
 
       { ZONE:New('blue bridge'), targetPoints.bridge },
-
-    }
-
-  },
-
-  farm = {
-
-    red = {
-
-      { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-    },
-
-    blue = {
-
-      { ZONE:New('blue bridge'), targetPoints.bridge },
+      { ZONE:New('blue port'), targetPoints.port },
+      { ZONE:New('blue storage'), targetPoints.storage },
+      { ZONE:New('red power'), targetPoints.power_plant_area },
+      { ZONE:New('blue station'), targetPoints.station },
+      { ZONE:New('blue farm'), targetPoints.production_plant_area }
 
     }
 
@@ -3764,70 +3753,75 @@ local targetZone = {
 
     red = {
 
-      { ZONE:New('red bridge'), targetPoints.bridge },
-
+      { ZONE:New('red wh'), targetPoints.warehouse },
+      { ZONE:New('red airbase'), targetPoints.airbase },
+      { ZONE:New('red farp'), targetPoints.farp },
+      { ZONE:New('red ewr'), targetPoints.ewr_site },
+      { ZONE:New('red hq'), targetPoints.hq }
 
     },
 
     blue = {
 
-      { ZONE:New('blue bridge'), targetPoints.bridge },
+      { ZONE:New('blue wh'), targetPoints.warehouse },
+      { ZONE:New('blue airbase'), targetPoints.airbase },
+      { ZONE:New('blue farp'), targetPoints.farp },
+      { ZONE:New('blue ewr'), targetPoints.ewr_site },
+      { ZONE:New('blue hq'), targetPoints.hq }
 
     }
 
   },
 
 
-  power_plant = {
+  group = {
 
     red = {
 
-      { ZONE:New('red bridge'), targetPoints.bridge },
+      { ZONE:New('red tar'), targetPoints.group },
+      { ZONE:New('red tar #001'), targetPoints.group },
 
 
     },
 
     blue = {
 
-      { ZONE:New('blue bridge'), targetPoints.bridge },
+      { ZONE:New('blue tar'), targetPoints.group },
+      { ZONE:New('blue tar #001'), targetPoints.group },
+      { ZONE:New('blue tar #002'), targetPoints.group },
+      { ZONE:New('blue tar #003'), targetPoints.group },
+      { ZONE:New('blue tar #004'), targetPoints.group },
+      { ZONE:New('blue tar #005'), targetPoints.group },
+      { ZONE:New('blue tar #006'), targetPoints.group }
+
 
     }
 
   },
 
-  storage = {
+  position = {
 
     red = {
 
-      { ZONE:New('red bridge'), targetPoints.bridge },
+      { ZONE:New('red pos'), targetPoints.group },
+      { ZONE:New('red pos #001'), targetPoints.group },
+      { ZONE:New('red pos #002'), targetPoints.group },
+      { ZONE:New('red pos #003'), targetPoints.group }
 
 
     },
 
     blue = {
 
-      { ZONE:New('blue bridge'), targetPoints.bridge },
+      { ZONE:New('blue pos'), targetPoints.group },
+      { ZONE:New('blue pos #001'), targetPoints.group },
+      { ZONE:New('blue pos #002'), targetPoints.group },
+      { ZONE:New('blue pos #003'), targetPoints.group }
+
 
     }
-
-  },
-
-  farm = {
-
-    red = {
-
-      { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-    },
-
-    blue = {
-
-      { ZONE:New('blue bridge'), targetPoints.bridge },
-
-    }
-
   }
+
 
 }
 
@@ -3840,25 +3834,7 @@ local targetZone = {
 
 
 
---NOTA redFrontZone e blueFrontZone sostituiti con la seguente struttura
 
-local frontZone = {
-
-  red = {
-
-        { ZONE:New("red front"), targetPoints.front_zone },
-        { ZONE:New("red front #001"), targetPoints.front_zone },
-        { ZONE:New("red front #002"), targetPoints.front_zone }
-  },
-
-  blue = {
-
-        { ZONE:New("blue front"), targetPoints.front_zone },
-        { ZONE:New("blue front #001"), targetPoints.front_zone },
-        { ZONE:New("blue front #002"), targetPoints.front_zone }
-  }
-
-}
 
 
 
@@ -3886,22 +3862,6 @@ local sweepZone = {
 
 
 
--- i target per l'arty dei blue
--- imposterei target dei blue e toglierei il prefisso BLUE verifica la posizione delle zone
-local targetZoneForBlueArty = {
-
-  { ZONE:New("blue tar arty"), targetPoints.front_zone },
-  { ZONE:New("tar arty #001"), targetPoints.front_zone }
-
-}
-
--- i target  per l'arty dei red
-local targetZoneForRedArty = {
-
-  { ZONE:New("red tar arty") , targetPoints.front_zone },
-  { ZONE:New("red tar arty #001") , targetPoints.front_zone }
-
-}
 
 local afacZone = {
 
@@ -3963,8 +3923,6 @@ local blueGroundGroup = {
 
 
 -- POLIGONAL CAP ZONE - ridefinisci la struttura
-
-
 
 local cap_zone_db_red = {
 
@@ -4502,20 +4460,23 @@ local warehouse_blue = {
 
 
 
--------------------------------------- red DIDI warehouse operations -------------------------------------------------------------------------------------------------------
+-------------------------------------- red Kvemo_Sba warehouse operations -------------------------------------------------------------------------------------------------------
 
 if wh_activation.Warehouse.red[ 2 ][ 1 ] then
 
-    logging('info', { 'main' , 'addAsset Didi warehouse'} )
+    logging('info', { 'main' , 'addAsset Kvemo warehouse'} )
 
-    warehouse.Kvemo_Sba:SetSpawnZone( ZONE:New("Didi Warehouse Spawn Zone") )
+    warehouse.Kvemo_Sba:SetSpawnZone( ZONE:New("red spawn zone wh #001") )
     warehouse.Kvemo_Sba:Start()
 
-
-    warehouse.Kvemo_Sba:AddAsset(                 "Infantry Platoon Alpha",                   30)
     warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankA,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
     warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankB,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
     warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.antitankC,         10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.armorA,            10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.armorB,            10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.mechanizedA,       10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.mechanizedB,       10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
+    warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.mechanizedC,       10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
     warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiAkatsia,       10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
     warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiGwozdika,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
     warehouse.Kvemo_Sba:AddAsset(                ground_group_template_red.ArtiKatiusha,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
@@ -4529,9 +4490,9 @@ if wh_activation.Warehouse.red[ 2 ][ 1 ] then
     logging('info', { 'main' , 'addrequest Didi warehouse'} )
 
 
-    local kvemo_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
+    local kvemo_efficiency_influence = math.random( 10, 20 ) * 0.1  -- Influence start_sched (from 1 to inf)
     local num_mission = 4
-    local num_mission_helo = 3
+    local num_mission_helo = 2
     local depart_time_helo = defineRequestPosition( num_mission_helo ) -- heli mission
     local depart_time = defineRequestPosition( num_mission ) -- ground mission
     local pos = 1
@@ -4546,16 +4507,15 @@ if wh_activation.Warehouse.red[ 2 ][ 1 ] then
       function()
 
         -- artillery request
-        warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'Kvemo_Artillery_Resupply' )
-        warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery + 120 , warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'Kvemo_Artillery_Ops')
+        warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'ARTI RESUPPLY 1' )
+        warehouse.Kvemo_Sba:__AddRequest( startReqTimeArtillery + 120 , warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'ARTI 1')
 
-        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_ZONE_Khashuri_Est') pos_heli = pos_heli + 1 end
-        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
-        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankA, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_1' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tkviavi_attack_2' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'tseveri_attack_1' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 2 ][ 13 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.jtac, math.random( AssetQty.red.ground.recon[1], AssetQty.red.ground.recon[2] ), nil, nil, nil, 'JTAC Tsveri' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC 1') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2], nil, nil, nil, 'AFAC 2') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiGwozdika, 1, nil, nil, nil, 'ARTI 2' ) pos = pos + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_TANK, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'ATTACK 1' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 2 ][ 12 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'ATTACK 2' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 2 ][ 13 ] and pos <= num_mission then warehouse.Kvemo_Sba:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.jtac, math.random( AssetQty.red.ground.recon[1], AssetQty.red.ground.recon[2] ), nil, nil, nil, 'JTAC 1' ) pos = pos + 1  end
 
         logging('finer', { 'Kvemo scheduler function' , 'addRequest Kvemo warehouse'} )
 
@@ -4580,56 +4540,45 @@ if wh_activation.Warehouse.red[ 2 ][ 1 ] then
 
       logging('finer', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-      if assignment == 'tkviavi_attack_1' then
+      if assignment == 'ATTACK 1' then
 
-          activeGO_TO_BATTLE( groupset, frontZone.red[1], 'enemy_attack', false, 1, true, suppr_param  )
-
-
-      elseif assignment == 'tkviavi_attack_2' then
-
-          activeGO_TO_BATTLE( groupset, frontZone.red[1], 'enemy_attack', false, 1, true, suppr_param  )
+          activeGO_TO_BATTLE( groupset, targetZone.group.blue[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
-      elseif assignment == 'tseveri_attack_1' then
+      elseif assignment == 'ATTACK 2' then
 
-          activeGO_TO_BATTLE( groupset, frontZone.red[1], 'enemy_attack', false, 1, true, suppr_param )
-
-
-      elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
-
-        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
+          activeGO_TO_BATTLE( groupset, targetZone.group.blue[3], 'enemy_attack', false, 1, true, suppr_param  )
 
 
-      elseif assignment == 'AFAC_ZONE_Didmukha_Tsveri' then
+      elseif assignment =='AFAC 1' then
 
-        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
+        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone[ 1 ][ 1 ] )
+
+
+      elseif assignment == 'AFAC 2' then
+
+        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone[ 1 ][ 1 ] )
 
 
 
-      elseif assignment == 'AFAC_Khashuri_Est' then -- att: Jtac are ground mission (i think)
+      elseif assignment == 'JTAC 1' then -- att: Jtac are ground mission (i think)
 
-        activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Khashuri_Est[ 1 ] )
-
-
-
-      elseif assignment == 'JTAC Tsveri' then -- att: Jtac are ground mission (i think)
-
-        activeJTAC( 'ground', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Didmukha_Tsveri[ 1 ] )
+        activeJTAC( 'ground', warehouse.Kvemo_Sba, groupset, red_command_center, nil, targetZone.position.red[ 4 ][ 1 ] )
 
 
 
       -- launch mission function: arty resupply
-      elseif assignment == 'Kvemo_Artillery_Resupply' then
+      elseif assignment == 'ARTI RESUPPLY 1' then
 
         groupResupplySet = groupset
         -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
         --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
-        activeGO_TO_ZONE_GROUND( groupset, targetZoneForBlueArty.TSKHINVALI_2[1], false, 1 )
+        activeGO_TO_ZONE_GROUND( groupset, targetZone.position.red[ 3 ][ 1 ], false, 1 )
 
 
 
       -- launch mission function: arty
-      elseif assignment == 'Kvemo_Artillery_Ops' then
+      elseif assignment == 'ARTI 1' then
 
           nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
           -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
@@ -4644,29 +4593,11 @@ if wh_activation.Warehouse.red[ 2 ][ 1 ] then
                   --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
 
                   [1] = {
-                    targetCoordinate = targetZoneForRedArty.TKVIAVI_2[1]:GetRandomCoordinate(),
-                    priority = 10,
-                    radiusTarget = 500,
-                    num_shots = 10,
+                    targetCoordinate = targetZone.group.blue[ 1 ][ 1 ]:GetRandomCoordinate(),
+                    priority = 100,
+                    radiusTarget = 350,
+                    num_shots = 20,
                     num_engagements = 10,
-                    weaponType = ARTY.WeaponType.Auto
-                  },
-
-                  [2] = {
-                    targetCoordinate = targetZoneForRedArty.TKVIAVI_3[1]:GetRandomCoordinate(),
-                    priority = 50,
-                    radiusTarget = 500,
-                    num_shots = 10,
-                    num_engagements = 7,
-                    weaponType = ARTY.WeaponType.Auto
-                  },
-
-                  [3] = {
-                    targetCoordinate = targetZoneForRedArty.TKVIAVI_4[1]:GetRandomCoordinate(),
-                    priority = 50,
-                    radiusTarget = 500,
-                    num_shots = 10,
-                    num_engagements = 7,
                     weaponType = ARTY.WeaponType.Auto
                   }
 
@@ -4682,15 +4613,73 @@ if wh_activation.Warehouse.red[ 2 ][ 1 ] then
 
               maxDistance = 20,
 
-              maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
-
+              maxFiringRange = 18500 -- Akatsia min range 0.3 km, max range 18.5 km, Gwozdika = 15.3 km, katiusha = 5 km
 
           }
 
 
           logging('info', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
 
-          activeGO_TO_ARTY( groupset, targetZoneForBlueArty.TSKHINVALI_2[1], param, true, 70 )
+          activeGO_TO_ARTY( groupset, targetZone.position.red[ 3 ][ 1 ], param, true, 70 )
+
+
+
+
+        elseif assignment == 'ARTI 2' then
+
+            nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
+            -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
+            activateDetectionReport = false
+
+
+            -- lista dei target e delle ammo
+            param = {
+
+                listTargetInfo = {
+
+                    --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
+
+                    [1] = {
+                      targetCoordinate = zoneForArty.target.blue[ 1 ][ 1 ]:GetRandomCoordinate(),
+                      priority = 50,
+                      radiusTarget = 350,
+                      num_shots = 10,
+                      num_engagements = 10,
+                      weaponType = ARTY.WeaponType.Auto
+                    },
+
+                    [2] = {
+                      targetCoordinate = zoneForArty.target.blue[ 3 ][ 1 ]:GetRandomCoordinate(),
+                      priority = 50,
+                      radiusTarget = 350,
+                      num_shots = 10,
+                      num_engagements = 10,
+                      weaponType = ARTY.WeaponType.Auto
+                    }
+
+
+                },
+
+                commandCenter = blue_command_center,
+
+                resupplySet = groupResupplySet,
+
+                speed = 60, -- km/h Akatsia max 60 km/h
+
+                onRoad = true,
+
+                maxDistance = 20,
+
+                maxFiringRange = 15500 -- Gozdwiga min range 0.3 km, max range 15.5 km
+
+
+            }
+
+
+            logging('info', { 'warehouse.Kvemo_Sba:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
+
+            activeGO_TO_ARTY( groupset, zoneForArty.position.red[ 4 ][ 1 ], param, true, 70 )
+
 
       else
 
@@ -4757,39 +4746,48 @@ if wh_activation.Warehouse.red[ 1 ][ 1 ] then
 
     -- Biteta warehouse e' una supply line warehouse: funziona da collegamento per il trasferimento degli asset tra i diversi nodi della supply line
 
+    -- INSERIRE ARTIGLIERIA CONTRO OBBIETTIVI targetZone.group.blue[ 2 ], targetZone.group.blue[ 7 ], targetZone.group.blue[ 5 ]
 
 
-    warehouse.Biteta:SetSpawnZone(ZONE:New("Warehouse Biteta Spawn Zone"))
+    warehouse.Biteta:SetSpawnZone(ZONE:New("red spawn zone wh"))
 
     warehouse.Biteta:Start()
 
-    -- Biteta: front farp-warehouse.  Receive resupply from Didi
+    logging('info', { 'main' , 'addAsset Biteta warehouse' } )
 
-    warehouse.Biteta:AddAsset(                "Infantry Platoon Alpha", 50 )
-    warehouse.Biteta:AddAsset(              ground_group_template_red.antitankC,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.antitankA,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
     warehouse.Biteta:AddAsset(              ground_group_template_red.antitankB,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.antitankC,        10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.armorA,           10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.armorB,           10,           WAREHOUSE.Attribute.GROUND_TANK, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.tank[1], AssetSkill.red.tank[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.mechanizedA,      10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.mechanizedB,      10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.mechanizedC,      10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])])
+    warehouse.Biteta:AddAsset(              ground_group_template_red.ArtiAkatsia,      10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+    warehouse.Biteta:AddAsset(              ground_group_template_red.ArtiGwozdika,     10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+    warehouse.Biteta:AddAsset(              ground_group_template_red.ArtiKatiusha,     10,           WAREHOUSE.Attribute.GROUND_ARTILLERY, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.artillery[1], AssetSkill.red.artillery[2])] )
+    warehouse.Biteta:AddAsset(              ground_group_template_red.jtac,             10,           WAREHOUSE.Attribute.GROUND_APC, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.ground[1], AssetSkill.red.ground[2])] )
     warehouse.Biteta:AddAsset(              air_template_red.CAS_MI_24V,                20,           WAREHOUSE.Attribute.AIR_ATTACKHELO, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.fighter_bomber[1], AssetSkill.red.fighter_bomber[2])]    ) -- attack
     warehouse.Biteta:AddAsset(              air_template_red.TRAN_MI_24,                10,           WAREHOUSE.Attribute.AIR_TRANSPORTHELO,           1500, nil, nil, AI.Skill[ math.random(AssetSkill.red.transport[1], AssetSkill.red.transport[2])]   ) -- attack
     warehouse.Biteta:AddAsset(              air_template_red.AFAC_MI_24,                10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
     warehouse.Biteta:AddAsset(              air_template_red.AFAC_Mi_8MTV2,             10,           WAREHOUSE.Attribute.AIR_OTHER, nil, nil, nil, AI.Skill[ math.random(AssetSkill.red.afac[1], AssetSkill.red.afac[2])] ) -- AFAC
 
-    logging('info', { 'main' , 'addAsset Biteta warehouse' } )
 
 
-    local ambrolauri_attack_1 = 'AMBROLAURI_attack_1'
-    local chiatura_attack_1 = 'CHIATURA_attack_1'
 
     logging('info', { 'main' , 'addRequest Biteta warehouse'} )
 
     --local depart_time = defineRequestPosition(3)
     local biteta_efficiency_influence = math.random(10, 20) * 0.1  -- Influence start_sched (from 1 to inf)
 
-    local num_mission = 3
-    local num_mission_helo = 1
+    local num_mission = 4
+    local num_mission_helo = 2
     local depart_time = defineRequestPosition( num_mission )
     local depart_time_heli = defineRequestPosition( num_mission_helo ) -- heli mission
     local pos = 1
     local pos_heli = 1
+    local startReqTimeArtillery = 1 -- Arty groups have first activation
+    local startReqTimeGround = startReqTimeArtillery + 420 -- Mech Groups are activated after 7'
     local sched_interval =  math.max(num_mission, num_mission_helo) * waitReqTimeGround / activeGroundRequestRatio
 
     -- Mission schedulator: position here the warehouse auto request for mission. The mission start list will be random
@@ -4797,11 +4795,16 @@ if wh_activation.Warehouse.red[ 1 ][ 1 ] then
 
       function()
 
-        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.antitankB, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'AMBROLAURI_attack_1' ) pos = pos + 1 end
-        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'CHIATURA_attack_1' ) pos = pos + 1 end
-        if wh_activation.Warehouse.red[ 1 ][ 14 ] and pos <= num_mission  then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Alagir,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Alagir' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 1 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Biteta:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2] ), nil, nil, nil, 'AFAC_CZ_ONI') pos_heli = pos_heli + 1 end
-        --warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[3] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 2, nil, nil, nil, 'PEREVI_APC' ) pos = pos + 1 end
+        -- artillery request
+        warehouse.Biteta:__AddRequest( startReqTimeArtillery, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtilleryResupply, 1, nil, nil, nil, 'ARTI RESUPPLY 1' )
+        warehouse.Biteta:__AddRequest( startReqTimeArtillery + 120 , warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiAkatsia, 1, nil, nil, nil, 'ARTI 1')
+
+        if wh_activation.Warehouse.red[ 1 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Biteta:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2] ), nil, nil, nil, 'AFAC 1') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 1 ][ 15 ] and pos_heli <= num_mission_helo then warehouse.Biteta:__AddRequest( startReqTimeGround + ( depart_time_heli[ pos_heli ] + 1 ) * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_MI_24, math.random( AssetQty.red.heli.recon[1], AssetQty.red.heli.recon[2] ), nil, nil, nil, 'AFAC 2') pos_heli = pos_heli + 1 end
+        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.ArtiGwozdika, 1, nil, nil, nil, 'ARTI 2' ) pos = pos + 1 end
+        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_TANK, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'ATTACK 1' ) pos = pos + 1 end
+        if wh_activation.Warehouse.red[ 1 ][ 12 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, math.random( AssetQty.red.ground.attack[1], AssetQty.red.ground.attack[2] ), nil, nil, nil, 'ATTACK 2' ) pos = pos + 1 end
+        if wh_activation.Warehouse.red[ 2 ][ 13 ] and pos <= num_mission then warehouse.Biteta:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.jtac, math.random( AssetQty.red.ground.recon[1], AssetQty.red.ground.recon[2] ), nil, nil, nil, 'JTAC 1' ) pos = pos + 1  end
 
         logging('finer', { 'Biteta scheduler function' , 'addRequest Biteta warehouse'} )
 
@@ -4827,20 +4830,127 @@ if wh_activation.Warehouse.red[ 1 ][ 1 ] then
 
         logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  - groupName = ' .. groupset:GetObjectNames()} )
 
-        if assignment == 'AMBROLAURI_attack_1' then
+        if assignment == 'ATTACK 1' then
 
-            activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_AMBROLAURI[1], 'enemy_attack', false, 1, true, suppr_param)
-
-
-        elseif assignment == 'CHIATURA_attack_1' then
-
-            activeGO_TO_BATTLE( groupset, blueFrontZone.CZ_CHIATURA[1], 'enemy_attack', false, 1, true, suppr_param )
+            activeGO_TO_BATTLE( groupset, targetZone.group.blue[ 2 ], 'enemy_attack', false, 1, true, suppr_param)
 
 
-        elseif assignment == 'AFAC_CZ_ONI' then
+        elseif assignment == 'ATTACK 2' then
 
-            activeJTAC( 'air', warehouse.Kvemo_Sba, groupset, red_command_center, nil, afacZone.Tskhunvali_Tkviavi[ 1 ] )
+            activeGO_TO_BATTLE( groupset, targetZone.group.blue[ 7 ], 'enemy_attack', false, 1, true, suppr_param )
 
+
+        elseif assignment == 'AFAC 1' then
+
+            activeJTAC( 'air', warehouse.Biteta, groupset, red_command_center, nil, afacZone[ 2 ][ 1 ] )
+
+
+        elseif assignment == 'AFAC 2' then
+
+            activeJTAC( 'air', warehouse.Biteta, groupset, red_command_center, nil, afacZone[ 2 ][ 1 ] )
+
+
+        -- launch mission function: arty resupply
+        elseif assignment == 'ARTI RESUPPLY 1' then
+
+          groupResupplySet = groupset
+          -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
+          --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
+          activeGO_TO_ZONE_GROUND( groupset, targetZone.position.red[ 1 ][ 1 ], false, 1 )
+
+
+
+        -- launch mission function: arty
+        elseif assignment == 'ARTI 1' then
+
+            nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
+            -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
+            activateDetectionReport = false
+
+
+            -- lista dei target e delle ammo
+            param = {
+
+                listTargetInfo = {
+
+                    --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
+
+                    [1] = {
+                      targetCoordinate = targetZone.group.blue[ 2 ][ 1 ]:GetRandomCoordinate(),
+                      priority = 100,
+                      radiusTarget = 300,
+                      num_shots = 20,
+                      num_engagements = 10,
+                      weaponType = ARTY.WeaponType.Auto
+                    }
+
+                },
+
+                commandCenter = blue_command_center,
+
+                resupplySet = groupResupplySet,
+
+                speed = 60, -- km/h Akatsia max 60 km/h
+
+                onRoad = true,
+
+                maxDistance = 20,
+
+                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+
+
+            }
+
+
+            logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
+
+            activeGO_TO_ARTY( groupset, targetZone.position.red[ 1 ][ 1 ], param, true, 70 )
+
+
+        elseif assignment == 'ARTI 2' then
+
+            nameArtyUnits = groupset:GetObjectNames()   -- "Artillery"
+            -- nameRecceUnits = recceArtyGroup.GetName()  -- "Recce"
+            activateDetectionReport = false
+
+
+            -- lista dei target e delle ammo
+            param = {
+
+                listTargetInfo = {
+
+                    --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
+
+                    [1] = {
+                      targetCoordinate = targetZone.group.blue[ 7 ][ 1 ]:GetRandomCoordinate(),
+                      priority = 100,
+                      radiusTarget = 350,
+                      num_shots = 20,
+                      num_engagements = 10,
+                      weaponType = ARTY.WeaponType.Auto
+                    }
+
+                },
+
+                commandCenter = blue_command_center,
+
+                resupplySet = groupResupplySet,
+
+                speed = 60, -- km/h Akatsia max 60 km/h
+
+                onRoad = true,
+
+                maxDistance = 20,
+
+                maxFiringRange = 15500 -- Gozdwiga min range 0.3 km, max range 15.5 km
+
+
+            }
+
+
+            logging('info', { 'warehouse.Biteta:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
+
+            activeGO_TO_ARTY( groupset, target.position.red[ 2 ][ 1 ], param, true, 70 )
 
 
         else
@@ -4965,6 +5075,7 @@ end -- wh_activation.Warehouse.red.Biteta then
 if wh_activation.Warehouse.red[ 3 ][ 1 ] then
 
 
+    warehouse.Biteta:SetSpawnZone(ZONE:New("red spawn zone wh #002"))
     warehouse.Alagir:Start()
 
     -- Alagir: link wharehouse.  Send resupply to Didi, Kvemo_Sba. Receive resupply from Beslan, Mineralnye, Nalchik
@@ -5012,15 +5123,11 @@ if wh_activation.Warehouse.red[ 3 ][ 1 ] then
 
       function()
 
-        -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
-        if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_MI_24V, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'Transfer to Biteta') pos_heli = pos_heli + 1  end
-        if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mi_8MTV2, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'Transfer to Kvemo_Sba') pos_heli = pos_heli + 1  end
-        -- inserisci missioni cargoSet
+        if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.TRAN_MI_26, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'TRANSPORT 1') pos_heli = pos_heli + 1  end
+        if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'TRANSPORT 2') pos_heli = pos_heli + 1  end
 
-        -- riutilizzo gli stessi indici in quanto essendo ground veichle appaiono nella warehouse spawn zone diversa dal FARP degli helo
-        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Batumi' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Kvemo_Sba' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Alagir,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TransportA, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'Transfert to Alagir' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'TRANSPORT 3' ) pos = pos + 1  end
+        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'TRANSPORT 4' ) pos = pos + 1  end        
 
         logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
 
