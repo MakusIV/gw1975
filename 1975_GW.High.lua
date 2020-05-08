@@ -3612,6 +3612,20 @@ local parAirbOp = {
 
 
 
+-- AI_A2A PARAMETER
+
+local radar_detection_distance = { blue = 50000, red = 45000 } -- distanza massima di rilevamento dei radar
+local gci_interception_distance = { blue = 75000, red = 70000 } -- distanza massima di attivazione GCI = 70 km (rispetto le aribase)
+local airborne_engaging_distance = { blue = 65000, red = 60000 } -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
+
+-- AI_A2G PARAMETER
+
+local area_radius_for_grouping = { red = 1000, blue = 1000 }
+local radar_detection_distance_ground = { red = 30000, blue = 30000 }
+local reactivity_level = { red = 'medium', blue = 'medium' } -- low, medium, high
+
+
+
 --- WAREHOUSE SCHEDULE TIMING CONFIGURATION
 
     -- AIR --
@@ -4164,11 +4178,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
     TSVERI_2 =   { ZONE:New("BLUE_TARZ_TSVERI_2") , "BLUE_TARZ_TSVERI_2", targetPoints.front_zone },
     TSVERI_3 =   { ZONE:New("BLUE_TARZ_TSVERI_3") , "BLUE_TARZ_TSVERI_3", targetPoints.front_zone },
     TSVERI_4 =   { ZONE:New("BLUE_TARZ_TSVERI_4") , "BLUE_TARZ_TSVERI_4", targetPoints.front_zone },
-    TSVERI_5 =   { ZONE:New("BLUE_TARZ_TSVERI_5") , "BLUE_TARZ_TSVERI_5", targetPoints.front_zone },
-    TSVERI_6 =   { ZONE:New("BLUE_TARZ_TSVERI_6") , "BLUE_TARZ_TSVERI_6", targetPoints.front_zone },
 
-    KHASHURI_1 =  { ZONE:New("BLUE_TARZ_KHASHURI_1") , "BLUE_TARZ_KHASHURI_1", targetPoints.front_zone },
-    KHASHURI_2 =  { ZONE:New("BLUE_TARZ_KHASHURI_2") , "BLUE_TARZ_KHASHURI_2", targetPoints.front_zone }
+
+    KHASHURI_1 =  { ZONE:New("BLUE_TARZ_KHASHURI_1") , "BLUE_TARZ_KHASHURI_1", targetPoints.front_zone }
+
 
   }
 
@@ -4862,17 +4875,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         if assignment == 'tkviavi_attack_1' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.TKVIAVI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
         elseif assignment == 'tkviavi_attack_2' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.TKVIAVI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
         elseif assignment == 'tseveri_attack_1' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.TSVERI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
         elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
@@ -4926,7 +4939,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     [1] = {
                       targetCoordinate = targetZoneForRedArty.TKVIAVI_2[1]:GetRandomCoordinate(),
                       priority = 10,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 10,
                       weaponType = ARTY.WeaponType.Auto
@@ -4944,7 +4957,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     [3] = {
                       targetCoordinate = targetZoneForRedArty.TKVIAVI_4[1]:GetRandomCoordinate(),
                       priority = 50,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 7,
                       weaponType = ARTY.WeaponType.Auto
@@ -4962,7 +4975,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 maxDistance = 20,
 
-                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+                maxFiringRange = 18500 -- Akatsia min range 0.3 km, max range 17.0 km
 
 
             }
@@ -7702,7 +7715,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           groupResupplySet = groupset
           -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
           --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
-          activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_5[1], false, 1 )
+          activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_4[1], false, 1 )
 
 
 
@@ -7723,9 +7736,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
 
                     [1] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_1[1]:GetRandomCoordinate(),
+                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
                       priority = 10,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 10,
                       weaponType = ARTY.WeaponType.Auto
@@ -7734,27 +7747,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     [2] = {
                       targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
                       priority = 50,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 7,
                       weaponType = ARTY.WeaponType.Auto
                     },
 
                     [3] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
+                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_3[1]:GetRandomCoordinate(),
                       priority = 50,
-                      radiusTarget = 500,
+                      radiusTarget = 250,
                       num_shots = 10,
                       num_engagements = 7,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [4] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_3[1]:GetRandomCoordinate(),
-                      priority = 70,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 5,
                       weaponType = ARTY.WeaponType.Auto
                     }
 
@@ -7771,7 +7775,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 maxDistance = 20,
 
-                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+                maxFiringRange = 18500 -- Akatsia min range 0.3 km, max range 17.0 km
 
 
             }
@@ -7779,7 +7783,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
 
-            activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_5[1], param, true, 70 )
+            activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_4[1], param, true, 70 )
 
         else
 
@@ -11279,7 +11283,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 45000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, radar_detection_distance.red, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -11298,7 +11302,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
     -- valuta su ME queste due didtanze
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 70000, 60000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, gci_interception_distance.red, airborne_engaging_distance.red, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 
@@ -11423,11 +11427,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 50000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, radar_detection_distance.blue, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     -- A2ADispatcher:
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 75000, 65000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, gci_interception_distance.blue, airborne_engaging_distance.blue, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
     -- Setup Red CAP e GCI
@@ -11616,12 +11620,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-         local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
+         local detection = DETECTION_AREAS:New( detectionGroupSetRed, area_radius_for_grouping.red )
 
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-         configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+         configureAI_A2GDispatcher( A2GDispatcher, radar_detection_distance_ground.red, reactivity_level.red, HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
@@ -11806,7 +11810,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if wh_activation.Warehouse_AB.red.Nalchik[2] then
 
                local squadronName = "Nalchik CAS"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, casTemplateAirplane, 20 )
                configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
@@ -12206,12 +12210,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
        -- This command defines the reconnaissance network.
        -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
        -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-       local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+       local detection = DETECTION_AREAS:New( detectionGroupSetBlue, area_radius_for_grouping.blue )
 
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+       configureAI_A2GDispatcher( A2GDispatcher, radar_detection_distance_ground.blue, reactivity_level.blue, HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
