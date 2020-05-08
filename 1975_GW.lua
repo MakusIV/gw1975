@@ -3476,6 +3476,22 @@ local parAirbOp = {
 
 
 
+-- AI_A2A PARAMETER
+
+local radar_detection_distance = { blue = 50000, red = 45000 } -- distanza massima di rilevamento dei radar
+local gci_interception_distance = { blue = 75000, red = 70000 } -- distanza massima di attivazione GCI = 70 km (rispetto le aribase)
+local airborne_engaging_distance = { blue = 65000, red = 60000 } -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
+
+
+
+-- AI_A2G PARAMETER
+
+local area_radius_for_grouping = { red = 1000, blue = 1000 }
+local radar_detection_distance_ground = { red = 30000, blue = 30000 }
+local reactivity_level = { red = 'medium', blue = 'medium' } -- low, medium, high
+
+
+
 --- WAREHOUSE SCHEDULE TIMING CONFIGURATION
 
     -- AIR --
@@ -5127,7 +5143,7 @@ if wh_activation.Warehouse.red[ 3 ][ 1 ] then
         if wh_activation.Warehouse.red[ 3 ][ 11 ] and pos_heli <= num_mission_helo  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time_heli[ pos_heli ] * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, air_template_red.AFAC_Mi_8MTV2, math.random( AssetQty.red.heli.transport[1], AssetQty.red.heli.transport[2] ), nil, nil, nil, 'TRANSPORT 2') pos_heli = pos_heli + 1  end
 
         if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Biteta,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'TRANSPORT 3' ) pos = pos + 1  end
-        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'TRANSPORT 4' ) pos = pos + 1  end        
+        if wh_activation.Warehouse.red[ 3 ][ 14 ] and pos <= num_mission  then warehouse.Alagir:__AddRequest( startReqTimeGround + depart_time[ pos ]  * waitReqTimeGround, warehouse.Kvemo_Sba,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_red.TroopTransport, math.random( AssetQty.red.ground.transport[1], AssetQty.red.ground.transport[2] ), nil, nil, nil, 'TRANSPORT 4' ) pos = pos + 1  end
 
         logging('finer', { 'Alagir scheduler function' , 'addRequest Alagir warehouse'} )
 
@@ -9789,7 +9805,7 @@ if active_AI_A2A_red then
 
   detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-  local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 40000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+  local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, radar_detection_distance.red, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
   --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
   -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -9808,7 +9824,7 @@ if active_AI_A2A_red then
   -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
   -- valuta su ME queste due didtanze
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+  configureAI_A2ADispatcher( A2ADispatcher, gci_interception_distance.red, airborne_engaging_distance.red, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 
@@ -9933,11 +9949,11 @@ if active_AI_A2A_blue then
 
   detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-  local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 40000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+  local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, radar_detection_distance.blue, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
   -- A2ADispatcher:
   A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-  configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+  configureAI_A2ADispatcher( A2ADispatcher, gci_interception_distance.blue, airborne_engaging_distance.blue, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
   -- Setup Red CAP e GCI
@@ -10126,12 +10142,12 @@ if activeAI_A2G_Dispatching_Red then
 
 
 
-       local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
+       local detection = DETECTION_AREAS:New( detectionGroupSetRed, area_radius_for_grouping.red )
 
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+       configureAI_A2GDispatcher( A2GDispatcher, radar_detection_distance_ground.red, reactivity_level.red, HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
@@ -10721,12 +10737,12 @@ if activeAI_A2G_Dispatching_Blue then
      -- This command defines the reconnaissance network.
      -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
      -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-     local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+     local detection = DETECTION_AREAS:New( detectionGroupSetBlue, area_radius_for_grouping.blue )
 
      -- Setup the A2A dispatcher, and initialize it.
      local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-     configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+     configureAI_A2GDispatcher( A2GDispatcher, radar_detection_distance_ground.blue, reactivity_level.blue, HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
