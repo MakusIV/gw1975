@@ -862,6 +862,24 @@ end
 -- @param: delay:         suppression start delay
 function suppressionGroup(group, retreatZone, fallBack, takeCover, delay)
 
+    --SUPPRESSION.SetSuppressionTime() can be used to set the time a goup gets suppressed.
+    --SUPPRESSION.SetRetreatZone() sets the retreat zone and enables the possiblity for the group to retreat.
+    --SUPPRESSION.SetFallbackDistance() sets a value how far the unit moves away from the attacker after the fallback event.
+    --SUPPRESSION.SetFallbackWait() sets the time after which the group resumes its mission after a FallBack event.
+    --SUPPRESSION.SetTakecoverWait() sets the time after which the group resumes its mission after a TakeCover event.
+    --SUPPRESSION.SetTakecoverRange() sets the radius in which hideouts are searched.
+    --SUPPRESSION.SetTakecoverPlace() explicitly sets the place where the group will run at a TakeCover event.
+    --SUPPRESSION.SetMinimumFleeProbability() sets the minimum probability that a group flees (FallBack or TakeCover) after a hit. Note taht the probability increases with damage.
+    --SUPPRESSION.SetMaximumFleeProbability() sets the maximum probability that a group flees (FallBack or TakeCover) after a hit. Default is 90%.
+    --SUPPRESSION.SetRetreatDamage() sets the damage a group/unit can take before it is ordered to retreat.
+    --SUPPRESSION.SetRetreatWait() sets the time a group waits in the retreat zone after a retreat.
+    --SUPPRESSION.SetDefaultAlarmState() sets the alarm state a group gets after it becomes CombatReady again.
+    --SUPPRESSION.SetDefaultROE() set the rules of engagement a group gets after it becomes CombatReady again.
+    --SUPPRESSION.FlareOn() is mainly for debugging. A flare is fired when a unit is hit, gets suppressed, recovers, dies.
+    --SUPPRESSION.SmokeOn() is mainly for debugging. Puts smoke on retreat zone, hideouts etc.
+    --SUPPRESSION.MenuON() is mainly for debugging. Activates a radio menu item where certain functions like retreat etc. can be triggered manually.
+
+
     local debug = false
 
     if debug then logging('enter', 'suppressionGroup(group, retreatZone, fallBack, takeCover, delay)') end
@@ -1428,6 +1446,28 @@ function activeJTAC( type, home, jtacSetGroup, commandCenter, rejectedZone, batt
 end
 
 
+
+
+
+function designateTarget(recceSetGroup, attackSetGroup, commanCenter, Detection)
+
+    RecceDesignation = DESIGNATE:New( CC, RecceDetection, AttackSet )
+
+    -- This sets the threat level prioritization on
+    RecceDesignation:SetThreatLevelPrioritization( true )
+
+    -- Set the possible laser codes.
+    RecceDesignation:GenerateLaserCodes()
+
+    RecceDesignation:AddMenuLaserCode( 1113, "Lase with %d for Su-25T" )
+
+    RecceDesignation:AddMenuLaserCode( 1680, "Lase with %d for A-10A" )
+
+    -- Start the detection process in 5 seconds.
+    RecceDesignation:__Detect( -5 )
+
+
+end
 
 
 
@@ -3128,13 +3168,24 @@ local ground_group_template_blue = {
 
 
 
-
-
-
-
-
-
 -------------------------------------------------------------------------------- END ASSET TEMPLATE -------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3148,6 +3199,10 @@ local airbase_red = { AIRBASE.Caucasus.Mozdok, AIRBASE.Caucasus.Maykop_Khanskaya
 
 local airbase_blue = { AIRBASE.Caucasus.Kutaisi, AIRBASE.Caucasus.Sochi_Adler, AIRBASE.Caucasus.Senaki_Kolkhi, AIRBASE.Caucasus.Gudauta, AIRBASE.Caucasus.Sukhumi_Babushara, AIRBASE.Caucasus.Kobuleti, AIRBASE.Caucasus.Tbilisi_Lochini, AIRBASE.Caucasus.Soganlug,
                         AIRBASE.Caucasus.Vaziani } -- aeroporti attivi in ME
+
+
+
+
 
 
 local typeTakeoff = { AI_A2A_DISPATCHER.Takeoff.Cold, AI_A2A_DISPATCHER.Takeoff.Hot, AI_A2A_DISPATCHER.Takeoff.Runway, AI_A2A_DISPATCHER.Takeoff.Air }
@@ -3176,6 +3231,21 @@ local targetPoints = {
   hq = { math.random( 10, 20 ) }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3311,7 +3381,6 @@ local activeBalancer = false
 
 
 
-
 local activation_code = {
 
   [ 1 ] = 'WH (warehouse) activation',
@@ -3347,7 +3416,6 @@ wh_selected.Warehouse_AB.red = randomTrueFalseList(3,2)
 
 
 
-
 local wh_activation = {
 
 
@@ -3355,18 +3423,18 @@ local wh_activation = {
 
     blue = {
 
-       { wh_selected.Warehouse.blue[1], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-       { wh_selected.Warehouse.blue[2], false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
+       Zestafoni     =   { wh_selected.Warehouse.blue[1], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Gori          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+       Khashuri      =   { wh_selected.Warehouse.blue[2], false, false, false, false, true, true, true, true, true, true, true, true, true, true, false, false }
 
     },
 
     red = {
 
-      { wh_selected.Warehouse.red[1], true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      { wh_selected.Warehouse.red[2], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
-      { wh_selected.Warehouse.red[3], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
+      Biteta        =   { wh_selected.Warehouse.red[1], true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Didi          =   { true, true, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Kvemo_Sba     =   { wh_selected.Warehouse.red[2], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false },
+      Alagir        =   { wh_selected.Warehouse.red[3], false, false, false, false, true, false, false, false, true, true, true, true, true, true, false, false }
 
     }
 
@@ -3376,22 +3444,22 @@ local wh_activation = {
 
     blue = {
 
-      { wh_selected.Warehouse_AB.blue[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      { wh_selected.Warehouse_AB.blue[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      { wh_selected.Warehouse_AB.blue[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
-      { wh_selected.Warehouse_AB.blue[4], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
-      { false, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
-      { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
+      Vaziani       =   { wh_selected.Warehouse_AB.blue[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Soganlug      =   { wh_selected.Warehouse_AB.blue[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Tbilisi       =   { wh_selected.Warehouse_AB.blue[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kutaisi       =   { wh_selected.Warehouse_AB.blue[4], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Kvitiri       =   { false, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, false },
+      Kvitiri_Helo  =   { false, true, true, true, false, true, true, true, true, true, true, false, true, false, true, false, false },
+      Batumi        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true }
 
     },
 
     red = {
 
-      { wh_selected.Warehouse_AB.red[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
-      { wh_selected.Warehouse_AB.red[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
-      { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
-      { wh_selected.Warehouse_AB.red[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
+      Mozdok        =   { wh_selected.Warehouse_AB.red[1], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false },
+      Mineralnye    =   { wh_selected.Warehouse_AB.red[2], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, true },
+      Beslan        =   { true, true, true, true, false, true, true, true, true, true, true, false, false, false, true, false, true },
+      Nalchik       =   { wh_selected.Warehouse_AB.red[3], true, true, true, false, true, true, true, true, true, true, false, false, false, true, true, false }
 
     }
 
@@ -3399,25 +3467,6 @@ local wh_activation = {
 
 
 }
--- ok: Mineralnye, Nalchik, vaziani, kutaisi, Batumi, tblisi, soganlug,  beslan, mozdock, Kvitiri, Kvitiri_Helo, didi
--- OK attivati GORI con   [ 11 ] = 'WH_TRANSPORT activation = true    [ 15 ] = 'WH_AFAC activation' = false     [ 10 ] = 'WH_RECON_Activation = true  [ 6 ] = 'WH_GA activation' = false
- -- [ 2 ] = 'AI_CAS activation' = true             [ 3 ] = 'AI_BAI activation' = true               [  4 ] = 'AI_SEAD activation' = true
-
-
-
-
--- GORI CRASH: DOVREBBERO ESSERE LE AFAC MISSION (JTAC AIR)
-
-
-
--- attivati GORI con   [ 6 ] = 'WH_GA activation' = true [ 15 ] = 'WH_AFAC activation' = true
-
-
-
-
-
-
-
 
 
 
@@ -3446,13 +3495,13 @@ local AssetSkill = {
 
   blue = {
 
-    ground = { 4, 6 },
-    tank =   { 4, 6 },
-    artillery = { 4, 6 },
-    sam = { 4, 6 },
-    fighter_bomber = { 4, 6 },
+    ground = { 5, 6 },
+    tank =   { 5, 6 },
+    artillery = { 5, 6 },
+    sam = { 5, 6 },
+    fighter_bomber = { 5, 6 },
     fighter = { 4, 6 },
-    bomber = { 4, 6 },
+    bomber = { 5, 6 },
     transport = { 5, 6 },
     afac = { 5, 6 },
     awacs = { 5, 6 },
@@ -3563,6 +3612,20 @@ local parAirbOp = {
 
 
 
+-- AI_A2A PARAMETER
+
+local radar_detection_distance = { blue = 50000, red = 45000 } -- distanza massima di rilevamento dei radar
+local gci_interception_distance = { blue = 75000, red = 70000 } -- distanza massima di attivazione GCI = 70 km (rispetto le aribase)
+local airborne_engaging_distance = { blue = 65000, red = 60000 } -- distanza massima autorizzazione all'ingaggio per aerei alleati nelle vicinanze
+
+-- AI_A2G PARAMETER
+
+local area_radius_for_grouping = { red = 1000, blue = 1000 }
+local radar_detection_distance_ground = { red = 30000, blue = 30000 }
+local reactivity_level = { red = 'medium', blue = 'medium' } -- low, medium, high
+
+
+
 --- WAREHOUSE SCHEDULE TIMING CONFIGURATION
 
     -- AIR --
@@ -3627,6 +3690,8 @@ end
 logging('info', { 'main' , 'conflictZone code module activated = ' ..  conflictZone } )
 logging('info', { 'main' , 'Activation code module for Warehouse, Air War, Ground War, SeaWar active = ' .. tostring(activeWarehouse) .. ' , ' .. tostring(activeAirWar) .. ' , ' .. tostring(activeGroundWar) .. ' , ' .. tostring(activeSeaWar) } )
 
+-- Qui l'eventuale codice per stabilire la zona del conflitto
+--  conflictZone = conflictZone()
 
 
 
@@ -3665,17 +3730,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-          { STATIC:FindByName( "blue wh" ),  targetPoints.warehouse },
-          { STATIC:FindByName( "blue wh #001" ), targetPoints.warehouse },
-          { STATIC:FindByName( "blue wh #002" ), targetPoints.warehouse }
+           Zestafoni    =   { STATIC:FindByName( "Warehouse ZESTAFONI" ), "Warehouse ZESTAFONI",  targetPoints.warehouse }, --Functional.Warehouse#WAREHOUSE
+           Gori          =   { STATIC:FindByName( "Warehouse GORI" ), "Warehouse GORI",  targetPoints.warehouse_big },  --Functional.Warehouse#WAREHOUSE
+           Khashuri      =   { STATIC:FindByName( "Warehouse KHASHURI" ), "Warehouse KHASHURI",  targetPoints.warehouse }   --Functional.Warehouse#WAREHOUSE
 
         },
 
         red = {
 
-          { STATIC:FindByName( "red wh" ),  targetPoints.warehouse },
-          { STATIC:FindByName( "red wh #001" ), targetPoints.warehouse },
-          { STATIC:FindByName( "red wh #002" ), targetPoints.warehouse }
+          Biteta        =   { STATIC:FindByName( "Warehouse Biteta" ), "Warehouse Biteta",  targetPoints.warehouse },--Functional.Warehouse#WAREHOUSE
+          Didi          =   { STATIC:FindByName( "Warehouse Didi" ), "Warehouse Didi",  targetPoints.warehouse_big }, --Functional.Warehouse#WAREHOUSE
+          Kvemo_Sba     =   { STATIC:FindByName( "Warehouse Kvemo Sba" ), "Warehouse Kvemo Sba",  targetPoints.warehouse }, --Functional.Warehouse#WAREHOUSE
+          Alagir        =   { STATIC:FindByName( "Warehouse Alagir" ), "Warehouse Alagir",  targetPoints.warehouse_big }  --Functional.Warehouse#WAREHOUSE
 
         }
 
@@ -3686,17 +3752,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-          { STATIC:FindByName( "blue farp" )  targetPoints.farp },
-          { STATIC:FindByName( "blue farp #001" )  targetPoints.farp },
-          { STATIC:FindByName( "blue farp #002" )  targetPoints.farp }
+          Zestafoni  =    { STATIC:FindByName( "Farp ZESTAFONI" ), "Farp ZESTAFONI",  targetPoints.farp }, --Functional.Warehouse#WAREHOUSE
+          Khashuri   =    { STATIC:FindByName( "FARP KHASHURI" ), "FARP KHASHURI",  targetPoints.farp },  --Functional.Warehouse#WAREHOUSE
+          Gori       =    { STATIC:FindByName( "FARP GORI" ), "FARP GORI",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
+          Kvitiri      =    { STATIC:FindByName( "FARP Kvitiri" ), "FARP Kvitiri",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
+          Kvitiri_Helo =    { STATIC:FindByName( "FARP Kvitiri Helo" ), "FARP Kvitiri Helo",  targetPoints.farp }   --Functional.Warehouse#WAREHOUSE
+
 
         },
 
         red = {
 
-          { STATIC:FindByName( "red farp" )  targetPoints.farp },
-          { STATIC:FindByName( "red farp #001" )  targetPoints.farp },
-          { STATIC:FindByName( "red farp #002" )  targetPoints.farp }
+          Biteta        =  { STATIC:FindByName( "FARP  Biteta" ), "FARP  Biteta",  targetPoints.farp },  --Functional.Warehouse#WAREHOUSE
+          Didi_1          =  { STATIC:FindByName( "FARP Didi 1" ), "FARP Didi 1",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
+          Didi_2          =  { STATIC:FindByName( "FARP Didi 2" ), "FARP Didi 2",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
+          Kvemo_Sba     =  { STATIC:FindByName( "FARP Kvemo Sba" ), "FARP Kvemo Sba",  targetPoints.farp },   --Functional.Warehouse#WAREHOUSE
+          Alagir        =  { STATIC:FindByName( "FARP Alagir" ), "FARP Alagir",  targetPoints.farp }   --Functional.Warehouse#WAREHOUSE
 
         }
 
@@ -3706,17 +3777,22 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-          { STATIC:FindByName( "blue airbase" ),  targetPoints.airbase },
-          { STATIC:FindByName( "blue airbase #001" ),  targetPoints.airbase },
-          { STATIC:FindByName( "blue airbase #002" ),  targetPoints.airbase }
+          Vaziani       =   { STATIC:FindByName( "Warehouse Vaziani Airbase" ), "Warehouse Vaziani Airbase",  targetPoints.airbase },  --Functional.Warehouse#WAREHOUSE
+          Soganlug      =   { STATIC:FindByName( "Warehouse Soganlug Airbase" ), "Warehouse Soganlug Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
+          Tbilisi       =   { STATIC:FindByName( "Warehouse Tbilisi Airbase" ), "Warehouse Tbilisi Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
+          Kutaisi       =   { STATIC:FindByName( "Warehouse Kutaisi Airbase"),  "Warehouse Kutaisi Airbase",  targetPoints.airbase },  --Functional.Warehouse#WAREHOUSE
+          Kvitiri       =   { STATIC:FindByName( "Warehouse KVITIRI"), "Warehouse KVITIRI",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
+          Kvitiri_Helo  =   { STATIC:FindByName( "Warehouse KVITIRI HELO"),  "Warehouse KVITIRI HELO",  targetPoints.airbase },  --Functional.Warehouse#WAREHOUSE
+          Batumi        =   { STATIC:FindByName( "Warehouse Batumi"), "Warehouse Batumi",  targetPoints.airbase }     --Functional.Warehouse#WAREHOUSE
 
         },
 
         red = {
 
-          { STATIC:FindByName( "red airbase" ),  targetPoints.airbase },
-          { STATIC:FindByName( "red airbase #001" ),  targetPoints.airbase },
-          { STATIC:FindByName( "red airbase #002" ),  targetPoints.airbase }
+          Mozdok        =   { STATIC:FindByName( "Warehouse Mozdok Airbase"), "Warehouse Mozdok Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
+          Mineralnye    =   { STATIC:FindByName( "Warehouse Mineralnye Airbase"), "Warehouse Mineralnye Airbase",  targetPoints.airbase },    --Functional.Warehouse#WAREHOUSE
+          Beslan        =   { STATIC:FindByName( "Warehouse Beslan Airbase"), "Warehouse Beslan Airbase",  targetPoints.airbase },   --Functional.Warehouse#WAREHOUSE
+          Nalchik       =   { STATIC:FindByName( "Warehouse Nalchik Airbase"), "Warehouse Nalchik Airbase",  targetPoints.airbase }    --Functional.Warehouse#WAREHOUSE
 
         }
 
@@ -3728,23 +3804,51 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         blue = {
 
-          { STATIC:FindByName( "blue station" ), targetPoints.station },
-          { STATIC:FindByName( "blue storage" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "blue bridge" ),  targetPoints.bridge },
-          { STATIC:FindByName( "blue power" ),  targetPoints.power_plant_area },
-          { STATIC:FindByName( "blue farm" ),  targetPoints.production_plant_area },
-          { STATIC:FindByName( "blue port" ),  targetPoints.port }
+          Zestafoni_Railway_Station       =   { STATIC:FindByName( "Zestafoni Railway Station" ), "Zestafoni Railway Station",  targetPoints.station },
+          Agara_Railway_Station           =   { STATIC:FindByName( "Agara Railway Station" ), "Agara Railway Station",  targetPoints.station },
+          Gori_Storage_Asset_1              =   { STATIC:FindByName( "Gori Storage Area #001" ), "Gori Storage Area #001",  targetPoints.storage_area },
+          Gori_Storage_Asset_2              =   { STATIC:FindByName( "Gori Storage Area #002" ), "Gori Storage Area #002",  targetPoints.storage_area },
+          Gori_Storage_Asset_3              =   { STATIC:FindByName( "Gori Storage Area #003" ), "Gori Storage Area #003",  targetPoints.storage_area },
+          Gori_Storage_Asset_4              =   { STATIC:FindByName( "Gori Storage Area #004" ), "Gori Storage Area #004",  targetPoints.storage_area },
+          Gori_Storage_Asset_5              =   { STATIC:FindByName( "Gori Storage Area #005" ), "Gori Storage Area #005",  targetPoints.storage_area },
+          Gori_Storage_Asset_6              =   { STATIC:FindByName( "Gori Storage Area #006" ), "Gori Storage Area #006",  targetPoints.storage_area },
+          Gori_Storage_Asset_7              =   { STATIC:FindByName( "Gori Storage Area #007" ), "Gori Storage Area #007",  targetPoints.storage_area },
+          Gori_Storage_Asset_8              =   { STATIC:FindByName( "Gori Storage Area #008" ), "Gori Storage Area #008",  targetPoints.storage_area },
+          Gori_Storage_Asset_9              =   { STATIC:FindByName( "Gori Storage Area #009" ), "Gori Storage Area #009",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_1             =   { STATIC:FindByName( "Storage Area Kaspi" ), "Storage Area Kaspi",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_2             =   { STATIC:FindByName( "Storage Area Kaspi #001" ), "Storage Area Kaspi #001",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_3             =   { STATIC:FindByName( "Storage Area Kaspi #002" ), "Storage Area Kaspi #002",  targetPoints.storage_area },
+          Kaspi_Storage_Asset_4             =   { STATIC:FindByName( "Storage Area Kaspi #003" ), "Storage Area Kaspi #003",  targetPoints.storage_area },
+          Zestafoni_Storage_Asset_1         =   { STATIC:FindByName( "Storage Area Zestafoni" ), "Storage Area Zestafoni",  targetPoints.storage_area },
+          Zestafoni_Storage_Asset_2         =   { STATIC:FindByName( "Storage Area Zestafoni #001" ), "Storage Area Zestafoni #001",  targetPoints.storage_area },
+          Zestafoni_Storage_Asset_3         =   { STATIC:FindByName( "Storage Area Zestafoni #002" ), "Storage Area Zestafoni #002",  targetPoints.storage_area },
+          Khashuri_Storage_Asset_1         =   { STATIC:FindByName( "Blue Khashuri Magazine" ), "Blue Khashuri Magazine",  targetPoints.storage_area },
+          Khashuri_Storage_Asset_2         =   { STATIC:FindByName( "Blue Khashuri Magazine #001" ), "Blue Khashuri Magazine #001",  targetPoints.storage_area },
+          Khashuri_Storage_Asset_3         =   { STATIC:FindByName( "Blue Khashuri Magazine #002" ), "Blue Khashuri Magazine #002",  targetPoints.storage_area }
+
 
         },
 
         red = {
 
-          { STATIC:FindByName( "red station" ), targetPoints.station },
-          { STATIC:FindByName( "red storage" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red bridge" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red power" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red farm" ),  targetPoints.storage_area },
-          { STATIC:FindByName( "red port" ),  targetPoints.port }
+          Biteta_Storage_Asset_1            =   { STATIC:FindByName( "Biteta Storage Area #001" ), "Biteta Storage Area #001",  targetPoints.storage_area },
+          Biteta_Storage_Asset_2            =   { STATIC:FindByName( "Biteta Storage Area #002" ), "Biteta Storage Area #002",  targetPoints.storage_area },
+          Biteta_Storage_Asset_3            =   { STATIC:FindByName( "Biteta Storage Area #003" ), "Biteta Storage Area #003",  targetPoints.storage_area },
+          Biteta_Storage_Asset_4            =   { STATIC:FindByName( "Biteta Storage Area #004" ), "Biteta Storage Area #004",  targetPoints.storage_area },
+          Biteta_Storage_Asset_5            =   { STATIC:FindByName( "Biteta Storage Area #005" ), "Biteta Storage Area #005",  targetPoints.storage_area },
+          Biteta_Storage_Asset_6            =   { STATIC:FindByName( "Biteta Storage Area #006" ), "Biteta Storage Area #006",  targetPoints.storage_area },
+          Biteta_Storage_Asset_7            =   { STATIC:FindByName( "Biteta Storage Area #007" ), "Biteta Storage Area #007",  targetPoints.storage_area },
+          Biteta_Storage_Asset_8            =   { STATIC:FindByName( "Biteta Storage Area #008" ), "Biteta Storage Area #008",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_1         =   { STATIC:FindByName( "Kvemo Sba Storage Area #001" ), "Kvemo Sba Storage Area #001",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_2         =   { STATIC:FindByName( "Kvemo Sba Storage Area #002" ), "Kvemo Sba Storage Area #002",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_3         =   { STATIC:FindByName( "Kvemo Sba Storage Area #003" ), "Kvemo Sba Storage Area #003",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_5         =   { STATIC:FindByName( "Kvemo Sba Storage Area #005" ), "Kvemo Sba Storage Area #005",  targetPoints.storage_area },
+          Kvemo_Sba_Storage_Asset_6         =   { STATIC:FindByName( "Kvemo Sba Storage Area #006" ), "Kvemo Sba Storage Area #006",  targetPoints.storage_area },
+          Kvemo_Kosha_Storage_Asset_1         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #002" ), "Red Structure Kvemo Kosha #002",  targetPoints.storage_area },
+          Kvemo_Kosha_Storage_Asset_2         =   { STATIC:FindByName( "Red Structure Kvemo Kosha #001" ), "Red Structure Kvemo Kosha #001",  targetPoints.storage_area },
+          Kvemo_Kosha_Storage_Asset_3         =   { STATIC:FindByName( "Red Structure Kvemo Kosha" ), "Red Structure Kvemo Kosha",  targetPoints.storage_area }
+
+
 
         }
 
@@ -3796,132 +3900,54 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
   -- Zone definite su target strutture (edifici, ponti) startegici (BAI, PINPOINT)
-  local zoneTarget = {
+  local zoneTargetStructure = {
 
-    structure = {
+    Red_Didi_Bridges = {
 
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    structure = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_1'), 'Target_Zone_Didi_Bridge_1', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_2'), 'Target_Zone_Didi_Bridge_2', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_3'), 'Target_Zone_Didi_Bridge_3', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_4'), 'Target_Zone_Didi_Bridge_4', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_5'), 'Target_Zone_Didi_Bridge_5', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_6'), 'Target_Zone_Didi_Bridge_6', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_7'), 'Target_Zone_Didi_Bridge_7', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_8'), 'Target_Zone_Didi_Bridge_8', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_9'), 'Target_Zone_Didi_Bridge_9', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_10'), 'Target_Zone_Didi_Bridge_10', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_11'), 'Target_Zone_Didi_Bridge_11', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_12'), 'Target_Zone_Didi_Bridge_12', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Didi_Bridge_13'), 'Target_Zone_Didi_Bridge_13', targetPoints.bridge }
 
 
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
 
     },
 
-    farm = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
+    Red_Biteta_Bridges = {
 
 
-      },
+      { ZONE:New('Target Zone Biteta Storage Area'), 'Target Zone Biteta Storage Area', targetPoints.storage_area }
 
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
 
     },
 
-    military_base = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
+    Red_Kvemo_Sba_Bridges = {
 
 
-      },
+      { ZONE:New('Target Zone Kvemo Sba Storage Area'), 'Target Zone Kvemo Sba Storage Area', targetPoints.storage_area }
 
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
 
     },
 
 
-    power_plant = {
 
-      red = {
+    Blue_Kutaisi_Bridges = {
 
-        { ZONE:New('red bridge'), targetPoints.bridge },
+      { ZONE:New('Target_Zone_Kutaisi_Bridge_1'), 'Target_Zone_Kutaisi_Bridge_1', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Kutaisi_Bridge_2'), 'Target_Zone_Kutaisi_Bridge_2', targetPoints.bridge },
+      { ZONE:New('Target_Zone_Kutaisi_Bridge_3'), 'Target_Zone_Kutaisi_Bridge_3', targetPoints.bridge }
 
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
 
     },
-
-    storage = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    },
-
-    farm = {
-
-      red = {
-
-        { ZONE:New('red bridge'), targetPoints.bridge },
-
-
-      },
-
-      blue = {
-
-        { ZONE:New('blue bridge'), targetPoints.bridge },
-
-      }
-
-    }
-
-
-
-
-    
 
     Red_Farm = {
 
@@ -4005,94 +4031,185 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
+ -- da
+  local cargoZone = {
+
+      Warehouse = {
+
+        blue = {
+
+           Zestafoni     =   ZONE:New( "Warehouse ZESTAFONI Spawn Zone" ),
+           Gori          =   ZONE:New( "Gori WH Spawn Zone" ),
+           Khashuri      =   ZONE:New( "Warehouse KHASHURI Spawn Zone" )
+
+
+        },
+
+        red = {
+
+          Biteta        =   ZONE:New( "Warehouse Biteta Spawn Zone" ),
+          Didi          =   ZONE:New( "Didi Warehouse Spawn Zone" ),
+          Kvemo_Sba     =   ZONE:New( "Kvemo_Sba Warehouse Spawn Zone" ),
+          Alagir        =   ZONE:New( "Alagir Warehouse Spawn Zone" )
+
+        }
+
+      },
+
+      Warehouse_AB = {
+
+        blue = {
+
+          Vaziani       =   ZONE:New( "VazianiPickupZone" ),
+          Soganlug      =   ZONE:New( "TbilisiPickupZone" ),
+          Tbilisi       =   ZONE:New( "TbilisiPickupZone" ),
+          Kutaisi       =   ZONE:New( "KutaisiPickupZone" ),
+          Kvitiri       =   ZONE:New( "KvitiriPickupZone" ),
+          Kvitiri_Helo  =   ZONE:New( "Kvitiri_HeloPickupZone" ),
+          Batumi        =   ZONE:New( "BatumiPickupZone" )
+
+        },
+
+        red = {
+
+          Mozdok        =   ZONE:New( "MozdockPickupZone" ),
+          Mineralnye    =   ZONE:New( "MineralnyePickupZone" ),
+          Beslan        =   ZONE:New( "BeslanPickupZone" ),
+          Nalchik       =   ZONE:New( "NalchikPickupZone" )
+
+        }
+
+      },
+
+      Stucture = {
+
+        blue = {
+
+          --Zestafoni_Railway_Station       =   ZONE:New( "PickupZone" ),
+          --Agara_Railway_Station      =   ZONE:New( "PickupZone" )
+
+
+        },
+
+        red = {
 
 
 
+        }
 
-
-
-  --NOTA redFrontZone e blueFrontZone sostituiti con la seguente struttura
-
-  local frontZone = {
-
-    red = {
-
-          { ZONE:New("red front"), targetPoints.front_zone },
-          { ZONE:New("red front #001"), targetPoints.front_zone }
-    },
-
-    blue = {
-
-          { ZONE:New("blue front"), targetPoints.front_zone },
-          { ZONE:New("blue front #001"), targetPoints.front_zone }
-    }
+      }
 
   }
 
 
 
-  -- NOTA redPatrolZone e bluePatrolZone sostituiti con la seguente struttura
 
-  local sweepZone = {
 
-    red = {
 
-      { ZONE:New("red sweep"), targetPoints.front_zone },
-      { ZONE:New("red sweep #001"), targetPoints.front_zone },
-      { ZONE:New("red sweep #002"), targetPoints.front_zone }
+  -- le zone del fronte presidiate dai red
+  local redFrontZone = {
 
-    },
-
-    blue = {
-
-      { ZONE:New("blue sweep") , targetPoints.front_zone },
-      { ZONE:New("blue sweep #001") , targetPoints.front_zone },
-      { ZONE:New("blue sweep #002") targetPoints.front_zone }
-
-    }
+        TSKHINVALI = { ZONE:New("TSKHINVALI") , "TSKHINVALI", targetPoints.front_zone },
+        SATIHARI = { ZONE:New("SATIHARI") , "SATIHARI", targetPoints.front_zone },
+        DIDMUKHA = { ZONE:New("DIDMUKHA") , "DIDMUKHA", targetPoints.front_zone },
+        DIDI_CUPTA = { ZONE:New("DIDI_CUPTA") , "DIDI_CUPTA", targetPoints.front_zone },
+        CZ_ONI = { ZONE:New("CZ_ONI") , "CZ_ONI", targetPoints.front_zone },
+        CZ_PEREVI = { ZONE:New("CZ_PEREVI") , "CZ_PEREVI", targetPoints.front_zone }
 
   }
 
+  -- le zone del fronte presidiate dai blue
+  local blueFrontZone = {
 
+        TSVERI = { ZONE:New("TSVERI") , "TSVERI", targetPoints.front_zone },
+        TKVIAVI = { ZONE:New("TKVIAVI") , "TKVIAVI", targetPoints.front_zone },
+        GORI = { ZONE:New("GORI") , "GORI", targetPoints.front_zone },
+        HEOBA = { ZONE:New("HEOBA") , "HEOBA", targetPoints.front_zone },
+        CZ_AMBROLAURI = { ZONE:New("CZ_AMBROLAURI") , "CZ_AMBROLAURI", targetPoints.front_zone },
+        CZ_CHIATURA = { ZONE:New("CZ_CHIATURA") , "CZ_CHIATURA", targetPoints.front_zone }
+
+  }
+
+  -- Zone for red patrol mission: zone in territorio dei red
+  local redPatrolZone = {
+
+      mineralnye = { ZONE:New("Patrol_Zone_Mineralnye") , "Patrol_Zone_Mineralnye", targetPoints.front_zone },
+      nalchik = { ZONE:New("Patrol_Zone_Nalchik") , "Patrol_Zone_Nalchik", targetPoints.front_zone },
+      beslan = { ZONE:New("Patrol_Zone_Beslan") , "Patrol_Zone_Beslan", targetPoints.front_zone }
+
+  }
+
+  -- Zone for blue patrol mission: zone in territorio dei blue
+  local bluePatrolZone = {
+
+      tbilisi = { ZONE:New("Patrol_Zone_Tbilisi") , "Patrol_Zone_Tbilisi", targetPoints.front_zone },
+      vaziani = { ZONE:New("Patrol_Zone_Vaziani") , "Patrol_Zone_Vaziani", targetPoints.front_zone },
+      soganlug = { ZONE:New("Patrol_Zone_Soganlug") , "Patrol_Zone_Soganlug", targetPoints.front_zone },
+      kutaisi = { ZONE:New("Patrol_Zone_Kutaisi") , "Patrol_Zone_Kutaisi", targetPoints.front_zone }
+
+  }
 
   -- i target per l'arty dei blue
   -- imposterei target dei blue e toglierei il prefisso BLUE verifica la posizione delle zone
   local targetZoneForBlueArty = {
 
-    { ZONE:New("blue tar arty"), targetPoints.front_zone },
-    { ZONE:New("tar arty #001"), targetPoints.front_zone }
+    DIDMUKHA_1 = { ZONE:New("RED_TARZ_DIDMUKHA_1") , "RED_TARZ_DIDMUKHA_1", targetPoints.front_zone },
+    DIDMUKHA_2 = { ZONE:New("RED_TARZ_DIDMUKHA_2") , "RED_TARZ_DIDMUKHA_2", targetPoints.front_zone },
+    DIDMUKHA_3 = { ZONE:New("RED_TARZ_DIDMUKHA_3") , "RED_TARZ_DIDMUKHA_3", targetPoints.front_zone },
+
+    SATHIARI_1 = { ZONE:New("RED_TARZ_SATHIARI_1") , "RED_TARZ_SATHIARI_1", targetPoints.front_zone },
+    SATHIARI_2 = { ZONE:New("RED_TARZ_SATHIARI_2") , "RED_TARZ_SATHIARI_2", targetPoints.front_zone },
+    SATHIARI_3 = { ZONE:New("RED_TARZ_SATHIARI_3") , "RED_TARZ_SATHIARI_3", targetPoints.front_zone },
+
+    TSKHINVALI_1 = { ZONE:New("RED_TARZ_TSKHINVALI_1") , "RED_TARZ_TSKHINVALI_1", targetPoints.front_zone },
+    TSKHINVALI_2 = { ZONE:New("RED_TARZ_TSKHINVALI_2") , "RED_TARZ_TSKHINVALI_2", targetPoints.front_zone },
 
   }
 
   -- i target  per l'arty dei red
   local targetZoneForRedArty = {
 
-    { ZONE:New("red tar arty") , targetPoints.front_zone },
-    { ZONE:New("red tar arty #001") , targetPoints.front_zone }
+    TKVIAVI_1 =   { ZONE:New("BLUE_TARZ_TKVIAVI_1") , "BLUE_TARZ_TKVIAVI_1", targetPoints.front_zone },
+    TKVIAVI_2 =   { ZONE:New("BLUE_TARZ_TKVIAVI_2") , "BLUE_TARZ_TKVIAVI_2", targetPoints.front_zone },
+    TKVIAVI_3 =   { ZONE:New("BLUE_TARZ_TKVIAVI_3") , "BLUE_TARZ_TKVIAVI_3", targetPoints.front_zone },
+    TKVIAVI_4 =   { ZONE:New("BLUE_TARZ_TKVIAVI_4") , "BLUE_TARZ_TKVIAVI_4", targetPoints.front_zone },
+
+    TSVERI_1 =   { ZONE:New("BLUE_TARZ_TSVERI_1") , "BLUE_TARZ_TSVERI_1", targetPoints.front_zone },
+    TSVERI_2 =   { ZONE:New("BLUE_TARZ_TSVERI_2") , "BLUE_TARZ_TSVERI_2", targetPoints.front_zone },
+    TSVERI_3 =   { ZONE:New("BLUE_TARZ_TSVERI_3") , "BLUE_TARZ_TSVERI_3", targetPoints.front_zone },
+    TSVERI_4 =   { ZONE:New("BLUE_TARZ_TSVERI_4") , "BLUE_TARZ_TSVERI_4", targetPoints.front_zone },
+
+
+    KHASHURI_1 =  { ZONE:New("BLUE_TARZ_KHASHURI_1") , "BLUE_TARZ_KHASHURI_1", targetPoints.front_zone }
+
 
   }
 
   local afacZone = {
 
-    { ZONE:New("afac") , targetPoints.front_zone },
-    { ZONE:New("afac #001") , targetPoints.front_zone },
+    Didmukha_Tsveri =       { ZONE:New("AFAC_ZONE_Didmukha_Tsveri") , "AFAC_ZONE_Didmukha_Tsveri", targetPoints.front_zone },
+    Tskhunvali_Tkviavi =    { ZONE:New("AFAC_ZONE_Tskhunvali_Tkviavi") , "AFAC_ZONE_Tskhunvali_Tkviavi", targetPoints.front_zone },
+    Sathiari_Tkviavi =      { ZONE:New("AFAC_ZONE_Sathiari_Tkviavi") , "AFAC_ZONE_Sathiari_Tkviavi", targetPoints.front_zone },
+    Didi_South =            { ZONE:New("AFAC_ZONE_Didi_South") , "AFAC_ZONE_Didi_South", targetPoints.front_zone },
+    Khashuri_Est =          { ZONE:New("AFAC_ZONE_Khashuri_Est") , "AFAC_ZONE_Khashuri_Est", targetPoints.front_zone }
+
   }
 
 
 
   local redAwacsZone = {
 
-    ZONE:New("red awa"),
-    ZONE:New("red awa #001") ,
-    ZONE:New("red awa #002")
+    nalchik =       ZONE:New("Red AWACS ZONE NALCHIK"),
+    beslan =        ZONE:New("Red AWACS ZONE BESLAN") ,
+    alagir =        ZONE:New("Red AWACS ZONE ALAGIR")
 
   }
 
   local blueAwacsZone = {
 
-    ZONE:New("blue awa"),
-    ZONE:New("blue awa #001") ,
-    ZONE:New("blue awa #002")
+    kutaisi =       ZONE:New("Blue AWACS ZONE KUTAISI"),
+    gori =          ZONE:New("Blue AWACS ZONE GORI") ,
+    tbilisi =       ZONE:New("Blue AWACS ZONE TBILISI")
 
   }
 
@@ -4100,38 +4217,53 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
   local redGroundGroup = {
 
-    { GROUP:FindByName('red armor'), targetPoints.armored },
-    { GROUP:FindByName('red armor #001'), targetPoints.armored },
-    { GROUP:FindByName('red mechanized'), targetPoints.mechanized },
-    { GROUP:FindByName('red mechanized #001'), targetPoints.mechanized },
-    { GROUP:FindByName('red antitank'), targetPoints.antitank },
-    { GROUP:FindByName('red antitank #001'), targetPoints.antitank },
-    { GROUP:FindByName('red ad'), targetPoints.sam },
-    { GROUP:FindByName('red hq'), targetPoints.hq },
-    { GROUP:FindByName('red sa-2'), targetPoints.sam },
-    { GROUP:FindByName('red sa-3'), targetPoints.sam },
-    { GROUP:FindByName('red ewr'), targetPoints.ewr_site },
-    { GROUP:FindByName('red ewr #001'), targetPoints.ewr_site }
+    { GROUP:FindByName('GW_1975 Russian Armor Defence@Nabakevi'), targetPoints.armored },
+    { GROUP:FindByName('Russian Antitank Defence@Didmukha'), targetPoints.antitank },
+    { GROUP:FindByName('Russian Mechanized Defence@Didmukha'), targetPoints.mechanized },
+    { GROUP:FindByName('Russian Antitank Defence@Tskhinvali'), targetPoints.antitank },
+    { GROUP:FindByName('RU HQ AirDefence'), targetPoints.sam },
+    { GROUP:FindByName('Russian Antitank Defence@Sathiari'), targetPoints.antitank },
+    { GROUP:FindByName('RED_HQ'), targetPoints.hq },
+    { GROUP:FindByName('GW_1975 Russian Mechanized Defence@Oni'), targetPoints.mechanized },
+    { GROUP:FindByName('SAM SA-2 Biteta'), targetPoints.sam },
+    { GROUP:FindByName('SAM SA-6 Didi Farp'), targetPoints.sam },
+    { GROUP:FindByName('SAM SA-6 Kvemo Sba Farp'), targetPoints.sam },
+    { GROUP:FindByName('SAM SA-2 Beslan EWR'), targetPoints.sam },
+    { GROUP:FindByName('DF CCCP EWR  Mineralnye'), targetPoints.ewr_site },
+    { GROUP:FindByName('DF CCCP EWR  Beslan'), targetPoints.ewr_site },
+    { GROUP:FindByName('Alagir SAM-2 Defence'), targetPoints.sam }
+
+
 
   }
 
   local blueGroundGroup = {
 
-    { GROUP:FindByName('blue armor'), targetPoints.armored },
-    { GROUP:FindByName('blue mechanized'), targetPoints.mechanized },
-    { GROUP:FindByName('blue antitank'), targetPoints.antitank },
-    { GROUP:FindByName('blue ad'), targetPoints.sam },
-    { GROUP:FindByName('blue hq'), targetPoints.hq },
-    { GROUP:FindByName('blue ewr'), targetPoints.ewr_site },
-    { GROUP:FindByName('blue sa-2'), targetPoints.sam },
-    { GROUP:FindByName('blue sa-3'), targetPoints.sam }
+    { GROUP:FindByName('Georgian Armored Defence@Khashuri'), targetPoints.armored },
+    { GROUP:FindByName('Georgian Mechanized Defence@Tsveri'), targetPoints.mechanized },
+    { GROUP:FindByName('Georgian Antitank Defence@Tsveri B'), targetPoints.antitank },
+    { GROUP:FindByName('Mecha Nato Group 1'), targetPoints.mechanized },
+    { GROUP:FindByName('GW_1975 Russian Armor Defence@Nabakevi #003'), targetPoints.armored },
+    { GROUP:FindByName('Georgian AAA HQ'), targetPoints.sam },
+    { GROUP:FindByName('BLUE_HQ'), targetPoints.hq },
+    { GROUP:FindByName('Georgian Mechanized Defence@Tkviavi B'), targetPoints.mechanized },
+    { GROUP:FindByName('NATO GROUND MECHA ATTACK A #017'), targetPoints.mechanized },
+    { GROUP:FindByName('Georgian Mechanized Defence Squad@Tkviavi B'), targetPoints.mechanized },
+    { GROUP:FindByName('DF GEORGIA EWR Kutaisi'), targetPoints.ewr_site },
+    { GROUP:FindByName('SAM SA-2 EWR Kutaisi'), targetPoints.sam },
+    { GROUP:FindByName('Georgian SA-3 Kutaisi'), targetPoints.sam },
+    { GROUP:FindByName('DF GEORGIA EWR Tbilisi'), targetPoints.ewr_site },
+    { GROUP:FindByName('SAM SA-2 Tbilisi'), targetPoints.sam },
+    { GROUP:FindByName('Georgian SA-3 Vaziani'), targetPoints.sam },
+    { GROUP:FindByName('Georgian SA-3 Tbilisi'), targetPoints.sam }
+
 
   }
 
 
 
 
-  -- POLIGONAL CAP ZONE - ridefinisci la struttura
+    -- CAP ZONE
 
 
 
@@ -4743,17 +4875,17 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         if assignment == 'tkviavi_attack_1' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.TSKHINVALI[1], 'enemy_attack', false, 1, true, suppr_param  )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.TKVIAVI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
         elseif assignment == 'tkviavi_attack_2' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param  )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.TKVIAVI[1], 'enemy_attack', false, 1, true, suppr_param  )
 
 
         elseif assignment == 'tseveri_attack_1' then
 
-            activeGO_TO_BATTLE( groupset, redFrontZone.DIDMUKHA[1], 'enemy_attack', false, 1, true, suppr_param )
+            activeGO_TO_BATTLE( groupset, blueFrontZone.TSVERI[1], 'enemy_attack', false, 1, true, suppr_param )
 
 
         elseif assignment =='AFAC_ZONE_Tskhunvali_Tkviavi' then
@@ -4807,7 +4939,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     [1] = {
                       targetCoordinate = targetZoneForRedArty.TKVIAVI_2[1]:GetRandomCoordinate(),
                       priority = 10,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 10,
                       weaponType = ARTY.WeaponType.Auto
@@ -4825,7 +4957,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     [3] = {
                       targetCoordinate = targetZoneForRedArty.TKVIAVI_4[1]:GetRandomCoordinate(),
                       priority = 50,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 7,
                       weaponType = ARTY.WeaponType.Auto
@@ -4843,7 +4975,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 maxDistance = 20,
 
-                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+                maxFiringRange = 18500 -- Akatsia min range 0.3 km, max range 17.0 km
 
 
             }
@@ -5441,7 +5573,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           -- Normal Mission Request
           if wh_activation.Warehouse_AB.red.Mineralnye[15] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.REC_SU_24MR, 1, nil, nil, nil, "AFAC_afacZone.Tskhunvali_Tkviavi") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[8] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Bomb, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Mineralnye[5] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mineralnye[5] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Missile_R, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mineralnye[7] and pos <= num_mission then warehouse.Mineralnye:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mineralnye, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE") pos = pos + 1  end
@@ -5519,10 +5651,10 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-      elseif request.assignment == "FIGHTER SWEEP" then
+        elseif request.assignment == "PATROL" then
 
           local homeAirbase =  AIRBASE.Caucasus.Mineralnye_Vody
-          local patrolZone =  redPatrolZone.mineralnye[1] -- CAMBIA IN red sweep #00..
+          local patrolZone =  redPatrolZone.mineralnye[1]
           local engageRange = math.random(10000, 20000)
           local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
           local patrolFloorAltitude = 4000
@@ -5840,7 +5972,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse_AB.red.Mozdok[8] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[8] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_SU_24M_HRocket, math.random( AssetQty.red.air.ga[1], AssetQty.red.air.ga[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_TU_22_Bomb, math.random( AssetQty.red.air.heavy_bomb[1], AssetQty.red.air.heavy_bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Mozdok[5] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Mozdok[5] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random( AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_SU_24_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Mozdok[7] and pos <= num_mission then warehouse.Mozdok:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Mozdok, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Bomb, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING FARM") pos = pos + 1  end
@@ -5934,7 +6066,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-      elseif request.assignment == "FIGHTER SWEEP" then
+        elseif request.assignment == "PATROL" then
 
           local homeAirbase =  AIRBASE.Caucasus.Mozdok
           local patrolZone =  redPatrolZone.beslan[1]
@@ -6657,7 +6789,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
           -- nelle request la selezione random esclusiva (utilizzando defineRequestPosition) dei target in modo da avere target diversi per schedulazioni successive
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAS_Mig_27K_Rocket, math.random(AssetQty.red.air.cas[1], AssetQty.red.air.cas[2]), nil, nil, nil, "BAI TARGET") pos = pos + 1  end
-          if wh_activation.Warehouse_AB.red.Nalchik[5] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2]), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+          if wh_activation.Warehouse_AB.red.Nalchik[5] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.CAP_Mig_23MLD, math.random(AssetQty.red.air.patrol[1], AssetQty.red.air.patrol[2]), nil, nil, nil, "PATROL") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.GA_Mig_27K_Bomb_Light, math.random( AssetQty.red.air.ga[1], AssetQty.red.air.ga[2] ), nil, nil, nil, "BAI TARGET 2") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[8] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Structure, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BAI POINT") pos = pos + 1  end
           if wh_activation.Warehouse_AB.red.Nalchik[7] and pos <= num_mission then warehouse.Nalchik:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Nalchik, WAREHOUSE.Descriptor.GROUPNAME, air_template_red.BOM_MIG_27K_Airbase, math.random( AssetQty.red.air.bomb[1], AssetQty.red.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
@@ -6723,7 +6855,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-        elseif request.assignment == "FIGHTER SWEEP" then
+        elseif request.assignment == "PATROL" then
 
 
           local homeAirbase =  AIRBASE.Caucasus.Nalchik
@@ -7478,9 +7610,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
           if wh_activation.Warehouse.blue.Gori[12] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.antitankB, math.random( AssetQty.blue.ground.attack[1], AssetQty.blue.ground.attack[2] ), nil, nil, nil, 'SATIHARI_attack_2' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Gori[13] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, math.random( AssetQty.blue.ground.recon[1], AssetQty.blue.ground.recon[2] ), nil, nil, nil, 'JTAC_SATIHARI' ) pos = pos + 1  end
           if wh_activation.Warehouse.blue.Gori[13] and pos <= num_mission  then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time[ pos ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, ground_group_template_blue.jtac, math.random( AssetQty.blue.ground.recon[1], AssetQty.blue.ground.recon[2] ), nil, nil, nil, 'JTAC_TSKHINVALI' ) pos = pos + 1  end
-          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L, math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
-          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_SA342L,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
-          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,  WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H, math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_HELO_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1  end
+          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Tskhunvali_Tkviavi') pos_heli = pos_heli + 1 end
+          if wh_activation.Warehouse.blue.Gori[15] and pos_heli <= num_mission_helo then warehouse.Gori:__AddRequest( startReqTimeGround + depart_time_helo[ pos_heli ] * waitReqTimeGround, warehouse.Gori,   WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_UH_1H,  math.random( AssetQty.blue.heli.recon[1], AssetQty.blue.heli.recon[2] ), nil, nil, nil, 'AFAC_ZONE_Didmukha_Tsveri') pos_heli = pos_heli + 1 end
 
           logging('finer', { 'gori scheduler function' , 'addRequest Gori warehouse'} )
 
@@ -7583,7 +7715,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           groupResupplySet = groupset
           -- controlla se targetZoneForRedArty.TSVERI_5 e' coerente come posizione
           --rndTrgGori.artillery[ pos_arty[ 1 ] + 1 ][ 2 ]
-          activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_5[1], false, 1 )
+          activeGO_TO_ZONE_GROUND( groupset, targetZoneForRedArty.TSVERI_4[1], false, 1 )
 
 
 
@@ -7604,9 +7736,9 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     --targetInfo.targetCoordinate,  targetInfo.priority, targetInfo.radiusTarget, targetInfo.num_shots, targetInfo.num_engagements, nil, targetInfo.weaponType
 
                     [1] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_1[1]:GetRandomCoordinate(),
+                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
                       priority = 10,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 10,
                       weaponType = ARTY.WeaponType.Auto
@@ -7615,27 +7747,18 @@ if conflictZone == 'Zone 1: South Ossetia' then
                     [2] = {
                       targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
                       priority = 50,
-                      radiusTarget = 500,
+                      radiusTarget = 300,
                       num_shots = 10,
                       num_engagements = 7,
                       weaponType = ARTY.WeaponType.Auto
                     },
 
                     [3] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_2[1]:GetRandomCoordinate(),
+                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_3[1]:GetRandomCoordinate(),
                       priority = 50,
-                      radiusTarget = 500,
+                      radiusTarget = 250,
                       num_shots = 10,
                       num_engagements = 7,
-                      weaponType = ARTY.WeaponType.Auto
-                    },
-
-                    [4] = {
-                      targetCoordinate = targetZoneForBlueArty.DIDMUKHA_3[1]:GetRandomCoordinate(),
-                      priority = 70,
-                      radiusTarget = 500,
-                      num_shots = 10,
-                      num_engagements = 5,
                       weaponType = ARTY.WeaponType.Auto
                     }
 
@@ -7652,7 +7775,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 maxDistance = 20,
 
-                maxFiringRange = 17000 -- Akatsia min range 0.3 km, max range 17.0 km
+                maxFiringRange = 18500 -- Akatsia min range 0.3 km, max range 17.0 km
 
 
             }
@@ -7660,7 +7783,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             logging('info', { 'warehouse.Gori:OnAfterSelfRequest(From,Event,To,groupset,request)' , 'assignment = ' .. assignment .. '  -  groupSet = ' .. groupset:GetObjectNames() .. ' -  num target assigned = ' .. #param .. ' -  groupResupplySet = ' .. groupResupplySet:GetObjectNames()  } )
 
-            activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_5[1], param, true, 70 )
+            activeGO_TO_ARTY( groupset, targetZoneForRedArty.TSVERI_4[1], param, true, 70 )
 
         else
 
@@ -8339,7 +8462,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if wh_activation.Warehouse_AB.blue.Kutaisi[15] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.REC_L_39ZA, math.random( AssetQty.blue.air.recon[1], AssetQty.blue.air.recon[2] ), nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri") pos = pos + 1  end
              if wh_activation.Warehouse_AB.blue.Kutaisi[8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
              if wh_activation.Warehouse_AB.blue.Kutaisi[8] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-             if wh_activation.Warehouse_AB.blue.Kutaisi[5] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+             if wh_activation.Warehouse_AB.blue.Kutaisi[5] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
              if wh_activation.Warehouse_AB.blue.Kutaisi[7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
              if wh_activation.Warehouse_AB.blue.Kutaisi[7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
              if wh_activation.Warehouse_AB.blue.Kutaisi[7] and pos <= num_mission then warehouse.Kutaisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
@@ -8447,7 +8570,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
         ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
 
-        elseif request.assignment == "FIGHTER SWEEP" then
+        elseif request.assignment == "PATROL" then
 
           local homeAirbase =  AIRBASE.Caucasus.Kutaisi
           local patrolZone =  bluePatrolZone.kutaisi[1]
@@ -8469,7 +8592,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
-      elseif request.assignment == "FIGHTER SWEEP 2" then
+        elseif request.assignment == "PATROL WITH ENGAGE ZONE" then
 
           local homeAirbase =  AIRBASE.Caucasus.Kutaisi
           local engageZone = redFrontZone.TSKHINVALI[1]
@@ -8819,8 +8942,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
                 if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_L_39ZA_HRocket, math.random(AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2]), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
                 if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2]), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-                if wh_activation.Warehouse_AB.blue.Kvitiri[5] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP 2") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri[5] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Kvitiri[8] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random(AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2]), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Bomb, math.random(AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2]), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Kvitiri[7] and pos <= num_mission then warehouse.Kvitiri:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kvitiri, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random(AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2]), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
@@ -8919,7 +9042,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          elseif request.assignment == "FIGHTER SWEEP" then
+          elseif request.assignment == "PATROL" then
 
               -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
               local homeAirbase =  AIRBASE.Caucasus.Kvitiri
@@ -8942,7 +9065,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
-          elseif request.assignment == "FIGHTER SWEEP" then
+          elseif request.assignment == "PATROL WITH ENGAGE ZONE" then
 
             local homeAirbase =  AIRBASE.Caucasus.Kvitiri
             local engageZone = redFrontZone.TSKHINVALI[1]
@@ -8961,7 +9084,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
             local patrolZone =  bluePatrolZone.vaziani[1] --bluePatrolZone[ math.random( 1, #bluePatrolZone ) ]
             local engageRange = math.random(10000, 20000)
             local patrolFloorAltitude = 4000
-            local patrolCeilAltitude = 7000
+            local patrolCeilAltitude = 9000
             local minSpeedPatrol = 400
             local maxSpeedPatrol = 600
             local minSpeedEngage = 600
@@ -9594,7 +9717,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
            -- Normal Mission Request
            if wh_activation.Warehouse_AB.blue.Tbilisi[8] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_5E_3_Cluster, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
            if wh_activation.Warehouse_AB.blue.Tbilisi[8] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-           if wh_activation.Warehouse_AB.blue.Tbilisi[5] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+           if wh_activation.Warehouse_AB.blue.Tbilisi[5] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
            if wh_activation.Warehouse_AB.blue.Tbilisi[7] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
            if wh_activation.Warehouse_AB.blue.Tbilisi[7] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
            if wh_activation.Warehouse_AB.blue.Tbilisi[7] and pos <= num_mission then warehouse.Tbilisi:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Tbilisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
@@ -9693,16 +9816,16 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-        ------------------------------------------------------------------------------------------------------ assignment for FIGHTER SWEEP asset
+        ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
 
-        elseif request.assignment == "FIGHTER SWEEP" then
+        elseif request.assignment == "PATROL" then
 
           local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
           local patrolZone =  bluePatrolZone.tbilisi[1]
           local engageRange = math.random(10000, 20000)
           local engageZone = patrolZone -- l'ingaggio e' determinato solo dalla valutazione del engangeRange e non dalla zona violata (engageZone)
           local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 7000
+          local patrolCeilAltitude = 9000
           local minSpeedPatrol = 400
           local maxSpeedPatrol = 600
           local minSpeedEngage = 600
@@ -9717,7 +9840,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
         ------------------------------------------------------------------------------------------------------ assignment for PATROL PATROL WITH ENGAGE ZONE (NON ATTIVO: NON INSERITO NELLE ADDREQUEST)
-      elseif request.assignment == "FIGHTER SWEEP 2" then
+        elseif request.assignment == "PATROL WITH ENGAGE ZONE" then
 
           local homeAirbase =  AIRBASE.Caucasus.Tbilisi_Lochini
           local engageZone = redFrontZone.TSKHINVALI[1]
@@ -9737,7 +9860,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
           local patrolZone =  bluePatrolZone.tbilisi[1]
           local engageRange = math.random(10000, 20000)
           local patrolFloorAltitude = 4000
-          local patrolCeilAltitude = 7000
+          local patrolCeilAltitude = 9000
           local minSpeedPatrol = 400
           local maxSpeedPatrol = 600
           local minSpeedEngage = 600
@@ -10188,8 +10311,8 @@ if conflictZone == 'Zone 1: South Ossetia' then
                 if wh_activation.Warehouse_AB.blue.Vaziani[15] and pos <= num_mission then warehouse.Vaziani:__AddRequest( startReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.AFAC_L_39ZA, 1, nil, nil, nil, "AFAC_afacZone.Didmukha_Tsveri")  end -- AFAC, ...
                 if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_MI_24V, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
                 if wh_activation.Warehouse_AB.blue.Vaziani[8] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_SU_24_Bomb, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BAI STRUCTURE") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-                if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
-                if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP 2") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_L_39ZA, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
+                if wh_activation.Warehouse_AB.blue.Vaziani[5] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_Mig_21Bis, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL WITH ENGAGE ZONE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Cluster, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_Su_17M4_Bomb, math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
                 if wh_activation.Warehouse_AB.blue.Vaziani[7] and pos <= num_mission then warehouse.Vaziani:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Vaziani, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.AIR_BOMBER, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING MIL ZONE") pos = pos + 1  end
@@ -10284,7 +10407,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          elseif request.assignment == "FIGHTER SWEEP" then
+          elseif request.assignment == "PATROL" then
 
               -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
               local homeAirbase =  AIRBASE.Caucasus.Vaziani
@@ -10307,7 +10430,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL MIG 21 asset
-        elseif request.assignment == "FIGHTER SWEEP 2" then
+          elseif request.assignment == "PATROL WITH ENGAGE ZONE" then
 
             local homeAirbase =  AIRBASE.Caucasus.Vaziani
             local engageZone = redFrontZone.TSKHINVALI[1]
@@ -10693,13 +10816,13 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAS_F_4E_Rocket,  math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
             if wh_activation.Warehouse_AB.blue.Soganlug[8] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Cluster,  math.random( AssetQty.blue.air.cas[1], AssetQty.blue.air.cas[2] ), nil, nil, nil, "BAI TARGET BIS") pos = pos + 1  end -- BAI_ZONE1, BAI2_ZONE2, ...
-            if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "FIGHTER SWEEP") pos = pos + 1  end
+            if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_AJS_37, math.random( AssetQty.blue.air.patrol[1], AssetQty.blue.air.patrol[2] ), nil, nil, nil, "PATROL") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING AIRBASE") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Structure, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING WAREHOUSE") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_AJS_37, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KUTAISI") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE DIDI") pos = pos + 1  end
             if wh_activation.Warehouse_AB.blue.Soganlug[7] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.BOM_F_4_E_Sparse_Heavy, math.random( AssetQty.blue.air.bomb[1], AssetQty.blue.air.bomb[2] ), nil, nil, nil, "BOMBING STRUCTURE KVEMO_SBA") pos = pos + 1  end
-            --if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "FIGHTER SWEEP F4") pos = pos + 1  end
+            --if wh_activation.Warehouse_AB.blue.Soganlug[5] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Soganlug, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_4, 2, nil, nil, nil, "PATROL F4") pos = pos + 1  end
           --  if wh_activation.Warehouse_AB.blue.Soganlug[11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.CAP_F_5, 2, nil, nil, nil, "TRANSFER MIG 21") pos = pos + 1  end
           --  if wh_activation.Warehouse_AB.blue.Soganlug[11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Kutaisi, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_AN_26, 2, nil, nil, nil, "TRANSPORT") pos = pos + 1  end
           --  if wh_activation.Warehouse_AB.blue.Soganlug[11] and pos <= num_mission then warehouse.Soganlug:__AddRequest( requestStartTime + depart_time[ pos ] * waitReqTimeAir, warehouse.Gori, WAREHOUSE.Descriptor.GROUPNAME, air_template_blue.TRAN_UH_60A, 2, nil, nil, nil, "TRANSPORT 2") pos = pos + 1  end
@@ -10786,7 +10909,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
           ------------------------------------------------------------------------------------------------------ assignment for PATROL asset
-          elseif request.assignment == "FIGHTER SWEEP" then
+          elseif request.assignment == "PATROL" then
 
             -- groupset, patrolZone, engageRange, engageZone, patrolFloorAltitude, patrolCeilAltitude, minSpeedPatrol, maxSpeedPatrol, minSpeedEngage, maxSpeedEngage
             local homeAirbase =  AIRBASE.Caucasus.Soganlug
@@ -11160,7 +11283,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetRedA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, 40000, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetRedA2A, radar_detection_distance.red, { Unit.Category.AIRPLANE, Unit.Category.HELICOPTER }, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     --- detection red: e' la distanza massima di valutazione se due o piu' aerei appartengono ad uno stesso gruppo (30km x modern, 10 km per ww2)
     -- i distanza impostata a 30 km. Considera che più piccola è questa distanza e maggiore potrebbe essere l'attivazione delle GCI (conseguente alla presenza di più enemy group)
@@ -11179,7 +11302,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
     -- definisci la distanza CAP in modo da includere tutte le zone strategicamente importanti e 'sfiorare' quelle del fronte in modo da evitare che le CAP si annullino tra loro
     -- valuta su ME queste due didtanze
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, gci_interception_distance.red, airborne_engaging_distance.red, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
 
@@ -11304,11 +11427,11 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
     detectionGroupSetBlueA2A:FilterStart() -- This command will start the dynamic filtering, so when groups spawn in or are destroyed
 
-    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, 40000, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
+    local detection = DETECTION_AREAS:New( detectionGroupSetBlueA2A, radar_detection_distance.blue, {Unit.Category.AIRPLANE, Unit.Category.HELICOPTER}, nil, nil, nil, {'radar', 'rwr', 'dlink'} )
 
     -- A2ADispatcher:
     A2ADispatcher = AI_A2A_DISPATCHER:New( detection )
-    configureAI_A2ADispatcher( A2ADispatcher, 65000, 50000, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
+    configureAI_A2ADispatcher( A2ADispatcher, gci_interception_distance.blue, airborne_engaging_distance.blue, A2ADispatcher.Takeoff.Runway, A2ADispatcher.Landing.AtRunway, 0.6, 0.4, false )
 
 
     -- Setup Red CAP e GCI
@@ -11497,12 +11620,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
 
 
 
-         local detection = DETECTION_AREAS:New( detectionGroupSetRed, 1000 )
+         local detection = DETECTION_AREAS:New( detectionGroupSetRed, area_radius_for_grouping.red )
 
          -- Setup the A2A dispatcher, and initialize it.
          local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-         configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+         configureAI_A2GDispatcher( A2GDispatcher, radar_detection_distance_ground.red, reactivity_level.red, HQ_RED, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 
@@ -11687,7 +11810,7 @@ if conflictZone == 'Zone 1: South Ossetia' then
              if wh_activation.Warehouse_AB.red.Nalchik[2] then
 
                local squadronName = "Nalchik CAS"
-               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Beslan, casTemplateAirplane, 20 )
+               A2GDispatcher:SetSquadron( squadronName, AIRBASE.Caucasus.Nalchik, casTemplateAirplane, 20 )
                configureAI_A2G_CAS_Mission( A2GDispatcher, squadronName, parAirbOp.cas[ 1 ], parAirbOp.cas[ 2 ], nil, 0.3, 500, 700, 2000, 4000)
 
                -- CAS MISSION: invia attacchi se rilevata minaccia a ground amiche
@@ -12087,12 +12210,12 @@ if conflictZone == 'Zone 1: South Ossetia' then
        -- This command defines the reconnaissance network.
        -- It will group any detected ground enemy targets within a radius of 1km. (crea un gruppo per tutte le unita' detected (rilevate) presenti in una circonferenza di raggio 1 km)
        -- It uses the DetectionSetGroup, which defines the set of reconnaissance groups to detect for enemy ground targets.
-       local detection = DETECTION_AREAS:New( detectionGroupSetBlue, 1000 )
+       local detection = DETECTION_AREAS:New( detectionGroupSetBlue, area_radius_for_grouping.blue )
 
        -- Setup the A2A dispatcher, and initialize it.
        local A2GDispatcher = AI_A2G_DISPATCHER:New( detection )
 
-       configureAI_A2GDispatcher( A2GDispatcher, 30000, 'medium', HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
+       configureAI_A2GDispatcher( A2GDispatcher, radar_detection_distance_ground.blue, reactivity_level.blue, HQ_BLUE, A2GDispatcher.Takeoff.Runway, A2GDispatcher.Landing.AtRunway, 0.4, 0.6, 3, false )
 
 
 

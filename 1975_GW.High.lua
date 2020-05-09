@@ -19,7 +19,7 @@
 -- variable
 --- loggingLevel
 -- 0 = nessun messaggio di log, 1 = error, 2 = severe, 3 = warning, 4 = info, 5 = fine, 6 = finer/enter/exit, 7 = finest
-local loggingLevel = 0
+local loggingLevel = 4
 
 
 -- Debug messages for ARTY
